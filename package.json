@@ -1,0 +1,10 @@
+{
+  "devDependencies": {
+    "husky": "^9.1.6",
+    "rimraf": "^6.0.1"
+  },
+  "scripts": {
+    "postinstall": "npx husky init && rimraf .husky/pre-commit",
+    "prepare": "husky"
+  }
+}

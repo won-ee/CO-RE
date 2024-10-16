@@ -1,0 +1,20 @@
+BRANCH_NAME=$(git symbolic-ref --short HEAD)
+COMMIT_MSG_FILE=$1
+COMMIT_SOURCE=$2
+SHA1=$3
+
+if [[ "$BRANCH_NAME" =~ ^(main|develop|release|hotfix)$ ]]; then
+    exit 0
+fi
+
+if [[ "$BRANCH_NAME" =~ ^(FE|BE)?/feat/(S11P31S106-[0-9]+) ]]; then
+    ISSUE_NUMBER=${BASH_REMATCH[2]}
+else
+    exit 0
+fi
+
+if grep -q "$ISSUE_NUMBER" "$COMMIT_MSG_FILE"; then
+    exit 0
+fi
+
+sed -i.bak -e "\$s/\$/(${ISSUE_NUMBER})/" "$COMMIT_MSG_FILE"
