@@ -1,35 +1,47 @@
 import React from "react";
+import { BrowserRouter as Router, Route,Routes } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import styled, { ThemeProvider } from "styled-components";
+import { ThemeProvider } from "styled-components";
+
+//글로벌 css
 import { GlobalStyle, theme } from "./styles/globalStyles";
+
+//Styled 컴포넌트
+import { DisplayLayout, SidebarLayout, HeaderLayout, NavLayout } from "./styles/appStyles";
+
 import Sidebar from "./components/Sidebar";
 import IssuePage from "./pages/IssuePage";
 
-
 const queryClient = new QueryClient();
-const Block=styled.div`
-  display: flex;
-  height: 100vh;
-`
-
 
 const App: React.FC = () => { 
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>
         <GlobalStyle />
-        <Block>
-          <div style={{ flex: '0 0 240px', height:'100vh',  backgroundColor:'white', display:'fixed'}}>
-          <Sidebar/>  {/* 왼쪽 고정 너비 (250px) */}
-          </div>
-          <div style={{ flex: 1, backgroundColor:'#F5F6FA'}} >
-            <div style={{backgroundColor:'white',height:'70px',fontSize:'32px'}}>
+        <DisplayLayout>
+          <SidebarLayout>
+            <Sidebar/>
+          </SidebarLayout>
+          <NavLayout>
+            <HeaderLayout>
               Header
-            </div>
-          <IssuePage/>  {/* 오른쪽 남은 영역을 모두 차지 */}
-          </div>
-        </Block>
+            </HeaderLayout>
+            <Router>
+              <Routes>
+                <Route path="/" element={'NEED LOGIN PAGE'}/>
+                <Route path="/dashboard" element={'NEED DASHBOARD'}/>
+                <Route path="/pullrequest" element={'NEED PR'}/>
+                <Route path="/issue" element={<IssuePage/>}/>
+                <Route path="/history" element={'NEED HISTORY PAGE'}/>
+                <Route path="/calender" element={'NEED CALENDER'}/>
+                <Route path="/member" element={'NEED MEMBER'}/>
+                <Route path="/setting" element={'NEED SETTING'}/>
+              </Routes>
+            </Router>
+          </NavLayout>
+        </DisplayLayout>
       </ThemeProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
@@ -37,3 +49,5 @@ const App: React.FC = () => {
 };
 
 export default App;
+
+
