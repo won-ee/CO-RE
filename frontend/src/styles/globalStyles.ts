@@ -1,4 +1,4 @@
-import { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle } from "styled-components";
 
 export const GlobalStyle = createGlobalStyle`
   body {
@@ -11,7 +11,7 @@ export const GlobalStyle = createGlobalStyle`
 
 export const theme = {
   colors: {
-    primary: '#0070f3',
-    secondary: '#1db954',
+    primary: "#0070f3",
+    secondary: "#1db954",
   },
 };
