@@ -17,18 +17,19 @@ const queryClient = new QueryClient();
 
 const App: React.FC = () => { 
   return (
+    <>
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>
         <GlobalStyle />
         <DisplayLayout>
-          <SidebarLayout>
-            <Sidebar/>
-          </SidebarLayout>
-          <NavLayout>
-            <HeaderLayout>
-              Header
-            </HeaderLayout>
-            <Router>
+          <Router>
+            <SidebarLayout>
+              <Sidebar/>
+            </SidebarLayout>
+            <NavLayout>
+              <HeaderLayout>
+                Header
+              </HeaderLayout>
               <Routes>
                 <Route path="/" element={'NEED LOGIN PAGE'}/>
                 <Route path="/dashboard" element={'NEED DASHBOARD'}/>
@@ -39,12 +40,13 @@ const App: React.FC = () => {
                 <Route path="/member" element={'NEED MEMBER'}/>
                 <Route path="/setting" element={'NEED SETTING'}/>
               </Routes>
+              </NavLayout>
             </Router>
-          </NavLayout>
         </DisplayLayout>
       </ThemeProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
+    </>
   );
 };
 
