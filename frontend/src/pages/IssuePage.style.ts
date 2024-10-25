@@ -1,5 +1,9 @@
 import styled from "styled-components";
 
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  $selectSection: boolean; 
+}
+
 export const FormContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -30,16 +34,28 @@ export const LeftSection = styled.div`
 `;
 
 
-export const Button = styled.button`
+export const ErrorInquiryButton = styled.button<ButtonProps>`
   width: 100%;
   padding: 15px;
   font-size: 14px;
-  color: black;
+  color: ${({ $selectSection }) => ($selectSection ? 'white' : 'balck')};
   border: none;
   border-radius: 5px;
   cursor: pointer;
   margin-top: 20px;
-  background-color: w;
+  background-color: ${({ $selectSection }) => ($selectSection ? '#4880FF' : 'white')};
+`;
+
+export const RelocationButton = styled.button<ButtonProps>`
+  width: 100%;
+  padding: 15px;
+  font-size: 14px;
+  color:  ${({ $selectSection }) => ($selectSection ? 'balck' : 'white')};
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+  background-color: ${({ $selectSection }) => ($selectSection ? 'white' : '#4880FF')};
 `;
 
 export const SelectInput = styled.select`
