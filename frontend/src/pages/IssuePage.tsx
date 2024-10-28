@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
-import SectionErrorInquiry from '../components/SectionErrorInquiry'
-import { ErrorInquiryButton,RelocationButton, FormContainer, FormWrapper, LeftSection, SelectInput,Line } from './IssuePage.style'
-import SectionIssueRelocation from '../components/SectionIssueRelocation';
+import SectionErrorInquiry from '../components/section/SectionErrorInquiry'
+import { ErrorInquiryButton,RelocationButton, FormContainer, FormWrapper, LeftSection, SelectInput,Line, IssueContainer } from './IssuePage.style'
+import SectionIssueRelocation from '../components/section/SectionIssueRelocation';
+import SectionIssueList from '../components/section/SectionIssueList';
+import TabIssueReassigned from '../components/tab/TabIssueReassigned';
 
 function IssuePage() {
   const [selectSection,setSelectSection] = useState(true)
@@ -32,6 +34,10 @@ function IssuePage() {
           {selectSection ? <SectionErrorInquiry /> : <SectionIssueRelocation />}
         </FormWrapper>
       </FormContainer>
+      <TabIssueReassigned/>
+      <IssueContainer>
+        <SectionIssueList/>
+      </IssueContainer>
     </>
   )
 }

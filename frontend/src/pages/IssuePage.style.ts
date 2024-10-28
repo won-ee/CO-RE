@@ -74,3 +74,12 @@ export const Line = styled.div`
   padding:0.3px ;
   margin-left: 50px;
 `;
+
+export const IssueContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 0px;
+  margin-top: 30px;
+  background-color: #f9f9f9;
+`;
