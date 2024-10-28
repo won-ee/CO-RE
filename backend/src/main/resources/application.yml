@@ -16,3 +16,11 @@ spring:
       ddl-auto: update
     show-sql: true
     generate-ddl: true
+  security:
+    oauth2:
+      client:
+        registration:
+          jira:
+            client-id: ${JIRA_CLIENT}
+            client-secret: ${JIRA_SECRET}
+            redirect-uri: ${JIRA_CALLBACK}
