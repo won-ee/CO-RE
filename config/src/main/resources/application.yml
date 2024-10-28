@@ -11,5 +11,6 @@ spring:
           uri: ${GITHUB_REPO}
           default-label: main
           basedir: config
+          searchPaths: config
           username: ${GITHUB_USERNAME}
           password: ${GITHUB_PASSWORD}
