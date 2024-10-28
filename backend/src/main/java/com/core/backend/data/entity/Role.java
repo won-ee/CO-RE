@@ -1,4 +1,4 @@
-package com.approve.cori.data.entity;
+package com.core.backend.data.entity;
 
 public enum Role {
     MANAGER, ADMIN, USER

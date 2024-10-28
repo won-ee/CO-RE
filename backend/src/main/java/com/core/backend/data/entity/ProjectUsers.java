@@ -1,4 +1,4 @@
-package com.approve.cori.data.entity;
+package com.core.backend.data.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -29,6 +29,6 @@ public class ProjectUsers extends Base {
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false)
     private Projects project;
-    
+
 
 }
