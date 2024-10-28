@@ -2,14 +2,15 @@ import styled from "styled-components";
 
 interface TaskStatusProps {
     status: string;
-  }
-export const TaskContainer = styled.div`
+}
+
+export const TaskContainerLayout = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
 `;
 
-export const TaskItem = styled.div`
+export const TaskItemBox = styled.div` 
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -21,15 +22,15 @@ export const TaskItem = styled.div`
   border-radius: 20px;
 `;
 
-export const TaskName = styled.div`
+export const TaskNameText = styled.div` 
   font-weight: bold;
 `;
 
-export const TaskId = styled.div`
+export const TaskIdText = styled.div` 
   color: #555;
 `;
 
-export const TaskTitleBox = styled.div<TaskStatusProps>`
+export const TaskTitleBox = styled.div<TaskStatusProps>` 
   display: flex;
   justify-content: center; 
   align-items: center; 
@@ -47,9 +48,9 @@ export const TaskTitleBox = styled.div<TaskStatusProps>`
       case '아이디어 회의':
         return '#4A9D17'; 
       default:
-        return 
+        return '#ccc';
     }
-  }};;
+  }};
   background-color: ${(props) => {
     switch (props.status) {
       case '프로젝트 기획/설계':
@@ -64,8 +65,8 @@ export const TaskTitleBox = styled.div<TaskStatusProps>`
   }};
 `;
 
-export const TaskStatusBox = styled.div<TaskStatusProps>`
-    display: flex;
+export const TaskStatusBox = styled.div<TaskStatusProps>` 
+  display: flex;
   justify-content: center; 
   align-items: center; 
   border-radius: 4px;
@@ -82,7 +83,7 @@ export const TaskStatusBox = styled.div<TaskStatusProps>`
       case 'DONE':
         return '#00B69B'; 
       default:
-        return '#ccc';
+        return '#ccc'; 
     }
   }};
   background-color: ${(props) => {
@@ -99,10 +100,10 @@ export const TaskStatusBox = styled.div<TaskStatusProps>`
   }};
 `;
 
-export const Comment = styled.span`
+export const CommentText = styled.span`  
   margin-right: 8px;
 `;
 
-export const Arrow = styled.span`
+export const ArrowIcon = styled.span`  
   cursor: pointer;
 `;

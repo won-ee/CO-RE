@@ -1,11 +1,11 @@
 import styled from "styled-components";
 
-export const RightSection = styled.div`
+export const RightSectionLayout = styled.div`
   flex: 2;
   margin-left: 50px;
 `;
 
-export const ErrorMessage = styled.div`
+export const ErrorMessageBox = styled.div`
   display: flex;
   align-items: center;
   color: red;
