@@ -9,7 +9,7 @@ import {
   SelectInput,
   DividerLine,
   IssueContainerBox,
-} from './IssuePage.style';
+} from './IssuePage.styled';
 import SectionIssueRelocation from '../components/section/SectionIssueRelocation';
 import SectionIssueList from '../components/section/SectionIssueList';
 import TabIssueReassigned from '../components/tab/TabIssueReassigned';
