@@ -1,13 +1,13 @@
-package com.approve.cori;
+package com.core.backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class CoriApplication {
+public class BackendApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CoriApplication.class, args);
+		SpringApplication.run(BackendApplication.class, args);
 	}
 
 }
