@@ -13,8 +13,13 @@ export const SidebarLayout = styled.div`
 `
 
 export const HeaderLayout = styled.div`
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  padding-left: 57px; 
   background-color: white;
   height:70px;
+  font-weight: bold;
   font-size:32px;
 `
 

@@ -1,6 +1,6 @@
-import { MainLogo, SidebarLayout, ButtonLayout,ButtonBottomGroup,Divider } from "../styles/sidebarSyles"
+import { MainLogo, SidebarLayout, ButtonLayout,ButtonBottomGroup,Divider } from "./Sidebar.Styled.ts"
 import { useLocation } from "react-router-dom"
-import ButtonSidebar from "./buttons/button_sidebar"
+import ButtonSidebar from "./buttons/ButtonSidebar.tsx"
 
 import Logo from '../assets/logo.png'
 import Icon_calender from '../assets/icon_calender.png'

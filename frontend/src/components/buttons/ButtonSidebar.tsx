@@ -1,4 +1,4 @@
-import { IconImg,NameBox,ContentBox, ChoicedBox, WholeLayout } from "../../styles/button_sidebarStyles"
+import { IconImg,NameBox,ContentBox, ChoicedBox, WholeLayout } from "./ButtonSidebar.Styles"
 import { useNavigate } from "react-router-dom";
 
 interface Props{
@@ -19,8 +19,8 @@ const ButtonSidebar: React.FC<Props> = ({ img, name, ischoiced, path }) => {
       <>
         <WholeLayout onClick={handleClick}>
           <ChoicedBox $ischoiced={ischoiced}/>
-          <ContentBox>
-            <IconImg src={img} alt="아이콘"/>
+          <ContentBox $ischoiced={ischoiced}>
+            <IconImg src={img} alt="아이콘" $ischoiced={ischoiced}/>
             <NameBox>{name}</NameBox>
           </ContentBox>
         </WholeLayout>

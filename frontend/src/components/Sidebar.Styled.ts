@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 export const MainLogo = styled.img`
+    padding-top: 15px;
     width: 120px;
     height: auto;
 `
