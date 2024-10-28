@@ -293,3 +293,4 @@ gradle-app.setting
 *_REMOTE_*.txt
 
 # End of https://www.toptal.com/developers/gitignore/api/gradle,visualstudiocode,macos,intellij+iml,intellij+all,windows,java
+config
