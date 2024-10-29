@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: cori
+    name: backend
   datasource:
     url: jdbc:mysql://localhost:3306/cori
     username: ssafy
@@ -16,4 +16,3 @@ spring:
       ddl-auto: update
     show-sql: true
     generate-ddl: true
-
