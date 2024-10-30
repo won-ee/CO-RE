@@ -16,6 +16,7 @@ import Sidebar from "./components/Sidebar";
 import IssuePage from "./pages/IssuePage";
 import DashboardPage from "./pages/DashboardPage";
 import PullRequestPage from "./pages/PullRequestPage";
+import LoginPage from "./pages/LoginPage";
 const queryClient = new QueryClient();
 
 const ParseHeader = (str: string) => {
@@ -42,7 +43,7 @@ const AppComponent: React.FC = () =>{
   }
   return(
     <>
-      <SidebarLayout>
+      {/* <SidebarLayout>
         <Sidebar />
       </SidebarLayout>
       <NavLayout>
@@ -54,9 +55,9 @@ const AppComponent: React.FC = () =>{
           onChange={handleChange}
           options={tempOption}
           />
-        </HeaderLayout>
+        </HeaderLayout> */}
         <Routes>
-          <Route path="/" element={"NEED LOGIN PAGE"} />
+          <Route path="/" element={<LoginPage/>} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/pullrequest" element={<PullRequestPage/>} />
           <Route path="/issue" element={<IssuePage />} />
@@ -65,7 +66,7 @@ const AppComponent: React.FC = () =>{
           <Route path="/member" element={"NEED MEMBER"} />
           <Route path="/setting" element={"NEED SETTING"} />
         </Routes>
-      </NavLayout>
+      {/* </NavLayout> */}
     </>
   );
 };
