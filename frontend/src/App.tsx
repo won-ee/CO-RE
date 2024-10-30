@@ -15,7 +15,7 @@ import { DisplayLayout, SidebarLayout, HeaderLayout, NavLayout, ChoiceStyles } f
 import Sidebar from "./components/Sidebar";
 import IssuePage from "./pages/IssuePage";
 import DashboardPage from "./pages/DashboardPage";
-
+import PullRequestPage from "./pages/PullRequestPage";
 const queryClient = new QueryClient();
 
 const ParseHeader = (str: string) => {
@@ -58,7 +58,7 @@ const AppComponent: React.FC = () =>{
         <Routes>
           <Route path="/" element={"NEED LOGIN PAGE"} />
           <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/pullrequest" element={"NEED PR"} />
+          <Route path="/pullrequest" element={<PullRequestPage/>} />
           <Route path="/issue" element={<IssuePage />} />
           <Route path="/history" element={"NEED HISTORY PAGE"} />
           <Route path="/calender" element={"NEED CALENDER"} />
