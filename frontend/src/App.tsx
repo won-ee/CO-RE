@@ -43,7 +43,7 @@ const AppComponent: React.FC = () =>{
   }
   return(
     <>
-      {/* <SidebarLayout>
+      <SidebarLayout>
         <Sidebar />
       </SidebarLayout>
       <NavLayout>
@@ -55,7 +55,7 @@ const AppComponent: React.FC = () =>{
           onChange={handleChange}
           options={tempOption}
           />
-        </HeaderLayout> */}
+        </HeaderLayout>
         <Routes>
           <Route path="/" element={<LoginPage/>} />
           <Route path="/dashboard" element={<DashboardPage />} />
@@ -66,7 +66,7 @@ const AppComponent: React.FC = () =>{
           <Route path="/member" element={"NEED MEMBER"} />
           <Route path="/setting" element={"NEED SETTING"} />
         </Routes>
-      {/* </NavLayout> */}
+      </NavLayout>
     </>
   );
 };
