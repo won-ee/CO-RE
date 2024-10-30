@@ -29,7 +29,8 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.30'
     implementation 'org.springframework.cloud:spring-cloud-starter-config'
     implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
-
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+    
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
