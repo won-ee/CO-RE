@@ -5,6 +5,6 @@ export const ContainerLayout = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 20px;
   padding: 20px;
-  background-color: #f9f9f9;
+  background-color: #F5F6FA;
 `;
 

@@ -8,7 +8,7 @@ import {
     SubmitButton 
 } from './SectionIssueRelocation.styled';
 
-const SectionIssueRelocation = () => {
+const SectionIssueRelocation:React.FC = () => {
   return (
     <RightSectionLayout> 
         <ErrorMessageBox>
