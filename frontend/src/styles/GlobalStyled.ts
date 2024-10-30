@@ -1,4 +1,4 @@
-import { createGlobalStyle } from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 
 export const GlobalStyle = createGlobalStyle`
   body {
@@ -15,3 +15,8 @@ export const theme = {
     secondary: "#1db954",
   },
 };
+
+export const Block = styled.div`
+  padding: 50px;
+  background-color: #F5F6FA;
+`

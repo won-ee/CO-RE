@@ -4,13 +4,20 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   $isErrorInquirySelected: boolean; 
 }
 
-export const FormContainerLayout = styled.div`
+interface TabProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  $isIssueSelected: boolean; 
+}
+
+export const IssueLayout = styled.div`
+  background-color:#F5F6FA ;
+`;
+
+export const FormContainerBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   margin-left: 0px;
   margin-top: 30px;
-  background-color: #f9f9f9;
 `;
 
 export const FormWrapperBox = styled.div`
@@ -49,12 +56,12 @@ export const RelocationButton = styled.button<ButtonProps>`
   width: 100%;
   padding: 15px;
   font-size: 14px;
-  color:  ${({ $isErrorInquirySelected }) => ($isErrorInquirySelected ? 'black' : 'white')};
+  color:  ${({ $isErrorInquirySelected }) => ($isErrorInquirySelected ? 'white' : 'black')};
   border: none;
   border-radius: 5px;
   cursor: pointer;
   margin-top: 20px;
-  background-color: ${({ $isErrorInquirySelected }) => ($isErrorInquirySelected ? 'white' : '#4880FF')};
+  background-color: ${({ $isErrorInquirySelected }) => ($isErrorInquirySelected ? '#4880FF' : 'white')};
 `;
 
 export const SelectInput = styled.select`
@@ -79,6 +86,23 @@ export const IssueContainerBox = styled.div`
   justify-content: center;
   align-items: center;
   margin-left: 0px;
-  margin-top: 30px;
-  background-color: #f9f9f9;
 `;
+
+export const TabBox  = styled.div`
+  margin-top: 20px;
+  margin-left: 60px;
+`
+
+export const IssueListText = styled.span<TabProps>`
+  font-size: 20px;
+  margin-right: 10px;
+  color: ${({ $isIssueSelected }) => ($isIssueSelected ? '#343C6A' : '#B9B9B9')};
+  border-bottom: ${({ $isIssueSelected }) => ($isIssueSelected ? 'solid 3px #343C6A' : '')};
+`
+
+export const ReassignedTasksText = styled.span<TabProps>`
+  margin-left: 10px;
+  font-size: 20px;
+  color: ${({ $isIssueSelected }) => ($isIssueSelected ? '#B9B9B9' : '#343C6A')};
+  border-bottom: ${({ $isIssueSelected }) => ($isIssueSelected ? '' : 'solid 3px #343C6A')};
+`

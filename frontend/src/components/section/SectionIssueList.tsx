@@ -1,6 +1,7 @@
 import React from 'react';
 import CardIssue from '../card/CardIssue'; 
-import { ContainerLayout, HeaderBox, SearchInput } from './SectionIssueList.styled';
+import { ContainerLayout, HeaderBox, Icon, SearchContainer, SearchInput } from './SectionIssueList.styled';
+import lens from '../../assets/Lens.png'
 
 const SectionIssueList = () => {
     const tasks = [
@@ -14,7 +15,10 @@ const SectionIssueList = () => {
     return (
         <ContainerLayout>
             <HeaderBox>
-                <SearchInput placeholder="Search" />
+                <SearchContainer>
+                    <SearchInput type="text" placeholder="Search" />
+                    <Icon src={lens} alt="search icon" />
+                </SearchContainer>
             </HeaderBox>
             {tasks.map((task, index) => (
                 <CardIssue key={task.id} task={task} index={index} />

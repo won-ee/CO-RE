@@ -22,8 +22,14 @@ export const TaskItemBox = styled.div`
   border-radius: 20px;
 `;
 
+export const TaskNameBox = styled.div` 
+  display: flex;
+  flex-direction: row;
+`;
+
 export const TaskNameText = styled.div` 
   font-weight: bold;
+  margin-left: 15px;
 `;
 
 export const TaskIdText = styled.div` 
@@ -100,10 +106,18 @@ export const TaskStatusBox = styled.div<TaskStatusProps>`
   }};
 `;
 
-export const CommentText = styled.span`  
+export const CommentText = styled.span`
+    width: 25px;
+  height: 25px;
+  border-radius: 50% ;
   margin-right: 8px;
+  background-color: #D9D9D9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
-export const ArrowIcon = styled.span`  
+export const ArrowIcon = styled.img`  
   cursor: pointer;
+  margin-right: 30px;
 `;
