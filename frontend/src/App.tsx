@@ -18,6 +18,8 @@ import DashboardPage from "./pages/DashboardPage";
 import PullRequestPage from "./pages/PullRequestPage";
 import LoginPage from "./pages/LoginPage";
 import MemberPage from "./pages/MemberPage";
+import SettingPage from "./pages/SettingPage";
+import CalenderPage from "./pages/CalenderPage";
 const queryClient = new QueryClient();
 
 const ParseHeader = (str: string) => {
@@ -63,9 +65,9 @@ const AppComponent: React.FC = () =>{
           <Route path="/pullrequest" element={<PullRequestPage/>} />
           <Route path="/issue" element={<IssuePage />} />
           <Route path="/history" element={"NEED HISTORY PAGE"} />
-          <Route path="/calender" element={"NEED CALENDER"} />
+          <Route path="/calender" element={<CalenderPage/>} />
           <Route path="/member" element={<MemberPage/>} />
-          <Route path="/setting" element={"NEED SETTING"} />
+          <Route path="/setting" element={<SettingPage/>} />
         </Routes>
       </NavLayout>
     </>
