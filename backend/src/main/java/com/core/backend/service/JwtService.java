@@ -2,8 +2,9 @@ package com.core.backend.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.core.backend.data.entity.JwtToken;
 import com.core.backend.data.repository.JwtTokenRepository;
-import com.core.backend.data.repository.OAutTokenRepository;
+import com.core.backend.data.repository.OAuthTokenRepository;
 import com.core.backend.data.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -38,7 +39,7 @@ public class JwtService {
     private String refreshHeader;
 
     private final JwtTokenRepository jwtTokenRepository;
-    private final OAutTokenRepository oAutTokenRepository;
+    private final OAuthTokenRepository oAuthTokenRepository;
 
     private static final String ACCESS_TOKEN_SUBJECT = "AccessToken";
     private static final String REFRESH_TOKEN_SUBJECT = "RefreshToken";
@@ -115,14 +116,22 @@ public class JwtService {
     public void updateRefreshToken(String email, String refreshToken) {
         userRepository.findByEmail(email)
                 .ifPresentOrElse(
-                        users -> {
-                            jwtTokenRepository.findById(String.valueOf(users.getId()));
-
-
-                            users.updateRefreshToken(refreshToken);
-
+                        users -> jwtTokenRepository.save(new JwtToken(refreshToken, String.valueOf(users.getId()))),
+                        () -> {
+                            throw new RuntimeException("일치하는 회원이 없습니다.");
                         }
                 );
     }
+
+    public boolean isTokenValid(String token) {
+        try {
+            JWT.require(Algorithm.HMAC512(secretKey)).build().verify(token);
+            return true;
+        } catch (Exception ex) {
+            log.error("유효하지 않은 토큰입니다. : {}", ex.getMessage());
+            return false;
+        }
+    }
+
 
 }

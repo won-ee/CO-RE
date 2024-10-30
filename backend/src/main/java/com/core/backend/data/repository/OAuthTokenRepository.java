@@ -5,5 +5,5 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface OAutTokenRepository extends CrudRepository<OAuthToken, String> {
+public interface OAuthTokenRepository extends CrudRepository<OAuthToken, String> {
 }

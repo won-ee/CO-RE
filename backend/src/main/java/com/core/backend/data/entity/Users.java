@@ -21,6 +21,15 @@ public class Users extends Base {
     @Column(name = "user_id", nullable = false)
     private long id;
 
+    @Column(name = "user_name")
+    private String name;
+
+    @Column(name = "user_nickname")
+    private String nickname;
+
+    @Column(name = "user_profile")
+    private String profile;
+
     @Column(name = "user_email", nullable = false, length = 100)
     private String email;
 
