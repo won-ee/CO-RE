@@ -33,7 +33,7 @@ function PullRequestPage() {
           selectedTab={selectedTab} 
           onTabChange={handleTabChange} 
         />
-        <ButtonCreateNewPR/>
+        <ButtonCreateNewPR text="Create New Request"/>
       </HeaderLayout>
       {/* 선택된 탭에 따라 컴포넌트 렌더링 */}
       {tabComponents[selectedTab]}
