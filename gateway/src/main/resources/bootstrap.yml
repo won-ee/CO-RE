@@ -7,6 +7,8 @@ spring:
   cloud:
     config:
       uri: http://localhost:8888
+  profiles:
+    active: backend, gateway
 
 eureka:
   instance:
