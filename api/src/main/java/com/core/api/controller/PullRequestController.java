@@ -23,4 +23,10 @@ public class PullRequestController {
         return ResponseEntity.ok(changeFiles);
     }
 
+    @GetMapping("/{owner}/{repo}")
+    public ResponseEntity<List<PullRequestDto>> getPullRequestList(@PathVariable String owner, @PathVariable String repo) {
+        List<PullRequestDto> pullRequestList = pullRequestService.getPullRequestList(owner, repo);
+        return ResponseEntity.ok(pullRequestList);
+    }
+
 }

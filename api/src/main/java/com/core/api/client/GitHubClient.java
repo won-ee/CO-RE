@@ -12,6 +12,13 @@ import java.util.List;
 @FeignClient(name = "github", url = "https://api.github.com")
 public interface GitHubClient {
 
+    @PostMapping("/repos/{owner}/{repo}/pulls")
+    void createPullRequest(
+            @PathVariable("owner") String owner,
+            @PathVariable("repo") String repo,
+            @RequestBody PullRequestInputServerDto pullRequestInputServerDto
+    );
+
     @GetMapping("/repos/{owner}/{repo}/pulls/{pullId}/files")
     List<FileDto> getChangeFiles(
             @PathVariable("owner") String owner,

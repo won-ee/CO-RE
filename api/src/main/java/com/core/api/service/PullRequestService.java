@@ -20,6 +20,16 @@ import java.util.Optional;
 public class PullRequestService {
 
     private final GitHubClient gitHubClient;
+    private final PullRequestRepository pullRequestRepository;
+
+    public List<PullRequestDto> getPullRequestList(String owner, String repo) {
+        List<PullRequest> prList = pullRequestRepository.findAllByOwnerAndRepo(owner, repo)
+                .orElseThrow(() -> new RuntimeException("Pull Request not found"));
+
+        return prList.stream()
+                .map(this::toPullRequestDto)
+                .toList();
+    }
 
     public List<ChangeDto> getChangeFiles(String owner, String repo, int pullId) {
         List<FileDto> changeFiles = gitHubClient.getChangeFiles(owner, repo, pullId);
@@ -37,5 +47,27 @@ public class PullRequestService {
                 .toList();
     }
 
+
+    private PullRequestDto toPullRequestDto(PullRequest pr) {
+        List<CommitDto> commits = pr.getCommits()
+                .stream()
+                .map(this::toCommitDto)
+                .toList();
+
+        List<ReviewerDto> reviewers = pr.getReviewers()
+                .stream()
+                .map(ReviewerDto::from)
+                .toList();
+
+        return PullRequestDto.from(pr, commits, reviewers);
+    }
+
+    private CommitDto toCommitDto(Commit commit) {
+        List<CommentDto> comments = commit.getComments()
+                .stream()
+                .map(CommentDto::from)
+                .toList();
+        return CommitDto.from(commit, comments);
+    }
 
 }
