@@ -32,7 +32,7 @@ public class PullRequest extends Base {
     private String repo;
 
     @Column(name = "pr_writer_id", nullable = false)
-    private int writerId;
+    private String writerId;
 
     @Column(name = "pr_summary", length = 2000)
     private String summary;
