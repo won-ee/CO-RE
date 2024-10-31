@@ -18,15 +18,15 @@ function Sidebar() {
     <SidebarLayout>
         <MainLogo src={Logo} alt="로고" />
         <ButtonLayout>
-          <ButtonSidebar img={Icon_dashboard} name='Dashboard' ischoiced={location.pathname === "/dashboard"} path="/dashboard"/>
-          <ButtonSidebar img={Icon_pr} name='Pull Request' ischoiced={location.pathname === "/pullrequest"} path="/pullrequest"/>
-          <ButtonSidebar img={Icon_issue} name='Issue' ischoiced={location.pathname === "/issue"} path="/issue"/>
-          <ButtonSidebar img={Icon_history} name='History' ischoiced={location.pathname === "/history"} path="/history"/>
-          <ButtonSidebar img={Icon_calender} name='Calender' ischoiced={location.pathname === "/calender"} path="/calender"/>
-          <ButtonSidebar img={Icon_member} name='Member' ischoiced={location.pathname === "/member"} path="/member"/>
+          <ButtonSidebar img={Icon_dashboard} name='Dashboard' ischoiced={location.pathname.includes('dashboard')} path="/dashboard"/>
+          <ButtonSidebar img={Icon_pr} name='Pull Request' ischoiced={location.pathname.includes('pullrequest')} path="/pullrequest"/>
+          <ButtonSidebar img={Icon_issue} name='Issue' ischoiced={location.pathname.includes('issue')} path="/issue"/>
+          <ButtonSidebar img={Icon_history} name='History' ischoiced={location.pathname.includes('history')} path="/history"/>
+          <ButtonSidebar img={Icon_calender} name='Calender' ischoiced={location.pathname.includes('calender')} path="/calender"/>
+          <ButtonSidebar img={Icon_member} name='Member' ischoiced={location.pathname.includes('member')} path="/member"/>
           <ButtonBottomGroup>
           <Divider />
-            <ButtonSidebar img={Icon_setting} name='Setting' ischoiced={location.pathname === "/setting"} path="/setting"/>
+            <ButtonSidebar img={Icon_setting} name='Setting' ischoiced={location.pathname.includes('setting')} path="/setting"/>
             <ButtonSidebar img={Icon_logout} name='Logout' ischoiced={false} path="/logout"/>
           </ButtonBottomGroup>
         </ButtonLayout>

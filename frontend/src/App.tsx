@@ -24,10 +24,21 @@ const queryClient = new QueryClient();
 
 const ParseHeader = (str: string) => {
   if (!str) return;
-  if (str == "/pullrequest") {
-    return "Pull Request";
+
+  const firstSlashIndex = str.indexOf('/');
+  const secondSlashIndex = str.indexOf('/', firstSlashIndex + 1);
+  let result = '';
+  // 두 번째 '/'가 있을 때 첫 번째 '/'와 두 번째 '/' 사이의 문자열 반환
+  if (secondSlashIndex !== -1) {
+    result = str.slice(firstSlashIndex + 1, secondSlashIndex);
   }
-  return str.charAt(1).toUpperCase() + str.slice(2);
+  else{// 두 번째 '/'가 없을 때 첫 번째 '/' 이후의 문자열 전체 반환
+  result = str.slice(firstSlashIndex + 1);
+  }
+  if(result=='pullrequest'){
+    return 'Pull Request'
+  }
+  return result.charAt(0).toUpperCase() + result.slice(1);
 };
 
 const tempOption = [
