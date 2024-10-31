@@ -2,12 +2,16 @@ package com.core.api.client;
 
 import com.core.api.data.dto.ContentDto;
 import com.core.api.data.dto.FileDto;
+import com.core.api.data.dto.github.CommitMessageServerDto;
+import com.core.api.data.dto.github.PullRequestInputServerDto;
+import com.core.api.data.dto.response.BranchResponseDto;
 import com.core.api.data.dto.response.MergeResponseDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @FeignClient(name = "github", url = "https://api.github.com")
 public interface GitHubClient {
@@ -42,4 +46,9 @@ public interface GitHubClient {
             @RequestBody CommitMessageServerDto commitMessage
     );
 
+    @GetMapping("/repos/{owner}/{repo}/branches")
+    ResponseEntity<List<BranchResponseDto>> getBranches(
+            @PathVariable("owner") String owner,
+            @PathVariable("repo") String repo
+    );
 }
