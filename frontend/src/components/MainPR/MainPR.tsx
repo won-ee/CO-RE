@@ -1,43 +1,26 @@
 import React, { useEffect, useState } from "react";
 import {
   PullRequestsLayout,
-  TableWrapper,
+  // TableWrapper,
   TableRowItem,
   TableHeaderCell,
   TableDataCell,
   StatusLabel,
   SectionTitleText,
   CommentCountLabel,
+  ScrollableTableWrapper,
+  StyledTable,
 } from "./MainPR.styled";
-import styled from "styled-components";
 
-type StatusType = "Approved" | "Processing" | "Rejected";
+// import styled from "styled-components";
 
 interface PullRequest {
   NAME: string;
   MESSAGE: string;
   DEADLINE: string;
   COMMENT: number;
-  STATUS: StatusType;
+  STATUS: "Approved" | "Processing" | "Rejected";
 }
-
-const ScrollableTableWrapper = styled.div`
-  max-height: 90px;
-  overflow-y: auto;
-  display: block;
-
-  ::-webkit-scrollbar {
-    display: none;
-  }
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-`;
-
-const StyledTable = styled(TableWrapper)`
-  width: 100%;
-  table-layout: fixed;
-  border-collapse: collapse;
-`;
 
 const parseDeadline = (deadline: string): number => {
   return parseInt(deadline.replace("D-", ""), 10);

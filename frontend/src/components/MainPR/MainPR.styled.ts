@@ -105,3 +105,21 @@ export const SectionTitleText = styled.h3`
   font-size: 22px;
   font-weight: bold;
 `;
+
+export const ScrollableTableWrapper = styled.div`
+  max-height: 90px;
+  overflow-y: auto;
+  display: block;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+`;
+
+export const StyledTable = styled(TableWrapper)`
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+`;
