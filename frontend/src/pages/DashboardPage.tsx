@@ -1,8 +1,8 @@
 import React from "react";
-import MainStats from "../components/stats/MainStats";
-import FilterAndGraphSection from "../components/filtergraph/FilterAndGraphSection";
-import MainPR from "../components/MainPR/MainPR";
-// import MainIssue from "../components/section/MainIssue/MainIssue";
+import MainStats from "../components/DashStats/MainStats";
+import FilterAndGraphSection from "../components/DashFilterGraph/FilterAndGraphSection";
+import MainPR from "../components/DashPR/MainPR";
+import MainIssue from "../components/DashIssue/MainIssue";
 import styled from "styled-components";
 
 const Container = styled.div``;
@@ -14,7 +14,7 @@ const Dashboard: React.FC = () => (
     <FilterAndGraphSection />
     <BottomContainer>
       <MainPR />
-      {/* <MainIssue /> */}
+      <MainIssue />
     </BottomContainer>
   </Container>
 );
