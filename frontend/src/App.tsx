@@ -20,6 +20,7 @@ import LoginPage from "./pages/LoginPage";
 import MemberPage from "./pages/MemberPage";
 import SettingPage from "./pages/SettingPage";
 import CalenderPage from "./pages/CalenderPage";
+import useUserStore from "./store/userStore";
 const queryClient = new QueryClient();
 
 const ParseHeader = (str: string) => {
@@ -49,7 +50,7 @@ const tempOption = [
 
 const AppComponent: React.FC = () =>{
   const location = useLocation()
-
+  const { isLogin } = useUserStore(); 
   const [selectedOp,setSelectedOp] = useState<SingleValue<OptionType>>(null);
 
   const handleChange = (option: SingleValue<OptionType>)=>{
@@ -57,10 +58,12 @@ const AppComponent: React.FC = () =>{
   }
   return(
     <>
+    {isLogin && (
       <SidebarLayout>
         <Sidebar />
-      </SidebarLayout>
+      </SidebarLayout>)}
       <NavLayout>
+      {isLogin && (
         <HeaderLayout>
           {ParseHeader(location.pathname)}
           <Select
@@ -69,7 +72,7 @@ const AppComponent: React.FC = () =>{
           onChange={handleChange}
           options={tempOption}
           />
-        </HeaderLayout>
+        </HeaderLayout>)}
         <Routes>
           <Route path="/" element={<LoginPage/>} />
           <Route path="/dashboard" element={<DashboardPage />} />
