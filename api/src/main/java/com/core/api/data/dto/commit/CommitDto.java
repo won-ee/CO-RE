@@ -1,6 +1,7 @@
-package com.core.api.data.dto;
+package com.core.api.data.dto.commit;
 
 
+import com.core.api.data.dto.CommentDto;
 import com.core.api.data.entity.Commit;
 import com.core.api.data.entity.PullRequest;
 
