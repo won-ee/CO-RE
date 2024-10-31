@@ -51,4 +51,12 @@ public interface GitHubClient {
             @PathVariable("owner") String owner,
             @PathVariable("repo") String repo
     );
+
+    @GetMapping("/repos/{owner}/{repo}/compare/{baseHead}")
+    Map<String, Object> compareBranchHead(
+            @PathVariable("owner") String owner,
+            @PathVariable("repo") String repo,
+            @PathVariable("baseHead") String baseHead
+    );
+
 }

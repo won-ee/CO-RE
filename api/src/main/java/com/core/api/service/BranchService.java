@@ -22,4 +22,9 @@ public class BranchService {
                 .getBody();
     }
 
+    public List<CompareBranchResponseDto> compareBranchHead(String owner, String repo, String baseHead) {
+        Map<String, Object> map = gitHubClient.compareBranchHead(owner, repo, baseHead);
+        return CompareBranchResponseDto.from(map);
+    }
+
 }

@@ -25,4 +25,10 @@ public class BranchController {
         List<BranchResponseDto> branchList = branchService.getBranches(owner, repo);
         return ResponseEntity.ok(branchList);
     }
+
+    @GetMapping("/{owner}/{repo}/{baseHead}")
+    public ResponseEntity<List<CompareBranchResponseDto>> compareBranchHead(@PathVariable String owner, @PathVariable String repo, @PathVariable String baseHead) {
+        List<CompareBranchResponseDto> branchList = branchService.compareBranchHead(owner, repo, baseHead);
+        return ResponseEntity.ok(branchList);
+    }
 }
