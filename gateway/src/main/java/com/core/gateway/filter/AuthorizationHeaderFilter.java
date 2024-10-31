@@ -23,10 +23,18 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
     @Value("${JWT_SECRET_KEY}")
     private String jwtSecretKey;
 
+    //    토큰 검증이 필요하지 않은 URL
+    private static final List<String> whitelistedUrls = List.of();
+
     @Override
     public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
+            String requestPath = request.getURI().getPath();
+
+            if (isWhitelistedUrl(requestPath)) {
+                return chain.filter(exchange);
+            }
 
             List<String> authHeaders = request.getHeaders().get(HttpHeaders.AUTHORIZATION);
             if (authHeaders == null || authHeaders.isEmpty()) {
@@ -42,6 +50,10 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
 
             return chain.filter(exchange);
         };
+    }
+
+    private boolean isWhitelistedUrl(String requestPath) {
+        return whitelistedUrls.stream().anyMatch(requestPath::startsWith);
     }
 
     private boolean isJwtValid(String jwt) {
