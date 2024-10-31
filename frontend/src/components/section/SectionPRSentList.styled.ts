@@ -54,7 +54,7 @@ export const GridCell = styled.div<GridCellProps>`
   align-items: center; /* 수직 가운데 정렬 */
   text-align: ${(props) => (props.align ? props.align : 'left')};
 `;
-export const CommentBox = styled.div`
+export const CommentBox = styled.div<StringProps>`
   background-color: #D9D9D9;
   width: 25px;
   height: 25px;
@@ -63,6 +63,7 @@ export const CommentBox = styled.div`
   justify-content: center; /* 수평 가운데 정렬 */
   text-align: center;
   border-radius: 100%;
+  opacity: ${(props)=>(props.status !== '' ? 1:0)};
 `
 export const StatusBox = styled.div<StringProps>`
   width: 93px;
