@@ -29,4 +29,17 @@ public class PullRequestController {
         return ResponseEntity.ok(pullRequestList);
     }
 
+
+    @PutMapping("/{owner}/{repo}/{pullId}/merge")
+    public ResponseEntity<MergeResponseDto> mergePullRequest(
+            @PathVariable String owner,
+            @PathVariable String repo,
+            @PathVariable int pullId,
+            @RequestBody CommitMessageDto commitMessage
+    ) {
+        MergeResponseDto message = pullRequestService.mergePullRequest(owner, repo, pullId, commitMessage);
+        return ResponseEntity.ok(message);
+    }
+
+
 }

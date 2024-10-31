@@ -4,6 +4,7 @@ import com.core.api.client.GitHubClient;
 import com.core.api.data.dto.*;
 import com.core.api.data.dto.pullrequest.PullRequestDto;
 import com.core.api.data.dto.pullrequest.PullRequestInputDto;
+import com.core.api.data.dto.response.MergeResponseDto;
 import com.core.api.data.entity.Commit;
 import com.core.api.data.entity.PullRequest;
 import com.core.api.data.repository.PullRequestRepository;
@@ -45,6 +46,11 @@ public class PullRequestService {
                             .orElseThrow(() -> new RuntimeException("Content not found for path: " + path));
                 })
                 .toList();
+    }
+
+    public MergeResponseDto mergePullRequest(String owner, String repo, int pullId, CommitMessageDto commitMessage) {
+        return gitHubClient.mergePullRequest(owner, repo, pullId, CommitMessageServerDto.of(commitMessage))
+                .getBody();
     }
 
 
