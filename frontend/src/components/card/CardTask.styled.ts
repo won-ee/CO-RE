@@ -33,7 +33,7 @@ export const CategoryBox = styled.div<{ category: string }>`
   align-items: center;
   justify-content: center;
   padding: 5px 10px;
-  border-radius: 10px;
+  border-radius: 4px;
   font-size: 12px;
   width: 150px;
   height: 30px;

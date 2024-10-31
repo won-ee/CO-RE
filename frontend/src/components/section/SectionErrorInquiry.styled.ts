@@ -11,6 +11,7 @@ export const ErrorMessageBox = styled.div`
   color: red;
   font-size: 22px;
   margin-bottom: 20px;
+  font-weight: bold;
 `;
 
 export const ErrorIcon = styled.div`
