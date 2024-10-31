@@ -2,9 +2,9 @@ package com.core.gateway.filter;
 
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -20,12 +20,8 @@ import java.util.List;
 @Component
 public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<AuthorizationHeaderFilter.Config> {
 
-    Environment environment;
-
-    public AuthorizationHeaderFilter(Environment environment) {
-        super(Config.class);
-        this.environment = environment;
-    }
+    @Value("${JWT_SECRET_KEY}")
+    private String jwtSecretKey;
 
     @Override
     public GatewayFilter apply(Config config) {
@@ -51,7 +47,7 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
     private boolean isJwtValid(String jwt) {
         try {
             String subject = Jwts.parser()
-                    .setSigningKey(environment.getProperty("JWT_SECRET_KEY"))
+                    .setSigningKey(jwtSecretKey)
                     .parseClaimsJws(jwt)
                     .getBody()
                     .getSubject();
