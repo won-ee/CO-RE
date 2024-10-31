@@ -1,5 +1,6 @@
 package com.core.backend.data.entity;
 
+import com.core.backend.data.enums.ProjectRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +21,7 @@ public class ProjectUsers extends Base {
 
     @Enumerated(value = EnumType.STRING)
     @Column(name = "project_user_role", nullable = false)
-    private Role role;
+    private ProjectRole role;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

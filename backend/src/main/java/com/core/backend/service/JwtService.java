@@ -6,6 +6,7 @@ import com.core.backend.data.entity.JwtToken;
 import com.core.backend.data.repository.JwtTokenRepository;
 import com.core.backend.data.repository.OAuthTokenRepository;
 import com.core.backend.data.repository.UserRepository;
+import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;
@@ -22,6 +23,8 @@ import java.util.Optional;
 @Getter
 @Slf4j
 public class JwtService {
+
+    private final Dotenv dotenv;
 
     @Value("${jwt.secretKey}")
     private String secretKey;

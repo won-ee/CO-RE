@@ -33,5 +33,13 @@ public class OAuthAttributes {
                 .build();
     }
 
+    public Users toEntity(OAuth2UserInfo oauth2UserInfo) {
+        return Users.builder()
+                .name(oauth2UserInfo.getName())
+                .nickname(oauth2UserInfo.getNickName())
+                .profile(oauth2UserInfo.getprofile())
+                .email(oauth2UserInfo.getEmail())
+                .build();
+    }
 
 }
