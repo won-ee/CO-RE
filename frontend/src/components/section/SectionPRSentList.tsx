@@ -37,7 +37,7 @@ function SectionPRSentList() {
               </GridCell>
             <GridCell>{row.col4}</GridCell>
             <GridCell align="center">
-              <CommentBox>{row.col5}</CommentBox>
+              <CommentBox status={row.col5}>{row.col5}</CommentBox>
             </GridCell>
             <GridCell align="center">
               <PriorityBox status={row.col6}>{row.col6}</PriorityBox>
