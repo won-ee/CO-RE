@@ -22,10 +22,11 @@ export const IssueInfoSection = styled.div`
   position: absolute;
   bottom: 20px;
   right: 20px;
+  height: 270px;
 `;
 
 export const IssuesListContainer = styled.div`
-  max-height: 125px;
+  max-height: 250px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -52,6 +53,7 @@ export const IssueDetailsWrapper = styled.div`
   display: flex;
   gap: 8px;
   align-items: flex-start;
+  max-height: 180px;
 `;
 
 export const IssueIcon = styled.img`
