@@ -21,6 +21,7 @@ import MemberPage from "./pages/MemberPage";
 import SettingPage from "./pages/SettingPage";
 import CalenderPage from "./pages/CalenderPage";
 import useUserStore from "./store/userStore";
+import PullRequestPageDetail from "./pages/PullRequestPageDetail";
 const queryClient = new QueryClient();
 
 const ParseHeader = (str: string) => {
@@ -82,6 +83,7 @@ const AppComponent: React.FC = () =>{
           <Route path="/calender" element={<CalenderPage/>} />
           <Route path="/member" element={<MemberPage/>} />
           <Route path="/setting" element={<SettingPage/>} />
+          <Route path="/pullrequestdetail" element={<PullRequestPageDetail/>} />
         </Routes>
       </NavLayout>
     </>
