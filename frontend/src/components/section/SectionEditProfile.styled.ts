@@ -62,7 +62,7 @@ export const Input = styled.input`
     padding: 10px;
     margin-top: 5px;
     border: 1px solid #ddd;
-    border-radius: 15px;
+    border-radius: 5px;
     font-size: 14px;
     color: #718EBF;
 `;
@@ -79,7 +79,7 @@ export const GitTokenInput = styled.input`
     padding: 10px;
     margin-top: 5px;
     border: 1px solid #ddd;
-    border-radius: 15px;
+    border-radius: 5px;
     font-size: 14px;
     color: #718EBF;
 `;

@@ -16,7 +16,7 @@ const SectionProjectSetting:React.FC = () => {
                 </LabelBox>
             </FormRow>
             <Label style={{ gridColumn: 'span 2' }}>Template</Label>
-            <TemplateInput type="text" defaultValue="Type your Message..." style={{ height: '100px' }} />
+            <TemplateInput placeholder="Type your Message..." style={{ height: '100px' }} />
             <SaveButton>Save</SaveButton>
         </FormLayout>
     </>
