@@ -11,6 +11,7 @@ export const PullRequestsLayout = styled.div`
   border-radius: 12px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   margin: 20px;
+  height: 270px;
 `;
 
 export const TableWrapper = styled.table`
@@ -107,7 +108,7 @@ export const SectionTitleText = styled.h3`
 `;
 
 export const ScrollableTableWrapper = styled.div`
-  max-height: 90px;
+  max-height: 180px;
   overflow-y: auto;
   display: block;
 
