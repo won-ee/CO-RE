@@ -20,23 +20,34 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
+  CartesianGrid,
+  DotProps,
 } from "recharts";
 
 type CategoryData = { day: number; value: number }[];
 
-interface MonthlyData {
+type MonthlyData = {
   [month: string]: {
     [category: string]: CategoryData;
   };
-}
+};
 
-interface VersionData {
+type VersionData = {
   [version: string]: string[];
-}
+};
 
-interface VersionNotes {
+type VersionNotes = {
   [version: string]: string;
-}
+};
+
+const CustomDot: React.FC<DotProps & { index?: number }> = (props) => {
+  const { cx, cy, index } = props;
+
+  if (index && index % 2 === 0 && cx && cy) {
+    return <circle cx={cx} cy={cy} r={4} fill="#3f51b5" />;
+  }
+  return null;
+};
 
 const FilterAndGraphSection: React.FC = () => {
   const [versionData, setVersionData] = useState<VersionData>({});
@@ -152,8 +163,9 @@ const FilterAndGraphSection: React.FC = () => {
       </FilterBox>
 
       <GraphContainer>
-        <ResponsiveContainer width="100%" height={200}>
+        <ResponsiveContainer width="100%" height={230}>
           <AreaChart
+            key={`${selectedMonth}-${selectedCategory}-${graphData.length}`}
             data={graphData}
             margin={{ left: -10, right: 10, top: 5, bottom: 5 }}
           >
@@ -166,21 +178,27 @@ const FilterAndGraphSection: React.FC = () => {
             </defs>
             <XAxis dataKey="day" tickLine={false} interval={4} />
             <YAxis
-              domain={[50, 250]}
-              ticks={[50, 100, 150, 200, 250]}
+              domain={["auto", "auto"]}
               tickLine={false}
+              axisLine={false}
             />
             <Tooltip />
+            <CartesianGrid
+              vertical={false}
+              stroke="#EAEAEA"
+              // strokeDasharray="3 3"
+            />
             <Area
-              type="monotone"
+              type="linear"
               dataKey="value"
               stroke="#3f51b5"
               strokeWidth={2}
               fill="url(#colorGradient)"
               connectNulls
-              dot={false}
+              dot={<CustomDot />}
+              isAnimationActive={true}
               animationDuration={1500}
-              animationEasing="ease-in-out"
+              animationEasing="ease-out"
             />
           </AreaChart>
         </ResponsiveContainer>
