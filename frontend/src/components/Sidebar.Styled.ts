@@ -11,6 +11,7 @@ export const SidebarLayout = styled.div`
     align-items: center;
     flex-direction: column;
     height: 100vh; /* 전체 화면 높이로 설정 */
+    width: 240px;
 `
 export const ButtonLayout = styled.div`
     display: flex;
@@ -18,12 +19,14 @@ export const ButtonLayout = styled.div`
     margin-top: 30px;
     width: 100%;
     height: 100%; /* 버튼 레이아웃을 전체 높이로 설정 */
+    gap: 10px;
 `
 export const ButtonBottomGroup = styled.div`
     margin-top: auto; /* 최하단으로 설정 */
-    margin-bottom: 91px;
+    margin-bottom: 50px;
     display: flex;
     flex-direction: column;
+    gap: 10px;
 `
 export const Divider = styled.hr`
     width: 100%;

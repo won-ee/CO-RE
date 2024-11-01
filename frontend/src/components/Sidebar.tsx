@@ -25,7 +25,7 @@ function Sidebar() {
           <ButtonSidebar img={Icon_calender} name='Calender' ischoiced={location.pathname.includes('calender')} path="/calender"/>
           <ButtonSidebar img={Icon_member} name='Member' ischoiced={location.pathname.includes('member')} path="/member"/>
           <ButtonBottomGroup>
-          <Divider />
+            <Divider />
             <ButtonSidebar img={Icon_setting} name='Setting' ischoiced={location.pathname.includes('setting')} path="/setting"/>
             <ButtonSidebar img={Icon_logout} name='Logout' ischoiced={false} path="/logout"/>
           </ButtonBottomGroup>
