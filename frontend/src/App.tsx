@@ -21,7 +21,9 @@ import MemberPage from "./pages/MemberPage";
 import SettingPage from "./pages/SettingPage";
 import CalenderPage from "./pages/CalenderPage";
 import useUserStore from "./store/userStore";
+import CreatePRPage from "./pages/CreatePRPage";
 import PullRequestPageDetail from "./pages/PullRequestPageDetail";
+
 const queryClient = new QueryClient();
 
 const ParseHeader = (str: string) => {
@@ -78,6 +80,7 @@ const AppComponent: React.FC = () =>{
           <Route path="/" element={<LoginPage/>} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/pullrequest" element={<PullRequestPage/>} />
+          <Route path="/pullrequest/create" element={<CreatePRPage/>} />
           <Route path="/issue" element={<IssuePage />} />
           <Route path="/history" element={"NEED HISTORY PAGE"} />
           <Route path="/calender" element={<CalenderPage/>} />
