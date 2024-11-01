@@ -49,7 +49,7 @@ interface StatChangeLabelProps {
 export const StatChangeLabel = styled.span<StatChangeLabelProps>`
   font-size: 14px;
   color: ${(props) => (props.$positive ? "green" : "red")};
-  text-align: center;
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -84,4 +84,9 @@ export const CarouselNavButton = styled.button`
     opacity: 0.5;
     cursor: not-allowed;
   }
+`;
+
+export const StatHeaderWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
 `;

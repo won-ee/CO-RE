@@ -8,6 +8,7 @@ import {
   StatIconWrapper,
   CarouselContainer,
   CarouselNavButton,
+  StatHeaderWrapper,
 } from "./MainStats.styled";
 
 import statsDownIcon from "../../assets/DashboardStatsDown.png";
@@ -22,6 +23,7 @@ import carouselButtonRight from "../../assets/DashboardCarouselRight.png";
 
 const STATS_DATA = [
   {
+    id: 1,
     TITLE: "Total Commit",
     VALUE: "2,512",
     CHANGE: "8.5%",
@@ -29,6 +31,7 @@ const STATS_DATA = [
     ICON: CommitIcon,
   },
   {
+    id: 2,
     TITLE: "Total Comment",
     VALUE: "1,293",
     CHANGE: "1.3%",
@@ -36,6 +39,7 @@ const STATS_DATA = [
     ICON: CommentIcon,
   },
   {
+    id: 3,
     TITLE: "Total Issue",
     VALUE: "8,900",
     CHANGE: "4.3%",
@@ -43,6 +47,7 @@ const STATS_DATA = [
     ICON: IssueIcon,
   },
   {
+    id: 4,
     TITLE: "Total Pull Request",
     VALUE: "204",
     CHANGE: "1.8%",
@@ -50,6 +55,7 @@ const STATS_DATA = [
     ICON: PRIcon,
   },
   {
+    id: 5,
     TITLE: "Total HotFix",
     VALUE: "204",
     CHANGE: "1.8%",
@@ -85,17 +91,17 @@ const MainStats: React.FC = () => {
   return (
     <StatsCarouselLayout>
       <CarouselNavButton onClick={handlePrevious}>
-        <img src={carouselButtonLeft} alt="Previous" />
+        <img src={carouselButtonLeft} alt="PreviousButton" />
       </CarouselNavButton>
       <CarouselContainer>
-        {getVisibleStats().map((stat, index) => (
-          <StatCard key={index}>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
+        {getVisibleStats().map((stat) => (
+          <StatCard key={stat.id}>
+            <StatHeaderWrapper>
               <StatTitle>{stat.TITLE}</StatTitle>
               <StatIconWrapper>
                 <img src={stat.ICON} alt={`${stat.TITLE} Icon`} />
               </StatIconWrapper>
-            </div>
+            </StatHeaderWrapper>
             <StatValue>{stat.VALUE}</StatValue>
             <StatChangeLabel $positive={stat.POSITIVE}>
               <img
@@ -108,7 +114,7 @@ const MainStats: React.FC = () => {
         ))}
       </CarouselContainer>
       <CarouselNavButton onClick={handleNext}>
-        <img src={carouselButtonRight} alt="Next" />
+        <img src={carouselButtonRight} alt="NextButton" />
       </CarouselNavButton>
     </StatsCarouselLayout>
   );
