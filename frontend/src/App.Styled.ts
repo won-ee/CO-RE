@@ -10,7 +10,7 @@ height: 100vh;
 export const SidebarLayout = styled.div`
   flex: 0 0 240px;
   height:100vh;
-  
+  position: fixed;
   background-color: white;
 `
 
@@ -23,7 +23,7 @@ export const HeaderLayout = styled.div`
   background-color: white;
   height:70px;
   font-weight: bold;
-  font-size:32px;
+  font-size:28px;
 `
 export const ChoiceStyles: SingleSelectStyles = {
   control: (provided) => ({
@@ -60,5 +60,6 @@ export const ChoiceStyles: SingleSelectStyles = {
 
 export const NavLayout = styled.div`
   flex: 1;
+  margin-left: 240px;
   background-color:#F5F6FA;
 `

@@ -42,7 +42,7 @@ export const WholeLayout = styled.div`
     &:hover ${ContentBox} { /* WholeLayout의 hover 상태에서 ContentBox에 스타일 적용 */
         color: white;
         background-color: #4880FF;
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
         z-index: 1;
     }  
 `
