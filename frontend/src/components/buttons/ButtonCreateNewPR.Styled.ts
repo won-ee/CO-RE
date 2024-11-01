@@ -8,4 +8,6 @@ export const ButtonCreateNewPRLayout = styled.div`
     padding: 6px 26px;
     font-weight: normal;
     cursor: pointer;
+    display: inline-block;
+    align-self: flex-start;
 `

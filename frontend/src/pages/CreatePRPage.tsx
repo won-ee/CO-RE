@@ -1,36 +1,29 @@
-import { CreatePRPageLayout, CreatePRPageHeader,CreatePRPageContentLayout, ProgressIMG } from './CreatePRPage.styled'
-import CardSelectBranch from '../components/card/CardSelectBranch'
+import { CreatePRPageLayout, CreatePRPageHeader } from './CreatePRPage.styled'
 import { useState } from 'react'
-import { SingleValue } from 'react-select'
-import { OptionType } from '../Types/SelectType'
-import ProgressImage from '../assets/icon_Progress.png'
+import { useBranchStore } from '../store/branchStore'
 
-const tempOption = [
-  { value: 'Projec01',label:'Project01'},
-  { value: 'Projec02',label:'Project02'},
-  { value: 'Projec03',label:'Project03'}
-]
+import SectionSelectBranch from '../components/section/SectionSelectBranch'
 
 function CreatePRPage() {
-  const [sourceBranch,setSourceBranch] = useState<SingleValue<OptionType>>(null);
-  const [targetBranch,setTargetBranch] = useState<SingleValue<OptionType>>(null);
+  const [isSelect,setIsSelect] = useState(true)
+  const sourceBranch = useBranchStore((state) => state.sourceBranch);
+  const targetBranch = useBranchStore((state) => state.targetBranch);
+  const setSourceBranch = useBranchStore((state) => state.setSourceBranch);
+  const setTargetBranch = useBranchStore((state) => state.setTargetBranch);
 
-  const handleSourceBranch=(option: SingleValue<OptionType>)=>{
-    setSourceBranch(option)
-  }
-
-  const handleTargetBranch=(option: SingleValue<OptionType>)=>{
-    setTargetBranch(option)
+  const handleIsSelect = ()=>{
+    setIsSelect(isSelect=>!isSelect)
   }
 
   return (
     <CreatePRPageLayout>
       <CreatePRPageHeader>New Pull Request</CreatePRPageHeader>
-      <CreatePRPageContentLayout>
-        <CardSelectBranch name="Source Branch" selectedOp={sourceBranch} handleChange={handleSourceBranch} option={tempOption}/>
-        <ProgressIMG src={ProgressImage} alt='Progress'/>
-        <CardSelectBranch name="Target Branch" selectedOp={targetBranch} handleChange={handleTargetBranch} option={tempOption}/>
-      </CreatePRPageContentLayout>
+      {isSelect ? <SectionSelectBranch
+      BtnAction={handleIsSelect}
+      sourceBranch={sourceBranch}
+      targetBranch={targetBranch}
+      setSourceBranch={setSourceBranch}
+      setTargetBranch={setTargetBranch}/>:"false"}
     </CreatePRPageLayout>
   )
 }
