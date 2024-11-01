@@ -34,7 +34,7 @@ spring:
             token-uri: https://auth.atlassian.com/oauth/token
 
 jwt:
-  secretKey: ${JWT_SECRET_KEY:default-secret-key}
+  secretKey: ${JWT_SECRET_KEY}
   access:
     expiration: ${JWT_ACCESS_TOKEN_EXPIRED}
     header: ${JWT_ACCESS_HEADER}
