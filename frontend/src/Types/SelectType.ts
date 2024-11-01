@@ -7,7 +7,7 @@ export interface OptionType {
 }
 
 // 2. StylesConfig 정의 (단일 선택용)
-export type SingleSelectStyles = StylesConfig<OptionType, false>;
+export type SingleSelectType = StylesConfig<OptionType, false>;
 
 // 3. 다중 선택을 위한 StylesConfig 타입 (필요할 경우)
-export type MultiSelectStyles = StylesConfig<OptionType, true>;
+export type MultiSelectType = StylesConfig<OptionType, true>;
