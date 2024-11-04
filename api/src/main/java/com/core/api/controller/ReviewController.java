@@ -49,5 +49,41 @@ public class ReviewController {
         return ResponseEntity.ok()
                 .build();
     }
+
+
+    @PostMapping("/{owner}/{repo}/{pullId}/review")
+    public ResponseEntity<Void> createReview(
+            @PathVariable String owner,
+            @PathVariable String repo,
+            @PathVariable int pullId,
+            @RequestBody ReviewInputDto reviewInputDto
+    ) {
+        reviewService.createReviewToServer(owner, repo, pullId, reviewInputDto);
+        return ResponseEntity.ok()
+                .build();
+    }
+
+    @PatchMapping("/{owner}/{repo}/review")
+    public ResponseEntity<Void> updateReview(
+            @PathVariable String owner,
+            @PathVariable String repo,
+            @RequestParam Long id,
+            @RequestBody ReviewSimpleDto reviewSimpleDto
+    ) {
+        reviewService.updateReviewToServer(owner, repo, id, reviewSimpleDto);
+        return ResponseEntity.ok()
+                .build();
+    }
+
+    @DeleteMapping("/{owner}/{repo}/review")
+    public ResponseEntity<Void> deleteReview(
+            @PathVariable String owner,
+            @PathVariable String repo,
+            @RequestParam Long id
+    ) {
+        reviewService.deleteReviewToServer(owner, repo, id);
+        return ResponseEntity.ok()
+                .build();
+    }
 }
 
