@@ -10,9 +10,6 @@ spring:
     url: jdbc:mysql://localhost:3306/core
     username: ssafy
     password: ssafy
-  redis:
-    host: localhost
-    port: 6379
   jpa:
     hibernate:
       ddl-auto: update
@@ -30,8 +27,12 @@ spring:
             scope: read:me, read:jira-work, manage:jira-project, manage:jira-configuration, read:jira-user, manage:jira-webhook, write:jira-work, manage:jira-data-provider
         provider:
           jira:
-            authorization-uri: https://auth.atlassian.com/authorize
             token-uri: https://auth.atlassian.com/oauth/token
+            authorization-uri: https://auth.atlassian.com/authorize?audience=api.atlassian.com
+  data:
+    redis:
+      host: localhost
+      port: 6379
 
 jwt:
   secretKey: ${JWT_SECRET_KEY}
@@ -41,3 +42,8 @@ jwt:
   refresh:
     expiration: ${JWT_REFRESH_TOKEN_EXPIRED}
     header: ${JWT_REFRESH_HEADER}
+
+logging:
+  level:
+    com.core.backend: DEBUG
+    com.core.backend.filter: DEBUG

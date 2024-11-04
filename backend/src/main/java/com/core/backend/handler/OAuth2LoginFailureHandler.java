@@ -15,9 +15,13 @@ import java.io.IOException;
 public class OAuth2LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
     @Override
-    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        response.getWriter().write("소셜 로그인에 실패했습니다");
-        log.info("소셜 로그인에 실패했습니다. 에러메세지 : {}", exception.getMessage());
+    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
+                                        AuthenticationException exception) throws IOException, ServletException {
+        // 실패 원인 로깅
+        log.error("OAuth2 로그인 실패: {}", exception.getMessage());
+
+        // 실패 시 리다이렉트할 URL 설정
+        setDefaultFailureUrl("/error"); // 실패 시 에러 페이지로 리다이렉트
+        super.onAuthenticationFailure(request, response, exception);
     }
 }
