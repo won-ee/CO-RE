@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   ErrorIcon,
   ErrorMessageBox,
@@ -8,7 +7,7 @@ import {
   SelectInput,
   SubmitButton,
   TextInput,
-} from './SectionErrorInquiry.styled';
+} from "./SectionErrorInquiry.styled";
 
 const SectionErrorInquiry = () => {
   return (
@@ -25,7 +24,7 @@ const SectionErrorInquiry = () => {
             <option>옵션선택</option>
           </SelectInput>
         </div>
-        <div style={{ marginRight: '45px' }}>
+        <div style={{ marginRight: "45px" }}>
           <FormLabel>[필수] 마감일자를 선택해주세요</FormLabel>
           <SelectInput>
             <option>옵션선택</option>
@@ -38,7 +37,7 @@ const SectionErrorInquiry = () => {
         <TextInput rows={4} />
       </div>
 
-      <div style={{ textAlign: 'right', marginRight: '32px' }}>
+      <div style={{ textAlign: "right", marginRight: "32px" }}>
         <SubmitButton>SEND</SubmitButton>
       </div>
     </RightSectionLayout>

@@ -1,9 +1,5 @@
-import React from 'react'
-
 const SectionChanges = () => {
-  return (
-    <div>SectionChanges</div>
-  )
-}
+  return <div>SectionChanges</div>;
+};
 
-export default SectionChanges
+export default SectionChanges;
