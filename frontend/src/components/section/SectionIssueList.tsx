@@ -3,7 +3,7 @@ import CardIssue from '../card/CardIssue';
 import { ContainerLayout, HeaderBox, Icon, SearchContainer, SearchInput } from './SectionIssueList.styled';
 import lens from '../../assets/Lens.png'
 
-const SectionIssueList = () => {
+const SectionIssueList:React.FC = () => {
     const tasks = [
         { name: '프로젝트 테스트01', id: 'S11P315106-2', title: '프로젝트 기획/설계', status: 'In Progress', comment: '4', priority: 'high' },
         { name: '프로젝트 테스트02', id: 'S11P315106-2', title: '프로젝트 기획/설계', status: 'In Progress', comment: '4', priority: 'high' },
