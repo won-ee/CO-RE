@@ -35,9 +35,9 @@ export const FormWrapperBox = styled.div`
 
 export const LeftSectionBox = styled.div`
   flex: 1;
-  margin-top: 50px;
+  margin-top: 56px;
   margin-right: 20px;
-  margin-left: 100px;
+  margin-left: 50px;
 `;
 
 export const ErrorInquiryButton = styled.button<ButtonProps>`
@@ -89,20 +89,27 @@ export const IssueContainerBox = styled.div`
 `;
 
 export const TabBox  = styled.div`
-  margin-top: 20px;
-  margin-left: 60px;
+ display: flex;
+ gap: 13px;
+ margin-top: 20px;
 `
 
 export const IssueListText = styled.span<TabProps>`
+  margin-left: 50px;
   font-size: 20px;
-  margin-right: 10px;
+  padding: 13px;
   color: ${({ $isIssueSelected }) => ($isIssueSelected ? '#343C6A' : '#B9B9B9')};
   border-bottom: ${({ $isIssueSelected }) => ($isIssueSelected ? 'solid 3px #343C6A' : '')};
+  font-weight: ${(props) => (props.$isIssueSelected ? "bold" : "normal")}; 
+  cursor: pointer;
 `
 
 export const ReassignedTasksText = styled.span<TabProps>`
   margin-left: 10px;
   font-size: 20px;
+  padding: 13px;
   color: ${({ $isIssueSelected }) => ($isIssueSelected ? '#B9B9B9' : '#343C6A')};
-  border-bottom: ${({ $isIssueSelected }) => ($isIssueSelected ? '' : 'solid 3px #343C6A')};
+  border-bottom: ${({ $isIssueSelected }) => ($isIssueSelected ? 'none' : 'solid 3px #343C6A')};
+  font-weight: ${(props) => (props.$isIssueSelected ? "normal" : "bold")}; 
+  cursor: pointer;
 `

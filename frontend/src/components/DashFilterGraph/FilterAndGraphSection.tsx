@@ -197,7 +197,7 @@ const FilterAndGraphSection: React.FC = () => {
               connectNulls
               dot={<CustomDot />}
               isAnimationActive={true}
-              animationDuration={1500}
+              animationDuration={2500}
               animationEasing="ease-out"
             />
           </AreaChart>
