@@ -1,8 +1,16 @@
 package com.core.api.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import feign.RequestInterceptor;
+import feign.codec.Decoder;
+import feign.codec.Encoder;
+import feign.jackson.JacksonDecoder;
+import feign.jackson.JacksonEncoder;
+import feign.okhttp.OkHttpClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 
 @Configuration
 public class FeignConfig {
@@ -11,11 +19,11 @@ public class FeignConfig {
     public RequestInterceptor requestInterceptor() {
 
         // TODO : 시큐리티 토큰값으로 변경
-        String token = "";
+        String token = "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";
         return requestTemplate -> {
             requestTemplate.header("Authorization", "Bearer " + token);
             requestTemplate.header("X-GitHub-Api-Version", "2022-11-28");
-            requestTemplate.header("Accept", "application/vnd.github+json");
+            requestTemplate.header("Accept", "application/vnd.github+json; charset=UTF-8");
         };
     }
 
