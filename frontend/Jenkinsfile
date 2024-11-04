@@ -1,0 +1,38 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Install Dependencies') {
+            steps {
+                script {
+                    nodejs('nodejs') {
+                        sh 'npm install'
+                    }
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'npm run build'
+            }
+        }
+
+        stage('Archive Build') {
+            steps {
+                sh 'tar -czf build.tar.gz build/'
+                archiveArtifacts artifacts: 'build.tar.gz', allowEmptyArchive: false
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh '''
+                tar -xzf build.tar.gz -C /var/www/html
+
+                sudo systemctl restart nginx
+                '''
+            }
+        }
+    }
+}

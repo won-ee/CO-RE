@@ -23,7 +23,7 @@ export const Input = styled.input`
     margin-top: 10px;
     padding: 10px;
     border: 1px solid #ddd;
-    border-radius: 15px;
+    border-radius: 5px;
     width: 385px;
     font-size: 14px;
     color: #718EBF;
@@ -31,15 +31,20 @@ export const Input = styled.input`
 
 `;
 
-export const TemplateInput = styled.input`
+export const TemplateInput = styled.textarea`
     margin-top: 10px;
     margin-left: 30px;
     padding: 10px;
     border: 1px solid #ddd;
-    border-radius: 15px;
+    border-radius: 5px;
     width: 820px;
     font-size: 14px;
     color: #718EBF;
+    &::placeholder{
+        font-family: 'Pretendard';
+        font-size: 14px;
+        color: rgba(128,127,127,0.5);
+    }
 `;
 
 export const SaveButton = styled.button`

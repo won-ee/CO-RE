@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import SectionErrorInquiry from '../components/section/SectionErrorInquiry';
+import SectionErrorInquiry from "../components/section/SectionErrorInquiry";
+import { useState } from "react";
 import {
   ErrorInquiryButton,
   RelocationButton,
@@ -13,15 +13,15 @@ import {
   TabBox,
   IssueListText,
   ReassignedTasksText,
-} from './IssuePage.styled';
-import SectionIssueRelocation from '../components/section/SectionIssueRelocation';
-import SectionIssueList from '../components/section/SectionIssueList';
-import SectionReassignedTasks from '../components/section/SectionReassignedTasks';
-import { Block } from '../styles/GlobalStyled';
+} from "./IssuePage.styled";
+import SectionIssueRelocation from "../components/section/SectionIssueRelocation";
+import SectionIssueList from "../components/section/SectionIssueList";
+import SectionReassignedTasks from "../components/section/SectionReassignedTasks";
+import { Block } from "../styles/GlobalStyled";
 
-function IssuePage() {
+const IssuePage:React.FC=()=>{
   const [isErrorInquirySelected, setIsErrorInquirySelected] = useState(true);
-  const [isIssueSelected,setIsIssueSelected] =useState(true)
+  const [isIssueSelected, setIsIssueSelected] = useState(true);
 
   return (
     <>
@@ -35,31 +35,44 @@ function IssuePage() {
               <ErrorInquiryButton
                 onClick={() => setIsErrorInquirySelected(true)}
                 $isErrorInquirySelected={isErrorInquirySelected}
-                >
+              >
                 SUPPORT - 오류문의
               </ErrorInquiryButton>
               <RelocationButton
                 $isErrorInquirySelected={!isErrorInquirySelected}
                 onClick={() => setIsErrorInquirySelected(false)}
-                style={{ marginTop: '10px' }}
-                >
+                style={{ marginTop: "10px" }}
+              >
                 SUPPORT - 이슈재배치
               </RelocationButton>
             </LeftSectionBox>
             <DividerLine />
-            {isErrorInquirySelected ? <SectionErrorInquiry /> : <SectionIssueRelocation />}
+            {isErrorInquirySelected ? (
+              <SectionErrorInquiry />
+            ) : (
+              <SectionIssueRelocation />
+            )}
           </FormWrapperBox>
         </FormContainerBox>
         <TabBox>
-          <IssueListText $isIssueSelected={isIssueSelected} onClick={() => setIsIssueSelected(true)}>IssueList</IssueListText>
-          <ReassignedTasksText $isIssueSelected={isIssueSelected} onClick={() => setIsIssueSelected(false)}>ReassignedTasks</ReassignedTasksText>
+          <IssueListText
+            $isIssueSelected={isIssueSelected}
+            onClick={() => setIsIssueSelected(true)}
+          >
+            IssueList
+          </IssueListText>
+          <ReassignedTasksText
+            $isIssueSelected={isIssueSelected}
+            onClick={() => setIsIssueSelected(false)}
+          >
+            ReassignedTasks
+          </ReassignedTasksText>
         </TabBox>
         <IssueContainerBox>
-          {isIssueSelected ? <SectionIssueList /> : <SectionReassignedTasks/>}
+          {isIssueSelected ? <SectionIssueList /> : <SectionReassignedTasks />}
         </IssueContainerBox>
       </IssueLayout>
-      <Block/>
-
+      <Block />
     </>
   );
 }

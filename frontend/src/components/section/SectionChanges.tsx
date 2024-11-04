@@ -1,9 +1,9 @@
 import React from 'react'
 
-const SectionChanges = () => {
+const SectionChanges:React.FC = () => {
   return (
     <div>SectionChanges</div>
   )
 }
 
-export default SectionChanges
+export default SectionChanges 
