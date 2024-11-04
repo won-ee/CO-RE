@@ -9,7 +9,7 @@ import {
   TextInput,
 } from "./SectionErrorInquiry.styled";
 
-const SectionErrorInquiry = () => {
+const SectionErrorInquiry:React.FC = () => {
   return (
     <RightSectionLayout>
       <ErrorMessageBox>

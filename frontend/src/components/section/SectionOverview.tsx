@@ -1,37 +1,7 @@
-import {
-  Button,
-  Container,
-  ContainerLayout,
-  DeadLineBox,
-  OverviewApproveBox,
-  OverviewApproveButton,
-  OverviewApproveContent,
-  OverviewApproveHeader,
-  OverviewContent,
-  OverviewContentBox,
-  OverviewCoreBox,
-  OverviewCoreContentBox,
-  OverviewCoreHeader,
-  OverviewCoreImg,
-  OverviewCoreText,
-  OverviewDayText,
-  OverviewHeaderBox,
-  OverviewHeaderText,
-  OverviewInfoBox,
-  OverviewInput,
-  OverviewName,
-  OverviewProfileImg,
-  OverviewSourceText,
-  OverviewTargetText,
-  OverviewText,
-  RadioButton,
-  RadioCol,
-  RadioGroup,
-  RadioText,
-  Text,
-} from "./SectionOverview.styled";
-import core from "../../assets/Core.png";
-const SectionOverview = () => {
+import React from 'react'
+import { Button, Container, ContainerLayout, DeadLineBox, OverviewApproveBox, OverviewApproveButton, OverviewApproveContent, OverviewApproveHeader, OverviewContent, OverviewContentBox, OverviewCoreBox, OverviewCoreContentBox, OverviewCoreHeader, OverviewCoreImg, OverviewCoreText, OverviewDayText, OverviewHeaderBox, OverviewHeaderText, OverviewInfoBox, OverviewInput, OverviewName, OverviewProfileImg, OverviewSourceText, OverviewTargetText, OverviewText, RadioButton, RadioCol, RadioGroup, RadioText, Text } from './SectionOverview.styled'
+import core from '../../assets/Core.png'
+const SectionOverview:React.FC = () => {
   return (
     <>
       <ContainerLayout>
