@@ -51,7 +51,7 @@ public class Review extends Base {
     }
 
     public void updateContent(ReviewDto dto) {
-        this.content = dto.content();
+        this.content = dto.getContent();
     }
 
 }

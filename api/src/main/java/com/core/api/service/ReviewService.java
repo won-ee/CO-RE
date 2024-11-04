@@ -51,8 +51,8 @@ public class ReviewService {
     }
 
     public void updateReview(ReviewDto reviewDto) {
-        Review review = reviewRepository.findById(reviewDto.id())
-                .orElseThrow(() -> new RuntimeException("Review not found with id: " + reviewDto.id()));
+        Review review = reviewRepository.findById(reviewDto.getId())
+                .orElseThrow(() -> new RuntimeException("Review not found with id: " + reviewDto.getId()));
 
         review.updateContent(reviewDto);
         reviewRepository.save(review);

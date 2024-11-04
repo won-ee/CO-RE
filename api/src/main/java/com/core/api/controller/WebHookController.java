@@ -40,7 +40,7 @@ public class WebHookController {
                 reviewService.updateReview(review);
                 break;
             case "deleted":
-                reviewService.deleteReview(review.id());
+                reviewService.deleteReview(review.getId());
                 break;
             default:
                 throw new IllegalArgumentException("Unexpected action: " + action);
