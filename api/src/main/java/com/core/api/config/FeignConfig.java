@@ -18,4 +18,23 @@ public class FeignConfig {
             requestTemplate.header("Accept", "application/vnd.github+json");
         };
     }
+
+    @Bean
+    public Encoder feignEncoder() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
+        return new JacksonEncoder(objectMapper);
+    }
+
+    @Bean
+    public Decoder feignDecoder() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
+        return new JacksonDecoder(objectMapper);
+    }
+
+    @Bean
+    public OkHttpClient client() {
+        return new OkHttpClient();
+    }
 }
