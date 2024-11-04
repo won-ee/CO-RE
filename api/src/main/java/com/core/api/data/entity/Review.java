@@ -41,12 +41,12 @@ public class Review extends Base {
 
     public static Review from(ReviewDto dto) {
         Review review = new Review();
-        review.id = dto.id();
-        review.parentId = dto.parentId();
-        review.startLine = dto.startLine();
-        review.isIssue = dto.isIssue();
-        review.endLine = dto.endLine();
-        review.content = dto.content();
+        review.id = dto.getId();
+        review.parentId = dto.getParentId();
+        review.startLine = dto.getStartLine();
+        review.isIssue = dto.getIsIssue();
+        review.endLine = dto.getEndLine();
+        review.content = dto.getContent();
         return review;
     }
 

@@ -1,21 +1,25 @@
 package com.core.api.data.dto.review;
 
+import lombok.Builder;
+import lombok.Getter;
+
 import java.util.Map;
 
-public record ReviewDto(
-        Long id,
-        Integer prId,
-        Boolean isIssue,
-        Integer parentId,
-        Integer startLine,
-        Integer endLine,
-        String content,
-        String commitId,
-        String writer,
-        String ownerName,
-        String repoName
+@Builder
+@Getter
+public class ReviewDto {
+    private Long id;
+    private Integer prId;
+    private Boolean isIssue;
+    private Integer parentId;
+    private Integer startLine;
+    private Integer endLine;
+    private String content;
+    private String commitId;
+    private String writer;
+    private String ownerName;
+    private String repoName;
 
-) {
     public static ReviewDto from(Map<?, ?> map) {
         Map<?, ?> comment = getComment(map);
         Integer parentId = getParentId(map, comment);
@@ -34,20 +38,22 @@ public record ReviewDto(
         Integer endLine = getEndLine(comment);
 
         Boolean isIssue = isIssue(map);
-        return new ReviewDto(
-                id,
-                prId,
-                isIssue,
-                parentId,
-                startLine,
-                endLine,
-                content,
-                commitId,
-                writer,
-                ownerName,
-                repoName
-        );
+        return ReviewDto.builder()
+                .id(id)
+                .prId(prId)
+                .isIssue(isIssue)
+                .parentId(parentId)
+                .startLine(startLine)
+                .endLine(endLine)
+                .content(content)
+                .commitId(commitId)
+                .writer(writer)
+                .ownerName(ownerName)
+                .repoName(repoName)
+                .build();
     }
+
+    // Private helper methods to handle data extraction
 
     private static boolean isComment(Map<?, ?> map) {
         return map.get("comment") != null;
@@ -108,4 +114,5 @@ public record ReviewDto(
     private static Integer getEndLine(Map<?, ?> comment) {
         return (Integer) comment.get("line");
     }
+
 }
