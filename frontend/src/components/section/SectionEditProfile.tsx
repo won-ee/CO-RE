@@ -32,25 +32,16 @@ const SectionEditProfile:React.FC<SectionEditProfileProps> = ({myInfo}) => {
                             <LabelBox>
                              <Label>Email</Label>
                                 <Input type="email" defaultValue={myInfo.email} />
-                            </LabelBox>
-                            <LabelBox>
-                                <Label>Date of Birth</Label>
-                                <Input type="text" defaultValue={myInfo.birth} />
-                            </LabelBox>                    
+                            </LabelBox>               
                         </FormLeft>
                         <FormRight>
                             <LabelBox>
                                 <Label>User Name</Label>
                                 <Input type="text" defaultValue={myInfo.nickName} />           
                             </LabelBox>
-                            
                             <LabelBox>
                                 <Label>Password</Label>
                                 <Input type="password" defaultValue={myInfo.password} />
-                            </LabelBox>
-                            <LabelBox>
-                                <Label>Present Address</Label>
-                                <Input type="text" defaultValue={myInfo.address} /> 
                             </LabelBox>
                         </FormRight>
                     </FormLow>

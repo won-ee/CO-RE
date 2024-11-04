@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { SingleSelectStyles } from "./Types/SelectType";
+import { SingleSelectType } from "./Types/SelectType";
 
 
 export const DisplayLayout=styled.div`
@@ -25,10 +25,10 @@ export const HeaderLayout = styled.div`
   font-weight: bold;
   font-size:28px;
 `
-export const ChoiceStyles: SingleSelectStyles = {
+export const ChoiceStyles: SingleSelectType = {
   control: (provided) => ({
     ...provided,
-    width:'244px',
+    minWidt:'244px',
     height:'40px',
     backgroundColor: 'white',
     borderColor: 'black',
@@ -59,7 +59,11 @@ export const ChoiceStyles: SingleSelectStyles = {
 };
 
 export const NavLayout = styled.div`
-  flex: 1;
-  margin-left: 240px;
-  background-color:#F5F6FA;
+  position: fixed;           // 부모 요소의 제한을 무시하고 화면 전체에 고정
+  top: 0;
+  left: 240px;               // 왼쪽 마진을 240px으로 설정
+  right: 0;
+  bottom: 0;
+  background-color: #F5F6FA;
+  overflow-y: auto;         
 `

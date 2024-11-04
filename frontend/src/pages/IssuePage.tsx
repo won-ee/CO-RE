@@ -19,7 +19,7 @@ import SectionIssueList from "../components/section/SectionIssueList";
 import SectionReassignedTasks from "../components/section/SectionReassignedTasks";
 import { Block } from "../styles/GlobalStyled";
 
-function IssuePage() {
+const IssuePage:React.FC=()=>{
   const [isErrorInquirySelected, setIsErrorInquirySelected] = useState(true);
   const [isIssueSelected, setIsIssueSelected] = useState(true);
 
