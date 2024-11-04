@@ -5,6 +5,7 @@ import { useState } from "react";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import CalendarIcon from '../../assets/icon_calender.png'
+import TabChange from "../tab/TabChange";
 // import ButtonCreateNewPR from "../buttons/ButtonCreateNewPR";
 
 // 옵션 예시
@@ -22,6 +23,11 @@ const PriorityOption: OptionType[] = [
   { value: 'high', label:'High'},
 ]
 
+enum TabsEnum {
+  Commit = 'Commit',
+  Change = 'Change',
+}
+
 interface SectionCreateBranchProps {
     sourceBranch: OptionType | null;
     targetBranch: OptionType | null;
@@ -32,6 +38,16 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
   const [isUrgent,setIsUrgent] = useState(false);
   const [priority,setPriority] = useState<string | null>(null)
+  const [selectedTab, setSelectedTab] = useState<TabsEnum>(TabsEnum.Commit);
+
+  const handleTabChange = (tab: TabsEnum) => {
+    setSelectedTab(tab);
+  };
+
+  // const tabComponents = {
+  //   [TabsEnum.Commit]: <SectionPRSentList />,
+  //   [TabsEnum.Change]: <SectionPRReceivedList />,
+  // };
 
   // 다중 선택 onChange 핸들러
   const handleChange = (options: MultiValue<OptionType>) => {
@@ -99,6 +115,9 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
         <CreateButtonBox>
           {/* <ButtonCreateNewPR text="Create New Request"/> */}
         </CreateButtonBox>
+        <TabChange values={Object.values(TabsEnum)} 
+          selectedTab={selectedTab} 
+          onTabChange={handleTabChange} />
     </SectionCreateBranchLayout>  
   );
 }
