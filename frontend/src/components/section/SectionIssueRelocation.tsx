@@ -15,7 +15,6 @@ const SectionIssueRelocation:React.FC = () => {
             <ErrorIcon>❗</ErrorIcon>
             이슈 재배치
         </ErrorMessageBox>
-
         <div>
             <FormLabel>[필수] 재배치 할 이슈를 선택해주세요.</FormLabel>
             <SelectInput>

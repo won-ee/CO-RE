@@ -1,8 +1,9 @@
 import styled from "styled-components";
 
 export const FormLayout = styled.form`
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-direction:column;
+    margin-left: 50px;
 `;
 
 export const FormRow = styled.form`
@@ -24,7 +25,7 @@ export const Input = styled.input`
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
-    width: 385px;
+    width: 345px;
     font-size: 14px;
     color: #718EBF;
     margin-left: 30px;

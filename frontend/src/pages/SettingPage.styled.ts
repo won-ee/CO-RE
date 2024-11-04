@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const ContainerLayout = styled.div`
-  max-width: 900px;
+  width: 80%;
   margin: 0 auto;
   padding: 20px;
   border-radius: 10px;
