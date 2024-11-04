@@ -53,8 +53,9 @@ export const DescriptionTextArea = styled.textarea`
 export const SelectBox: SingleSelectType = {
     control: (provided) => ({
       ...provided,
+      width:'fit-content',
       marginTop: '6px',
-      width:'300px',
+      minWidth:'300px',
       height:'35px',
       backgroundColor: 'white',
       border: '1px solid #807F7F',
@@ -69,7 +70,7 @@ export const SelectBox: SingleSelectType = {
     }),
     menu: (provided) => ({
       ...provided,
-      width:'300px',
+      width:'auto',
       borderRadius: '5px',
       marginTop: '5px',
     }),
