@@ -59,4 +59,26 @@ public interface GitHubClient {
             @PathVariable("baseHead") String baseHead
     );
 
+    @PostMapping("/repos/{owner}/{repo}/issues/{pullId}/comments")
+    void createComment(
+            @PathVariable("owner") String owner,
+            @PathVariable("repo") String repo,
+            @PathVariable("pullId") int pullId,
+            @RequestBody ReviewSimpleDto reviewSimpleDto
+    );
+
+    @PatchMapping("/repos/{owner}/{repo}/issues/comments/{commentId}")
+    void updateComment(
+            @PathVariable("owner") String owner,
+            @PathVariable("repo") String repo,
+            @PathVariable("commentId") Long commentId,
+            @RequestBody ReviewSimpleDto reviewSimpleDto
+    );
+
+    @DeleteMapping("/repos/{owner}/{repo}/issues/comments/{commentId}")
+    void deleteComment(
+            @PathVariable("owner") String owner,
+            @PathVariable("repo") String repo,
+            @PathVariable("commentId") Long commentId
+    );
 }
