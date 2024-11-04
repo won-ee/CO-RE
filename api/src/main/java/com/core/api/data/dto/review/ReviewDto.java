@@ -53,8 +53,6 @@ public class ReviewDto {
                 .build();
     }
 
-    // Private helper methods to handle data extraction
-
     private static boolean isComment(Map<?, ?> map) {
         return map.get("comment") != null;
     }
