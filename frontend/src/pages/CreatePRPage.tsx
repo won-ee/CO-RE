@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { useBranchStore } from '../store/branchStore'
 
 import SectionSelectBranch from '../components/section/SectionSelectBranch'
+import SectionCreateBranch from '../components/section/SectionCreateBranch'
 
 function CreatePRPage() {
   const [isSelect,setIsSelect] = useState(true)
@@ -23,7 +24,11 @@ function CreatePRPage() {
       sourceBranch={sourceBranch}
       targetBranch={targetBranch}
       setSourceBranch={setSourceBranch}
-      setTargetBranch={setTargetBranch}/>:"false"}
+      setTargetBranch={setTargetBranch}/>:
+
+      <SectionCreateBranch
+      sourceBranch={sourceBranch}
+      targetBranch={targetBranch}/>}
     </CreatePRPageLayout>
   )
 }

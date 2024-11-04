@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { SingleSelectStyles } from "../../Types/SelectType";
+import { SingleSelectType } from "../../Types/SelectType";
 
 export const CardSelectBranchLayout = styled.div`
 `
@@ -8,7 +8,7 @@ export const CardSelectBranchHeader = styled.div`
     font-size:24px;
     font-weight: bold;
 `
-export const ChoiceStyles: SingleSelectStyles = {
+export const ChoiceStyles: SingleSelectType = {
     control: (provided) => ({
       ...provided,
       width:'300px',
