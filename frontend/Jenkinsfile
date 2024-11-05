@@ -23,18 +23,18 @@ pipeline {
         stage('Deploy') {
             steps {
                 sshagent(credentials: ['remote-server']) {
-                    sh 'rsync -avz ./dist/ $REMOTE_USER@$REMOTE_SERVER_IP:/var/www/core'
+                    sh "rsync -avz ./dist/ ${REMOTE_USER}@${REMOTE_SERVER_IP}:/var/www/core"
                 }
             }
         }
+    }
 
-        post {
-            success {
-                echo 'Deployment successful!'
-            }
-            failure {
-                echo 'Deployment failed'
-            }
+    post { 
+        success {
+            echo 'Deployment successful!'
+        }
+        failure {
+            echo 'Deployment failed'
         }
     }
 }
