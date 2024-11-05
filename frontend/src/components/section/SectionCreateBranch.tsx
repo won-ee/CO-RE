@@ -6,6 +6,8 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import CalendarIcon from '../../assets/icon_calender.png'
 import TabChange from "../tab/TabChange";
+import SectionChanges from "./SectionChanges";
+import SectionCommits from "./SectionCommits";
 // import ButtonCreateNewPR from "../buttons/ButtonCreateNewPR";
 
 // 옵션 예시
@@ -44,10 +46,10 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
     setSelectedTab(tab);
   };
 
-  // const tabComponents = {
-  //   [TabsEnum.Commit]: <SectionPRSentList />,
-  //   [TabsEnum.Change]: <SectionPRReceivedList />,
-  // };
+  const tabComponents = {
+    [TabsEnum.Commit]: <SectionCommits/>,
+    [TabsEnum.Change]: <SectionChanges />,
+  };
 
   // 다중 선택 onChange 핸들러
   const handleChange = (options: MultiValue<OptionType>) => {
@@ -118,6 +120,7 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
         <TabChange values={Object.values(TabsEnum)} 
           selectedTab={selectedTab} 
           onTabChange={handleTabChange} />
+          {tabComponents[selectedTab]}
     </SectionCreateBranchLayout>  
   );
 }
