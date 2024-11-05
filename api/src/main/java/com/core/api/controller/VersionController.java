@@ -21,4 +21,10 @@ public class VersionController {
         List<VersionDto> versionList = versionService.getVersion(owner, repo);
         return ResponseEntity.ok(versionList);
     }
+
+    @GetMapping("/{owner}/{repo}/history")
+    public ResponseEntity<List<VersionHistoryDto>> getVersionDetailById(@PathVariable String owner, @PathVariable String repo, @RequestParam Long id) {
+        List<VersionHistoryDto> versionList = versionService.getVersionHistoryById(id);
+        return ResponseEntity.ok(versionList);
+    }
 }
