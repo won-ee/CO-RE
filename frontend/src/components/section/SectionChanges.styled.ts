@@ -5,17 +5,31 @@ export const ChangeCard = styled.div`
   border-radius: 6px;
   background-color: #fafbfc;
   margin: 16px 0;
-  padding: 16px;
-  font-family: 'Courier New', Courier, monospace;
+  font-size: 14px;
 `;
 
 export const Header = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
   font-weight: bold;
-  margin-bottom: 8px;
+  padding: 10px 25px;
+  background-color: #F6F8FA;
+  border-radius: 5px;
+  border: 1px solid #807F7F;
 `;
 
+export const HeaderToggle = styled.div`
+  display: flex;
+  gap: 15px;
+  align-items: center;
+`
+export const VectorImg = styled.img<{ isExpanded: boolean }>`
+  transform: ${({ isExpanded }) => (isExpanded ? 'rotate(-90deg)' : 'rotate(0deg)')};
+  filter: grayscale(100%) brightness(0.5);
+  width: 14px;
+  height: 8px;
+`
 export const StatusBadge = styled.span<{ status: string }>`
   font-size: 0.875em;
   padding: 2px 6px;
