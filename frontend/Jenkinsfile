@@ -3,20 +3,23 @@ pipeline {
     environment {
         REMOTE_USER = 'ubuntu'
         REMOTE_SERVER_IP = credentials("deployServerIP")
-        REMOTE_SERVER_PW = credentials("deployServerPassword")
-        PROJECT_DIR = 'home/ubuntu'
+        BUILD_DIR = 'frontend'
     }
 
     stages {
         stage('Install Dependencies') {
             steps {
-                sh 'npm ci'
+                dir('frontend') {
+                    sh 'npm ci'
+                }
             }
         }
 
         stage('Build') {
             steps {
-                sh 'npm run build'
+                dir('frontend') {
+                    sh 'npm run build'
+                }
             }
         }
         
