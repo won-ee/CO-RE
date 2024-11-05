@@ -86,7 +86,7 @@ const AppComponent: React.FC = () =>{
           <Route path="/calender" element={<CalenderPage/>} />
           <Route path="/member" element={<MemberPage/>} />
           <Route path="/setting" element={<SettingPage/>} />
-          <Route path="/pullrequestdetail" element={<PullRequestPageDetail/>} />
+          <Route path="/pullrequestdetail/:pullRequestId" element={<PullRequestPageDetail />} />
         </Routes>
       </NavLayout>
     </>
