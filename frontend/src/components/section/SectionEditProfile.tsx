@@ -45,12 +45,12 @@ const SectionEditProfile:React.FC<SectionEditProfileProps> = ({myInfo}) => {
                             </LabelBox>
                         </FormRight>
                     </FormLow>
-                    <GitTokenBox>
+                </Form>
+                <GitTokenBox>
                         <Label >Github token</Label> 
                         <GitTokenInput type="text" defaultValue={myInfo.githubToken}/>
                     </GitTokenBox>
                     <SaveButton>Save</SaveButton>   
-                </Form>
             </FormBox>
         </ContainerLayout>
     </>
