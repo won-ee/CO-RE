@@ -35,3 +35,13 @@ export interface PullRequestParams {
     commits: Commit[];
     reviewers: Reviewer[];
   }
+  export interface Change {
+    file: {
+      filename: string;
+      status: string;
+      additions: number;
+      deletions: number;
+      patch: string;
+    };
+    content: string;
+  }
