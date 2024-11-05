@@ -19,7 +19,7 @@ public class FeignConfig {
     public RequestInterceptor requestInterceptor() {
 
         // TODO : 시큐리티 토큰값으로 변경
-        String token = "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";
+        String token = "";
         return requestTemplate -> {
             requestTemplate.header("Authorization", "Bearer " + token);
             requestTemplate.header("X-GitHub-Api-Version", "2022-11-28");
