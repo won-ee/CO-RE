@@ -4,6 +4,7 @@ import FilterAndGraphSection from "../components/DashFilterGraph/FilterAndGraphS
 import MainPR from "../components/DashPR/MainPR";
 import MainIssue from "../components/DashIssue/MainIssue";
 import styled from "styled-components";
+import SimpleSlider from "../components/DashStats/SimpleSlider";
 
 const Container = styled.div``;
 const BottomContainer = styled.div``;

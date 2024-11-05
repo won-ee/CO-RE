@@ -1,16 +1,5 @@
-import React, { useState } from "react";
-import {
-  StatsCarouselLayout,
-  StatCard,
-  StatTitle,
-  StatValue,
-  StatChangeLabel,
-  StatIconWrapper,
-  CarouselContainer,
-  CarouselNavButton,
-  StatHeaderWrapper,
-} from "./MainStats.styled";
-
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css";
 import statsDownIcon from "../../assets/DashboardStatsDown.png";
 import statsUpIcon from "../../assets/DashboardStatsUp.png";
 import CommentIcon from "../../assets/DashboardComment.png";
@@ -18,8 +7,16 @@ import CommitIcon from "../../assets/DashboardCommit.png";
 import PRIcon from "../../assets/DashboardPR.png";
 import IssueIcon from "../../assets/DashboardIssueIcon.png";
 import HotFixIcon from "../../assets/DashboardHotFix.png";
-import carouselButtonLeft from "../../assets/DashboardCarouselLeft.png";
-import carouselButtonRight from "../../assets/DashboardCarouselRight.png";
+import {
+  StatTitle,
+  StatValue,
+  StatChangeLabel,
+  StatIconWrapper,
+  StatHeaderWrapper,
+  CardBox,
+  StyledSlider,
+  Card,
+} from "./MainStats.styled";
 
 const STATS_DATA = [
   {
@@ -64,38 +61,24 @@ const STATS_DATA = [
   },
 ];
 
-const ITEMS_PER_PAGE = 4;
-
-const MainStats: React.FC = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const totalItems = STATS_DATA.length;
-
-  const handleNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % totalItems);
-  };
-
-  const handlePrevious = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? totalItems - 1 : prevIndex - 1,
-    );
-  };
-
-  const getVisibleStats = () => {
-    const visibleStats = [];
-    for (let i = 0; i < ITEMS_PER_PAGE; i++) {
-      visibleStats.push(STATS_DATA[(currentIndex + i) % totalItems]);
-    }
-    return visibleStats;
+export default function SimpleSlider() {
+  const settings = {
+    infinite: true,
+    speed: 500,
+    arrows: true,
+    autoplay: true,
+    autoplaySpeed: 2000,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    variableWidth: true, 
+    centerPadding: '0px',
   };
 
   return (
-    <StatsCarouselLayout>
-      <CarouselNavButton onClick={handlePrevious}>
-        <img src={carouselButtonLeft} alt="PreviousButton" />
-      </CarouselNavButton>
-      <CarouselContainer>
-        {getVisibleStats().map((stat) => (
-          <StatCard key={stat.id}>
+    <CardBox>
+      <StyledSlider {...settings}>
+        {STATS_DATA.map((stat) => (
+          <Card key={stat.id} style={{ width: 285}}>
             <StatHeaderWrapper>
               <StatTitle>{stat.TITLE}</StatTitle>
               <StatIconWrapper>
@@ -110,14 +93,9 @@ const MainStats: React.FC = () => {
               />
               {stat.CHANGE} {stat.POSITIVE ? "Up" : "Down"} from past week
             </StatChangeLabel>
-          </StatCard>
+          </Card>
         ))}
-      </CarouselContainer>
-      <CarouselNavButton onClick={handleNext}>
-        <img src={carouselButtonRight} alt="NextButton" />
-      </CarouselNavButton>
-    </StatsCarouselLayout>
+      </StyledSlider>
+    </CardBox>
   );
-};
-
-export default MainStats;
+}
