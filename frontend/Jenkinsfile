@@ -7,23 +7,23 @@ pipeline {
         BUILD_DIR = 'frontend'
     }
 
-    stage('Notify Start') {
-        steps {
-            script {
-                def Author_Name = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
-                def Author_Email = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
+    stages {
+        stage('Notify Start') {
+            steps {
+                script {
+                    def Author_Name = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
+                    def Author_Email = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
 
-                mattermostSend(
-                    color: '#CDC1FF',
-                    message: ":hungry_koongya: 빌드 시작: ${env.JOB_NAME} #${env.BUILD_NUMBER} \n(<${env.BUILD_URL}|Details>)",
-                    endpoint: MATTERMOST_URL, 
-                    channel: 'jenkins'
-                )
+                    mattermostSend(
+                        color: '#CDC1FF',
+                        message: ":hungry_koongya: 빌드 시작: ${env.JOB_NAME} #${env.BUILD_NUMBER} \n(<${env.BUILD_URL}|Details>)",
+                        endpoint: MATTERMOST_URL, 
+                        channel: 'jenkins'
+                    )
+                }
             }
         }
-    }
-
-    stages {
+        
         stage('Install Dependencies') {
             steps {
                 dir('frontend') {
