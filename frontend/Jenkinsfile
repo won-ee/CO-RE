@@ -14,9 +14,9 @@ pipeline {
                 def Author_Email = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
 
                 mattermostSend(
-                    color: '#CDC1FF' 
-                    message: ":hungry_koongya: 빌드 시작: ${env.JOB_NAME} #${env.BUILD_NUMBER} \n(<${env.BUILD_URL}|Details>)"
-                    endpoint: '${MATTERMOST_URL}',
+                    color: '#CDC1FF',
+                    message: ":hungry_koongya: 빌드 시작: ${env.JOB_NAME} #${env.BUILD_NUMBER} \n(<${env.BUILD_URL}|Details>)",
+                    endpoint: MATTERMOST_URL, 
                     channel: 'jenkins'
                 )
             }
@@ -57,7 +57,7 @@ pipeline {
                 mattermostSend(
                     color: '#BFECFF', 
                     message: "빌드 성공: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_Name} (${Author_Email})\n(<${env.BUILD_URL}|Details>)",
-                    endpoint: '${MATTERMOST_URL}',
+                    endpoint: MATTERMOST_URL, 
                     channel: 'jenkins'
                 )
             }
@@ -69,7 +69,7 @@ pipeline {
                 mattermostSend(
                     color: '#FFCCEA', 
                     message: "빌드 실패: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_Name} (${Author_Email})\n(<${env.BUILD_URL}|Details>)",
-                    endpoint: '${MATTERMOST_URL}',
+                    endpoint: MATTERMOST_URL, 
                     channel: 'jenkins'
                 )
             }
