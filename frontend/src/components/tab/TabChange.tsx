@@ -1,14 +1,13 @@
-import React from 'react';
 import { TabLayout, ContentBox } from './TabChange.styled';
-import { TabsEnum } from '../../Types/TabsEnumType'; // Enum import
 
-interface Props {
-  values: TabsEnum[];
-  selectedTab: TabsEnum;
-  onTabChange: (tab: TabsEnum) => void;
+
+interface Props<T extends string | number> {
+  values: T[];
+  selectedTab: T;
+  onTabChange: (tab: T) => void;
 }
 
-const TabChange: React.FC<Props> = ({ values, selectedTab, onTabChange }) => {
+function TabChange<T extends string | number>({ values, selectedTab, onTabChange }: Props<T>) {
   return (
     <TabLayout>
       {values.map((value, index) => (
@@ -22,6 +21,6 @@ const TabChange: React.FC<Props> = ({ values, selectedTab, onTabChange }) => {
       ))}
     </TabLayout>
   );
-};
+}
 
 export default TabChange;
