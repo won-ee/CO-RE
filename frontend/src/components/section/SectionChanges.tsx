@@ -11,6 +11,8 @@ import {
   CollapsedLinesContent,
   HeaderToggle,
   VectorImg,
+  LineNumberBox,
+  LineSymbol
 } from './SectionChanges.styled';
 import Vector from '../../assets/low.png'
 
@@ -27,7 +29,7 @@ interface SectionChangesProps {
   }[];
 }
 
-type LineType = 'add' | 'remove' | 'context' | 'collapsed';
+type LineType = 'add' | 'remove' | 'context' | 'collapsed'|'hunkHeader';
 
 interface Line {
   type: LineType;
@@ -75,11 +77,15 @@ const parsePatchWithCollapsedContent = (patch: string, content: string): Line[] 
         modifiedLineNumber = newModifiedLineNumber;
         currentContentLine += modifiedLength;
       }
-      result.push({ type: 'context', content: line, originalLineNumber: null, modifiedLineNumber: null });
+      
+      // 기존 'context' 대신 'hunkHeader' 타입으로 구분
+      result.push({ type: 'hunkHeader', content: line, originalLineNumber: null, modifiedLineNumber: null });
     } else if (line.startsWith('+')) {
-      result.push({ type: 'add', content: line, originalLineNumber: null, modifiedLineNumber: modifiedLineNumber++ });
+      // "+" 기호를 제거하고 content에 저장
+      result.push({ type: 'add', content: line.slice(1), originalLineNumber: null, modifiedLineNumber: modifiedLineNumber++ });
     } else if (line.startsWith('-')) {
-      result.push({ type: 'remove', content: line, originalLineNumber: originalLineNumber++, modifiedLineNumber: null });
+      // "-" 기호를 제거하고 content에 저장
+      result.push({ type: 'remove', content: line.slice(1), originalLineNumber: originalLineNumber++, modifiedLineNumber: null });
     } else {
       result.push({
         type: 'context',
@@ -92,6 +98,7 @@ const parsePatchWithCollapsedContent = (patch: string, content: string): Line[] 
 
   return result;
 };
+
 
 const SectionChanges: React.FC<SectionChangesProps> = ({ changes }) => {
   const [expandedCards, setExpandedCards] = useState<{ [key: number]: boolean }>({});
@@ -136,19 +143,35 @@ const SectionChanges: React.FC<SectionChangesProps> = ({ changes }) => {
                         {expandedGroups[line.id!] && (
                           <CollapsedLinesContent>
                             {line.content.split('\n').map((collapsedLine, collapsedIdx) => (
-                              <LineContainer key={collapsedIdx}>
+                              <LineContainer key={collapsedIdx} style={{backgroundColor:'#F6F8FA'}}>
                                 <LineNumber>{line.originalLineNumber !== null ? line.originalLineNumber + collapsedIdx + 1 : ''}</LineNumber>
                                 <LineNumber>{line.modifiedLineNumber !== null ? line.modifiedLineNumber + collapsedIdx + 1 : ''}</LineNumber>
+                                <LineSymbol/>
                                 <LineContent>{collapsedLine}</LineContent>
                               </LineContainer>
                             ))}
                           </CollapsedLinesContent>
                         )}
                       </LineContainer>
+                    ) : line.type === 'hunkHeader' ? (
+                      <LineContainer className="hunkHeader">
+                        <LineNumberBox className={line.type}>
+                          <LineNumber>{line.originalLineNumber !== null ? line.originalLineNumber + 1 : ''}</LineNumber>
+                          <LineNumber>{line.modifiedLineNumber !== null ? line.modifiedLineNumber + 1 : ''}</LineNumber>
+                          <LineSymbol/>
+                        </LineNumberBox>
+                        <LineContent>{line.content}</LineContent>
+                      </LineContainer>
                     ) : (
                       <LineContainer className={line.type}>
-                        <LineNumber>{line.originalLineNumber !== null ? line.originalLineNumber + 1 : ''}</LineNumber>
-                        <LineNumber>{line.modifiedLineNumber !== null ? line.modifiedLineNumber + 1 : ''}</LineNumber>
+                        
+                        <LineNumberBox className={line.type}>
+                          <LineNumber>{line.originalLineNumber !== null ? line.originalLineNumber + 1 : ''}</LineNumber>
+                          <LineNumber>{line.modifiedLineNumber !== null ? line.modifiedLineNumber + 1 : ''}</LineNumber>
+                        </LineNumberBox>
+                        <LineSymbol className={line.type}>
+                            {line.type === 'add' ? '+' : line.type === 'remove' ? '-' : ''}
+                          </LineSymbol>
                         <LineContent className={line.type}>{line.content}</LineContent>
                       </LineContainer>
                     )}

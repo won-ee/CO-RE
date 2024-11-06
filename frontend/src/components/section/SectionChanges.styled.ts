@@ -43,22 +43,39 @@ export const StatusBadge = styled.span<{ status: string }>`
 export const FileInfo = styled.div`
   font-size: 0.875em;
   color: #586069;
-  margin-bottom: 12px;
+
+  display: flex;
+  align-items:center;
+  padding: 4px;
 `;
 
 export const PatchContent = styled.div`
-  font-family: 'Courier New', Courier, monospace;
+  /* font-family: 'Courier New', Courier, monospace; */
+  font-size: 16px;
+  font-weight: 400;
 `;
+export const LineNumberBox = styled.div<{ className?: string }>`
+  display:flex;
+  height:'100%';
+  background-color:${({ className }) =>
+    className === 'add' ? '#D1F8D9' : className === 'remove' ? '#FFCECB' : 'transparent'};
+  align-items: stretch;
+  padding: 4px 0;
+`
 
 export const LineContainer = styled.div<{ className?: string }>`
   display: flex;
   align-items: center;
-  padding: 2px 0;
+  /* padding: 2px 0; */
   cursor: pointer;
   background-color: ${({ className }) =>
-    className === 'add' ? '#e6ffed' : className === 'remove' ? '#ffeef0' : 'transparent'};
+    className === 'add' ? '#e6ffed' : className === 'remove' ? '#ffeef0' : className==='hunkHeader' ? '#DDF4FF':'transparent'};
   &:hover {
     background-color: #ebedf0;
+    /* LineNumberBox에 hover 색상 적용 */
+    & > ${LineNumberBox} {
+      background-color: #ebedf0; /* LineNumberBox가 hover 시 색상을 상속 받도록 설정 */
+    }
   }
 `;
 
@@ -69,8 +86,14 @@ export const LineNumber = styled.div`
   padding-right: 10px;
   font-size: 0.875em;
   user-select: none;
+  height: 100%;
+  
 `;
-
+export const LineSymbol = styled.div`
+  width: 20px;
+  text-align: center;
+  color: black;
+`;
 export const LineContent = styled.div`
   flex: 1;
   padding: 2px 5px;
