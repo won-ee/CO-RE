@@ -23,6 +23,6 @@ public class Commit extends Base {
     private PullRequest pullRequest;
 
     @OneToMany(mappedBy = "commit", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments = new ArrayList<>();
+    private List<Review> reviews = new ArrayList<>();
 
 }

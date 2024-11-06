@@ -7,6 +7,7 @@ export const ContainerLayout = styled.div`
 
 export const ImgBox = styled.div`
     position: relative;
+    margin-left: 60px;
 `
 
 export const ProfileImg = styled.img`
@@ -29,9 +30,7 @@ export const FormBox = styled.div`
 `
 
 export const Form = styled.form`
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
+
 `;
 
 export const FormLow = styled.form`
@@ -48,6 +47,8 @@ export const FormRight= styled.form`
 `;
 
 export const LabelBox = styled.div`
+    display: flex;
+    flex-direction: column;
     margin-top: 10px;
 `
 

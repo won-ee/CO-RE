@@ -14,6 +14,6 @@ export const ContentBox = styled.div<Props>`
     font-size: 20px;
     padding: 13px;
     color: ${(props) => (props.$ischoiced ? "#343C6A" : "#757575")}; /* 선택된 탭의 경우 색상 변경 */
-    border-bottom: ${(props) => (props.$ischoiced ? "3px solid black" : "none")}; /* 선택된 탭의 경우 하단에 border */
+    border-bottom: ${(props) => (props.$ischoiced ? "3px solid #343C6A" : "none")}; /* 선택된 탭의 경우 하단에 border */
     cursor: pointer;
 `;

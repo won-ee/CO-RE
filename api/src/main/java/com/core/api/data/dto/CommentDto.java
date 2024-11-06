@@ -1,22 +1,20 @@
 package com.core.api.data.dto;
 
 
-import com.core.api.data.entity.Comment;
+import com.core.api.data.entity.Review;
 
 public record CommentDto(
         Long id,
-        Long commentId,
         Integer startLine,
         Integer endLine,
         String content
 ) {
-    public static CommentDto from(Comment comment) {
+    public static CommentDto from(Review review) {
         return new CommentDto(
-                comment.getId(),
-                comment.getCommentId(),
-                comment.getStartLine(),
-                comment.getEndLine(),
-                comment.getContent()
+                review.getId(),
+                review.getStartLine(),
+                review.getEndLine(),
+                review.getContent()
         );
     }
 }

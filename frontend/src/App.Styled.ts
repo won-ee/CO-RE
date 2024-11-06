@@ -28,7 +28,7 @@ export const HeaderLayout = styled.div`
 export const ChoiceStyles: SingleSelectType = {
   control: (provided) => ({
     ...provided,
-    minWidt:'244px',
+    minWidth:'244px',
     height:'40px',
     backgroundColor: 'white',
     borderColor: 'black',

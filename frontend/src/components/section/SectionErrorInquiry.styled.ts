@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const RightSectionLayout = styled.div`
   flex: 2;
-  margin-left: 50px;
+  margin-left:50px;
 `;
 
 export const ErrorMessageBox = styled.div`
@@ -58,7 +58,7 @@ export const FormRow = styled.div`
 `;
 
 export const TextInput = styled.textarea`
-  width: 550px;
+  width: 580px;
   padding: 10px;
   font-size: 16px;
   border-radius: 5px;
