@@ -37,6 +37,24 @@ public class PullRequestService {
     private final PullRequestRepository pullRequestRepository;
     private final CommitRepository commitRepository;
 
+    @Transactional
+    public void createPullRequest(PullRequestInputDto pullRequestInputDto) {
+        Map<String, Object> data = gitHubClient.createPullRequest(
+                pullRequestInputDto.owner(),
+                pullRequestInputDto.repo(),
+                PullRequestInputServerDto.from(pullRequestInputDto)
+        );
+        Integer number = (Integer) data.get("number");
+        PullRequest pr = PullRequest.from(pullRequestInputDto, number);
+        pullRequestRepository.save(pr);
+
+        gitHubClient.getCommits(pullRequestInputDto.owner(), pullRequestInputDto.repo(), number)
+                .stream()
+                .map(commitData -> CommitServerDto.fromApiResponse((Map<?, ?>) commitData))
+                .map(commitDto -> Commit.from(commitDto, pr))
+                .forEach(commitRepository::save);
+
+    }
 
     public List<PullRequestDto> getPullRequestList(String owner, String repo) {
         List<PullRequest> prList = pullRequestRepository.findAllByOwnerAndRepo(owner, repo)
@@ -77,8 +95,13 @@ public class PullRequestService {
         return gitHubClient.mergePullRequest(owner, repo, pullId, CommitMessageServerDto.of(commitMessage));
 
     }
-        return gitHubClient.mergePullRequest(owner, repo, pullId, CommitMessageServerDto.of(commitMessage))
-                .getBody();
+
+    public void closedPullRequest(PullRequestServerDto pullRequest) {
+        pullRequestRepository.findByOwnerAndRepoAndBaseAndHead(pullRequest.getOwner(), pullRequest.getRepo(), pullRequest.getBase(), pullRequest.getHead())
+                .ifPresent(pr -> {
+                    pr.updateMergeStatus(pullRequest.getMergeStatus());
+                    pullRequestRepository.save(pr);
+                });
     }
 
 

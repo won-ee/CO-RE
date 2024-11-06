@@ -14,6 +14,7 @@ public interface PullRequestRepository extends JpaRepository<PullRequest, Long> 
 
     Optional<List<PullRequest>> findAllByOwnerAndRepo(String owner, String repo);
 
+    Optional<PullRequest> findByOwnerAndRepoAndBaseAndHead(String owner, String repo, String base, String head);
 
     @Query("SELECT pr FROM PullRequest pr " +
             "LEFT JOIN pr.reviewers r " +

@@ -28,6 +28,13 @@ public class PullRequestController {
         return ResponseEntity.ok(changeFiles);
     }
 
+    @PostMapping
+    public ResponseEntity<Void> createPullRequest(@RequestBody PullRequestInputDto pullRequestDto) {
+        pullRequestService.createPullRequest(pullRequestDto);
+        return ResponseEntity.ok()
+                .build();
+    }
+
     @GetMapping("/{owner}/{repo}")
     public ResponseEntity<List<PullRequestDto>> getPullRequestList(Pageable pageable, @PathVariable String owner, @PathVariable String repo) {
         List<PullRequestDto> pullRequestList = pullRequestService.getPullRequestList(owner, repo);
