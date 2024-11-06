@@ -18,6 +18,7 @@ public class PullRequestDto {
     Integer pullRequestId;
     String writerId;
     String summary;
+    String description;
     String head;
     String base;
     Boolean mergeStatus;
@@ -36,6 +37,7 @@ public class PullRequestDto {
                 .writerId(pullRequest.getWriterId())
                 .summary(pullRequest.getSummary())
                 .head(pullRequest.getHead())
+                .description(pullRequest.getDescription())
                 .base(pullRequest.getBase())
                 .mergeStatus(pullRequest.getMergeStatus())
                 .priority(pullRequest.getPriority())
