@@ -40,7 +40,7 @@ pipeline {
                 mattermostSend(
                     color: 'good', 
                     message: "빌드 성공: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_Name} (${Author_Email})\n(<${env.BUILD_URL}|Details>)",
-                    endpoint: 'https://meeting.ssafy.com/hooks/36krfmjecjyzxbu5kjdgxm44uh',
+                    endpoint: 'http://meeting.ssafy.com/hooks/36krfmjecjyzxbu5kjdgxm44uh',
                     channel: '🍔 빌드 알림'
                 )
             }
@@ -52,7 +52,7 @@ pipeline {
                 mattermostSend(
                     color: 'danger', 
                     message: "빌드 실패: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_Name} (${Author_Email})\n(<${env.BUILD_URL}|Details>)",
-                    endpoint: 'https://meeting.ssafy.com/hooks/36krfmjecjyzxbu5kjdgxm44uh',
+                    endpoint: 'http://meeting.ssafy.com/hooks/36krfmjecjyzxbu5kjdgxm44uh',
                     channel: '🍔 빌드 알림'
                 )
             }
