@@ -106,4 +106,11 @@ public interface GitHubClient {
             @PathVariable("repo") String repo,
             @PathVariable("commentId") Long commentId
     );
+
+    @GetMapping("/repos/{owner}/{repo}/pulls/{pullId}/commits")
+    List<Object> getCommits(
+            @PathVariable("owner") String owner,
+            @PathVariable("repo") String repo,
+            @PathVariable("pullId") Integer pullId
+    );
 }
