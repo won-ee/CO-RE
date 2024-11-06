@@ -36,7 +36,7 @@ public class WebHookController {
 
         PullRequestServerDto pullRequest = PullRequestServerDto.from(data);
         String action = (String) data.get("action");
-        EventEnum eventEnum = EventEnum.fromString(action);
+        EventEnum eventEnum = EventEnum.valueOf(action.toUpperCase());
 
         switch (eventEnum) {
             case EDITED:
@@ -68,7 +68,7 @@ public class WebHookController {
         ReviewDto review = ReviewDto.from(data);
 
         String action = (String) data.get("action");
-        EventEnum eventEnum = EventEnum.fromString(action);
+        EventEnum eventEnum = EventEnum.valueOf(action.toUpperCase());
         switch (eventEnum) {
             case CREATED, SUBMITTED:
                 reviewService.saveReview(review);
