@@ -21,6 +21,10 @@ public class UserService {
         return userRepository.findByEmail(email).isPresent();
     }
 
+//    public UserLoginDto userInfo(String accessToken) {
+//
+//    }
+
     public void signUp(UserInfoDto userInfoDto) throws Exception {
         // 로그인시에 회원정보 받아오면서
     }

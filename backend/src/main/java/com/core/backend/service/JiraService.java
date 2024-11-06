@@ -2,25 +2,26 @@ package com.core.backend.service;
 
 import com.core.backend.data.dto.Users.UserInfoDto;
 import com.core.backend.data.dto.Users.UserProjectsDto;
-import com.core.backend.data.entity.OAuthToken;
+import com.core.backend.data.entity.JiraOAuthToken;
 import jakarta.servlet.http.HttpSession;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 public class JiraService {
 
-    private static final Logger log = LoggerFactory.getLogger(JiraService.class);
-    private final WebClient webClient;
+    private final RestTemplate restTemplate;
 
     @Value("${spring.security.oauth2.client.registration.jira.client-id}")
     private String clientId;
@@ -31,21 +32,11 @@ public class JiraService {
     @Value("${spring.security.oauth2.client.registration.jira.redirect-uri}")
     private String redirectUri;
 
-    public JiraService(WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder.baseUrl("https://api.atlassian.com").build();
+    public JiraService(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
     }
 
-    public Mono<OAuthToken> exchangeAuthorizationCode(String authorizationCode, HttpSession session) {
-//
-//        String cachedAccessToken = (String) session.getAttribute("accessToken");
-//        String cachedRefreshToken = (String) session.getAttribute("refreshToken");
-//
-//        if (cachedAccessToken != null && cachedRefreshToken != null) {
-//            log.info("AccessToken found in session: {}", cachedAccessToken);
-//            log.info("RefreshToken found in session: {}", cachedRefreshToken);
-//            return Mono.just(new OAuthToken(null, cachedAccessToken, cachedRefreshToken)); // 세션에 있으면 바로 반환
-//        }
-
+    public JiraOAuthToken exchangeAuthorizationCode(String authorizationCode, HttpSession session) {
         Map<String, String> requestBody = Map.of(
                 "grant_type", "authorization_code",
                 "client_id", clientId,
@@ -54,58 +45,59 @@ public class JiraService {
                 "redirect_uri", redirectUri
         );
 
-        return webClient.post()
-                .uri("https://auth.atlassian.com/oauth/token")
-                .bodyValue(requestBody)
-                .retrieve()
-                .bodyToMono(Map.class)
-                .doOnNext(response -> {
-                    String accessToken = (String) response.get("access_token");
-                    String refreshToken = (String) response.get("refresh_token");
-                    log.info("Access Token: {}", accessToken);
-                    log.info("Refresh Token: {}", refreshToken);
-                    session.setAttribute("accessToken", accessToken);
-                    session.setAttribute("refreshToken", refreshToken);
-                })
-                .map(response -> new OAuthToken(null, (String) response.get("access_token"), (String) response.get("refresh_token")));
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<Map<String, String>> request = new HttpEntity<>(requestBody, headers);
+
+        Map<String, Object> response = restTemplate.exchange(
+                "https://auth.atlassian.com/oauth/token",
+                org.springframework.http.HttpMethod.POST,
+                request,
+                new ParameterizedTypeReference<Map<String, Object>>() {
+                }).getBody();
+
+        assert response != null;
+        String accessToken = (String) response.get("access_token");
+        String refreshToken = (String) response.get("refresh_token");
+        log.info("Access Token: {}", accessToken);
+        log.info("Refresh Token: {}", refreshToken);
+        session.setAttribute("OAuthAccessToken", accessToken);
+        session.setAttribute("OAuthRefreshToken", refreshToken);
+
+        return new JiraOAuthToken(null, accessToken, refreshToken);
     }
 
-    public Mono<List<UserProjectsDto>> getProjects(String accessToken, HttpSession session) {
-//        List<Map<String, Object>> cachedProjects = (List<Map<String, Object>>) session.getAttribute("projects");
-//
-//        if (cachedProjects != null) {
-//            log.info("Projects found in session");
-//            return Mono.just(convertToUserProjectsDto(cachedProjects)); // 세션에 있으면 바로 반환
-//        }
+    public List<UserProjectsDto> getProjects(String accessToken, HttpSession session) {
+        HttpEntity<String> request = new HttpEntity<>(createHeadersWithAuthorization(accessToken));
 
-        return webClient.get()
-                .uri("https://api.atlassian.com/oauth/token/accessible-resources")
-                .header("Authorization", "Bearer " + accessToken)
-                .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<List<Map<String, Object>>>() {
-                })
-                .doOnNext(projects -> session.setAttribute("projects", projects))
-                .map(this::convertToUserProjectsDto);
+        List<Map<String, Object>> response = restTemplate.exchange(
+                "https://api.atlassian.com/oauth/token/accessible-resources",
+                org.springframework.http.HttpMethod.GET,
+                request,
+                new ParameterizedTypeReference<List<Map<String, Object>>>() {
+                }).getBody();
+
+        session.setAttribute("projects", response);
+
+        assert response != null;
+        return convertToUserProjectsDto(response);
     }
 
-    public Mono<UserInfoDto> getUserInfo(String accessToken, HttpSession session) {
+    public UserInfoDto getUserInfo(String accessToken, HttpSession session) {
 
-//        Map<String, Object> cachedUserInfo = (Map<String, Object>) session.getAttribute("user");
-//
-//        if (cachedUserInfo != null) {
-//            log.info("User info found in session");
-//            return Mono.just(convertToUserInfoDto(cachedUserInfo)); // 세션에 있으면 바로 반환
-//        }
+        HttpEntity<String> request = new HttpEntity<>(createHeadersWithAuthorization(accessToken));
 
-        return webClient.get()
-                .uri("https://api.atlassian.com/me")
-                .header("Authorization", "Bearer " + accessToken)
-                .header("Accept", "application/json")
-                .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {
-                })
-                .doOnNext(userInfo -> session.setAttribute("user", userInfo))
-                .map(this::convertToUserInfoDto);
+        Map<String, Object> response = restTemplate.exchange(
+                "https://api.atlassian.com/me",
+                org.springframework.http.HttpMethod.GET,
+                request,
+                new ParameterizedTypeReference<Map<String, Object>>() {
+                }).getBody();
+
+        session.setAttribute("user", response);
+
+        assert response != null;
+        return convertToUserInfoDto(response);
     }
 
     private UserInfoDto convertToUserInfoDto(Map<String, Object> userInfo) {
@@ -116,6 +108,13 @@ public class JiraService {
                 (String) userInfo.get("picture"),
                 (String) userInfo.get("nickname")
         );
+    }
+
+    private HttpHeaders createHeadersWithAuthorization(String accessToken) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + accessToken);
+        headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+        return headers;
     }
 
     private ArrayList<UserProjectsDto> convertToUserProjectsDto(List<Map<String, Object>> projects) {

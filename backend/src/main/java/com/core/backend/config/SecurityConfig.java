@@ -1,6 +1,8 @@
 package com.core.backend.config;
 
-import com.core.backend.handler.OAuth2LoginFailureHandler;
+import com.core.backend.filter.JwtAuthenticationFilter;
+import com.core.backend.handler.JiraOAuth2LoginFailureHandler;
+import com.core.backend.service.JwtTokenService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -9,6 +11,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -20,18 +23,18 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig implements WebMvcConfigurer {
 
-    private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
+    private final JiraOAuth2LoginFailureHandler jiraOAuth2LoginFailureHandler;
 
-    public SecurityConfig(OAuth2LoginFailureHandler oAuth2LoginFailureHandler) {
-        this.oAuth2LoginFailureHandler = oAuth2LoginFailureHandler;
+    public SecurityConfig(JiraOAuth2LoginFailureHandler jiraOAuth2LoginFailureHandler) {
+        this.jiraOAuth2LoginFailureHandler = jiraOAuth2LoginFailureHandler;
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtTokenService jwtTokenService) throws Exception {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/").permitAll()
@@ -42,8 +45,9 @@ public class SecurityConfig implements WebMvcConfigurer {
                 )
                 .oauth2Login(oauth2Login -> oauth2Login
                         .loginPage("/login/jira")
-                        .failureHandler(oAuth2LoginFailureHandler)
-                );
+                        .failureHandler(jiraOAuth2LoginFailureHandler)
+                )
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenService), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

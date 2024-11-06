@@ -2,15 +2,13 @@ package com.core.backend.data.entity;
 
 import com.core.backend.data.enums.ProjectRole;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "ProjectUsers")
 @Builder
 public class ProjectUsers extends Base {
 

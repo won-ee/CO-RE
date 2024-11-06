@@ -8,12 +8,12 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class LoginService {
 
-    private final JwtService jwtService;
-    private final TokenService tokenService;
+    private final JwtTokenService jwtTokenService;
+    private final JiraOAuthTokenService JiraOAuthTokenService;
 
-    public LoginService(JwtService jwtService, TokenService tokenService) {
-        this.jwtService = jwtService;
-        this.tokenService = tokenService;
+    public LoginService(JwtTokenService jwtTokenService, JiraOAuthTokenService JiraOAuthTokenService) {
+        this.jwtTokenService = jwtTokenService;
+        this.JiraOAuthTokenService = JiraOAuthTokenService;
     }
 
     public UserLoginDto aceessCheck(String accessToken) {
@@ -28,7 +28,8 @@ public class LoginService {
 //                String email = emailOpt.get();
 //                log.info("Access Token is valid. User email: {}", email);
 //
-//                // 연결된 jira accesstoken 유효한지 체크하기
+//                // 연결된 jira accesstoken 유효여부는 체크하지 않음.
+//                // 그건 api 요청하다가 기간 지났다는 명령어 오면 refreshtoken으로 access 재
 //                OAuthToken getOAuthToken = tokenService.getOAuthToken(email);
 //
 //                String oauthAccessToken

@@ -43,7 +43,7 @@ public class Users extends Base {
 
     public static Users createUser(UserInfoDto userInfo) {
         return Users.builder()
-                .accountId(userInfo.account_id())
+                .accountId(userInfo.accountId())
                 .email(userInfo.email())
                 .name(userInfo.name())
                 .profile(userInfo.picture())

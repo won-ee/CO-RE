@@ -5,8 +5,8 @@ import lombok.Getter;
 import org.springframework.data.redis.core.RedisHash;
 
 @Getter
-@RedisHash("oauthToken")
-public class OAuthToken {
+@RedisHash("jiraOAuthToken")
+public class JiraOAuthToken {
     @Id
     private String id;  //id = email
 
@@ -14,7 +14,7 @@ public class OAuthToken {
 
     private String refreshToken;
 
-    public OAuthToken(String id, String accessToken, String refreshToken) {
+    public JiraOAuthToken(String id, String accessToken, String refreshToken) {
         this.id = id;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;

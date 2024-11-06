@@ -2,9 +2,13 @@ package com.core.backend.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.core.backend.data.entity.JwtToken;
+import com.core.backend.data.repository.JiraOAuthTokenRepository;
 import com.core.backend.data.repository.JwtTokenRepository;
-import com.core.backend.data.repository.OAuthTokenRepository;
 import com.core.backend.data.repository.UserRepository;
+import com.core.backend.exception.InCorrectAccessTokenException;
+import com.core.backend.util.CookieUtil;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;
@@ -20,16 +24,16 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Getter
 @Slf4j
-public class JwtService {
+public class JwtTokenService {
 
     @Value("${jwt.secretKey}")
     private String secretKey;
 
     @Value("${jwt.access.expiration}")
-    private Long accessTokenExpirationPeriod;
+    private int accessTokenExpirationPeriod;
 
     @Value("${jwt.refresh.expiration}")
-    private Long refreshTokenExpirationPeriod;
+    private int refreshTokenExpirationPeriod;
 
     @Value("${jwt.access.header}")
     private String accessHeader;
@@ -38,7 +42,7 @@ public class JwtService {
     private String refreshHeader;
 
     private final JwtTokenRepository jwtTokenRepository;
-    private final OAuthTokenRepository oAuthTokenRepository;
+    private final JiraOAuthTokenRepository jiraOAuthTokenRepository;
 
     private static final String ACCESS_TOKEN_SUBJECT = "AccessToken";
     private static final String REFRESH_TOKEN_SUBJECT = "RefreshToken";
@@ -85,19 +89,15 @@ public class JwtService {
                 .map(refreshToken -> refreshToken.replace(BEARER, ""));
     }
 
-    public Optional<String> extraAccessToken(HttpServletRequest request) {
-        return Optional.ofNullable(request.getHeader(accessHeader))
-                .filter(accessToken -> accessToken.startsWith(BEARER))
-                .map(accessToken -> accessToken.replace(BEARER, ""));
-    }
-
     public Optional<String> extractEmail(String accessToken) {
         try {
-            return Optional.ofNullable(JWT.require(Algorithm.HMAC512(secretKey))
-                    .build()
-                    .verify(accessToken)
-                    .getClaim(EMAIL_CLAIM)
-                    .asString());
+            var decodedJWT = JWT.require(Algorithm.HMAC512(secretKey)).build().verify(accessToken);
+
+            String email = decodedJWT.getClaim(EMAIL_CLAIM).asString();
+            if (email == null) {
+                throw new InCorrectAccessTokenException();
+            }
+            return Optional.of(email);
         } catch (Exception e) {
             log.error("Access Token이 유효하지 않습니다.");
             return Optional.empty();
@@ -112,23 +112,58 @@ public class JwtService {
         response.setHeader(refreshHeader, refreshToken);
     }
 
-//    public void updateRefreshToken(String email, String refreshToken) {
-//        userRepository.findByEmail(email)
-//                .ifPresentOrElse(
-//                        users -> jwtTokenRepository.save(new JwtToken(refreshToken, String.valueOf(users.getId()))),
-//                        () -> {
-//                            throw new RuntimeException("일치하는 회원이 없습니다.");
-//                        }
-//                );
-//    }
+    //    TODO: 이거 다시짜기 두개다 재발급하는 코드
+    public void reissueToken(HttpServletRequest request, HttpServletResponse response) {
+        Optional<String> refreshToken = extraRefreshToken(request);
+    }
 
     public boolean isJwtTokenValid(String token) {
         try {
-            JWT.require(Algorithm.HMAC512(secretKey)).build().verify(token);
-            return true;
+            var decodeJWT = JWT.require(Algorithm.HMAC512(secretKey)).build().verify(token);
+
+            String email = decodeJWT.getClaim(EMAIL_CLAIM).asString();
+            String subject = decodeJWT.getSubject();
+
+            return email != null && subject != null && subject.equals(ACCESS_TOKEN_SUBJECT);
         } catch (Exception ex) {
             log.error("유효하지 않은 토큰입니다. : {}", ex.getMessage());
             return false;
+        }
+    }
+
+    public JwtToken createAndStoreToken(String email) {
+        String accessToken = createAccessToken(email);
+        String refreshToken = createRefreshToken();
+
+        JwtToken jwtToken = new JwtToken(accessToken, refreshToken, email);
+        saveJwtToken(jwtToken);
+
+        log.info("Redis에 저장된 AccessToken: {}", accessToken);
+        log.info("Redis에 저장된 RefreshToken: {}", refreshToken);
+
+        return jwtToken;
+    }
+
+    public Cookie createAllTokenCookie(String email) {
+        JwtToken jwtToken = createAndStoreToken(email);
+        return CookieUtil.createTokenCookie("accessToken", jwtToken.getAccessToken(), accessTokenExpirationPeriod);
+    }
+
+    public Cookie createAccessTokenCookie(String email) {
+        String newAccessToken = createAccessToken(email);
+
+        return CookieUtil.createTokenCookie("accessToken", newAccessToken, accessTokenExpirationPeriod);
+    }
+
+    public JwtToken getJwtToken(String id) {
+        return jwtTokenRepository.findById(id).orElse(null);
+    }
+
+    public void saveJwtToken(JwtToken targetToken) {
+        try {
+            jwtTokenRepository.save(targetToken);
+        } catch (Exception ex) {
+            log.error("JwtToken Save Error : {}", ex.toString());
         }
     }
 

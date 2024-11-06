@@ -1,7 +1,10 @@
 package com.core.backend.data.dto.Users;
 
+import lombok.Builder;
+
+@Builder
 public record UserInfoDto(
-        String account_id,
+        String accountId,
         String email,
         String name,
         String picture,
