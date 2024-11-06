@@ -1,7 +1,5 @@
 package com.core.api.data.dto.pullrequest;
 
-import java.time.LocalDateTime;
-
 public record PullRequestInputDto(
         String title,
         String body,
@@ -11,7 +9,7 @@ public record PullRequestInputDto(
         String repo,
         String description,
         Boolean afterReview,
-        LocalDateTime deadline,
+        String deadline,
         Integer priority,
         String writerId
 ) {

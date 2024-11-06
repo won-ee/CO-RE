@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Builder
@@ -22,7 +23,7 @@ public class PullRequestDto {
     Boolean mergeStatus;
     Integer priority;
     Boolean afterReview;
-    LocalDateTime deadline;
+    String deadline;
     LocalDateTime createdDate;
     List<CommitDto> commits;
     List<ReviewerDto> reviewers;
@@ -39,7 +40,8 @@ public class PullRequestDto {
                 .mergeStatus(pullRequest.getMergeStatus())
                 .priority(pullRequest.getPriority())
                 .afterReview(pullRequest.getAfterReview())
-                .deadline(pullRequest.getDeadline())
+                .deadline(pullRequest.getDeadline()
+                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                 .createdDate(pullRequest.getCreatedDate())
                 .commits(commits)
                 .reviewers(reviewers)

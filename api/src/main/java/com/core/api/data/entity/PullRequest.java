@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,7 +83,8 @@ public class PullRequest extends Base {
         pullRequest.pullRequestId = pullRequestId;
         pullRequest.afterReview = pullRequestInputDto.afterReview();
         pullRequest.mergeStatus = false;
-        pullRequest.deadline = pullRequestInputDto.deadline();
+        pullRequest.deadline = LocalDate.parse(pullRequestInputDto.deadline(), DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                .atStartOfDay();
         pullRequest.priority = pullRequestInputDto.priority();
         pullRequest.description = pullRequestInputDto.description();
         pullRequest.writerId = pullRequestInputDto.writerId();

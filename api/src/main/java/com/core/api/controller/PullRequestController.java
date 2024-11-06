@@ -9,7 +9,6 @@ import com.core.api.data.dto.pullrequest.PullRequestInputDto;
 import com.core.api.data.dto.response.MergeResponseDto;
 import com.core.api.service.PullRequestService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,7 +35,7 @@ public class PullRequestController {
     }
 
     @GetMapping("/{owner}/{repo}")
-    public ResponseEntity<List<PullRequestDto>> getPullRequestList(Pageable pageable, @PathVariable String owner, @PathVariable String repo) {
+    public ResponseEntity<List<PullRequestDto>> getPullRequestList(@PathVariable String owner, @PathVariable String repo) {
         List<PullRequestDto> pullRequestList = pullRequestService.getPullRequestList(owner, repo);
         return ResponseEntity.ok(pullRequestList);
     }
