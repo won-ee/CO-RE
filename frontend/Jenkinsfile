@@ -16,14 +16,14 @@ pipeline {
 
                     mattermostSend(
                         color: '#CDC1FF',
-                        message: ":hungry_koongya: 빌드 시작: ${env.JOB_NAME} #${env.BUILD_NUMBER} \n(<${env.BUILD_URL}|Details>)",
+                        message: "### :hungry_koongya: **Frontend 빌드 시작**\n\n<${env.BUILD_URL}|${env.JOB_NAME} #${env.BUILD_NUMBER}>\n![](https://media.giphy.com/media/JdCz7YXOZAURq/giphy.gif)",
                         endpoint: MATTERMOST_URL, 
                         channel: 'jenkins'
                     )
                 }
             }
         }
-        
+
         stage('Install Dependencies') {
             steps {
                 dir('frontend') {
