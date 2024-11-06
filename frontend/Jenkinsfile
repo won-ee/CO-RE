@@ -3,7 +3,24 @@ pipeline {
     environment {
         REMOTE_USER = 'ubuntu'
         REMOTE_SERVER_IP = credentials("deployServerIP")
+        MATTERMOST_URL = credentials("mattermost-url")
         BUILD_DIR = 'frontend'
+    }
+
+    stage('Notify Start') {
+        steps {
+            script {
+                def Author_Name = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
+                def Author_Email = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
+
+                mattermostSend(
+                    color: '#CDC1FF' 
+                    message: ":hungry_koongya: 빌드 시작: ${env.JOB_NAME} #${env.BUILD_NUMBER} \n(<${env.BUILD_URL}|Details>)"
+                    endpoint: '${MATTERMOST_URL}',
+                    channel: 'jenkins'
+                )
+            }
+        }
     }
 
     stages {
@@ -38,10 +55,10 @@ pipeline {
                 def Author_Name = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
                 def Author_Email = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
                 mattermostSend(
-                    color: 'good', 
+                    color: '#BFECFF', 
                     message: "빌드 성공: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_Name} (${Author_Email})\n(<${env.BUILD_URL}|Details>)",
-                    endpoint: 'http://meeting.ssafy.com/hooks/36krfmjecjyzxbu5kjdgxm44uh',
-                    channel: '🍔 빌드 알림'
+                    endpoint: '${MATTERMOST_URL}',
+                    channel: 'jenkins'
                 )
             }
         }
@@ -50,10 +67,10 @@ pipeline {
                 def Author_Name = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
                 def Author_Email = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
                 mattermostSend(
-                    color: 'danger', 
+                    color: '#FFCCEA', 
                     message: "빌드 실패: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_Name} (${Author_Email})\n(<${env.BUILD_URL}|Details>)",
-                    endpoint: 'http://meeting.ssafy.com/hooks/36krfmjecjyzxbu5kjdgxm44uh',
-                    channel: '🍔 빌드 알림'
+                    endpoint: '${MATTERMOST_URL}',
+                    channel: 'jenkins'
                 )
             }
         }
