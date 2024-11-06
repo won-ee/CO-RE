@@ -1,62 +1,43 @@
 pipeline {
     agent any
+    environment {
+        REMOTE_USER = 'ubuntu'
+        REMOTE_SERVER_IP = credentials("deployServerIP")
+        BUILD_DIR = 'frontend'
+    }
 
     stages {
         stage('Install Dependencies') {
             steps {
-                script {
-                    nodejs('nodejs') {
-                        sh 'npm install'
-                    }
+                dir('frontend') {
+                    sh 'npm ci'
                 }
             }
         }
 
         stage('Build') {
             steps {
-                sh 'npm run build'
+                dir('frontend') {
+                    sh 'npm run build'
+                }
             }
         }
-
-        stage('Archive Build') {
-            steps {
-                sh 'tar -czf build.tar.gz build/'
-                archiveArtifacts artifacts: 'build.tar.gz', allowEmptyArchive: false
-            }
-        }
-
+        
         stage('Deploy') {
             steps {
-                sh '''
-                tar -xzf build.tar.gz -C /var/www/html
-
-                sudo systemctl restart nginx
-                '''
+                sshagent(credentials: ['remote-server']) {
+                    sh "rsync -avz -e 'ssh -o StrictHostKeyChecking=no' ./frontend/dist/ ${REMOTE_USER}@${REMOTE_SERVER_IP}:/var/www/core"
+                }
             }
         }
-        post {
-            success {
-                script {
-                    def Author_ID = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
-                    def Author_Name = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
-                    mattermostSend (color: 'good', 
-                    message: "빌드 성공: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_ID}(${Author_Name})\n(<${env.BUILD_URL}|Details>)", 
-                    endpoint: 'https://meeting.ssafy.com/hooks/36krfmjecjyzxbu5kjdgxm44uh', 
-                    channel: '🍔 빌드 알림'
-                    )
-                }
-            }
-            failure {
-                script {
-                    def Author_ID = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
-                    def Author_Name = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
-                    mattermostSend (color: 'danger', 
-                    message: "빌드 실패: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_ID}(${Author_Name})\n(<${env.BUILD_URL}|Details>)", 
-                    endpoint: 'https://meeting.ssafy.com/hooks/36krfmjecjyzxbu5kjdgxm44uh', 
-                    channel: '🍔 빌드 알림'
-                    )
-                }
-            }
+    }
+
+    post { 
+        success {
+            echo 'Deployment successful!'
+        }
+        failure {
+            echo 'Deployment failed'
         }
     }
 }
