@@ -1,10 +1,7 @@
 package com.core.backend.data.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +9,8 @@ import java.util.List;
 @Entity
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "Projects")
 @Builder
 public class Projects {
 
@@ -20,6 +18,9 @@ public class Projects {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "project_id", nullable = false)
     private Long id;
+
+    @Column(name = "project_cloud_id", nullable = false)
+    private String cloudId;
 
     @Column(name = "project_name", nullable = false, length = 100)
     private String name;
@@ -41,4 +42,8 @@ public class Projects {
 
     @OneToMany(mappedBy = "project")
     private List<ProjectUsers> projectUsersList = new ArrayList<>();
+
+//    public static Projects createProject(){
+//
+//    }
 }

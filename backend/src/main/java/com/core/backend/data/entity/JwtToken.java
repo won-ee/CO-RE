@@ -1,21 +1,23 @@
 package com.core.backend.data.entity;
 
+import jakarta.persistence.Id;
 import lombok.Getter;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
 @Getter
 @RedisHash("jwtToken")
 public class JwtToken {
+    @Id
+    private String id;  //id = email
+
+    private String accessToken;
 
     private String refreshToken;
 
-    @Id
-    private String userId;
-
-
-    public JwtToken(String refreshToken, String userId) {
-        this.userId = userId;
+    public JwtToken(String id, String accessToken, String refreshToken) {
+        this.id = id;
+        this.accessToken = accessToken;
         this.refreshToken = refreshToken;
     }
+
 }

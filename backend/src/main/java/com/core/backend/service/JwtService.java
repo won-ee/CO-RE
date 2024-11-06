@@ -2,7 +2,6 @@ package com.core.backend.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.core.backend.data.entity.JwtToken;
 import com.core.backend.data.repository.JwtTokenRepository;
 import com.core.backend.data.repository.OAuthTokenRepository;
 import com.core.backend.data.repository.UserRepository;
@@ -22,7 +21,7 @@ import java.util.Optional;
 @Getter
 @Slf4j
 public class JwtService {
-    
+
     @Value("${jwt.secretKey}")
     private String secretKey;
 
@@ -113,17 +112,17 @@ public class JwtService {
         response.setHeader(refreshHeader, refreshToken);
     }
 
-    public void updateRefreshToken(String email, String refreshToken) {
-        userRepository.findByEmail(email)
-                .ifPresentOrElse(
-                        users -> jwtTokenRepository.save(new JwtToken(refreshToken, String.valueOf(users.getId()))),
-                        () -> {
-                            throw new RuntimeException("일치하는 회원이 없습니다.");
-                        }
-                );
-    }
+//    public void updateRefreshToken(String email, String refreshToken) {
+//        userRepository.findByEmail(email)
+//                .ifPresentOrElse(
+//                        users -> jwtTokenRepository.save(new JwtToken(refreshToken, String.valueOf(users.getId()))),
+//                        () -> {
+//                            throw new RuntimeException("일치하는 회원이 없습니다.");
+//                        }
+//                );
+//    }
 
-    public boolean isTokenValid(String token) {
+    public boolean isJwtTokenValid(String token) {
         try {
             JWT.require(Algorithm.HMAC512(secretKey)).build().verify(token);
             return true;

@@ -8,7 +8,7 @@ import org.springframework.data.redis.core.RedisHash;
 @RedisHash("oauthToken")
 public class OAuthToken {
     @Id
-    private String id;
+    private String id;  //id = email
 
     private String accessToken;
 
