@@ -4,15 +4,17 @@ import com.core.api.data.dto.ReviewerDto;
 import com.core.api.data.dto.commit.CommitDto;
 import com.core.api.data.entity.PullRequest;
 import lombok.Builder;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Builder
+@Getter
 public class PullRequestDto {
     Long id;
     String title;
-    Long pullRequestId;
+    Integer pullRequestId;
     String writerId;
     String summary;
     String head;

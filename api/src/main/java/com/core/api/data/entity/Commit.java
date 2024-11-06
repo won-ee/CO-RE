@@ -13,8 +13,12 @@ import java.util.List;
 public class Commit extends Base {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "commit_id", nullable = false)
-    private String id;
+    private Long id;
+
+    @Column(name = "commit_sha", nullable = false)
+    private String sha;
 
     @Column(name = "commit_message", length = 2000)
     private String message;
@@ -34,7 +38,7 @@ public class Commit extends Base {
 
     public static Commit from(CommitServerDto commitServerDto, PullRequest pullRequest) {
         Commit commit = new Commit();
-        commit.id = commitServerDto.sha();
+        commit.sha = commitServerDto.sha();
         commit.message = commitServerDto.message();
         commit.pullRequest = pullRequest;
         commit.parent = commitServerDto.parent();

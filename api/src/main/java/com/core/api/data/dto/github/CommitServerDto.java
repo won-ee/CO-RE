@@ -15,7 +15,7 @@ public record CommitServerDto(
 ) {
     public static CommitServerDto from(Commit commit) {
         return new CommitServerDto(
-                commit.getId(),
+                commit.getSha(),
                 commit.getMessage(),
                 commit.getCreatedDate()
                         .toString(),

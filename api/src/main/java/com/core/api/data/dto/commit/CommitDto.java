@@ -14,7 +14,7 @@ public record CommitDto(
 
     public static CommitDto from(Commit commit, List<CommentDto> comments) {
         return new CommitDto(
-                commit.getId(),
+                commit.getSha(),
                 commit.getMessage(),
                 comments
         );

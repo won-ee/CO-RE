@@ -23,7 +23,7 @@ public class PullRequest extends Base {
     private String title;
 
     @Column(name = "pr_github_id")
-    private Long pullRequestId;
+    private Integer pullRequestId;
 
     @Column(name = "pr_owner", nullable = false)
     private String owner;
@@ -60,6 +60,10 @@ public class PullRequest extends Base {
     @Column(name = "pr_deadline")
     private LocalDateTime deadline;
 
+    @ManyToOne
+    @JoinColumn(name = "version_id")
+    private Version version;
+
     @OneToMany(mappedBy = "pullRequest", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Commit> commits = new ArrayList<>();
 
@@ -69,20 +73,30 @@ public class PullRequest extends Base {
     @OneToMany(mappedBy = "pullRequest", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> images = new ArrayList<>();
 
-    public static PullRequest from(PullRequestInputDto pullRequestInputDto) {
+    public static PullRequest from(PullRequestInputDto pullRequestInputDto, Integer pullRequestId) {
         PullRequest pullRequest = new PullRequest();
         pullRequest.title = pullRequestInputDto.title();
-        pullRequest.description = pullRequestInputDto.body();
         pullRequest.head = pullRequestInputDto.head();
         pullRequest.base = pullRequestInputDto.base();
-        pullRequest.afterReview = false;
+        pullRequest.pullRequestId = pullRequestId;
+        pullRequest.afterReview = pullRequestInputDto.afterReview();
         pullRequest.mergeStatus = false;
         pullRequest.deadline = pullRequestInputDto.deadline();
         pullRequest.priority = pullRequestInputDto.priority();
+        pullRequest.description = pullRequestInputDto.description();
         pullRequest.writerId = pullRequestInputDto.writerId();
         pullRequest.owner = pullRequestInputDto.owner();
         pullRequest.repo = pullRequestInputDto.repo();
         return pullRequest;
+    }
+
+
+    public void updateMergeStatus(Boolean mergeStatus) {
+        this.mergeStatus = mergeStatus;
+    }
+
+    public void updateVersion(Version version) {
+        this.version = version;
     }
 
 
