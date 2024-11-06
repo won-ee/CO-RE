@@ -16,7 +16,7 @@ pipeline {
 
                     mattermostSend(
                         color: '#CDC1FF',
-                        message: "### :hungry_koongya: **Frontend 빌드 시작**\n\n<${env.BUILD_URL}|${env.JOB_NAME} #${env.BUILD_NUMBER}>\n![](https://media.giphy.com/media/JdCz7YXOZAURq/giphy.gif)",
+                        message: "### :hungry_koongya: **<${env.BUILD_URL}|Frontend #${env.BUILD_NUMBER}> 빌드 시작**\n\n![](https://media.giphy.com/media/JdCz7YXOZAURq/giphy.gif)",
                         endpoint: MATTERMOST_URL, 
                         channel: 'jenkins'
                     )
@@ -56,7 +56,7 @@ pipeline {
                 def Author_Email = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
                 mattermostSend(
                     color: '#BFECFF', 
-                    message: "빌드 성공: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_Name} (${Author_Email})\n(<${env.BUILD_URL}|Details>)",
+                    message: "### :koongya_zoom_close: **<${env.BUILD_URL}|Frontend #${env.BUILD_NUMBER}> 빌드 성공!**\n\n![](https://media.giphy.com/media/jtFkrEYzGlf9xtdef0/giphy.gif)",
                     endpoint: MATTERMOST_URL, 
                     channel: 'jenkins'
                 )
@@ -68,7 +68,7 @@ pipeline {
                 def Author_Email = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
                 mattermostSend(
                     color: '#FFCCEA', 
-                    message: "빌드 실패: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_Name} (${Author_Email})\n(<${env.BUILD_URL}|Details>)",
+                    message: "### :onion_koongya2: **<${env.BUILD_URL}|Frontend #${env.BUILD_NUMBER}> 빌드 실패**\n\nJenkins log 확인이 필요해요.\n![](https://media.giphy.com/media/pm4VOSkAgkj3q/giphy.gif)",
                     endpoint: MATTERMOST_URL, 
                     channel: 'jenkins'
                 )
