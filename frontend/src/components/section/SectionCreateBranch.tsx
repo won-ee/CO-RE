@@ -1,14 +1,15 @@
 import { SectionCreateBranchLayout, TitleInput, DescriptionTextArea, SelectBox, MergeDirectionBox, HighLightBox, DateInputContainer, DatePickerImg, DeadLineBox, DatePickerBox, UrgentBox, UrgentButton, PriorityBox, CreateButtonBox  } from "./SectionCreateBranch.styled";
 import Select, { MultiValue, SingleValue, StylesConfig } from "react-select";
 import { OptionType } from "../../Types/SelectType";
-import { useState } from "react";
+import { useState, ChangeEvent } from "react";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import CalendarIcon from '../../assets/icon_calender.png'
 import TabChange from "../tab/TabChange";
 import SectionChanges from "./SectionChanges";
 import SectionCommits from "./SectionCommits";
-// import ButtonCreateNewPR from "../buttons/ButtonCreateNewPR";
+import ButtonCreateNewPR from "../buttons/ButtonCreateNewPR";
+import { useMutationCreatePR } from "../../hooks/useMutationCreatePR";
 
 // 옵션 예시
 const TempOption: OptionType[] = [
@@ -41,10 +42,32 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
   const [isUrgent,setIsUrgent] = useState(false);
   const [priority,setPriority] = useState<string | null>(null)
   const [selectedTab, setSelectedTab] = useState<TabsEnum>(TabsEnum.Commit);
+  const [title, setTitle] = useState<string>('')
+  const [content, setContent] = useState<string>('')
 
   const handleTabChange = (tab: TabsEnum) => {
     setSelectedTab(tab);
   };
+
+  const mutation = useMutationCreatePR()
+
+  const handlePostPR=()=>{
+    const pullRequestData = {
+      title: "Feature Update",
+      body: "This update includes several feature improvements and bug fixes.",
+      base: "main",
+      head: "feat",
+      owner: "JEM1224",
+      repo: "github-api",
+      description: "Detailed description of the pull request with all necessary information.",
+      afterReview: false,
+      deadline: "2024-12-31T23:59:59",
+      priority: 1,
+      writerId: "JEM1224"
+    };
+
+    mutation.mutate(pullRequestData);
+  }
 
   const changesData = [
     {
@@ -91,15 +114,23 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
     setPriority(option ? option.value : null)
   }
 
+  const handleTitle = (e:ChangeEvent<HTMLInputElement>)=>{
+    setTitle(e.target.value)
+  }
+
+  const handleContent = (e:ChangeEvent<HTMLTextAreaElement>)=>{
+    setContent(e.target.value)
+  }
+
   return (
     <SectionCreateBranchLayout>
         <MergeDirectionBox>
             From <HighLightBox>{sourceBranch?.label}</HighLightBox> into <HighLightBox>{targetBranch?.label}</HighLightBox>
         </MergeDirectionBox>
         Title
-        <TitleInput type="text" placeholder="Type your title..." />
+        <TitleInput type="text" placeholder="Type your title..." onChange={handleTitle} value={title}/>
         Description
-        <DescriptionTextArea placeholder="Type your Details..." />
+        <DescriptionTextArea placeholder="Type your Details..." onChange={handleContent} value={content}/>
         Reviewers
         <Select<OptionType, true>  // 타입을 명시하여 isMulti가 true임을 지정
             styles={SelectBox as StylesConfig<OptionType, true>}
@@ -142,7 +173,7 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
           />
         {priority}
         <CreateButtonBox>
-          {/* <ButtonCreateNewPR text="Create New Request"/> */}
+          <ButtonCreateNewPR text="Create New Request" btnEvent={handlePostPR}/>
         </CreateButtonBox>
         <TabChange values={Object.values(TabsEnum)} 
           selectedTab={selectedTab} 

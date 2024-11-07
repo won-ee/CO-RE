@@ -22,6 +22,20 @@
     content: string;
   }
 
+export interface CreatePR{
+  title: string,
+  body: string,
+  base: string,
+  head: string,
+  owner: string,
+  repo: string,
+  description: string,
+  afterReview: boolean,
+  deadline: string,
+  priority: number,
+  writerId: string
+}
+
 export interface CalendarPRParamsType {
   owner: string;
   repo: string;
@@ -52,4 +66,5 @@ export interface PRDegailParamsType {
   owner: string;
   repo: string;
   pullId: number;
+
 }
