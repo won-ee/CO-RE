@@ -67,15 +67,12 @@ export const LineContainer = styled.div<{ className?: string }>`
   display: flex;
   align-items: center;
   /* padding: 2px 0; */
-  cursor: pointer;
+  /* cursor: pointer; */
   background-color: ${({ className }) =>
     className === 'add' ? '#e6ffed' : className === 'remove' ? '#ffeef0' : className==='hunkHeader' ? '#DDF4FF':'transparent'};
-  &:hover {
-    background-color: #ebedf0;
-    /* LineNumberBox에 hover 색상 적용 */
-    & > ${LineNumberBox} {
-      background-color: #ebedf0; /* LineNumberBox가 hover 시 색상을 상속 받도록 설정 */
-    }
+  &:hover{
+    background-color: ${({ className }) => 
+      className === 'collapsed' ? '#F6F8FA' : ''}; 
   }
 `;
 
@@ -95,11 +92,15 @@ export const LineSymbol = styled.div`
   color: black;
 `;
 export const LineContent = styled.div`
+  display: flex;
+  gap: 4px;
   flex: 1;
   padding: 2px 5px;
   font-size: 0.875em;
   color: #24292e;
-  
+  &:hover .hover-button {
+    display: flex;
+  }
 `;
 
 export const CollapsedLinesContent = styled.div`

@@ -12,9 +12,12 @@ import {
   HeaderToggle,
   VectorImg,
   LineNumberBox,
-  LineSymbol
+  LineSymbol,
+  
 } from './SectionChanges.styled';
 import Vector from '../../assets/low.png'
+import ButtonReview from '../buttons/ButtonReview';
+import CardCodeReview from '../card/CardCodeReview';
 
 interface SectionChangesProps {
   changes: {
@@ -99,10 +102,13 @@ const parsePatchWithCollapsedContent = (patch: string, content: string): Line[] 
   return result;
 };
 
-
 const SectionChanges: React.FC<SectionChangesProps> = ({ changes }) => {
-  const [expandedCards, setExpandedCards] = useState<{ [key: number]: boolean }>({});
+  const [expandedCards, setExpandedCards] = useState<{ [key: number]: boolean }>(
+    () => changes.reduce((acc, _, index) => ({ ...acc, [index]: true }), {})
+  );
   const [expandedGroups, setExpandedGroups] = useState<{ [key: number]: boolean }>({});
+  const [hoveredLineId, setHoveredLineId] = useState<number | null>(null); // 현재 호버된 줄의 ID 상태
+  const [reviewLineIndex, setReviewLineIndex] = useState<number | null>(null); // 리뷰가 표시될 줄의 인덱스
 
   const toggleCard = (index: number) => {
     setExpandedCards((prev) => ({ ...prev, [index]: !prev[index] }));
@@ -111,6 +117,15 @@ const SectionChanges: React.FC<SectionChangesProps> = ({ changes }) => {
   const toggleCollapse = (id: number) => {
     setExpandedGroups((prev) => ({ ...prev, [id]: !prev[id] }));
   };
+
+  const handleReview = (index:number)=>{
+    setReviewLineIndex((prevIndex) => (prevIndex === index ? null : index)); // 동일 줄 클릭 시 닫힘
+  }
+
+  const handleCancel = () => {
+    setReviewLineIndex(null); // 리뷰 창 닫기
+  };
+  
 
   return (
     <div>
@@ -134,7 +149,7 @@ const SectionChanges: React.FC<SectionChangesProps> = ({ changes }) => {
                 {parsePatchWithCollapsedContent(change.file.patch, change.content).map((line, idx) => (
                   <React.Fragment key={idx}>
                     {line.type === 'collapsed' ? (
-                      <LineContainer onClick={() => toggleCollapse(line.id!)} style={{ flexDirection: 'column', alignItems: 'start' }}>
+                      <LineContainer onClick={() => toggleCollapse(line.id!)} style={{ flexDirection: 'column', alignItems: 'start', cursor:'pointer' }} className={line.type}>
                         <LineContent className={line.type}>
                           {expandedGroups[line.id!]
                             ? `▲ Hide ${line.count} hidden lines`
@@ -163,17 +178,22 @@ const SectionChanges: React.FC<SectionChangesProps> = ({ changes }) => {
                         <LineContent>{line.content}</LineContent>
                       </LineContainer>
                     ) : (
-                      <LineContainer className={line.type}>
-                        
+                      <>
+                      <LineContainer className={line.type}
+                        onMouseEnter={() => setHoveredLineId(idx)}
+                        onMouseLeave={() => setHoveredLineId(null)}>        
                         <LineNumberBox className={line.type}>
                           <LineNumber>{line.originalLineNumber !== null ? line.originalLineNumber + 1 : ''}</LineNumber>
                           <LineNumber>{line.modifiedLineNumber !== null ? line.modifiedLineNumber + 1 : ''}</LineNumber>
                         </LineNumberBox>
                         <LineSymbol className={line.type}>
-                            {line.type === 'add' ? '+' : line.type === 'remove' ? '-' : ''}
-                          </LineSymbol>
+                          {hoveredLineId === idx ? <ButtonReview btnEvent={()=>handleReview(idx)} />:
+                          line.type === 'add' ? '+' : line.type === 'remove' ? '-' : ''}
+                        </LineSymbol>
                         <LineContent className={line.type}>{line.content}</LineContent>
                       </LineContainer>
+                      {reviewLineIndex === idx && <CardCodeReview onCancel={handleCancel}/>}
+                      </>
                     )}
                   </React.Fragment>
                 ))}
