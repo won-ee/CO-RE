@@ -14,7 +14,7 @@ eureka:
     register-with-eureka: false
     fetch-registry: false
     service-url:
-      defaultZone: https://54.180.238.131:8761/eureka/
+      defaultZone: https://k11s106.p.ssafy.io:8761/eureka/
   server:
     enable-self-preservation: true
     #    서버가 요청을 받기 전 대기할 초기 시간
