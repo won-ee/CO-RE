@@ -1,13 +1,24 @@
 import { useQuery } from 'react-query';
-import { fetchPullRequest } from '../api/pullRequestAPI';
-import { PullRequestParams, PullRequestData } from '../Types/pullRequestType';
+import { getCalendarPR, getPRDetail } from '../api/pullRequestAPI';
+import { PRDataType, CalendarPRParamsType, PRDegailParamsType } from '../Types/pullRequestType';
 
-export const usePullRequestData = (params: PullRequestParams) => {
-  return useQuery<PullRequestData[], Error>(
+export const useQueryCalendarPR = (params: CalendarPRParamsType) => {
+  return useQuery<PRDataType[], Error>(
     ['pullRequest', params],
-    () => fetchPullRequest(params),
+    () => getCalendarPR(params),
     {
       enabled: !!params.writer && !!params.month && !!params.year, 
+      staleTime: 1000 * 60 * 5, 
+    }
+  );
+};
+
+export const useQueryPRDetail = (params: PRDegailParamsType) => {
+  return useQuery<PRDataType, Error>(
+    ['pullRequest', params],
+    () => getPRDetail(params),
+    {
+      enabled: !!params.pullId, 
       staleTime: 1000 * 60 * 5, 
     }
   );

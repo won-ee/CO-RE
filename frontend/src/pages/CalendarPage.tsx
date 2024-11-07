@@ -1,22 +1,23 @@
 import React from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
-import "./CalenderPage.css"
-import { usePullRequestData } from '../hooks/usePullRequestData';
-import { PullRequestParams } from '../Types/pullRequestType';
+import "./CalendarPage.css"
+import { useQueryCalendarPR } from '../hooks/usePullRequestData';
+import { CalendarPRParamsType } from '../Types/pullRequestType';
 import { Block } from '../styles/GlobalStyled';
 import { useNavigate } from 'react-router-dom';
 
+const params: CalendarPRParamsType = {
+  owner: 'SSAFY',
+  repo: 'CORE',
+  writer: 'jmeve24',
+  month: 10,
+  year: 2024,
+};
+
 const CalenderPage:React.FC = () => {
-  const params: PullRequestParams = {
-    owner: 'SSAFY',
-    repo: 'CORE',
-    writer: 'jmeve24',
-    month: 10,
-    year: 2024,
-  };
   const navigate = useNavigate(); 
-  const { data, error, isLoading } = usePullRequestData(params);
+  const { data, error, isLoading } = useQueryCalendarPR(params);
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
