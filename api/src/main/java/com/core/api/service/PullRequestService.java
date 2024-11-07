@@ -85,7 +85,7 @@ public class PullRequestService {
     }
 
     private CommitDto toCommitDto(Commit commit) {
-        List<CommentDto> comments = commit.getComments()
+        List<CommentDto> comments = commit.getReviews()
                 .stream()
                 .map(CommentDto::from)
                 .toList();

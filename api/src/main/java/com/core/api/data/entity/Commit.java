@@ -1,6 +1,7 @@
 package com.core.api.data.entity;
 
 
+import com.core.api.data.dto.github.CommitServerDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -22,7 +23,23 @@ public class Commit extends Base {
     @JoinColumn(name = "pr_id", nullable = false)
     private PullRequest pullRequest;
 
+    @Column(name = "commit_parent")
+    private String parent;
+
+    @Column(name = "commit_second_parent")
+    private String secondParent;
+
     @OneToMany(mappedBy = "commit", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments = new ArrayList<>();
+    private List<Review> reviews = new ArrayList<>();
+
+    public static Commit from(CommitServerDto commitServerDto, PullRequest pullRequest) {
+        Commit commit = new Commit();
+        commit.id = commitServerDto.sha();
+        commit.message = commitServerDto.message();
+        commit.pullRequest = pullRequest;
+        commit.parent = commitServerDto.parent();
+        commit.secondParent = commitServerDto.secondParent();
+        return commit;
+    }
 
 }

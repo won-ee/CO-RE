@@ -1,18 +1,10 @@
-export interface PullRequestParams {
-    owner: string;
-    repo: string;
-    writer: string;
-    month: number;
-    year: number;
-  }
-  
-  export interface Reviewer {
+  export interface ReviewerType {
     id: number;
     reviewerId: string;
     score: number;
   }
   
-  export interface Commit {
+  export interface CommitType {
     id: number;
     message: string;
     author: string;
@@ -57,4 +49,37 @@ export interface CreatePRType{
   deadline: string,
   priority: number,
   writerId: string
+}
+
+export interface CalendarPRParamsType {
+  owner: string;
+  repo: string;
+  writer: string;
+  month: number;
+  year: number;
+}
+
+export interface PRDataType {
+  id: number;
+  title: string;
+  pullRequestId: number;
+  writerId: string;
+  writerImg:string
+  summary: string;
+  head: string;
+  base: string;
+  mergeStatus: boolean;
+  priority: number;
+  afterReview: boolean;
+  deadline: string;
+  createdDate: string;
+  commits: CommitType[];
+  reviewers: ReviewerType[];
+}
+
+export interface PRDegailParamsType {
+  owner: string;
+  repo: string;
+  pullId: number;
+
 }

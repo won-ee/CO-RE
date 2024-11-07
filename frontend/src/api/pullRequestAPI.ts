@@ -3,14 +3,14 @@ import { PullRequestData, PullRequestParams, CreatePRType } from '../Types/pullR
 
 const BASE_URL = process.env.REACT_APP_API_BASE_URL; 
 
-export const fetchPullRequest = async ({
+export const getCalendarPR = async ({
     owner,
     repo,
     writer,
     month,
     year,
-  }: PullRequestParams): Promise<PullRequestData[]> => {
-    const response = await axios.get<PullRequestData[]>(
+  }: CalendarPRParamsType): Promise<PRDataType[]> => {
+    const response = await axios.get<PRDataType[]>(
       `${BASE_URL}/pull-request/${owner}/${repo}/user`,
       {
         params: {
@@ -31,4 +31,14 @@ export const postCreatePR =async (PRData:CreatePRType)=>{
     }
   );
   return data;
+}
+export const getPRDetail = async ({
+  owner,
+  repo,
+  pullId
+}: PRDegailParamsType): Promise<PRDataType> => {
+  const response = await axios.get<PRDataType>(
+    `${BASE_URL}/pull-request/${owner}/${repo}/${pullId}`,
+  );
+  return response.data;
 };

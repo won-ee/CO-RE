@@ -91,6 +91,7 @@ export const GraphContainer = styled.div`
 `;
 
 export const VersionNoteWrapper = styled.div`
+  position: relative;
   background-color: #e7eefc;
   padding: 20px;
   border-radius: 10px;
@@ -105,6 +106,7 @@ export const VersionNoteWrapper = styled.div`
   }
 
   .edit-icon {
+    position: absolute;
     cursor: pointer;
     width: 24px;
     height: 24px;
@@ -132,4 +134,65 @@ export const NoteToggleButton = styled.button`
   &:hover {
     color: #2c3a9e;
   }
+`;
+
+export const SelectedTagsContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+  margin-left: 8px;
+`;
+
+export const Tag = styled.div`
+  background-color: #e0e0e0;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 14px;
+  color: #333;
+`;
+
+export const OptionContainer = styled.div`
+  margin-bottom: 10px;
+`;
+
+export const OptionHeader = styled.div`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+`;
+
+export const Checkbox = styled.input`
+  width: 18px;
+  height: 18px;
+`;
+
+export const OptionLabel = styled.span<{ isSelected: boolean }>`
+  margin-left: 8px;
+  font-size: 16px;
+  font-weight: ${({ isSelected }) => (isSelected ? "bold" : "normal")};
+`;
+
+export const SubOptionsContainer = styled.div`
+  padding-left: 20px;
+  margin-top: 5px;
+`;
+
+export const SubOptionLabel = styled.span<{ isSelected: boolean }>`
+  margin-left: 8px;
+  font-size: 16px;
+  font-weight: ${({ isSelected }) => (isSelected ? "bold" : "normal")};
+`;
+
+export const ChevronIcon = styled.span`
+  margin-left: auto;
+`;
+
+export const EditIconImage = styled.img`
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
 `;

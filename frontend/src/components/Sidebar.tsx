@@ -22,7 +22,7 @@ function Sidebar() {
           <ButtonSidebar img={Icon_pr} name='Pull Request' ischoiced={location.pathname.includes('pullrequest')} path="/pullrequest"/>
           <ButtonSidebar img={Icon_issue} name='Issue' ischoiced={location.pathname.includes('issue')} path="/issue"/>
           <ButtonSidebar img={Icon_history} name='History' ischoiced={location.pathname.includes('history')} path="/history"/>
-          <ButtonSidebar img={Icon_calender} name='Calender' ischoiced={location.pathname.includes('calender')} path="/calender"/>
+          <ButtonSidebar img={Icon_calender} name='calendar' ischoiced={location.pathname.includes('calendar')} path="/calendar"/>
           <ButtonSidebar img={Icon_member} name='Member' ischoiced={location.pathname.includes('member')} path="/member"/>
           <ButtonBottomGroup>
             <Divider />

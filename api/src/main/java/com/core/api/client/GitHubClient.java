@@ -6,6 +6,8 @@ import com.core.api.data.dto.github.CommitMessageServerDto;
 import com.core.api.data.dto.github.PullRequestInputServerDto;
 import com.core.api.data.dto.response.BranchResponseDto;
 import com.core.api.data.dto.response.MergeResponseDto;
+import com.core.api.data.dto.review.ReviewInputDto;
+import com.core.api.data.dto.review.ReviewSimpleDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -59,4 +61,56 @@ public interface GitHubClient {
             @PathVariable("baseHead") String baseHead
     );
 
+    @PostMapping("/repos/{owner}/{repo}/issues/{pullId}/comments")
+    void createComment(
+            @PathVariable("owner") String owner,
+            @PathVariable("repo") String repo,
+            @PathVariable("pullId") int pullId,
+            @RequestBody ReviewSimpleDto reviewSimpleDto
+    );
+
+    @PatchMapping("/repos/{owner}/{repo}/issues/comments/{commentId}")
+    void updateComment(
+            @PathVariable("owner") String owner,
+            @PathVariable("repo") String repo,
+            @PathVariable("commentId") Long commentId,
+            @RequestBody ReviewSimpleDto reviewSimpleDto
+    );
+
+    @DeleteMapping("/repos/{owner}/{repo}/issues/comments/{commentId}")
+    void deleteComment(
+            @PathVariable("owner") String owner,
+            @PathVariable("repo") String repo,
+            @PathVariable("commentId") Long commentId
+    );
+
+    @PostMapping("/repos/{owner}/{repo}/pulls/{pullId}/reviews")
+    void createReview(
+            @PathVariable("owner") String owner,
+            @PathVariable("repo") String repo,
+            @PathVariable("pullId") int pullId,
+            @RequestBody ReviewInputDto reviewInputDto
+    );
+
+    @PatchMapping("/repos/{owner}/{repo}/pulls/comments/{commentId}")
+    void updateReview(
+            @PathVariable("owner") String owner,
+            @PathVariable("repo") String repo,
+            @PathVariable("commentId") Long commentId,
+            @RequestBody ReviewSimpleDto reviewSimpleDto
+    );
+
+    @DeleteMapping("/repos/{owner}/{repo}/pulls/comments/{commentId}")
+    void deleteReview(
+            @PathVariable("owner") String owner,
+            @PathVariable("repo") String repo,
+            @PathVariable("commentId") Long commentId
+    );
+
+    @GetMapping("/repos/{owner}/{repo}/pulls/{pullId}/commits")
+    List<Object> getCommits(
+            @PathVariable("owner") String owner,
+            @PathVariable("repo") String repo,
+            @PathVariable("pullId") Integer pullId
+    );
 }

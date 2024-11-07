@@ -24,6 +24,7 @@ export const HeaderLayout = styled.div`
   height:70px;
   font-weight: bold;
   font-size:28px;
+  z-index: -20;
 `
 export const ChoiceStyles: SingleSelectType = {
   control: (provided) => ({
@@ -38,7 +39,7 @@ export const ChoiceStyles: SingleSelectType = {
     fontSize:'18px',
     fontWeight:'normal',
     '&:hover': {
-      borderColor: 'black',  // 마우스를 올렸을 때 테두리 색상 유지
+      borderColor: 'black', 
     },
   }),
   menu: (provided) => ({
@@ -65,5 +66,6 @@ export const NavLayout = styled.div`
   right: 0;
   bottom: 0;
   background-color: #F5F6FA;
-  overflow-y: auto;         
+  overflow-y: auto;       
+  z-index  : 49;
 `
