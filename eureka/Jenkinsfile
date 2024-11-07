@@ -30,8 +30,10 @@ pipeline {
         }
 
         stage ('Build') {
-            dir(eureka) {
-                sh './gradlew build'
+            steps {
+                dir(eureka) {
+                    sh './gradlew build'
+                }
             }
         }
 
