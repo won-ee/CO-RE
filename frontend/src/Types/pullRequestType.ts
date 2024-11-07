@@ -35,7 +35,7 @@ export interface PullRequestParams {
     commits: Commit[];
     reviewers: Reviewer[];
   }
-  export interface Change {
+  export interface ChangeType {
     file: {
       filename: string;
       status: string;
@@ -45,7 +45,7 @@ export interface PullRequestParams {
     };
     content: string;
   }
-export interface CreatePR{
+export interface CreatePRType{
   title: string,
   body: string,
   base: string,

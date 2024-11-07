@@ -1,7 +1,7 @@
 import axios from 'axios';
-import { PullRequestData, PullRequestParams } from '../Types/pullRequestType';
+import { PullRequestData, PullRequestParams, CreatePRType } from '../Types/pullRequestType';
 
-const BASE_URL = 'http://3.37.87.183:8080'; 
+const BASE_URL = process.env.REACT_APP_API_BASE_URL; 
 
 export const fetchPullRequest = async ({
     owner,
@@ -22,3 +22,13 @@ export const fetchPullRequest = async ({
     );
     return response.data;
   };
+
+export const postCreatePR =async (PRData:CreatePRType)=>{
+  const { data } = await axios.post(`${BASE_URL}/pull-request`,PRData,{
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+  return data;
+};

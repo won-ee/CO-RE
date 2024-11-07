@@ -1,6 +1,6 @@
 import { useMutation } from "react-query";
-import { PostCreatePR } from "../api/PostCreatePR";
+import { postCreatePR } from "../api/pullRequestAPI";
 
 export const useMutationCreatePR=()=>{
-    return useMutation(PostCreatePR)
+    return useMutation(postCreatePR)
 }
