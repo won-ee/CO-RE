@@ -10,33 +10,16 @@
     author: string;
     timestamp: string;
   }
-  
-  export interface PullRequestData {
-    id: number;
-    title: string;
-    pullRequestId: number;
-    writerId: string;
-    summary: string;
-    head: string;
-    base: string;
-    mergeStatus: boolean;
-    priority: number;
-    afterReview: boolean;
-    deadline: string;
-    createdDate: string;
-    commits: Commit[];
-    reviewers: Reviewer[];
-  }
-  export interface ChangeType {
-    file: {
-      filename: string;
-      status: string;
-      additions: number;
-      deletions: number;
-      patch: string;
-    };
-    content: string;
-  }
+export interface ChangeType {
+  file: {
+    filename: string;
+    status: string;
+    additions: number;
+    deletions: number;
+    patch: string;
+  };
+  content: string;
+}
 export interface CreatePRType{
   title: string,
   body: string,
