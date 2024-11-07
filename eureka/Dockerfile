@@ -1,6 +1,6 @@
 FROM openjdk:17-slim
 
-ARG JAR_FILE=./build/libs/eureka-0.0.1-SNAPSHOT.jar
+ARG JAR_FILE=/home/ubuntu/eureka/eureka-0.0.1-SNAPSHOT.jar
 COPY ${JAR_FILE} app.jar
 
 EXPOSE 8761

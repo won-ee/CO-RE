@@ -1,13 +1,15 @@
 pipeline {
     agent any
     environment {
+        // 공통 env 변수
         REMOTE_USER = 'ubuntu'
         REMOTE_SERVER_IP = credentials("deployServerIP")
         MATTERMOST_URL = credentials("mattermost-url")
 
-        DOCKER_HUB_CREDENTIALS = credentials("docker-hub-credentials")
-        DOCKER_IMAGE_NAME = 'algostudyy/core'
-        IMAGE_TAG = 'eureka'
+        // build env
+        JAR_NAME = 'eureka-0.0.1-SNAPSHOT.jar'
+        IMAGE_NAME = 'eureka_service'
+        REMOTE_PATH = '/home/ubuntu/eureka'
     }
 
     stages {
@@ -19,42 +21,41 @@ pipeline {
 
                     mattermostSend(
                         color: '#CDC1FF',
-                        message: "### :hungry_koongya: **<${env.BUILD_URL}|Eureka #${env.BUILD_NUMBER}> 빌드 시작**\n\n![](https://media.giphy.com/media/JdCz7YXOZAURq/giphy.gif)",
-                        endpoint: MATTERMOST_URL, 
+                        message: "### :hungry_koongya: **<${env.BUILD_URL}|Eureka #${env.BUILD_NUMBER}> 빌드 시작**\n\n${Author_Name}(${Author_Email})\n\n![](https://media.giphy.com/media/JdCz7YXOZAURq/giphy.gif)",
+                        endpoint: MATTERMOST_URL,
                         channel: 'jenkins'
                     )
                 }
             }
         }
 
-        stage('Build Docker Image') {
-            steps {
-                dir('eureka') {
-                    sh 'docker build -t ${DOCKER_IMAGE_NAME}:${IMAGE_TAG} .'
-                }
+        stage ('Build') {
+            dir(eureka) {
+                sh './gradlew build'
             }
         }
 
-        stage('Push to Docker Hub') {
+        stage('Transfer Files') {
             steps {
-                script {
-                    docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-credentials') {
-                        sh 'docker push ${DOCKER_IMAGE_NAME}:${IMAGE_TAG}'
-                    }
-                }
-            }
-        }
-
-        stage('Pull and Run on Remote Server') {
-            steps {
-                script {
+                sshagent(credentials: ['remote-server']) {
                     sh """
-                    ssh ${REMOTE_USER}@${REMOTE_SERVER_IP} << EOF
-                        docker pull ${DOCKER_IMAGE_NAME}:${IMAGE_TAG}
-                        docker stop eureka-service || true
-                        docker rm eureka-service || true
-                        docker run -d --name eureka-service -p 8761:8761 ${DOCKER_IMAGE_NAME}:${IMAGE_TAG}
-                    EOF
+                        scp ./eureka/build/libs/${JAR_NAME} ${REMOTE_USER}@${REMOTE_SERVER_IP}:${REMOTE_PATH}
+                        scp ./eureka/Dockerfile ${REMOTE_USER}@${REMOTE_SERVER_IP}:${REMOTE_PATH}
+                    """
+                }
+            }
+        }
+
+        stage('Deploy on Remote Server') {
+            steps {
+                sshagent(credentials: ['remote-server']) {
+                    sh """
+                        ssh ${REMOTE_USER}@${REMOTE_SERVER_IP} '
+                        cd ${REMOTE_PATH} &&
+                        docker build -t ${IMAGE_NAME} . &&
+                        docker stop ${IMAGE_NAME} || true &&
+                        docker rm ${IMAGE_NAME} || true &&
+                        docker run -d -p 8761:8761 --name ${IMAGE_NAME} ${IMAGE_NAME}'
                     """
                 }
             }
@@ -69,7 +70,7 @@ pipeline {
                 def Author_Email = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
                 mattermostSend(
                     color: '#BFECFF', 
-                    message: "### :koongya_zoom_close: **<${env.BUILD_URL}|Eureka #${env.BUILD_NUMBER}> 빌드 성공!**\n\n![](https://media.giphy.com/media/jtFkrEYzGlf9xtdef0/giphy.gif)",
+                    message: "### :koongya_zoom_close: **<${env.BUILD_URL}|Eureka #${env.BUILD_NUMBER}> 빌드 성공!**\n\n${Author_Name}(${Author_Email})\n\n![](https://media.giphy.com/media/jtFkrEYzGlf9xtdef0/giphy.gif)",
                     endpoint: MATTERMOST_URL, 
                     channel: 'jenkins'
                 )
@@ -81,7 +82,7 @@ pipeline {
                 def Author_Email = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
                 mattermostSend(
                     color: '#FFCCEA', 
-                    message: "### :onion_koongya2: **<${env.BUILD_URL}|Eureka #${env.BUILD_NUMBER}> 빌드 실패**\n\nJenkins log 확인이 필요해요.\n![](https://media.giphy.com/media/pm4VOSkAgkj3q/giphy.gif)",
+                    message: "### :onion_koongya2: **<${env.BUILD_URL}|Eureka #${env.BUILD_NUMBER}> 빌드 실패**\n\nJenkins log 확인이 필요해요.\n${Author_Name}(${Author_Email})\n\n![](https://media.giphy.com/media/pm4VOSkAgkj3q/giphy.gif)",
                     endpoint: MATTERMOST_URL, 
                     channel: 'jenkins'
                 )
