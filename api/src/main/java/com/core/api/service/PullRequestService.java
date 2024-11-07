@@ -25,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -56,10 +57,18 @@ public class PullRequestService {
 
     }
 
-    public List<PullRequestDto> getPullRequestList(String owner, String repo) {
-        List<PullRequest> prList = pullRequestRepository.findAllByOwnerAndRepo(owner, repo)
-                .orElseThrow(() -> new RuntimeException("Pull Request not found"));
+    public List<PullRequestDto> getOpenPullRequestOpenedList(String owner, String repo) {
+        List<PullRequest> prList = pullRequestRepository.findOpenPullRequestsByOwnerAndRepo(owner, repo)
+                .orElse(Collections.emptyList());
 
+        return prList.stream()
+                .map(this::toPullRequestDto)
+                .toList();
+    }
+
+    public List<PullRequestDto> getClosedPullRequestOpenedList(String owner, String repo) {
+        List<PullRequest> prList = pullRequestRepository.findClosedPullRequestsByOwnerAndRepo(owner, repo)
+                .orElse(Collections.emptyList());
         return prList.stream()
                 .map(this::toPullRequestDto)
                 .toList();

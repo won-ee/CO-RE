@@ -12,6 +12,12 @@ import java.util.Optional;
 public interface PullRequestRepository extends JpaRepository<PullRequest, Long> {
 
 
+    @Query("SELECT p FROM PullRequest p WHERE p.owner = :owner AND p.repo = :repo AND (p.mergeStatus = false OR p.afterReview = true)")
+    Optional<List<PullRequest>> findOpenPullRequestsByOwnerAndRepo(String owner, String repo);
+
+    @Query("SELECT p FROM PullRequest p WHERE p.owner = :owner AND p.repo = :repo AND (p.mergeStatus = true OR p.afterReview = true)")
+    Optional<List<PullRequest>> findClosedPullRequestsByOwnerAndRepo(String owner, String repo);
+
     Optional<List<PullRequest>> findAllByOwnerAndRepo(String owner, String repo);
 
     Optional<PullRequest> findByOwnerAndRepoAndBaseAndHead(String owner, String repo, String base, String head);
