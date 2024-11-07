@@ -7,7 +7,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import CalendarIcon from '../../assets/icon_calender.png'
 import TabChange from "../tab/TabChange";
 import SectionChanges from "./SectionChanges";
-import SectionCommits from "./SectionCommits";
+// import SectionCommits from "./SectionCommits";
 import ButtonCreateNewPR from "../buttons/ButtonCreateNewPR";
 import { useMutationCreatePR } from "../../hooks/useMutationCreatePR";
 
@@ -97,7 +97,7 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
   ];
 
   const tabComponents = {
-    [TabsEnum.Commit]: <SectionCommits/>,
+    [TabsEnum.Commit]: <SectionChanges changes={changesData} />,
     [TabsEnum.Change]: <SectionChanges changes={changesData} />,
   };
 
