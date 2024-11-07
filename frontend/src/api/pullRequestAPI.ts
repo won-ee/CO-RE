@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { PullRequestData, PullRequestParams, CreatePRType } from '../Types/pullRequestType';
+import { PRDataType, CalendarPRParamsType, PRDegailParamsType } from '../Types/pullRequestType';
 
 const BASE_URL = process.env.REACT_APP_API_BASE_URL; 
 
