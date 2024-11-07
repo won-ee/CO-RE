@@ -17,6 +17,7 @@ public class PullRequestDto {
     String title;
     Integer pullRequestId;
     String writerId;
+    String writerImg;
     String summary;
     String description;
     String head;
@@ -30,7 +31,10 @@ public class PullRequestDto {
     List<ReviewerDto> reviewers;
 
     public static PullRequestDto from(PullRequest pullRequest, List<CommitDto> commits, List<ReviewerDto> reviewers) {
+
+        //TODO : 유저 정보에서 writerImg 받아오기
         return PullRequestDto.builder()
+                .writerImg("https://i.namu.wiki/i/-eAh3vYcyIrcsJuRa27seExMXV5xAz6q58Tjspbgyv99by_od90qDZVqwZRkpx4eyh43u1P8aKCh1XL652gd0kkfPyYac0oiGWKItHx0ZhODdD3QqZsRmdfwaeYslKrnSak_76X4OZ6FndPEHJUd9g.webp")
                 .id(pullRequest.getId())
                 .title(pullRequest.getTitle())
                 .pullRequestId(pullRequest.getPullRequestId())

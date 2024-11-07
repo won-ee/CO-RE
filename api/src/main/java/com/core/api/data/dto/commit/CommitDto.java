@@ -9,13 +9,19 @@ import java.util.List;
 public record CommitDto(
         String id,
         String message,
+        String writerId,
+        String writerImg,
+        String date,
         List<CommentDto> comments
 ) {
-
     public static CommitDto from(Commit commit, List<CommentDto> comments) {
         return new CommitDto(
                 commit.getSha(),
                 commit.getMessage(),
+                commit.getWriterId(),
+                commit.getWriterImg(),
+                commit.getCreatedDate()
+                        .toString(),
                 comments
         );
     }
