@@ -8,9 +8,9 @@ import { Block } from '../styles/GlobalStyled';
 import { useNavigate } from 'react-router-dom';
 
 const params: CalendarPRParamsType = {
-  owner: 'SSAFY',
-  repo: 'CORE',
-  writer: 'jmeve24',
+  owner: 'JEM1224',
+  repo: 'github-api',
+  writer: 'JEM1224',
   month: 10,
   year: 2024,
 };
