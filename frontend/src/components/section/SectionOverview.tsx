@@ -1,21 +1,53 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Container, ContainerLayout, DeadLineBox, OverviewApproveBox, OverviewApproveButton, OverviewApproveContent, OverviewApproveHeader, OverviewContent, OverviewContentBox, OverviewCoreBox, OverviewCoreContentBox, OverviewCoreHeader, OverviewCoreImg, OverviewCoreText, OverviewDayText, OverviewHeaderBox, OverviewHeaderText, OverviewInfoBox, OverviewInput, OverviewName, OverviewProfileImg, OverviewSourceText, OverviewTargetText, OverviewText, RadioButton, RadioCol, RadioGroup, RadioText, Text } from './SectionOverview.styled'
 import core from '../../assets/Core.png'
-const SectionOverview:React.FC = () => {
+import { PRDataType } from '../../Types/pullRequestType';
+interface SectionOverviewProps{
+  data:PRDataType|undefined
+}
+
+const SectionOverview:React.FC<SectionOverviewProps> = ({data}) => {
+  const [dDay, setDDay] = useState(0);
+  const [createDate,setCreateDate] = useState(0)
+
+  useEffect(() => {
+    if (data?.deadline) {
+      const formatDeadline = () => {
+        const deadline = new Date(data.deadline);
+        const today = new Date();
+        const differenceInTime = deadline.getTime() - today.getTime();
+        const differenceInDays = Math.ceil(differenceInTime / (1000 * 60 * 60 * 24));
+        setDDay(differenceInDays);
+      };
+
+      formatDeadline();
+    }
+    if (data?.createdDate) {
+      const formatCreateDate = () => {
+        const createData = new Date(data.createdDate);
+        const today = new Date();
+        const differenceInTime = createData.getTime() - today.getTime();
+        const differenceInDays = Math.ceil(differenceInTime / (1000 * 60 * 60 * 24));
+        setCreateDate(-differenceInDays);
+      }
+      formatCreateDate();
+    }
+  }, []);
+  
   return (
     <>
       <ContainerLayout>
         <OverviewHeaderBox>
-          <DeadLineBox>D-1</DeadLineBox>
-          <OverviewHeaderText>Frame Adjustment</OverviewHeaderText>
+          <DeadLineBox>D-{dDay}</DeadLineBox>
+          <OverviewHeaderText>{data?.title}</OverviewHeaderText>
         </OverviewHeaderBox>
         <OverviewInfoBox>
-          <OverviewProfileImg src="https://i.pravatar.cc/150?img=1" />
-          <OverviewName>Brooks</OverviewName>
-          <OverviewDayText>3days ago</OverviewDayText>
-          <OverviewSourceText>Frame</OverviewSourceText>
+          <OverviewProfileImg src={data?.writerImg} />
+          <OverviewName>{data?.writerId}</OverviewName>
+          <OverviewDayText>{createDate}days ago</OverviewDayText>
+          <OverviewSourceText>{data?.base}</OverviewSourceText>
           <OverviewText>into</OverviewText>
-          <OverviewTargetText>frontend</OverviewTargetText>
+          <OverviewTargetText>{data?.head}</OverviewTargetText>
         </OverviewInfoBox>
         <OverviewContentBox>
           <OverviewContent>
@@ -62,11 +94,7 @@ const SectionOverview:React.FC = () => {
           <OverviewCoreContentBox>
             <OverviewCoreHeader>Summarized by CO:RE</OverviewCoreHeader>
             <OverviewCoreText>
-              This commit includes optimizations in authentication, caching, API
-              performance, and accessibility improvements.
-              <br />
-              It also introduces better error logging, bug fixes in password
-              reset, input validation, and new language support.
+              {data?.summary}
             </OverviewCoreText>
           </OverviewCoreContentBox>
         </OverviewCoreBox>
