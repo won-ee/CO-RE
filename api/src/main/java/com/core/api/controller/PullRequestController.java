@@ -40,6 +40,13 @@ public class PullRequestController {
         return ResponseEntity.ok(pullRequestList);
     }
 
+    @GetMapping("/{owner}/{repo}/{pullId}")
+    public ResponseEntity<PullRequestDto> getPullRequest(@PathVariable String owner, @PathVariable String repo, @PathVariable Integer pullId) {
+        PullRequestDto pullRequest = pullRequestService.getPullRequest(owner, repo, pullId);
+        return ResponseEntity.ok(pullRequest);
+    }
+
+
     @GetMapping("/{owner}/{repo}/user")
     public ResponseEntity<List<PullRequestDto>> getPullRequestListByFilter(
             @PathVariable String owner,

@@ -65,6 +65,13 @@ public class PullRequestService {
                 .toList();
     }
 
+    public PullRequestDto getPullRequest(String owner, String repo, Integer pullId) {
+        PullRequest pr = pullRequestRepository.findByOwnerAndRepoAndPullRequestId(owner, repo, pullId)
+                .orElseThrow(() -> new RuntimeException("Pull Request not found"));
+
+        return toPullRequestDto(pr);
+    }
+
     public List<PullRequestDto> getPullRequestListByFilter(PullRequestDateFilterDto filter) {
         List<PullRequest> prList = pullRequestRepository.findAllByOwnerRepoByFilter(filter)
                 .orElseThrow(() -> new RuntimeException("Pull Request not found"));
