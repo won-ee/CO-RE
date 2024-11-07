@@ -16,7 +16,7 @@ public interface PullRequestRepository extends JpaRepository<PullRequest, Long> 
 
 
     @Query("SELECT pr FROM PullRequest pr " +
-            "JOIN pr.reviewers r " +
+            "LEFT JOIN pr.reviewers r " +
             "WHERE (pr.writerId = :#{#param.writer()} OR r.reviewerId = :#{#param.writer()}) " +
             "AND pr.owner = :#{#param.owner()} " +
             "AND pr.repo = :#{#param.repo()} " +

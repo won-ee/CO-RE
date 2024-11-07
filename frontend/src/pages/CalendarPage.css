@@ -14,7 +14,9 @@
 
 
 /* 달력부분 */
-
+.fc-event {
+    cursor: pointer;
+  }
 
 /* 일요일 날짜: 빨간색 */
 .fc .fc-day-sun a {
@@ -117,3 +119,44 @@
     font-weight: 500;
     font-size: 14px;
 }
+
+.fc-popover {
+    background-color: #fff; /* 배경색 */
+    border: 1px solid #ccc; /* 테두리 색 */
+    border-radius: 5px; /* 둥근 모서리 */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+  }
+  
+  /* 제목 스타일 수정 */
+  .fc-popover .fc-popover-header {
+    background-color: #f0f0f0; /* 헤더 배경색 */
+    color: #333; /* 텍스트 색 */
+    padding: 10px; /* 패딩 */
+    font-weight: bold; /* 글자 두께 */
+  }
+  
+  /* 내용 스타일 수정 */
+  .fc-popover .fc-popover-body {
+    padding: 10px; /* 패딩 */
+    color: #666; /* 텍스트 색 */
+  }
+
+  /* 팝업 헤더 스타일 수정 */
+.fc-popover .fc-popover-header {
+    background-color: #007bff; /* 헤더 배경색 */
+    color: #ffffff; /* 텍스트 색 */
+    padding: 10px; /* 패딩 */
+    font-weight: bold; /* 글자 두께 */
+    border-top-left-radius: 5px; /* 둥근 모서리 */
+    border-top-right-radius: 5px; /* 둥근 모서리 */
+    text-align: center; /* 텍스트 정렬 */
+  }
+  
+  /* 팝업 헤더의 닫기 버튼 스타일 수정 */
+  .fc-popover .fc-popover-header .fc-close {
+    color: #ffffff; /* 닫기 버튼 텍스트 색 */
+    font-size: 16px; /* 닫기 버튼 텍스트 크기 */
+    float: right; /* 오른쪽 정렬 */
+    cursor: pointer; /* 커서 변경 */
+  }
+  
