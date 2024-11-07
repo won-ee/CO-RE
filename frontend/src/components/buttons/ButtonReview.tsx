@@ -1,10 +1,10 @@
 import { ButtonReviewLayout } from "./ButtonReview.styled";
 
-interface Props{
+interface ButtonReviewProps{
   btnEvent:() => void;
 }
 
-function ButtonReview({ btnEvent }: Props) {
+function ButtonReview({ btnEvent }: ButtonReviewProps) {
   return (
     <ButtonReviewLayout onClick={()=>btnEvent()}>
       +

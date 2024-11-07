@@ -10,7 +10,23 @@
     author: string;
     timestamp: string;
   }
-
+  
+  export interface PullRequestData {
+    id: number;
+    title: string;
+    pullRequestId: number;
+    writerId: string;
+    summary: string;
+    head: string;
+    base: string;
+    mergeStatus: boolean;
+    priority: number;
+    afterReview: boolean;
+    deadline: string;
+    createdDate: string;
+    commits: Commit[];
+    reviewers: Reviewer[];
+  }
   export interface ChangeType {
     file: {
       filename: string;
@@ -21,8 +37,7 @@
     };
     content: string;
   }
-
-export interface CreatePR{
+export interface CreatePRType{
   title: string,
   body: string,
   base: string,
