@@ -1,58 +1,63 @@
 package com.core.backend.service;
 
+import com.core.backend.data.dto.Users.UserGroupsDto;
 import com.core.backend.data.dto.Users.UserInfoDto;
 import com.core.backend.data.entity.JiraOAuthToken;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import com.core.backend.data.entity.Users;
+import com.core.backend.data.repository.UserRepository;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @Slf4j
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class CallbackService {
 
-    private final JiraOAuthTokenService JiraOAuthTokenService;
+    private final JiraOAuthTokenService jiraOAuthTokenService;
     private final JiraService jiraService;
     private final JwtTokenService jwtTokenService;
     private final UserService userService;
+    private final GroupService groupService;
+    private final UserRepository userRepository;
 
-    public CallbackService(JiraOAuthTokenService JiraOAuthTokenService, JiraService jiraService, JwtTokenService jwtTokenService, UserService userService) {
-        this.JiraOAuthTokenService = JiraOAuthTokenService;
-        this.jiraService = jiraService;
-        this.jwtTokenService = jwtTokenService;
-        this.userService = userService;
-    }
 
-    //    TODO: user정보, project정보 DB에 저장
-    public JiraOAuthToken loginCallBack(String authorizationCode, HttpServletRequest request, HttpServletResponse response) {
+    public Map<String, Object> loginAccessCallBack(String authorizationCode) {
         log.info("Authorization code received: {}", authorizationCode);
 
         try {
-            JiraOAuthToken jiraOAuthToken = jiraService.exchangeAuthorizationCode(authorizationCode, request.getSession());
+            JiraOAuthToken jiraOAuthToken = jiraService.exchangeAuthorizationCode(authorizationCode);
             log.info("OAuthToken : {}", jiraOAuthToken);
 
             String accessToken = jiraOAuthToken.getAccessToken();
 
-            UserInfoDto userInfo = jiraService.getUserInfo(accessToken, request.getSession());
+            UserInfoDto userInfo = jiraService.getUserInfo(accessToken);
             log.info("User Info: {}", userInfo);
 
+            Users user = userRepository.findByEmail(userInfo.email()).orElse(null);
             JiraOAuthToken newJiraOAuthToken = new JiraOAuthToken(userInfo.email(), jiraOAuthToken.getAccessToken(), jiraOAuthToken.getRefreshToken());
-//            tokenService.saveOAuthToken(newOAuthToken);
+            jiraOAuthTokenService.saveOAuthToken(newJiraOAuthToken);
+            Long userId;
+            if (user == null) {
+                List<UserGroupsDto> groupList = jiraService.getGroups(accessToken);
+                log.info("Groups: {}", groupList);
+                userId = userService.saveUser(userInfo);
+                groupService.saveGroups(groupList);
+            } else {
+                userId = user.getId();
+            }
 
-//            if (userService.findUserEmail(userInfo.email())) {
-//                // 프로젝트 정보를 동기적으로 가져옴
-//                List<UserProjectsDto> projectList = jiraService.getProjects(accessToken, request.getSession());
-//                log.info("Projects: {}", projectList);
-//
-//                userService.saveUserAndProjects(userInfo, projectList);
-//            }
+            Map<String, Object> responseMap = new HashMap<>();
+            responseMap.put("userId", userId);
+            responseMap.put("newJiraOAuthToken", newJiraOAuthToken);
 
-//            List<UserProjectsDto> projectList = jiraService.getProjects(accessToken, request.getSession());
-//            log.info("Projects: {}", projectList);
-
-            return newJiraOAuthToken;
-
-//            createRedirectResponseWithJWT(userInfo.email(), response);
+            return responseMap;
         } catch (Exception e) {
             log.error("Error during login callback processing: {}", e.getMessage());
         }

@@ -1,9 +1,9 @@
 package com.core.backend.service;
 
+import com.core.backend.data.dto.Users.UserGroupsDto;
 import com.core.backend.data.dto.Users.UserInfoDto;
-import com.core.backend.data.dto.Users.UserProjectsDto;
 import com.core.backend.data.entity.JiraOAuthToken;
-import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -19,6 +19,7 @@ import java.util.Map;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class JiraService {
 
     private final RestTemplate restTemplate;
@@ -32,11 +33,7 @@ public class JiraService {
     @Value("${spring.security.oauth2.client.registration.jira.redirect-uri}")
     private String redirectUri;
 
-    public JiraService(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-    }
-
-    public JiraOAuthToken exchangeAuthorizationCode(String authorizationCode, HttpSession session) {
+    public JiraOAuthToken exchangeAuthorizationCode(String authorizationCode) {
         Map<String, String> requestBody = Map.of(
                 "grant_type", "authorization_code",
                 "client_id", clientId,
@@ -61,13 +58,11 @@ public class JiraService {
         String refreshToken = (String) response.get("refresh_token");
         log.info("Access Token: {}", accessToken);
         log.info("Refresh Token: {}", refreshToken);
-        session.setAttribute("OAuthAccessToken", accessToken);
-        session.setAttribute("OAuthRefreshToken", refreshToken);
 
         return new JiraOAuthToken(null, accessToken, refreshToken);
     }
 
-    public List<UserProjectsDto> getProjects(String accessToken, HttpSession session) {
+    public List<UserGroupsDto> getGroups(String accessToken) {
         HttpEntity<String> request = new HttpEntity<>(createHeadersWithAuthorization(accessToken));
 
         List<Map<String, Object>> response = restTemplate.exchange(
@@ -76,14 +71,11 @@ public class JiraService {
                 request,
                 new ParameterizedTypeReference<List<Map<String, Object>>>() {
                 }).getBody();
-
-        session.setAttribute("projects", response);
-
         assert response != null;
-        return convertToUserProjectsDto(response);
+        return convertToUserGroupsDto(response);
     }
 
-    public UserInfoDto getUserInfo(String accessToken, HttpSession session) {
+    public UserInfoDto getUserInfo(String accessToken) {
 
         HttpEntity<String> request = new HttpEntity<>(createHeadersWithAuthorization(accessToken));
 
@@ -93,8 +85,6 @@ public class JiraService {
                 request,
                 new ParameterizedTypeReference<Map<String, Object>>() {
                 }).getBody();
-
-        session.setAttribute("user", response);
 
         assert response != null;
         return convertToUserInfoDto(response);
@@ -117,23 +107,23 @@ public class JiraService {
         return headers;
     }
 
-    private ArrayList<UserProjectsDto> convertToUserProjectsDto(List<Map<String, Object>> projects) {
-        ArrayList<UserProjectsDto> userProjects = new ArrayList<>();
+    private ArrayList<UserGroupsDto> convertToUserGroupsDto(List<Map<String, Object>> groups) {
+        ArrayList<UserGroupsDto> userGroups = new ArrayList<>();
 
-        for (Map<String, Object> project : projects) {
-            String projectId = (String) project.get("id");
-            String projectName = (String) project.get("name");
-            String projectUrl = (String) project.get("url");
-            String projectAvatarUrl = (String) project.get("avatarUrl");
+        for (Map<String, Object> group : groups) {
+            String groupId = (String) group.get("id");
+            String groupName = (String) group.get("name");
+            String groupUrl = (String) group.get("url");
+            String groupAvatarUrl = (String) group.get("avatarUrl");
 
-            UserProjectsDto projectDto = new UserProjectsDto(
-                    projectId,
-                    projectName,
-                    projectUrl,
-                    projectAvatarUrl
+            UserGroupsDto groupDto = new UserGroupsDto(
+                    groupId,
+                    groupName,
+                    groupUrl,
+                    groupAvatarUrl
             );
-            userProjects.add(projectDto);
+            userGroups.add(groupDto);
         }
-        return userProjects;
+        return userGroups;
     }
 }

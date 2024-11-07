@@ -4,6 +4,6 @@ import java.util.ArrayList;
 
 public record UserLoginDto(
         UserInfoDto userInfo,
-        ArrayList<UserProjectsDto> projectList
+        ArrayList<UserGroupsDto> groupList
 ) {
 }

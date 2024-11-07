@@ -19,11 +19,26 @@ public class Projects {
     @Column(name = "project_id", nullable = false)
     private Long id;
 
-    @Column(name = "project_cloud_id", nullable = false)
-    private String cloudId;
+    @Column(name = "project_jira_id", nullable = false)
+    private String jiraId;
 
     @Column(name = "project_name", nullable = false, length = 100)
     private String name;
+
+    @Column(name = "project_key", nullable = false, length = 1000)
+    private String key;
+
+    @Column(name = "project_image", nullable = false, length = 1000)
+    private String image;
+
+    @Column(name = "project_self_url", nullable = false, length = 1000)
+    private String selfUrl;
+
+    @Column(name = "project_category_name", nullable = false, length = 1000)
+    private String categoryName;
+
+    @Column(name = "project_category_id", nullable = false, length = 1000)
+    private String categoryId;
 
     @Column(name = "project_owner", nullable = false, length = 100)
     private String owner;
@@ -43,7 +58,8 @@ public class Projects {
     @OneToMany(mappedBy = "project")
     private List<ProjectUsers> projectUsersList = new ArrayList<>();
 
-//    public static Projects createProject(){
-//
-//    }
+    @ManyToOne
+    @JoinColumn(name = "group_id", nullable = false)
+    private Groups group;
+    
 }

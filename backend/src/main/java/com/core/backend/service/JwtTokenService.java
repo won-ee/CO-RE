@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -46,16 +48,18 @@ public class JwtTokenService {
 
     private static final String ACCESS_TOKEN_SUBJECT = "AccessToken";
     private static final String REFRESH_TOKEN_SUBJECT = "RefreshToken";
+    private static final String ID_CLAIM = "id";
     private static final String EMAIL_CLAIM = "email";
     private static final String BEARER = "Bearer";
 
     private final UserRepository userRepository;
 
-    public String createAccessToken(String email) {
+    public String createAccessToken(Long id, String email) {
         Date now = new Date();
         return JWT.create()
                 .withSubject(ACCESS_TOKEN_SUBJECT)
                 .withExpiresAt(new Date(now.getTime() + accessTokenExpirationPeriod))
+                .withClaim(ID_CLAIM, id)
                 .withClaim(EMAIL_CLAIM, email)
                 .sign(Algorithm.HMAC512(secretKey));
     }
@@ -89,18 +93,26 @@ public class JwtTokenService {
                 .map(refreshToken -> refreshToken.replace(BEARER, ""));
     }
 
-    public Optional<String> extractEmail(String accessToken) {
+    public Map<String, Optional<String>> extractIdAndEmail(String accessToken) {
         try {
             var decodedJWT = JWT.require(Algorithm.HMAC512(secretKey)).build().verify(accessToken);
 
+            String id = decodedJWT.getClaim(ID_CLAIM).asString();
             String email = decodedJWT.getClaim(EMAIL_CLAIM).asString();
-            if (email == null) {
+
+            if (id == null || email == null) {
                 throw new InCorrectAccessTokenException();
             }
-            return Optional.of(email);
+
+            Map<String, Optional<String>> claims = new HashMap<>();
+            claims.put(ID_CLAIM, Optional.of(id));
+            claims.put(EMAIL_CLAIM, Optional.of(email));
+
+            return claims;
+
         } catch (Exception e) {
             log.error("Access Token이 유효하지 않습니다.");
-            return Optional.empty();
+            return Map.of(ID_CLAIM, Optional.empty(), EMAIL_CLAIM, Optional.empty());
         }
     }
 
@@ -131,8 +143,8 @@ public class JwtTokenService {
         }
     }
 
-    public JwtToken createAndStoreToken(String email) {
-        String accessToken = createAccessToken(email);
+    public JwtToken createAndStoreToken(Long id, String email) {
+        String accessToken = createAccessToken(id, email);
         String refreshToken = createRefreshToken();
 
         JwtToken jwtToken = new JwtToken(accessToken, refreshToken, email);
@@ -144,19 +156,15 @@ public class JwtTokenService {
         return jwtToken;
     }
 
-    public Cookie createAllTokenCookie(String email) {
-        JwtToken jwtToken = createAndStoreToken(email);
+    public Cookie createAllTokenCookie(Long id, String email) {
+        JwtToken jwtToken = createAndStoreToken(id, email);
         return CookieUtil.createTokenCookie("accessToken", jwtToken.getAccessToken(), accessTokenExpirationPeriod);
     }
 
-    public Cookie createAccessTokenCookie(String email) {
-        String newAccessToken = createAccessToken(email);
+    public Cookie createAccessTokenCookie(Long id, String email) {
+        String newAccessToken = createAccessToken(id, email);
 
         return CookieUtil.createTokenCookie("accessToken", newAccessToken, accessTokenExpirationPeriod);
-    }
-
-    public JwtToken getJwtToken(String id) {
-        return jwtTokenRepository.findById(id).orElse(null);
     }
 
     public void saveJwtToken(JwtToken targetToken) {

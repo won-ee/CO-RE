@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -24,13 +25,14 @@ public class CallbackController {
     private final CallbackService callbackService;
     private final JwtTokenService jwtTokenService;
 
-    //    TODO: code로 저장된 login한 사용자 체크해서 project목록과 유저정보는 요청안하게끔 추후처리
     @GetMapping("/code/jira")
     public void callback(@RequestParam("code") String authorizationCode, HttpServletRequest request, HttpServletResponse response) {
         try {
-            JiraOAuthToken jiraOAuthToken = callbackService.loginCallBack(authorizationCode, request, response);
+            Map<String, Object> loginData = callbackService.loginAccessCallBack(authorizationCode);
+            Long userId = (Long) loginData.get("userId");
+            JiraOAuthToken jiraOAuthToken = (JiraOAuthToken) loginData.get("newJiraOAuthToken");
 
-            Cookie cookie = jwtTokenService.createAllTokenCookie(jiraOAuthToken.getId());
+            Cookie cookie = jwtTokenService.createAllTokenCookie(userId, jiraOAuthToken.getId());
 
             // 쿠키 이름과 값을 로그로 출력
             log.info("Cookie Name: {}, Cookie Value: {}", cookie.getName(), cookie.getValue());

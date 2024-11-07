@@ -1,5 +1,6 @@
 package com.core.backend.controller;
 
+import com.core.backend.service.JwtTokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -15,10 +16,20 @@ import java.io.IOException;
 @RequestMapping("/login")
 public class LoginController {
 
-    //    TODO: AccessToken 남아있으면 유저체크해서 유효하면 자동 리다이렉트
+    private final JwtTokenService jwtTokenService;
+
+    public LoginController(JwtTokenService jwtTokenService) {
+        this.jwtTokenService = jwtTokenService;
+    }
+
     @GetMapping("/jira")
     public void login(@RequestHeader(value = "Authorization", required = false) String accessToken, HttpServletRequest request, HttpServletResponse response) throws IOException {
 
+        if (accessToken != null && jwtTokenService.isJwtTokenValid(accessToken)) {
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.sendRedirect("http://localhost:5173");
+            return;
+        }
 
         response.sendRedirect("/oauth2/authorization/jira");
     }
