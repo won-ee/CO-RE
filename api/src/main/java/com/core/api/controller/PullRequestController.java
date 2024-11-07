@@ -35,8 +35,18 @@ public class PullRequestController {
     }
 
     @GetMapping("/{owner}/{repo}")
-    public ResponseEntity<List<PullRequestDto>> getPullRequestList(@PathVariable String owner, @PathVariable String repo) {
-        List<PullRequestDto> pullRequestList = pullRequestService.getPullRequestList(owner, repo);
+    public ResponseEntity<List<PullRequestDto>> getPullRequestList(
+            @PathVariable String owner,
+            @PathVariable String repo,
+            @RequestParam String state
+    ) {
+
+        List<PullRequestDto> pullRequestList = switch (state) {
+            case "sent" -> pullRequestService.getPullRequestListByWriter(owner, repo);
+            case "received" -> pullRequestService.getPullRequestListByReviewer(owner, repo);
+            default -> List.of();
+        };
+
         return ResponseEntity.ok(pullRequestList);
     }
 
@@ -45,7 +55,6 @@ public class PullRequestController {
         PullRequestDto pullRequest = pullRequestService.getPullRequest(owner, repo, pullId);
         return ResponseEntity.ok(pullRequest);
     }
-
 
     @GetMapping("/{owner}/{repo}/user")
     public ResponseEntity<List<PullRequestDto>> getPullRequestListByFilter(
@@ -59,7 +68,6 @@ public class PullRequestController {
         return ResponseEntity.ok(pullRequestList);
     }
 
-
     @PutMapping("/{owner}/{repo}/{pullId}/merge")
     public ResponseEntity<MergeResponseDto> mergePullRequest(
             @PathVariable String owner,
@@ -70,6 +78,5 @@ public class PullRequestController {
         MergeResponseDto message = pullRequestService.mergePullRequest(owner, repo, pullId, commitMessage);
         return ResponseEntity.ok(message);
     }
-
 
 }
