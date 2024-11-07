@@ -1,16 +1,16 @@
 import { useState, ChangeEvent } from "react";
 import { CardCodeReviewLayout, ReviewTextArea, ButtonBox } from "./CardCodeReview.styled"
 import ButtonSimpleSquare from "../buttons/ButtonSimpleSquare"
+import { ReviewType } from "../../Types/pullRequestType";
 
 interface CardCodeReviewProps {
     onCancel: () => void;
+    onAdd: () => void;
+    content :string;
+    setContent:
   }
 
-const handleCreate = ()=>{
-    console.log('add');
-}
-
-function CardCodeReview({onCancel} : CardCodeReviewProps) {
+function CardCodeReview({onCancel, onAdd, } : CardCodeReviewProps) {
     const [content, setContent] = useState<string>('')
 
     const handleContent = (e:ChangeEvent<HTMLTextAreaElement>)=>{
@@ -22,7 +22,7 @@ function CardCodeReview({onCancel} : CardCodeReviewProps) {
             <ReviewTextArea placeholder="Type your Review..." onChange={handleContent} value={content}/>
             <ButtonBox>
                 <ButtonSimpleSquare text='Cancle' color='black' bgc='#EFF2F5' btnEvent={onCancel}/>
-                <ButtonSimpleSquare text='Add Review' color='white' bgc='#1F883D' btnEvent={handleCreate}/>
+                <ButtonSimpleSquare text='Add Review' color='white' bgc='#1F883D' btnEvent={onAdd}/>
             </ButtonBox>
         </CardCodeReviewLayout>
     )

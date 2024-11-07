@@ -18,7 +18,7 @@ import {
 import Vector from '../../assets/low.png'
 import ButtonReview from '../buttons/ButtonReview';
 import CardCodeReview from '../card/CardCodeReview';
-
+import { ReviewType } from '../../Types/pullRequestType';
 interface SectionChangesProps {
   changes: {
     file: {
@@ -109,6 +109,8 @@ const SectionChanges: React.FC<SectionChangesProps> = ({ changes }) => {
   const [expandedGroups, setExpandedGroups] = useState<{ [key: number]: boolean }>({});
   const [hoveredLineId, setHoveredLineId] = useState<number | null>(null); // 현재 호버된 줄의 ID 상태
   const [reviewLineIndex, setReviewLineIndex] = useState<number | null>(null); // 리뷰가 표시될 줄의 인덱스
+  const [reviews,setReviews] = useState<ReviewType[] |null>(null)
+  const [reviewContent,setReviewContent] = useState<string>('')
 
   const toggleCard = (index: number) => {
     setExpandedCards((prev) => ({ ...prev, [index]: !prev[index] }));
@@ -118,7 +120,7 @@ const SectionChanges: React.FC<SectionChangesProps> = ({ changes }) => {
     setExpandedGroups((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
-  const handleReview = (index:number)=>{
+  const handleReviewIndex = (index:number)=>{
     setReviewLineIndex((prevIndex) => (prevIndex === index ? null : index)); // 동일 줄 클릭 시 닫힘
   }
 
@@ -126,7 +128,13 @@ const SectionChanges: React.FC<SectionChangesProps> = ({ changes }) => {
     setReviewLineIndex(null); // 리뷰 창 닫기
   };
   
+  const handleReview = (newReview: ReviewType) => {
+    setReviews((prevReviews) => prevReviews ? [...prevReviews, newReview] : [newReview]);
+  };
 
+  const handleReviewContent = ()=>{
+
+  }
   return (
     <div>
       {changes.map((change, index) => (
@@ -187,12 +195,12 @@ const SectionChanges: React.FC<SectionChangesProps> = ({ changes }) => {
                           <LineNumber>{line.modifiedLineNumber !== null ? line.modifiedLineNumber + 1 : ''}</LineNumber>
                         </LineNumberBox>
                         <LineSymbol className={line.type}>
-                          {hoveredLineId === idx ? <ButtonReview btnEvent={()=>handleReview(idx)} />:
+                          {hoveredLineId === idx ? <ButtonReview btnEvent={()=>handleReviewIndex(idx)} />:
                           line.type === 'add' ? '+' : line.type === 'remove' ? '-' : ''}
                         </LineSymbol>
                         <LineContent className={line.type}>{line.content}</LineContent>
                       </LineContainer>
-                      {reviewLineIndex === idx && <CardCodeReview onCancel={handleCancel}/>}
+                      {reviewLineIndex === idx && <CardCodeReview onCancel={handleCancel} onAdd={handleReview()} content={reviewContent} setContent={handleReviewContent}/>}
                       </>
                     )}
                   </React.Fragment>

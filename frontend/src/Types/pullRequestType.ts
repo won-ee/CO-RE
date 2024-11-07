@@ -66,3 +66,10 @@ export interface PRDegailParamsType {
   pullId: number;
 
 }
+export interface ReviewType{
+  path: string,
+  startLine: number,
+  endLine: number,
+  commitId: string,
+  body: string//내용
+}

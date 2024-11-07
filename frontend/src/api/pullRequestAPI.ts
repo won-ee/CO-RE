@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { PRDataType, CalendarPRParamsType, PRDegailParamsType, CreatePRType } from '../Types/pullRequestType';
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
-// const BASE_URL = 'http://54.180.83.239:8080'
+// const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const BASE_URL = 'http://54.180.83.239:8080'
 export const getCalendarPR = async ({
     owner,
     repo,
