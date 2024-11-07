@@ -1,33 +1,31 @@
+import Slider from "react-slick";
 import styled from "styled-components";
 
-export const StatsCarouselLayout = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 30px;
+export const CardBox = styled.div`
+  margin: 2% 2% 4% 2%;
+  width: 95%;
 `;
 
-export const CarouselContainer = styled.div`
-  display: flex;
-  justify-content: space-around;
-  gap: 15px;
-  padding: 10px 10px;
-  width: 90%;
-  transition: transform 0.5s ease;
-`;
-
-export const StatCard = styled.div`
-  background: #ffffff;
+export const Card = styled.div`
+  height: 160px;
+  background-color: white;
+  border-radius: 20px;
+  margin: 0 10px; 
   padding: 20px;
-  border-radius: 15px;
-  width: calc(25% - 15px);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  height: 130px;
-  gap: 10px;
-  transition: transform 0.2s;
+  box-sizing: border-box; 
+`;
+
+export const StyledSlider = styled(Slider)`
+  .slick-slide {
+    margin: 0 10px; 
+  }
+
+  .slick-prev:before,
+  .slick-next:before {
+    font-size: 30px;
+    opacity: 0.5;
+    color: gray;
+  }
 `;
 
 export const StatTitle = styled.h4`
@@ -49,7 +47,6 @@ interface StatChangeLabelProps {
 export const StatChangeLabel = styled.span<StatChangeLabelProps>`
   font-size: 14px;
   color: ${(props) => (props.$positive ? "green" : "red")};
-
   display: flex;
   align-items: center;
   justify-content: center;
@@ -66,23 +63,6 @@ export const StatIconWrapper = styled.div`
   img {
     width: 31px;
     height: 31px;
-  }
-`;
-
-export const CarouselNavButton = styled.button`
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 5px;
-
-  img {
-    width: 20px;
-    height: 20px;
-  }
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
   }
 `;
 

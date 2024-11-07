@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { PullRequestData, PullRequestParams } from '../Types/pullRequestType';
 
-const BASE_URL = 'http://3.37.87.183:8080'; 
+const BASE_URL = 'http://54.180.83.239:8080'; 
 
 export const fetchPullRequest = async ({
     owner,
