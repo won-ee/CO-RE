@@ -6,7 +6,7 @@ spring:
     name: gateway
   cloud:
     config:
-      uri: http://localhost:8888
+      uri: https://k11s106.p.ssafy.io/config
   profiles:
     active: backend, gateway
 
