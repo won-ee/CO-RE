@@ -167,10 +167,10 @@ export const Checkbox = styled.input`
   height: 18px;
 `;
 
-export const OptionLabel = styled.span<{ isSelected: boolean }>`
+export const OptionLabel = styled.span<{ $isSelected: boolean }>`
   margin-left: 8px;
   font-size: 16px;
-  font-weight: ${({ isSelected }) => (isSelected ? "bold" : "normal")};
+  font-weight: ${({ $isSelected }) => ($isSelected ? "bold" : "normal")};
 `;
 
 export const SubOptionsContainer = styled.div`
@@ -178,10 +178,10 @@ export const SubOptionsContainer = styled.div`
   margin-top: 5px;
 `;
 
-export const SubOptionLabel = styled.span<{ isSelected: boolean }>`
+export const SubOptionLabel = styled.span<{ $isSelected: boolean }>`
   margin-left: 8px;
   font-size: 16px;
-  font-weight: ${({ isSelected }) => (isSelected ? "bold" : "normal")};
+  font-weight: ${({ $isSelected }) => ($isSelected ? "bold" : "normal")};
 `;
 
 export const ChevronIcon = styled.span`
@@ -195,4 +195,46 @@ export const EditIconImage = styled.img`
   width: 24px;
   height: 24px;
   cursor: pointer;
+`;
+
+export const NoteContainer = styled.div`
+  display: flex;
+  gap: 40px;
+`;
+
+export const NoteContent = styled.div`
+  flex: 1;
+`;
+
+export const NoteTitle = styled.h2`
+  margin-top: 0;
+`;
+
+export const NoteTextarea = styled.textarea`
+  width: 100%;
+  border-radius: 10px;
+  padding: 10px;
+`;
+
+export const NotePre = styled.pre`
+  white-space: pre-wrap;
+  word-wrap: break-word;
+`;
+
+export const OptionListContainer = styled.div`
+  flex: 1;
+  margin-top: 40px;
+`;
+
+export const FetchedNotesContainer = styled.div`
+  margin-top: 20px;
+`;
+
+export const FetchedNoteItem = styled.div`
+  margin-bottom: 10px;
+`;
+
+export const FetchedNoteTitle = styled.strong`
+  display: block;
+  margin-bottom: 5px;
 `;
