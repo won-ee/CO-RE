@@ -8,13 +8,13 @@ pipeline {
 
         // build env
         JAR_NAME = 'config-0.0.1-SNAPSHOT.jar'
-        IMAGE_NAME = 'config_service'
+        IMAGE_NAME = 'config'
         REMOTE_PATH = '/home/ubuntu/config'
 
         GITHUB_PASSWORD = credentials('GITHUB_PASSWORD')
         GITHUB_USERNAME = credentials('GITHUB_USERNAME')
         GITHUB_REPO = credentials('GITHUB_REPO')
-        EUREKA_SERVER_URL = 'http://eureka_service:8761/eureka'
+        EUREKA_SERVER_URL = 'http://eureka:8761/eureka'
     }
 
     stages {
