@@ -1,16 +1,16 @@
 import axios from 'axios';
-import { PullRequestData, PullRequestParams } from '../Types/pullRequestType';
+import { PRDataType, CalendarPRParamsType, PRDegailParamsType, CreatePRType } from '../Types/pullRequestType';
 
-const BASE_URL = 'http://54.180.83.239:8080'; 
+const BASE_URL = process.env.REACT_APP_API_BASE_URL; 
 
-export const fetchPullRequest = async ({
+export const getCalendarPR = async ({
     owner,
     repo,
     writer,
     month,
     year,
-  }: PullRequestParams): Promise<PullRequestData[]> => {
-    const response = await axios.get<PullRequestData[]>(
+  }: CalendarPRParamsType): Promise<PRDataType[]> => {
+    const response = await axios.get<PRDataType[]>(
       `${BASE_URL}/pull-request/${owner}/${repo}/user`,
       {
         params: {
@@ -22,3 +22,23 @@ export const fetchPullRequest = async ({
     );
     return response.data;
   };
+
+export const postCreatePR =async (PRData:CreatePRType)=>{
+  const { data } = await axios.post(`${BASE_URL}/pull-request`,PRData,{
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+  return data;
+}
+export const getPRDetail = async ({
+  owner,
+  repo,
+  pullId
+}: PRDegailParamsType): Promise<PRDataType> => {
+  const response = await axios.get<PRDataType>(
+    `${BASE_URL}/pull-request/${owner}/${repo}/${pullId}`,
+  );
+  return response.data;
+};

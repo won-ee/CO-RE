@@ -1,5 +1,6 @@
 import React from 'react'
 import { CommitMessageBox, CommitMessageContent, CommitMessageTitle, Container, DateBox } from './SectionCommits.styled';
+import { CommitType } from '../../Types/pullRequestType';
 
 interface Commit {
   title: string;
@@ -48,8 +49,13 @@ const sectionsData: CommitHistoryProps[] = [
   },
 ];
 
+interface SectionCommitsProps{
+  data : CommitType[]|undefined
+}
 
-const SectionCommits:React.FC = () => {
+const SectionCommits:React.FC<SectionCommitsProps> = (data) => {
+  console.log(data);
+  
   return (
     <>
       <Container>
