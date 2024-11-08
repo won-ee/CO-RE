@@ -1,5 +1,5 @@
 import React from 'react'
-import { Input, Label, Form, SaveButton, ContainerLayout, FormBox, ProfileImg, FormLow, FormLeft, FormRight, LabelBox, GitTokenBox, GitTokenInput, EditImg, ImgBox } from './SectionEditProfile.styled'
+import { ProfileBox, Label, Form, SaveButton, ContainerLayout, FormBox, ProfileImg, FormLow, FormLeft, FormRight, LabelBox, GitTokenBox, GitTokenInput, EditImg, ImgBox } from './SectionEditProfile.styled'
 import editButtonImg from '../../assets/EditButton.png'
 interface SectionEditProfileProps{
     myInfo:{
@@ -27,21 +27,21 @@ const SectionEditProfile:React.FC<SectionEditProfileProps> = ({myInfo}) => {
                         <FormLeft>
                             <LabelBox>
                                 <Label>Your Name</Label>
-                                <Input type="text" defaultValue={myInfo.name} />
+                                <ProfileBox>{myInfo.name}</ProfileBox>
                             </LabelBox>
                             <LabelBox>
                              <Label>Email</Label>
-                                <Input type="email" defaultValue={myInfo.email} />
+                                <ProfileBox>{myInfo.email}</ProfileBox>
                             </LabelBox>               
                         </FormLeft>
                         <FormRight>
                             <LabelBox>
                                 <Label>User Name</Label>
-                                <Input type="text" defaultValue={myInfo.nickName} />           
+                                <ProfileBox>{myInfo.nickName}</ProfileBox>           
                             </LabelBox>
                             <LabelBox>
-                                <Label>Password</Label>
-                                <Input type="password" defaultValue={myInfo.password} />
+                                <Label>company department / company rank</Label>
+                                <ProfileBox>마케팅 / 사원</ProfileBox>
                             </LabelBox>
                         </FormRight>
                     </FormLow>

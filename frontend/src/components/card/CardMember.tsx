@@ -1,5 +1,5 @@
 import React from 'react'
-import { ContainerLayout, Email, Image, Name, Title } from './CardMember.styled';
+import { CardLow, ContainerLayout, Email, Image, Name, Title } from './CardMember.styled';
 
 interface CardMemberProps{
     profile: {
@@ -17,6 +17,10 @@ const CardMember:React.FC<CardMemberProps> = ({profile}) => {
             <Image src={profile.image} alt={profile.name} />
             <Name>{profile.name}</Name>
             <Title>{profile.title}</Title>
+            <CardLow>
+                <Title>마케팅/</Title>
+                <Title>사원</Title>
+            </CardLow>
             <Email>{profile.email}</Email>
         </ContainerLayout>
     </>
@@ -24,4 +28,4 @@ const CardMember:React.FC<CardMemberProps> = ({profile}) => {
 )
 }
 
-export default CardMember
+export default CardMember 
