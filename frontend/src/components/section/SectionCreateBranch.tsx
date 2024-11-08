@@ -1,4 +1,4 @@
-import { SectionCreateBranchLayout, TitleInput, DescriptionTextArea, SelectBox, MergeDirectionBox, HighLightBox, DateInputContainer, DatePickerImg, DeadLineBox, DatePickerBox, UrgentBox, UrgentButton, PriorityBox, CreateButtonBox  } from "./SectionCreateBranch.styled";
+import { SectionCreateBranchLayout, TitleInput, DescriptionTextArea, SelectBox, MergeDirectionBox, HighLightBox, DateInputContainer, DatePickerImg, DeadLineBox, DatePickerBox, UrgentBox, UrgentButton, PriorityBox, CreateButtonBox, TabBox  } from "./SectionCreateBranch.styled";
 import Select, { MultiValue, SingleValue, StylesConfig } from "react-select";
 import { OptionType } from "../../Types/SelectType";
 import { useState, ChangeEvent } from "react";
@@ -9,7 +9,9 @@ import TabChange from "../tab/TabChange";
 import SectionChanges from "./SectionChanges";
 // import SectionCommits from "./SectionCommits";
 import ButtonCreateNewPR from "../buttons/ButtonCreateNewPR";
-import { useMutationCreatePR } from "../../hooks/useMutationCreatePR";
+import { useMutationCreatePR, useMutationpostPRReview } from "../../hooks/useMutationCreatePR";
+import ButtonSimpleSquare from "../buttons/ButtonSimpleSquare";
+import { TotalReviewsType, ReviewType } from "../../Types/pullRequestType";
 
 // 옵션 예시
 const TempOption: OptionType[] = [
@@ -44,12 +46,25 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
   const [selectedTab, setSelectedTab] = useState<TabsEnum>(TabsEnum.Commit);
   const [title, setTitle] = useState<string>('')
   const [content, setContent] = useState<string>('')
+  const [commit_id,setCommit_Id] = useState<string>('')
+  const [body,setBody] = useState<string>('')
+  const event = "COMMENT"
+  const [comments,setComments] = useState<ReviewType[]>([])
+
+  const handleUpdateComments = (updatedReviews: ReviewType[]) => {
+    setComments(updatedReviews);
+  };
+
+  const handleBodytChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    setBody(e.target.value);
+  };
 
   const handleTabChange = (tab: TabsEnum) => {
     setSelectedTab(tab);
   };
 
-  const mutation = useMutationCreatePR()
+  const mutationCreatePR = useMutationCreatePR()
+  const mutationpostPRReview = useMutationpostPRReview()
 
   const handlePostPR=()=>{
     const pullRequestData = {
@@ -66,7 +81,7 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
       writerId: "JEM1224"
     };
 
-    mutation.mutate(pullRequestData);
+    mutationCreatePR.mutate(pullRequestData);
   }
 
   const changesData = [
@@ -97,8 +112,9 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
   ];
 
   const tabComponents = {
-    [TabsEnum.Commit]: <SectionChanges changes={changesData} />,
-    [TabsEnum.Change]: <SectionChanges changes={changesData} />,
+    // [TabsEnum.Commit]: <SectionCommits changes={changesData} onUpdateReviews={handleUpdateComments} />,
+    [TabsEnum.Commit]: <SectionChanges changes={changesData} onUpdateReviews={handleUpdateComments} />,
+    [TabsEnum.Change]: <SectionChanges changes={changesData} onUpdateReviews={handleUpdateComments} />,
   };
 
   // 다중 선택 onChange 핸들러
@@ -117,9 +133,24 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
   const handleTitle = (e:ChangeEvent<HTMLInputElement>)=>{
     setTitle(e.target.value)
   }
-
+ 
   const handleContent = (e:ChangeEvent<HTMLTextAreaElement>)=>{
     setContent(e.target.value)
+  }
+
+  const handleFinishReview = ()=>{
+    const TotalReview : TotalReviewsType ={
+      commit_id,
+      body,
+      event,
+      comments,
+    }
+    mutationpostPRReview.mutate({
+      owner:'JEM1224',
+      repo:'',
+      pullId:'',
+      reviewData:TotalReview
+    })
   }
 
   return (
@@ -175,9 +206,12 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
         <CreateButtonBox>
           <ButtonCreateNewPR text="Create New Request" btnEvent={handlePostPR}/>
         </CreateButtonBox>
-        <TabChange values={Object.values(TabsEnum)} 
-          selectedTab={selectedTab} 
-          onTabChange={handleTabChange} />
+        <TabBox>
+          <TabChange values={Object.values(TabsEnum)} 
+            selectedTab={selectedTab} 
+            onTabChange={handleTabChange} />
+          {comments.length>0 && <ButtonSimpleSquare text="Finish Review" color="white" bgc="#1C8139" btnEvent={handleFinishReview}/>}
+        </TabBox>
           {tabComponents[selectedTab]}
     </SectionCreateBranchLayout>  
   );

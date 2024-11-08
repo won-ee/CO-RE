@@ -14,7 +14,6 @@ export const ButtonSimpleSquareLayout = styled.div<ButtonSimpleSquareLayoutProps
     font-weight: normal;
     cursor: pointer;
     display: inline-block;
-    align-self: flex-start;
     border: 0.5px solid gray;
     &:hover {
     filter: brightness(0.9); /* 밝기를 90%로 줄여 살짝 어둡게 */

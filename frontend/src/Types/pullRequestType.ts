@@ -73,3 +73,9 @@ export interface ReviewType{
   commitId: string,
   body: string//내용
 }
+export interface TotalReviewsType{
+    commit_id: string,
+    body: string,
+    event: string,
+    comments: ReviewType[]
+}
