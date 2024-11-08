@@ -13,12 +13,12 @@ import {
   VectorImg,
   LineNumberBox,
   LineSymbol,
-  
 } from './SectionChanges.styled';
 import Vector from '../../assets/low.png'
 import ButtonReview from '../buttons/ButtonReview';
 import CardCodeReview from '../card/CardCodeReview';
 import { ReviewType } from '../../Types/pullRequestType';
+import CardCodeReviewRead from '../card/CardCodeReviewRead';
 
 interface SectionChangesProps {
   changes: {
@@ -116,7 +116,10 @@ const SectionChanges: React.FC<SectionChangesProps> = ({ changes, onUpdateReview
   const [startLine, setStartLine] = useState<number>(0);
   const [endLine, setEndLine] = useState<number>(0);
   const [commitId, setCommitId] = useState("123abc456");
-  const [body, setBody] = useState(""); // body는 입력값으로 변경
+  const [body, setBody] = useState(""); 
+  if (body) {
+    //null
+    }
 
   // 리뷰가 업데이트될 때마다 onUpdateReviews 호출
 useEffect(() => {
@@ -142,13 +145,13 @@ useEffect(() => {
     setReviewLineIndex(null); // 리뷰 창 닫기
   };
   
- const handleAddReview = () => {
+ const handleAddReview = (content: string) => {
   const newReview: ReviewType = {
     path,
     startLine,
     endLine,
     commitId,
-    body,
+    body:content,
   };
   
   setReviews((prevReviews) => prevReviews ? [...prevReviews, newReview] : [newReview]);
@@ -215,11 +218,16 @@ useEffect(() => {
                           <LineNumber>{line.modifiedLineNumber !== null ? line.modifiedLineNumber + 1 : ''}</LineNumber>
                         </LineNumberBox>
                         <LineSymbol className={line.type}>
-                          {hoveredLineId === idx ? <ButtonReview btnEvent={()=>handleReviewIndex(idx, change.file.filename)} />:
+                          {hoveredLineId === idx ? (<ButtonReview btnEvent={() => handleReviewIndex(idx, change.file.filename)} />):
                           line.type === 'add' ? '+' : line.type === 'remove' ? '-' : ''}
                         </LineSymbol>
                         <LineContent className={line.type}>{line.content}</LineContent>
                       </LineContainer>
+                      {reviews.length > 0 ? (reviews.filter((review) => review.startLine === idx).map((review, index) => (
+                              <CardCodeReviewRead key={index} review={review}>
+                              </CardCodeReviewRead>
+                            ))
+                        ) : null}
                       {reviewLineIndex === idx && <CardCodeReview onCancel={handleCancel} onAdd={handleAddReview}/>}
                       </>
                     )}

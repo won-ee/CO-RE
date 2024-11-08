@@ -12,6 +12,7 @@ import ButtonCreateNewPR from "../buttons/ButtonCreateNewPR";
 import { useMutationCreatePR, useMutationpostPRReview } from "../../hooks/useMutationCreatePR";
 import ButtonSimpleSquare from "../buttons/ButtonSimpleSquare";
 import { TotalReviewsType, ReviewType } from "../../Types/pullRequestType";
+import CardFinalCodeReview from "../card/CardFinalCodeReview";
 
 // 옵션 예시
 const TempOption: OptionType[] = [
@@ -50,13 +51,14 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
   const [body,setBody] = useState<string>('')
   const event = "COMMENT"
   const [comments,setComments] = useState<ReviewType[]>([])
+  const [isFinalReviewOpen,setIsFinalReviewOpen] = useState(false)
+
+  const handlesIsFinalReviewOpen = ()=>{
+    setIsFinalReviewOpen((isFinalReviewOpen)=>!isFinalReviewOpen)
+  }
 
   const handleUpdateComments = (updatedReviews: ReviewType[]) => {
     setComments(updatedReviews);
-  };
-
-  const handleBodytChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setBody(e.target.value);
   };
 
   const handleTabChange = (tab: TabsEnum) => {
@@ -153,6 +155,11 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
     })
   }
 
+  const handleAddReview = (content: string) => {
+    setBody(content); // content를 body로 설정
+    handleFinishReview(); // API 호출
+};
+
   return (
     <SectionCreateBranchLayout>
         <MergeDirectionBox>
@@ -210,7 +217,11 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
           <TabChange values={Object.values(TabsEnum)} 
             selectedTab={selectedTab} 
             onTabChange={handleTabChange} />
-          {comments.length>0 && <ButtonSimpleSquare text="Finish Review" color="white" bgc="#1C8139" btnEvent={handleFinishReview}/>}
+          {comments && 
+          <div style={{position:'relative'}}>
+          <ButtonSimpleSquare text="Finish Review" color="white" bgc="#1C8139" btnEvent={handlesIsFinalReviewOpen}/>
+          {isFinalReviewOpen && <CardFinalCodeReview onAdd={handleAddReview} commentNums={comments.length}/>}
+          </div>}
         </TabBox>
           {tabComponents[selectedTab]}
     </SectionCreateBranchLayout>  
