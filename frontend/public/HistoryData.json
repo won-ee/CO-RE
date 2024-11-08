@@ -1,0 +1,102 @@
+[
+  {
+    "prId": 49,
+    "title": "기능1 ",
+    "content": " 요약본",
+    "base": "develop",
+    "head": "#1",
+    "commits": [
+      {
+        "sha": "64604f8d3fb9167e2e028efb43f71dc20bb3ae85",
+        "message": "1번",
+        "date": "2024-11-06T02:27:44.780215",
+        "parent": "8ea42637db2e64eccbcf7a5fcb16b23b1ee00089",
+        "secondParent": null
+      },
+      {
+        "sha": "b5ccb68f4c11922489115225dab6cf77d3bd5841",
+        "message": "2번",
+        "date": "2024-11-06T02:27:44.789259",
+        "parent": "64604f8d3fb9167e2e028efb43f71dc20bb3ae85",
+        "secondParent": null
+      }
+    ]
+  },
+  {
+    "prId": 50,
+    "title": "기능3 ",
+    "content": " 요약본",
+    "base": "develop",
+    "head": "#3",
+    "commits": [
+      {
+        "sha": "0dc3d439ca58165c160f09587b6f8f2bca7f1b94",
+        "message": "3번",
+        "date": "2024-11-06T02:30:17.497357",
+        "parent": "8ea42637db2e64eccbcf7a5fcb16b23b1ee00089",
+        "secondParent": null
+      },
+      {
+        "sha": "c42be74ba83b8f97aee5299ece7793ba80efac6c",
+        "message": "4번",
+        "date": "2024-11-06T02:30:17.503124",
+        "parent": "0dc3d439ca58165c160f09587b6f8f2bca7f1b94",
+        "secondParent": null
+      }
+    ]
+  },
+  {
+    "prId": 51,
+    "title": "기능3 ",
+    "content": " 요약본",
+    "base": "develop",
+    "head": "#2",
+    "commits": [
+      {
+        "sha": "e3dc7c570d844d47ef4894a6ce5673fa444bcb1a",
+        "message": "5번",
+        "date": "2024-11-06T02:30:31.747374",
+        "parent": "8ea42637db2e64eccbcf7a5fcb16b23b1ee00089",
+        "secondParent": null
+      },
+      {
+        "sha": "83916e45612a581e291155d95a3e837d40df40cb",
+        "message": "6번",
+        "date": "2024-11-06T02:31:16.677924",
+        "parent": "e3dc7c570d844d47ef4894a6ce5673fa444bcb1a",
+        "secondParent": "34a30d21523239fbee233d184e3dddfc23877fb8"
+      }
+    ]
+  },
+  {
+    "prId": 52,
+    "title": "마스터머지",
+    "content": " 요약본",
+    "base": "master",
+    "head": "develop",
+    "commits": [
+      {
+        "sha": "771f3b7f60ac0f0bbd14991e9659e631369c63d3",
+        "message": "7번",
+        "date": "2024-11-06T02:31:16.664955",
+        "parent": "8ea42637db2e64eccbcf7a5fcb16b23b1ee00089",
+        "secondParent": "b5ccb68f4c11922489115225dab6cf77d3bd5841"
+      },
+      {
+        "sha": "34a30d21523239fbee233d184e3dddfc23877fb8",
+        "message": "8번",
+        "date": "2024-11-06T02:31:16.667571",
+        "parent": "771f3b7f60ac0f0bbd14991e9659e631369c63d3",
+        "secondParent": "c42be74ba83b8f97aee5299ece7793ba80efac6c"
+      },
+
+      {
+        "sha": "0470c587ef4ea3f2f96ec40d3c31bdcc7879e7d0",
+        "message": "9번",
+        "date": "2024-11-06T02:31:16.679915",
+        "parent": "34a30d21523239fbee233d184e3dddfc23877fb8",
+        "secondParent": "83916e45612a581e291155d95a3e837d40df40cb"
+      }
+    ]
+  }
+]

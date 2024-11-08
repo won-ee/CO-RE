@@ -18,27 +18,30 @@ import CreatePRPage from "./pages/CreatePRPage";
 import PullRequestPageDetail from "./pages/PullRequestPageDetail";
 import Header from "./components/Header";
 import NotFoundPage from "./pages/NotFoundPage";
+import HistoryPage from "./pages/HistoryPage";
 
+const AppComponent: React.FC = () => {
+  const { isLogin } = useUserStore();
 
-const AppComponent: React.FC = () =>{
-  const { isLogin } = useUserStore(); 
-
-  return(
+  return (
     <>
-    {isLogin && (<Sidebar />)}
+      {isLogin && <Sidebar />}
       <NavLayout>
-      {isLogin && (<Header/>)}
+        {isLogin && <Header />}
         <Routes>
-          <Route path="/" element={<LoginPage/>} />
+          <Route path="/" element={<LoginPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/pullrequest" element={<PullRequestPage/>} />
-          <Route path="/pullrequest/create" element={<CreatePRPage/>} />
+          <Route path="/pullrequest" element={<PullRequestPage />} />
+          <Route path="/pullrequest/create" element={<CreatePRPage />} />
           <Route path="/issue" element={<IssuePage />} />
-          <Route path="/history" element={"NEED HISTORY PAGE"} />
-          <Route path="/calendar" element={<CalendarPage/>} />
-          <Route path="/member" element={<MemberPage/>} />
-          <Route path="/setting" element={<SettingPage/>} />
-          <Route path="/pullrequest/:pullRequestId" element={<PullRequestPageDetail />} />
+          <Route path="/history" element={<HistoryPage />} />
+          <Route path="/calendar" element={<CalendarPage />} />
+          <Route path="/member" element={<MemberPage />} />
+          <Route path="/setting" element={<SettingPage />} />
+          <Route
+            path="/pullrequest/:pullRequestId"
+            element={<PullRequestPageDetail />}
+          />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </NavLayout>
