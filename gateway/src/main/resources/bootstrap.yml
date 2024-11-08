@@ -8,7 +8,7 @@ spring:
     config:
       uri: https://k11s106.p.ssafy.io/config
   profiles:
-    active: backend, gateway
+    active: gateway
 
 eureka:
   instance:
