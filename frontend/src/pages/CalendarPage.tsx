@@ -6,6 +6,8 @@ import { useQueryCalendarPR } from '../hooks/usePullRequestData';
 import { CalendarPRParamsType } from '../Types/pullRequestType';
 import { Block } from '../styles/GlobalStyled';
 import { useNavigate } from 'react-router-dom';
+import LoadingPage from './LoadingPage';
+import NotFoundPage from './NotFoundPage';
 
 const params: CalendarPRParamsType = {
   owner: 'JEM1224',
@@ -18,8 +20,8 @@ const params: CalendarPRParamsType = {
 const CalenderPage:React.FC = () => {
   const navigate = useNavigate(); 
   const { data, error, isLoading } = useQueryCalendarPR(params);
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
+  if (isLoading) return <LoadingPage />;
+  if (error) return <NotFoundPage/>;
 
   const handleEventClick = (info:any) => {
     const pullRequestId = info.event.id;
