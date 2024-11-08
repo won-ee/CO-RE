@@ -6,7 +6,7 @@ spring:
     name: gateway
   cloud:
     config:
-      uri: http://config:8888
+      uri: http://localhost:8888
   profiles:
     active: backend, gateway
 
