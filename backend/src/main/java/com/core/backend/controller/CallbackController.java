@@ -1,6 +1,5 @@
 package com.core.backend.controller;
 
-import com.core.backend.data.entity.JiraOAuthToken;
 import com.core.backend.service.CallbackService;
 import com.core.backend.service.JwtTokenService;
 import jakarta.servlet.http.Cookie;
@@ -30,9 +29,9 @@ public class CallbackController {
         try {
             Map<String, Object> loginData = callbackService.loginAccessCallBack(authorizationCode);
             Long userId = (Long) loginData.get("userId");
-            JiraOAuthToken jiraOAuthToken = (JiraOAuthToken) loginData.get("newJiraOAuthToken");
+            String userEmail = (String) loginData.get("userEmail");
 
-            Cookie cookie = jwtTokenService.createAllTokenCookie(userId, jiraOAuthToken.getId());
+            Cookie cookie = jwtTokenService.createAllTokenCookie(userId, userEmail);
 
             // 쿠키 이름과 값을 로그로 출력
             log.info("Cookie Name: {}, Cookie Value: {}", cookie.getName(), cookie.getValue());

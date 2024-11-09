@@ -1,7 +1,7 @@
 package com.core.backend.service;
 
-import com.core.backend.data.dto.Users.UserGroupsDto;
-import com.core.backend.data.entity.Groups;
+import com.core.backend.data.dto.users.UserGroupsDto;
+import com.core.backend.data.entity.JiraGroups;
 import com.core.backend.data.repository.GroupRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -22,10 +22,10 @@ public class GroupService {
     public void saveGroups(List<UserGroupsDto> groupList) {
         for (UserGroupsDto group : groupList) {
 
-            Optional<Groups> existingGroup = groupRepository.findByGroupKey(group.groupKey());
+            Optional<JiraGroups> existingGroup = groupRepository.findByGroupKey(group.groupKey());
 
             if (existingGroup.isEmpty()) {
-                Groups newGroup = Groups.builder()
+                JiraGroups newGroup = JiraGroups.builder()
                         .groupKey(group.groupKey())
                         .groupName(group.groupName())
                         .groupUrl(group.groupUrl())
@@ -38,5 +38,12 @@ public class GroupService {
 
     }
 
+    public JiraGroups findGroupByGroupId(Long groupId) {
+        return groupRepository.findById(groupId).orElse(null);
+    }
 
+
+    public JiraGroups findGroup(String groupUrl) {
+        return groupRepository.findByGroupUrl(groupUrl);
+    }
 }

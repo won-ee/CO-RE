@@ -97,7 +97,7 @@ public class JwtTokenService {
         try {
             var decodedJWT = JWT.require(Algorithm.HMAC512(secretKey)).build().verify(accessToken);
 
-            String id = decodedJWT.getClaim(ID_CLAIM).asString();
+            Long id = decodedJWT.getClaim(ID_CLAIM).asLong();
             String email = decodedJWT.getClaim(EMAIL_CLAIM).asString();
 
             if (id == null || email == null) {
@@ -105,7 +105,7 @@ public class JwtTokenService {
             }
 
             Map<String, Optional<String>> claims = new HashMap<>();
-            claims.put(ID_CLAIM, Optional.of(id));
+            claims.put(ID_CLAIM, Optional.of(id.toString()));
             claims.put(EMAIL_CLAIM, Optional.of(email));
 
             return claims;
@@ -124,19 +124,15 @@ public class JwtTokenService {
         response.setHeader(refreshHeader, refreshToken);
     }
 
-    //    TODO: 이거 다시짜기 두개다 재발급하는 코드
-    public void reissueToken(HttpServletRequest request, HttpServletResponse response) {
-        Optional<String> refreshToken = extraRefreshToken(request);
-    }
-
     public boolean isJwtTokenValid(String token) {
         try {
             var decodeJWT = JWT.require(Algorithm.HMAC512(secretKey)).build().verify(token);
 
+            Long id = decodeJWT.getClaim(ID_CLAIM).asLong();
             String email = decodeJWT.getClaim(EMAIL_CLAIM).asString();
             String subject = decodeJWT.getSubject();
 
-            return email != null && subject != null && subject.equals(ACCESS_TOKEN_SUBJECT);
+            return id != null && email != null && subject != null && subject.equals(ACCESS_TOKEN_SUBJECT);
         } catch (Exception ex) {
             log.error("유효하지 않은 토큰입니다. : {}", ex.getMessage());
             return false;
@@ -147,7 +143,7 @@ public class JwtTokenService {
         String accessToken = createAccessToken(id, email);
         String refreshToken = createRefreshToken();
 
-        JwtToken jwtToken = new JwtToken(accessToken, refreshToken, email);
+        JwtToken jwtToken = new JwtToken(email, accessToken, refreshToken);
         saveJwtToken(jwtToken);
 
         log.info("Redis에 저장된 AccessToken: {}", accessToken);

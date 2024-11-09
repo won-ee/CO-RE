@@ -1,7 +1,7 @@
 package com.core.backend.service;
 
-import com.core.backend.data.dto.Users.UserGroupsDto;
-import com.core.backend.data.dto.Users.UserInfoDto;
+import com.core.backend.data.dto.users.UserGroupsDto;
+import com.core.backend.data.dto.users.UserInfoDto;
 import com.core.backend.data.entity.JiraOAuthToken;
 import com.core.backend.data.entity.Users;
 import com.core.backend.data.repository.UserRepository;
@@ -26,7 +26,8 @@ public class CallbackService {
     private final UserService userService;
     private final GroupService groupService;
     private final UserRepository userRepository;
-
+    private final ProjectService projectService;
+    private final RoleService roleService;
 
     public Map<String, Object> loginAccessCallBack(String authorizationCode) {
         log.info("Authorization code received: {}", authorizationCode);
@@ -44,22 +45,38 @@ public class CallbackService {
             JiraOAuthToken newJiraOAuthToken = new JiraOAuthToken(userInfo.email(), jiraOAuthToken.getAccessToken(), jiraOAuthToken.getRefreshToken());
             jiraOAuthTokenService.saveOAuthToken(newJiraOAuthToken);
             Long userId;
+            String userEmail;
             if (user == null) {
+
+                // 그룹 목록가져오기 저장하기 (중복체크)
                 List<UserGroupsDto> groupList = jiraService.getGroups(accessToken);
                 log.info("Groups: {}", groupList);
                 userId = userService.saveUser(userInfo);
+
+                Users newUser = userService.getUser(userId);
+                userId = newUser.getId();
+                userEmail = newUser.getEmail();
+                log.info("New user created with ID: {}", userId);
+
                 groupService.saveGroups(groupList);
+                log.info("Groups saved.");
+
+                projectService.saveProjects(groupList, newUser, accessToken);
+                log.info("Projects saved for the new user.");
+
             } else {
                 userId = user.getId();
+                userEmail = user.getEmail();
+                log.info("Returning existing user with ID: {}", userId);
             }
 
             Map<String, Object> responseMap = new HashMap<>();
             responseMap.put("userId", userId);
-            responseMap.put("newJiraOAuthToken", newJiraOAuthToken);
+            responseMap.put("userEmail", userEmail);
 
             return responseMap;
         } catch (Exception e) {
-            log.error("Error during login callback processing: {}", e.getMessage());
+            log.error("loginAccessCallBack Error: {}", e.getMessage());
         }
         return null;
     }

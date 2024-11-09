@@ -1,7 +1,7 @@
 package com.core.backend.service;
 
-import com.core.backend.data.dto.Users.UserGroupsDto;
-import com.core.backend.data.dto.Users.UserInfoDto;
+import com.core.backend.data.dto.users.UserGroupsDto;
+import com.core.backend.data.dto.users.UserInfoDto;
 import com.core.backend.data.entity.JiraOAuthToken;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,96 +34,126 @@ public class JiraService {
     private String redirectUri;
 
     public JiraOAuthToken exchangeAuthorizationCode(String authorizationCode) {
-        Map<String, String> requestBody = Map.of(
-                "grant_type", "authorization_code",
-                "client_id", clientId,
-                "client_secret", clientSecret,
-                "code", authorizationCode,
-                "redirect_uri", redirectUri
-        );
+        try {
+            Map<String, String> requestBody = Map.of(
+                    "grant_type", "authorization_code",
+                    "client_id", clientId,
+                    "client_secret", clientSecret,
+                    "code", authorizationCode,
+                    "redirect_uri", redirectUri
+            );
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<Map<String, String>> request = new HttpEntity<>(requestBody, headers);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<Map<String, String>> request = new HttpEntity<>(requestBody, headers);
 
-        Map<String, Object> response = restTemplate.exchange(
-                "https://auth.atlassian.com/oauth/token",
-                org.springframework.http.HttpMethod.POST,
-                request,
-                new ParameterizedTypeReference<Map<String, Object>>() {
-                }).getBody();
+            Map<String, Object> response = restTemplate.exchange(
+                    "https://auth.atlassian.com/oauth/token",
+                    org.springframework.http.HttpMethod.POST,
+                    request,
+                    new ParameterizedTypeReference<Map<String, Object>>() {
+                    }).getBody();
 
-        assert response != null;
-        String accessToken = (String) response.get("access_token");
-        String refreshToken = (String) response.get("refresh_token");
-        log.info("Access Token: {}", accessToken);
-        log.info("Refresh Token: {}", refreshToken);
+            assert response != null;
+            String accessToken = (String) response.get("access_token");
+            String refreshToken = (String) response.get("refresh_token");
+            log.info("Access Token: {}", accessToken);
+            log.info("Refresh Token: {}", refreshToken);
 
-        return new JiraOAuthToken(null, accessToken, refreshToken);
+            return new JiraOAuthToken(null, accessToken, refreshToken);
+        } catch (Exception e) {
+            log.info("exchangeAuthorizationCode Error : {}", e.getMessage());
+        }
+        return null;
     }
 
     public List<UserGroupsDto> getGroups(String accessToken) {
-        HttpEntity<String> request = new HttpEntity<>(createHeadersWithAuthorization(accessToken));
+        try {
+            HttpEntity<String> request = new HttpEntity<>(createHeadersWithAuthorization(accessToken));
 
-        List<Map<String, Object>> response = restTemplate.exchange(
-                "https://api.atlassian.com/oauth/token/accessible-resources",
-                org.springframework.http.HttpMethod.GET,
-                request,
-                new ParameterizedTypeReference<List<Map<String, Object>>>() {
-                }).getBody();
-        assert response != null;
-        return convertToUserGroupsDto(response);
+            List<Map<String, Object>> response = restTemplate.exchange(
+                    "https://api.atlassian.com/oauth/token/accessible-resources",
+                    org.springframework.http.HttpMethod.GET,
+                    request,
+                    new ParameterizedTypeReference<List<Map<String, Object>>>() {
+                    }).getBody();
+            assert response != null;
+            return convertToUserGroupsDto(response);
+        } catch (Exception ex) {
+            log.info("getGroups Error : {}", ex.getMessage());
+        }
+        return new ArrayList<>();
     }
 
     public UserInfoDto getUserInfo(String accessToken) {
 
-        HttpEntity<String> request = new HttpEntity<>(createHeadersWithAuthorization(accessToken));
+        try {
+            HttpEntity<String> request = new HttpEntity<>(createHeadersWithAuthorization(accessToken));
 
-        Map<String, Object> response = restTemplate.exchange(
-                "https://api.atlassian.com/me",
-                org.springframework.http.HttpMethod.GET,
-                request,
-                new ParameterizedTypeReference<Map<String, Object>>() {
-                }).getBody();
+            Map<String, Object> response = restTemplate.exchange(
+                    "https://api.atlassian.com/me",
+                    org.springframework.http.HttpMethod.GET,
+                    request,
+                    new ParameterizedTypeReference<Map<String, Object>>() {
+                    }).getBody();
 
-        assert response != null;
-        return convertToUserInfoDto(response);
+            assert response != null;
+            return convertToUserInfoDto(response);
+        } catch (Exception ex) {
+            log.info("getUserInfo Error : {}", ex.getMessage());
+        }
+        return null;
     }
 
     private UserInfoDto convertToUserInfoDto(Map<String, Object> userInfo) {
-        return new UserInfoDto(
-                (String) userInfo.get("account_id"),
-                (String) userInfo.get("email"),
-                (String) userInfo.get("name"),
-                (String) userInfo.get("picture"),
-                (String) userInfo.get("nickname")
-        );
+        try {
+            return new UserInfoDto(
+                    (String) userInfo.get("account_id"),
+                    (String) userInfo.get("email"),
+                    (String) userInfo.get("name"),
+                    (String) userInfo.get("picture"),
+                    (String) userInfo.get("nickname")
+            );
+        } catch (Exception ex) {
+            log.info("convertToUserInfoDto Error : {}", ex.getMessage());
+        }
+        return null;
     }
 
     private HttpHeaders createHeadersWithAuthorization(String accessToken) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + accessToken);
-        headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-        return headers;
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", "Bearer " + accessToken);
+            headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+            return headers;
+        } catch (Exception ex) {
+            log.info("createHeadersWithAuthorization Error : {}", ex.getMessage());
+        }
+        return new HttpHeaders();
     }
 
     private ArrayList<UserGroupsDto> convertToUserGroupsDto(List<Map<String, Object>> groups) {
-        ArrayList<UserGroupsDto> userGroups = new ArrayList<>();
+        try {
+            ArrayList<UserGroupsDto> userGroups = new ArrayList<>();
 
-        for (Map<String, Object> group : groups) {
-            String groupId = (String) group.get("id");
-            String groupName = (String) group.get("name");
-            String groupUrl = (String) group.get("url");
-            String groupAvatarUrl = (String) group.get("avatarUrl");
+            for (Map<String, Object> group : groups) {
+                String groupId = (String) group.get("id");
+                String groupName = (String) group.get("name");
+                String groupUrl = (String) group.get("url");
+                String groupAvatarUrl = (String) group.get("avatarUrl");
 
-            UserGroupsDto groupDto = new UserGroupsDto(
-                    groupId,
-                    groupName,
-                    groupUrl,
-                    groupAvatarUrl
-            );
-            userGroups.add(groupDto);
+                UserGroupsDto groupDto = new UserGroupsDto(
+                        groupId,
+                        groupName,
+                        groupUrl,
+                        groupAvatarUrl
+                );
+                userGroups.add(groupDto);
+            }
+            return userGroups;
+        } catch (Exception ex) {
+            log.info("convertToUserGroupsDto Error : {}", ex.getMessage());
         }
-        return userGroups;
+        return new ArrayList<>();
     }
 }

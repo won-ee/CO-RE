@@ -1,6 +1,6 @@
 package com.core.backend.data.entity;
 
-import com.core.backend.data.dto.Users.UserInfoDto;
+import com.core.backend.data.dto.users.UserInfoDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -36,10 +36,14 @@ public class Users extends Base {
     private String email;
 
     @Column(name = "user_git_check", nullable = false)
-    private Boolean gitCheck = false;
+    private boolean gitCheck = false;
 
     @OneToMany(mappedBy = "user")
     private List<ProjectUsers> projectUsersList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<UserRoles> userRolesList = new ArrayList<>();
+
 
     public static Users createUser(UserInfoDto userInfo) {
         return Users.builder()

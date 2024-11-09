@@ -41,6 +41,8 @@ public class SecurityConfig implements WebMvcConfigurer {
                         .requestMatchers("/login/jira").permitAll()
                         .requestMatchers("/oauth2/**").permitAll()
                         .requestMatchers("/callback/oauth2/**").permitAll()
+                        .requestMatchers("/jira/**").permitAll()
+                        .requestMatchers("/ssafy/atlassian/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2Login -> oauth2Login
