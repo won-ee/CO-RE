@@ -1,11 +1,16 @@
 import axios from "axios";
-import { HistoryParamsType, HistoryDataType } from "../Types/historyType";
+import { InitialDataType, HistoryDataType } from "../Types/historyType";
 
 const BASE_URL = "http://54.180.83.239:8080";
 
-export const getHistoryData = async ({
-  id,
-}: HistoryParamsType): Promise<HistoryDataType> => {
-  const response = await axios.get<HistoryDataType>(`${BASE_URL}/2/${id}`);
-  return response.data;
+export const fetchRepos = async (): Promise<InitialDataType[]> => {
+  const { data } = await axios.get(`${BASE_URL}/version/JEM1224/github-api`);
+  return data;
+};
+
+export const fetchGraphDataById = async (
+  id: string,
+): Promise<HistoryDataType> => {
+  const { data } = await axios.get(`${BASE_URL}/version/${id}`);
+  return data;
 };

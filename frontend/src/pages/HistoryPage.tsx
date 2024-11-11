@@ -1,31 +1,57 @@
 import React from "react";
-import styled from "styled-components";
-import { useParams } from "react-router-dom";
-import GitHistory from "../components/History/HIstoryGraph";
-import { useQueryHistoryData } from "../hooks/useHistory";
+import { useParams, useNavigate } from "react-router-dom";
+import GitGraphComponent from "../components/History/HistoryGraph";
+import { useHistoryData } from "../hooks/useHistory";
 import LoadingPage from "./LoadingPage";
 import NotFoundPage from "./NotFoundPage";
-import { HistoryParamsType } from "../Types/historyType";
+import { DropdownContainer, StyledSelect } from "./HistoryPage.styled";
 
-const Container = styled.div``;
-
-const History: React.FC = () => {
+const HistoryPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const params: HistoryParamsType = {
-    id: id ?? "",
+  const navigate = useNavigate();
+
+  const {
+    repos,
+    isLoadingRepos,
+    selectedRepoId,
+    setSelectedRepoId,
+    graphData,
+    isLoadingGraph,
+    graphError,
+  } = useHistoryData();
+
+  const handleSelectChange = (selectedId: string) => {
+    setSelectedRepoId(selectedId);
+    if (!selectedId) {
+      navigate("/history");
+    } else {
+      navigate(`/history/${selectedId}`);
+    }
   };
 
-  const { data: graphData, error, isLoading } = useQueryHistoryData(params);
-
-  if (!id) return <NotFoundPage />;
-  if (isLoading) return <LoadingPage />;
-  if (error || !graphData) return <NotFoundPage />;
+  if (isLoadingRepos) return <LoadingPage />;
+  if (graphError) return <NotFoundPage error={graphError.message} />;
 
   return (
-    <Container>
-      <GitHistory graphData={graphData} />
-    </Container>
+    <div>
+      <DropdownContainer>
+        <StyledSelect
+          value={selectedRepoId || ""}
+          onChange={(e) => handleSelectChange(e.target.value)}
+        >
+          <option value="">Version</option>
+          {repos?.map((repo) => (
+            <option key={repo.id} value={repo.id}>
+              {repo.id}
+            </option>
+          ))}
+        </StyledSelect>
+      </DropdownContainer>
+
+      {id && isLoadingGraph && <div>Loading graph data...</div>}
+      {id && graphData && <GitGraphComponent graphData={graphData} />}
+    </div>
   );
 };
 
-export default History;
+export default HistoryPage;

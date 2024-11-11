@@ -1,12 +1,18 @@
-export interface HistoryParamsType {
+export interface InitialDataType {
   id: string;
+  name: string | null;
+  owner: string;
+  repo: string;
+  content: string;
 }
 
 export interface CommitType {
   sha: string;
   message: string;
+  writerId: string;
+  writerImg: string;
   date: string;
-  parent: string;
+  parent?: string;
   secondParent?: string | null;
 }
 

@@ -1,10 +1,10 @@
-import React from "react";
 import { Gitgraph, Branch } from "@gitgraph/react";
+import { useRef } from "react";
 import { GitGraphContainer } from "./HistoryGraph.styled";
-import { GitGraphComponentProps } from "../../Types/historyType";
+import { GitGraphComponentProps, CommitType } from "../../Types/historyType";
 
 const GitGraphComponent: React.FC<GitGraphComponentProps> = ({ graphData }) => {
-  const isInitialized = React.useRef(false);
+  const isInitialized = useRef(false);
 
   return (
     <GitGraphContainer>
@@ -14,7 +14,7 @@ const GitGraphComponent: React.FC<GitGraphComponentProps> = ({ graphData }) => {
         }}
       >
         {(gitgraph) => {
-          if (!isInitialized.current) {
+          if (!isInitialized.current && graphData) {
             isInitialized.current = true;
 
             const master = gitgraph.branch("master");
@@ -28,7 +28,7 @@ const GitGraphComponent: React.FC<GitGraphComponentProps> = ({ graphData }) => {
 
             const allCommits = graphData
               .flatMap((pr) =>
-                pr.commits.map((commit) => ({
+                pr.commits.map((commit: CommitType) => ({
                   ...commit,
                   prHead: pr.head,
                   prId: pr.prId,
@@ -66,7 +66,7 @@ const GitGraphComponent: React.FC<GitGraphComponentProps> = ({ graphData }) => {
               commitMap[commit.sha] = headBranch;
             });
 
-            master.merge(develop, "develop 브랜치 병합 완료");
+            master.merge(develop, "develop branch merge complete");
           }
         }}
       </Gitgraph>
