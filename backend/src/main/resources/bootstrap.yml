@@ -8,7 +8,7 @@ spring:
     name: backend
   cloud:
     config:
-      uri: https://k11s106.p.ssafy.io/config
+      uri: http://config:8888
   profiles:
     active: backend
   datasource:
@@ -56,3 +56,11 @@ front:
   url: ${FRONT_URL}
 jira:
   scopes: read:me read:jira-work manage:jira-project manage:jira-configuration read:jira-user manage:jira-webhook write:jira-work offline_access
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    lease-renewal-interval-in-seconds: 10
+  client:
+    service-url:
+      defaultZone: http://eureka:8761/eureka/

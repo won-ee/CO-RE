@@ -32,10 +32,10 @@ public class CallbackController {
             String userEmail = (String) loginData.get("userEmail");
 
             Cookie cookie = jwtTokenService.createAllTokenCookie(userId, userEmail);
-            
+
             log.info("Cookie Name: {}, Cookie Value: {}", cookie.getName(), cookie.getValue());
             response.addCookie(cookie);
-            response.sendRedirect("http://localhost:5173");
+            response.sendRedirect("https://k11s106.p.ssafy.io/dashboard");
 
         } catch (IOException e) {
             log.error("Error during callback processing: {}", e.getMessage());
