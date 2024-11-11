@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import GitGraphComponent from "../components/History/HistoryGraph";
+import GitGraphComponent from "../components/History/HIstoryGraph";
 import { useHistoryData } from "../hooks/useHistory";
 import LoadingPage from "./LoadingPage";
 import NotFoundPage from "./NotFoundPage";
@@ -30,7 +30,7 @@ const HistoryPage: React.FC = () => {
   };
 
   if (isLoadingRepos) return <LoadingPage />;
-  if (graphError) return <NotFoundPage error={graphError.message} />;
+  if (graphError) return <NotFoundPage/>;
 
   return (
     <div>

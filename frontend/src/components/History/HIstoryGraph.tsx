@@ -9,9 +9,9 @@ const GitGraphComponent: React.FC<GitGraphComponentProps> = ({ graphData }) => {
   return (
     <GitGraphContainer>
       <Gitgraph
-        options={{
-          orientation: "vertical-reverse",
-        }}
+        // options={{
+        //   orientation: "vertical-reverse",
+        // }}
       >
         {(gitgraph) => {
           if (!isInitialized.current && graphData) {
