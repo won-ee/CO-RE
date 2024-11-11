@@ -1,15 +1,12 @@
 package com.core.api.client;
 
-import com.core.api.data.dto.ContentDto;
 import com.core.api.data.dto.FileDto;
 import com.core.api.data.dto.github.CommitMessageServerDto;
 import com.core.api.data.dto.github.PullRequestInputServerDto;
-import com.core.api.data.dto.response.BranchResponseDto;
 import com.core.api.data.dto.response.MergeResponseDto;
 import com.core.api.data.dto.review.ReviewInputDto;
 import com.core.api.data.dto.review.ReviewSimpleDto;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,7 +16,7 @@ import java.util.Map;
 public interface GitHubClient {
 
     @PostMapping("/repos/{owner}/{repo}/pulls")
-    void createPullRequest(
+    Map<String, Object> createPullRequest(
             @PathVariable("owner") String owner,
             @PathVariable("repo") String repo,
             @RequestBody PullRequestInputServerDto pullRequestInputServerDto
@@ -33,7 +30,7 @@ public interface GitHubClient {
     );
 
     @GetMapping("/repos/{owner}/{repo}/contents/{path}")
-    ResponseEntity<ContentDto> getContents(
+    Map<String, Object> getContents(
             @PathVariable("owner") String owner,
             @PathVariable("repo") String repo,
             @PathVariable("path") String path,
@@ -41,7 +38,7 @@ public interface GitHubClient {
     );
 
     @PutMapping("/repos/{owner}/{repo}/pulls/{pullId}/merge")
-    ResponseEntity<MergeResponseDto> mergePullRequest(
+    MergeResponseDto mergePullRequest(
             @PathVariable("owner") String owner,
             @PathVariable("repo") String repo,
             @PathVariable("pullId") int pullId,
@@ -49,7 +46,7 @@ public interface GitHubClient {
     );
 
     @GetMapping("/repos/{owner}/{repo}/branches")
-    ResponseEntity<List<BranchResponseDto>> getBranches(
+    List<Map<String, Object>> getBranches(
             @PathVariable("owner") String owner,
             @PathVariable("repo") String repo
     );

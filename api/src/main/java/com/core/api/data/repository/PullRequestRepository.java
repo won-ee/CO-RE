@@ -14,6 +14,9 @@ public interface PullRequestRepository extends JpaRepository<PullRequest, Long> 
 
     Optional<List<PullRequest>> findAllByOwnerAndRepo(String owner, String repo);
 
+    Optional<PullRequest> findByOwnerAndRepoAndBaseAndHead(String owner, String repo, String base, String head);
+
+    Optional<PullRequest> findByOwnerAndRepoAndPullRequestId(String owner, String repo, Integer pullRequestId);
 
     @Query("SELECT pr FROM PullRequest pr " +
             "LEFT JOIN pr.reviewers r " +
@@ -22,5 +25,28 @@ public interface PullRequestRepository extends JpaRepository<PullRequest, Long> 
             "AND pr.repo = :#{#param.repo()} " +
             "AND pr.createdDate BETWEEN :#{#param.startDate()} AND :#{#param.endDate()}")
     Optional<List<PullRequest>> findAllByOwnerRepoByFilter(@Param("param") PullRequestDateFilterDto param);
+
+    @Query("SELECT pr FROM PullRequest pr " +
+            "LEFT JOIN pr.reviewers r " +
+            "WHERE pr.owner = :owner " +
+            "AND pr.repo = :repo " +
+            "AND r.reviewerId = :reviewerId " +
+            "AND pr.mergeStatus = false " +
+            "AND pr.afterReview = true")
+    Optional<List<PullRequest>> findAllByOwnerAndRepoWhereReviewerIs(
+            @Param("owner") String owner,
+            @Param("repo") String repo,
+            @Param("reviewerId") String reviewerId);
+
+    @Query("SELECT pr FROM PullRequest pr " +
+            "WHERE pr.owner = :owner " +
+            "AND pr.repo = :repo " +
+            "AND pr.writerId = :writerId " +
+            "AND pr.mergeStatus = false " +
+            "AND pr.afterReview = true")
+    Optional<List<PullRequest>> findAllByOwnerAndRepoWhereWriterIs(
+            @Param("owner") String owner,
+            @Param("repo") String repo,
+            @Param("writerId") String writerId);
 
 }

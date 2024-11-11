@@ -6,7 +6,8 @@ spring:
     name: gateway
   cloud:
     config:
-      uri: https://k11s106.p.ssafy.io/config
+      uri:
+        http://config:8888
   profiles:
     active: gateway
 
@@ -16,4 +17,4 @@ eureka:
     lease-renewal-interval-in-seconds: 10
   client:
     service-url:
-      defaultZone: https://k11s106.p.ssafy.io/eureka/eureka/
+      defaultZone: http://eureka:8761/eureka/

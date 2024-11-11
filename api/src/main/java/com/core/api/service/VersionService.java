@@ -31,12 +31,13 @@ public class VersionService {
         }
         Version version = Version.createVersion(pullRequest);
         versionRepository.save(version);
-
         pullRequestRepository.findAllByOwnerAndRepo(pullRequest.getOwner(), pullRequest.getRepo())
                 .ifPresent(pullRequests -> pullRequests.stream()
                         .filter(pr -> pr.getOwner()
-                                .equals(pullRequest.getOwner()) && pr.getRepo()
-                                .equals(pullRequest.getRepo()))
+                                .equals(pullRequest.getOwner()) &&
+                                pr.getRepo()
+                                        .equals(pullRequest.getRepo()) &&
+                                pr.getVersion() == null)
                         .forEach(pr -> pr.updateVersion(version))
                 );
 
@@ -53,7 +54,6 @@ public class VersionService {
     public List<VersionHistoryDto> getVersionHistoryById(Long id) {
         Version version = versionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Version with ID " + id + " not found"));
-
         return version.getPullRequests()
                 .stream()
                 .map(this::convertToVersionHistoryDto)

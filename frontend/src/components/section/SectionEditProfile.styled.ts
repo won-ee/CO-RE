@@ -57,7 +57,7 @@ export const Label = styled.label`
     color: #232323;
 `;
 
-export const Input = styled.input`
+export const ProfileBox = styled.div`
     width: 300px;
     height: 25px;
     padding: 10px;
