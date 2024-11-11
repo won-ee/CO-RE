@@ -60,7 +60,7 @@ export interface PRDataType {
   reviewers: ReviewerType[];
 }
 
-export interface PRDegailParamsType {
+export interface PRDetailParamsType {
   owner: string;
   repo: string;
   pullId: number;

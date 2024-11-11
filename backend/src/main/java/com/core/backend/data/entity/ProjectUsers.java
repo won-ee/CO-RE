@@ -1,15 +1,13 @@
 package com.core.backend.data.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "ProjectUsers")
 @Builder
 public class ProjectUsers extends Base {
 
@@ -18,9 +16,6 @@ public class ProjectUsers extends Base {
     @Column(name = "project_user_id", nullable = false)
     private Long id;
 
-    @Enumerated(value = EnumType.STRING)
-    @Column(name = "project_user_role", nullable = false)
-    private Role role;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

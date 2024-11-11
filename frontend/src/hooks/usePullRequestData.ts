@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query';
 import { getCalendarPR, getPRDetail } from '../api/pullRequestAPI';
-import { PRDataType, CalendarPRParamsType, PRDegailParamsType } from '../Types/pullRequestType';
+import { PRDataType, CalendarPRParamsType, PRDetailParamsType } from '../Types/pullRequestType';
 
 export const useQueryCalendarPR = (params: CalendarPRParamsType) => {
   return useQuery<PRDataType[], Error>(
@@ -13,7 +13,7 @@ export const useQueryCalendarPR = (params: CalendarPRParamsType) => {
   );
 };
 
-export const useQueryPRDetail = (params: PRDegailParamsType) => {
+export const useQueryPRDetail = (params: PRDetailParamsType) => {
   return useQuery<PRDataType, Error>(
     ['pullRequest', params],
     () => getPRDetail(params),

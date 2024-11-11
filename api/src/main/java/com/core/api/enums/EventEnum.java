@@ -7,13 +7,4 @@ public enum EventEnum {
     DELETED,
     CLOSED;
 
-    public static EventEnum fromString(String action) {
-        for (EventEnum eventEnum : EventEnum.values()) {
-            if (eventEnum.name()
-                    .equalsIgnoreCase(action)) {
-                return eventEnum;
-            }
-        }
-        return null;
-    }
 }

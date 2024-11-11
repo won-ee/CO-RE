@@ -18,8 +18,11 @@ public class BranchService {
     private final GitHubClient gitHubClient;
 
     public List<BranchResponseDto> getBranches(String owner, String repo) {
-        return gitHubClient.getBranches(owner, repo)
-                .getBody();
+        List<Map<String, Object>> branches = gitHubClient.getBranches(owner, repo);
+
+        return branches.stream()
+                .map(BranchResponseDto::from)
+                .toList();
     }
 
     public List<CompareBranchResponseDto> compareBranchHead(String owner, String repo, String baseHead) {

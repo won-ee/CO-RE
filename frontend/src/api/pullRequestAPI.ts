@@ -36,7 +36,7 @@ export const getPRDetail = async ({
   owner,
   repo,
   pullId
-}: PRDegailParamsType): Promise<PRDataType> => {
+}: PRDetailParamsType): Promise<PRDataType> => {
   const response = await axios.get<PRDataType>(
     `${BASE_URL}/pull-request/${owner}/${repo}/${pullId}`,
   );
