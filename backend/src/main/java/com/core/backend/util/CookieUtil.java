@@ -21,7 +21,8 @@ public class CookieUtil {
     }
 
     public static Cookie createTokenCookie(String key, String token, int period) {
-        return createCookie(key, token, period, false);
+        // TODO: Test 위해 변경 false -> true
+        return createCookie(key, token, period, true);
     }
 
 }
