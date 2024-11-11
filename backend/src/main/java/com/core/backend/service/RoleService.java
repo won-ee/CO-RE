@@ -45,7 +45,6 @@ public class RoleService {
             Map<String, Object> roles = response.getBody();
             assert roles != null;
 
-            // 각 역할을 반복하면서 DB에 저장되지 않은 경우 저장
             for (Map.Entry<String, Object> entry : roles.entrySet()) {
                 String roleName = entry.getKey();
                 String roleDetailUrl = (String) entry.getValue();
@@ -63,16 +62,13 @@ public class RoleService {
                             return roleRepository.save(newRole);
                         });
 
-                // Userrole 처리
                 List<Map<String, Object>> actors = (List<Map<String, Object>>) roleDetails.get("actors");
                 for (Map<String, Object> actor : actors) {
 
-                    // actorUser가 존재하는 경우에만 accountId를 비교
                     if (actor.containsKey("actorUser")) {
                         Map<String, Object> actorUser = (Map<String, Object>) actor.get("actorUser");
                         String actorAccountId = (String) actorUser.get("accountId");
 
-                        // actor의 accountId가 로그인한 사용자와 일치하는지 확인
                         if (user.getAccountId().equals(actorAccountId)) {
                             boolean exists = userRoleRepository.existsByRoleAndUser(role, user);
 

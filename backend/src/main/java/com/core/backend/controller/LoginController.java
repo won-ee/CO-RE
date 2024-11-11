@@ -43,12 +43,10 @@ public class LoginController {
             return;
         }
 
-        // 스코프 인코딩
         String scopes = "read:me read:jira-work manage:jira-project manage:jira-configuration read:jira-user write:jira-work offline_access";
         String encodedScopes = URLEncoder.encode(scopes, StandardCharsets.UTF_8).replace("+", "%20");
         String encodedRedirectUri = URLEncoder.encode(redirectUri, StandardCharsets.UTF_8);
 
-        // 인증 URL 만들기
         String audience = "api.atlassian.com";
         String authorizationUrl = String.format(
                 "https://auth.atlassian.com/authorize?audience=%s&client_id=%s&scope=%s&redirect_uri=%s&state=YOUR_USER_BOUND_VALUE&response_type=code&prompt=consent",
@@ -58,9 +56,8 @@ public class LoginController {
                 encodedRedirectUri
         );
 
-        log.info("Redirecting to: {}", authorizationUrl); // 디버깅을 위한 로그
+        log.info("Redirecting to: {}", authorizationUrl);
 
-        // 인증 URL로 리다이렉션
         response.sendRedirect(authorizationUrl);
     }
 }

@@ -48,7 +48,6 @@ public class CallbackService {
             String userEmail;
             if (user == null) {
 
-                // 그룹 목록가져오기 저장하기 (중복체크)
                 List<UserGroupsDto> groupList = jiraService.getGroups(accessToken);
                 log.info("Groups: {}", groupList);
                 userId = userService.saveUser(userInfo);

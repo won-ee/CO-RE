@@ -148,7 +148,6 @@ public class ProjectService {
                         projectRepository.save(newProject);
                     }
 
-                    // project당 팀원 저장하기 (중복체크)
                     if (!projectUserRepository.existsByUserAndProjectJiraId(user, newProject.getJiraId())) {
                         ProjectUsers projectUser = ProjectUsers.builder()
                                 .user(user)
@@ -158,7 +157,6 @@ public class ProjectService {
                         projectUserRepository.save(projectUser);
                     }
 
-                    // project당 roleList 체크하기, 저장하기(중복체크), role별로 user가 맞다면 userrole에 저장(중복체크)
                     roleService.saveProjectRolesIfNotExists(accessToken, selfUrl, newProject, user);
                 }
             }

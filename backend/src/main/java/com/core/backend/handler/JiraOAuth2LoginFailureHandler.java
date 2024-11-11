@@ -17,11 +17,9 @@ public class JiraOAuth2LoginFailureHandler extends SimpleUrlAuthenticationFailur
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                         AuthenticationException exception) throws IOException, ServletException {
-        // 실패 원인 로깅
         log.error("OAuth2 로그인 실패: {}", exception.getMessage());
 
-        // 실패 시 리다이렉트할 URL 설정
-        setDefaultFailureUrl("/error"); // 실패 시 에러 페이지로 리다이렉트
+        setDefaultFailureUrl("/error");
         super.onAuthenticationFailure(request, response, exception);
     }
 }

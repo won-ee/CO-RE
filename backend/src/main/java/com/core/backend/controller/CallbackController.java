@@ -32,8 +32,7 @@ public class CallbackController {
             String userEmail = (String) loginData.get("userEmail");
 
             Cookie cookie = jwtTokenService.createAllTokenCookie(userId, userEmail);
-
-            // 쿠키 이름과 값을 로그로 출력
+            
             log.info("Cookie Name: {}, Cookie Value: {}", cookie.getName(), cookie.getValue());
             response.addCookie(cookie);
             response.sendRedirect("http://localhost:5173");
