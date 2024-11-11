@@ -1,5 +1,5 @@
 server:
-  port:${SERVER_PORT}
+  port: ${SERVER_PORT:8082}
 
 spring:
   config:
@@ -9,7 +9,7 @@ spring:
   cloud:
     config:
       uri: https://k11s106.p.ssafy.io/config
-  properties:
+  profiles:
     active: backend
   datasource:
     url: ${MYSQL_URL}
@@ -29,7 +29,6 @@ spring:
             client-secret: ${JIRA_SECRET}
             authorization-grant-type: authorization_code
             redirect-uri: ${JIRA_CALLBACK}
-            scope: read:me,read:jira-work,manage:jira-project,manage:jira-configuration,read:jira-user,manage:jira-webhook,write:jira-work,manage:jira-data-provider,offline_access
         provider:
           jira:
             token-uri: https://auth.atlassian.com/oauth/token
@@ -53,3 +52,7 @@ logging:
   level:
     com.core.backend: DEBUG
     com.core.backend.filter: DEBUG
+front:
+  url: ${FRONT_URL}
+jira:
+  scopes: read:me read:jira-work manage:jira-project manage:jira-configuration read:jira-user manage:jira-webhook write:jira-work offline_access

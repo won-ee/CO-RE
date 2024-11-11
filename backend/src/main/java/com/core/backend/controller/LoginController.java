@@ -28,6 +28,12 @@ public class LoginController {
     @Value("${spring.security.oauth2.client.registration.jira.redirect-uri}")
     private String redirectUri;
 
+    @Value("${jira.scopes}")
+    private String jiraScope;
+
+    @Value("${front.url}")
+    private String frontUrl;
+
     private final JwtTokenService jwtTokenService;
 
     public LoginController(JwtTokenService jwtTokenService) {
@@ -39,12 +45,11 @@ public class LoginController {
 
         if (accessToken != null && jwtTokenService.isJwtTokenValid(accessToken)) {
             response.setStatus(HttpServletResponse.SC_OK);
-            response.sendRedirect("http://localhost:5173");
+            response.sendRedirect(frontUrl);
             return;
         }
 
-        String scopes = "read:me read:jira-work manage:jira-project manage:jira-configuration read:jira-user write:jira-work offline_access";
-        String encodedScopes = URLEncoder.encode(scopes, StandardCharsets.UTF_8).replace("+", "%20");
+        String encodedScopes = URLEncoder.encode(jiraScope, StandardCharsets.UTF_8).replace("+", "%20");
         String encodedRedirectUri = URLEncoder.encode(redirectUri, StandardCharsets.UTF_8);
 
         String audience = "api.atlassian.com";
