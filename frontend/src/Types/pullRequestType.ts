@@ -69,10 +69,16 @@ export interface PRDetailParamsType {
   pullId: number;
 
 }
-
-export interface PRCreateReviewParamsType {
-  owner: string;
-  repo: string;
-  pullId: number;
-  comment: string;
+export interface ReviewType{
+  path: string,
+  startLine: number,
+  endLine: number,
+  commitId: string,
+  body: string//내용
+}
+export interface TotalReviewsType{
+    commit_id: string,
+    body: string,
+    event: string,
+    comments: ReviewType[]
 }

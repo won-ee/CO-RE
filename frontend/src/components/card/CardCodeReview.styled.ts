@@ -1,11 +1,24 @@
 import styled from "styled-components";
 
-export const CardCodeReviewLayout = styled.div`
+interface CardCodeReviewLayoutProps{
+    isAbsolute? : boolean
+}
+
+export const CardCodeReviewLayout = styled.div<CardCodeReviewLayoutProps>`
     display: flex;
     flex-direction: column;
     padding: 6px;
     border-top: 1px solid #e1e4e8;
     border-bottom: 1px solid #e1e4e8;
+    ${({ isAbsolute }) => isAbsolute && `
+        position: absolute;
+        top:100%
+        left: 0;
+        right: 0;
+        z-index: 10; /* 다른 요소 위에 표시 */
+        background-color: white; /* 배경색 추가하여 다른 요소와 구분 */
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+  `}
 `
 export const ReviewTextArea = styled.textarea`
     font-family: 'Pretendard';

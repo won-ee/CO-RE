@@ -112,3 +112,11 @@ export const CollapsedLinesContent = styled.div`
   /* padding-left: 10px; */
   /* margin-left: 50px; */
 `;
+export const ReviewBox = styled.div`
+  border: 1px solid black;
+  padding: 10px;
+`
+export const CardCodeReviewReadBox = styled.div`
+  display: flex;
+  flex-direction: column;
+`

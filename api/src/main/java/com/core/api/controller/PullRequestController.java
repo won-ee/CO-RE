@@ -5,6 +5,7 @@ import com.core.api.data.dto.commit.CommitMessageDto;
 import com.core.api.data.dto.pullrequest.PullRequestDateFilterDto;
 import com.core.api.data.dto.pullrequest.PullRequestDto;
 import com.core.api.data.dto.pullrequest.PullRequestFilterDto;
+import com.core.api.data.dto.pullrequest.PullRequestInputDto;
 import com.core.api.data.dto.response.MergeResponseDto;
 import com.core.api.service.PullRequestService;
 import lombok.RequiredArgsConstructor;
@@ -20,16 +21,39 @@ public class PullRequestController {
 
     private final PullRequestService pullRequestService;
 
-    @GetMapping("/{owner}/{repo}/{pullId}/files")
-    public ResponseEntity<List<ChangeDto>> getChangeFiles(@PathVariable String owner, @PathVariable String repo, @PathVariable int pullId) {
-        List<ChangeDto> changeFiles = pullRequestService.getChangeFiles(owner, repo, pullId);
+    @GetMapping("/{owner}/{repo}/files/{baseHead}")
+    public ResponseEntity<List<ChangeDto>> getChangeFiles(@PathVariable String owner, @PathVariable String repo, @PathVariable String baseHead) {
+        List<ChangeDto> changeFiles = pullRequestService.getChangeFiles(owner, repo, baseHead);
         return ResponseEntity.ok(changeFiles);
     }
 
+    @PostMapping
+    public ResponseEntity<Void> createPullRequest(@RequestBody PullRequestInputDto pullRequestDto) {
+        pullRequestService.createPullRequest(pullRequestDto);
+        return ResponseEntity.ok()
+                .build();
+    }
+
     @GetMapping("/{owner}/{repo}")
-    public ResponseEntity<List<PullRequestDto>> getPullRequestList(@PathVariable String owner, @PathVariable String repo) {
-        List<PullRequestDto> pullRequestList = pullRequestService.getPullRequestList(owner, repo);
+    public ResponseEntity<List<PullRequestDto>> getPullRequestList(
+            @PathVariable String owner,
+            @PathVariable String repo,
+            @RequestParam String state
+    ) {
+
+        List<PullRequestDto> pullRequestList = switch (state) {
+            case "sent" -> pullRequestService.getPullRequestListByWriter(owner, repo);
+            case "received" -> pullRequestService.getPullRequestListByReviewer(owner, repo);
+            default -> List.of();
+        };
+
         return ResponseEntity.ok(pullRequestList);
+    }
+
+    @GetMapping("/{owner}/{repo}/{pullId}")
+    public ResponseEntity<PullRequestDto> getPullRequest(@PathVariable String owner, @PathVariable String repo, @PathVariable Integer pullId) {
+        PullRequestDto pullRequest = pullRequestService.getPullRequest(owner, repo, pullId);
+        return ResponseEntity.ok(pullRequest);
     }
 
     @GetMapping("/{owner}/{repo}/user")
@@ -44,7 +68,6 @@ public class PullRequestController {
         return ResponseEntity.ok(pullRequestList);
     }
 
-
     @PutMapping("/{owner}/{repo}/{pullId}/merge")
     public ResponseEntity<MergeResponseDto> mergePullRequest(
             @PathVariable String owner,
@@ -55,6 +78,5 @@ public class PullRequestController {
         MergeResponseDto message = pullRequestService.mergePullRequest(owner, repo, pullId, commitMessage);
         return ResponseEntity.ok(message);
     }
-
 
 }

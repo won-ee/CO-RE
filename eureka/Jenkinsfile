@@ -8,7 +8,7 @@ pipeline {
 
         // build env
         JAR_NAME = 'eureka-0.0.1-SNAPSHOT.jar'
-        IMAGE_NAME = 'eureka_service'
+        IMAGE_NAME = 'eureka'
         REMOTE_PATH = '/home/ubuntu/eureka'
     }
 
@@ -58,7 +58,7 @@ pipeline {
                         sudo docker build -t ${IMAGE_NAME} . &&
                         sudo docker stop ${IMAGE_NAME} || true &&
                         sudo docker rm ${IMAGE_NAME} || true &&
-                        sudo docker run -d -p 8761:8761 --name ${IMAGE_NAME} ${IMAGE_NAME}'
+                        sudo docker run -d -p 8761:8761 --name ${IMAGE_NAME} --network docker-network ${IMAGE_NAME}'
                     """
                 }
             }

@@ -3,26 +3,28 @@ import { CardCodeReviewLayout, ReviewTextArea, ButtonBox } from "./CardCodeRevie
 import ButtonSimpleSquare from "../buttons/ButtonSimpleSquare"
 
 interface CardCodeReviewProps {
-    onCancel: () => void;
+    onCancel?: () => void;
+    onAdd: (content: string) => void; // 리뷰 내용을 부모에 전달하는 콜백
   }
-
-const handleCreate = ()=>{
-    console.log('add');
-}
-
-function CardCodeReview({onCancel} : CardCodeReviewProps) {
-    const [content, setContent] = useState<string>('')
-
-    const handleContent = (e:ChangeEvent<HTMLTextAreaElement>)=>{
-        setContent(e.target.value)
-      }
+  
+  function CardCodeReview({ onCancel, onAdd }: CardCodeReviewProps) {
+    const [content, setContent] = useState<string>(""); // content를 자식 컴포넌트 상태로 관리
+  
+    const handleContentChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+      setContent(e.target.value);
+    };
+  
+    const handleAddReview = () => {
+      onAdd(content); // 부모에 content 전달
+      setContent(""); // content 초기화
+    };
 
     return (
         <CardCodeReviewLayout>
-            <ReviewTextArea placeholder="Type your Review..." onChange={handleContent} value={content}/>
+            <ReviewTextArea placeholder="Type your Review..." onChange={handleContentChange} value={content}/>
             <ButtonBox>
-                <ButtonSimpleSquare text='Cancle' color='black' bgc='#EFF2F5' btnEvent={onCancel}/>
-                <ButtonSimpleSquare text='Add Review' color='white' bgc='#1F883D' btnEvent={handleCreate}/>
+                {onCancel && <ButtonSimpleSquare text='Cancle' color='black' bgc='#EFF2F5' btnEvent={onCancel}/>}
+                <ButtonSimpleSquare text='Add Review' color='white' bgc='#1F883D' btnEvent={handleAddReview}/>
             </ButtonBox>
         </CardCodeReviewLayout>
     )

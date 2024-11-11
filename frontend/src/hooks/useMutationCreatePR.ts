@@ -1,10 +1,10 @@
 import { useMutation } from "react-query";
-import { postCreatePR, postCreatePRReview } from "../api/pullRequestAPI";
+import { postCreatePR,postPRReview } from "../api/pullRequestAPI";
+import { TotalReviewsType } from "../Types/pullRequestType";
 
 export const useMutationCreatePR=()=>{
     return useMutation(postCreatePR)
 }
-
-export const useMutationCreatePRReview=()=>{
-    return useMutation(postCreatePRReview)
-}
+export const useMutationpostPRReview = () => {
+    return useMutation((params: { owner: string; repo: string; pullId: string; reviewData: TotalReviewsType }) => postPRReview(params));
+  };
