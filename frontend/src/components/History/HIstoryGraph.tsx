@@ -1,4 +1,4 @@
-import { Gitgraph, Branch } from "@gitgraph/react";
+import { Gitgraph, Branch, Orientation } from "@gitgraph/react";
 import { useRef } from "react";
 import { GitGraphContainer } from "./HistoryGraph.styled";
 import { GitGraphComponentProps, CommitType } from "../../Types/historyType";
@@ -9,9 +9,9 @@ const GitGraphComponent: React.FC<GitGraphComponentProps> = ({ graphData }) => {
   return (
     <GitGraphContainer>
       <Gitgraph
-        // options={{
-        //   orientation: "vertical-reverse",
-        // }}
+        options={{
+          orientation: Orientation.VerticalReverse,
+        }}
       >
         {(gitgraph) => {
           if (!isInitialized.current && graphData) {
