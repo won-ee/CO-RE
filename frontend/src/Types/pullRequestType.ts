@@ -5,10 +5,12 @@
   }
   
   export interface CommitType {
-    id: number;
+    id: string;
     message: string;
-    author: string;
-    timestamp: string;
+    writerId: string;
+    writerImg:string;
+    date: string;
+    comments:[];
   }
 export interface ChangeType {
   file: {
@@ -49,6 +51,7 @@ export interface PRDataType {
   writerId: string;
   writerImg:string
   summary: string;
+  description:string;
   head: string;
   base: string;
   mergeStatus: boolean;
@@ -65,4 +68,11 @@ export interface PRDetailParamsType {
   repo: string;
   pullId: number;
 
+}
+
+export interface PRCreateReviewParamsType {
+  owner: string;
+  repo: string;
+  pullId: number;
+  comment: string;
 }
