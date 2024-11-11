@@ -1,4 +1,5 @@
 import { ReviewType } from "../../Types/pullRequestType";
+import { CardCodeReviewReadLayout, CardCodeReviewReadBox } from "./CardCodeReviewRead.styled";
 
 interface CardCodeReviewReadProps{
     key:number;
@@ -7,9 +8,11 @@ interface CardCodeReviewReadProps{
 
 function CardCodeReviewRead({review}:CardCodeReviewReadProps) {
   return (
-    <>
-    {review.body}
-    </>
+    <CardCodeReviewReadLayout>
+      <CardCodeReviewReadBox>
+        {review.body}
+      </CardCodeReviewReadBox>
+    </CardCodeReviewReadLayout>
   )
 }
 

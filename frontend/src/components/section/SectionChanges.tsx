@@ -13,6 +13,7 @@ import {
   VectorImg,
   LineNumberBox,
   LineSymbol,
+  CardCodeReviewReadBox,
 } from './SectionChanges.styled';
 import Vector from '../../assets/low.png'
 import ButtonReview from '../buttons/ButtonReview';
@@ -224,8 +225,9 @@ useEffect(() => {
                         <LineContent className={line.type}>{line.content}</LineContent>
                       </LineContainer>
                       {reviews.length > 0 ? (reviews.filter((review) => review.startLine === idx).map((review, index) => (
-                              <CardCodeReviewRead key={index} review={review}>
-                              </CardCodeReviewRead>
+                              <CardCodeReviewReadBox>
+                                <CardCodeReviewRead key={index} review={review}/>
+                              </CardCodeReviewReadBox>
                             ))
                         ) : null}
                       {reviewLineIndex === idx && <CardCodeReview onCancel={handleCancel} onAdd={handleAddReview}/>}
