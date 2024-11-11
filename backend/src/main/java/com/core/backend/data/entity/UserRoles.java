@@ -5,25 +5,23 @@ import lombok.*;
 
 @Entity
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "ProjectUsers")
+@Table(name = "UserRoles")
+@AllArgsConstructor
 @Builder
-public class ProjectUsers extends Base {
+public class UserRoles {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "project_user_id", nullable = false)
-    private Long id;
+    @Column(name = "user_role_id", nullable = false)
+    private long id;
 
+    @ManyToOne
+    @JoinColumn(name = "role_id", nullable = false)
+    private Roles role;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private Users user;
-
-    @ManyToOne
-    @JoinColumn(name = "project_id", nullable = false)
-    private Projects project;
-
 
 }
