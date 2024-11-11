@@ -116,7 +116,8 @@ const SectionChanges: React.FC<SectionChangesProps> = ({ changes, onUpdateReview
   const [path, setPath] = useState<string>('');
   const [startLine, setStartLine] = useState<number>(0);
   const [endLine, setEndLine] = useState<number>(0);
-  const [commitId, setCommitId] = useState("123abc456");
+  // const [commitId, setCommitId] = useState("123abc456");
+  const commitId="123abc456"
   const [body, setBody] = useState(""); 
   if (body) {
     //null

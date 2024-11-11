@@ -14,7 +14,7 @@ interface NoteState {
 const useNoteStore = create<NoteState>((set) => ({
   noteContent: "",
   setNoteContent: (content) => set({ noteContent: content }),
-  saveNote: (version, content) => {
+  saveNote: (content) => {
     set({ noteContent: content });
   },
   loadNote: (version, defaultNotes) => {

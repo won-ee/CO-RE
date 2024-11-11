@@ -47,7 +47,8 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
   const [selectedTab, setSelectedTab] = useState<TabsEnum>(TabsEnum.Commit);
   const [title, setTitle] = useState<string>('')
   const [content, setContent] = useState<string>('')
-  const [commit_id,setCommit_Id] = useState<string>('')
+  // const [commit_id,setCommit_Id] = useState<string>('')
+  const commit_id=''
   const [body,setBody] = useState<string>('')
   const event = "COMMENT"
   const [comments,setComments] = useState<ReviewType[]>([])
