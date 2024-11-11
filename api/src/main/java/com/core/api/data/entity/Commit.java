@@ -5,19 +5,30 @@ import com.core.api.data.dto.github.CommitServerDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
-public class Commit extends Base {
+public class Commit {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "commit_id", nullable = false)
-    private String id;
+    private Long id;
+
+    @Column(name = "commit_sha", nullable = false)
+    private String sha;
 
     @Column(name = "commit_message", length = 2000)
     private String message;
+
+    @Column(name = "commit_writer_id", length = 2000)
+    private String writerId;
+
+    @Column(name = "commit_writer_img", length = 2000)
+    private String writerImg;
 
     @ManyToOne
     @JoinColumn(name = "pr_id", nullable = false)
@@ -32,13 +43,20 @@ public class Commit extends Base {
     @OneToMany(mappedBy = "commit", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
 
+    @Column(name = "created_date", nullable = false, updatable = false)
+    private LocalDateTime createdDate;
+
+
     public static Commit from(CommitServerDto commitServerDto, PullRequest pullRequest) {
         Commit commit = new Commit();
-        commit.id = commitServerDto.sha();
+        commit.sha = commitServerDto.sha();
         commit.message = commitServerDto.message();
         commit.pullRequest = pullRequest;
         commit.parent = commitServerDto.parent();
         commit.secondParent = commitServerDto.secondParent();
+        commit.createdDate = LocalDateTime.parse(commitServerDto.date());
+        commit.writerId = commitServerDto.writerId();
+        commit.writerImg = commitServerDto.writerImg();
         return commit;
     }
 

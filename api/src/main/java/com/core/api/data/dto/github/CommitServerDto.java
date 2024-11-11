@@ -8,6 +8,8 @@ import java.util.Map;
 public record CommitServerDto(
         String sha,
         String message,
+        String writerId,
+        String writerImg,
         String date,
         String parent,
         String secondParent
@@ -15,8 +17,10 @@ public record CommitServerDto(
 ) {
     public static CommitServerDto from(Commit commit) {
         return new CommitServerDto(
-                commit.getId(),
+                commit.getSha(),
                 commit.getMessage(),
+                commit.getWriterId(),
+                commit.getWriterImg(),
                 commit.getCreatedDate()
                         .toString(),
                 commit.getParent(),
@@ -26,6 +30,7 @@ public record CommitServerDto(
 
     public static CommitServerDto fromApiResponse(Map<?, ?> map) {
         Map<?, ?> commit = (Map<?, ?>) map.get("commit");
+        Map<?, ?> authorInfo = (Map<?, ?>) map.get("author");
         Map<?, ?> author = (Map<?, ?>) commit.get("author");
         List<?> parents = (List<?>) map.get("parents");
 
@@ -38,6 +43,8 @@ public record CommitServerDto(
         return new CommitServerDto(
                 (String) map.get("sha"),
                 (String) commit.get("message"),
+                (String) authorInfo.get("login"),
+                (String) authorInfo.get("avatar_url"),
                 (String) author.get("date"),
                 parent,
                 secondParent
