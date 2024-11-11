@@ -8,7 +8,7 @@ spring:
     name: backend
   cloud:
     config:
-      uri: https://k11s106.p.ssafy.io/config
+      uri: http://config:8888
   profiles:
     active: backend
   datasource:
