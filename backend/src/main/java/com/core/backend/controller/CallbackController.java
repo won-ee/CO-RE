@@ -35,8 +35,7 @@ public class CallbackController {
 
             log.info("Cookie Name: {}, Cookie Value: {}", cookie.getName(), cookie.getValue());
             response.addCookie(cookie);
-            // TODO: 테스트 위해서 변경 localhost -> domain
-            response.sendRedirect("https://k11s106.p.ssafy.io/");
+            response.sendRedirect("https://k11s106.p.ssafy.io/dashboard");
 
         } catch (IOException e) {
             log.error("Error during callback processing: {}", e.getMessage());
