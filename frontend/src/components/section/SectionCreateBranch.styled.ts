@@ -179,3 +179,8 @@ export const CreateButtonBox = styled.div`
   margin-top: 25px;
   margin-bottom: 100px;
 `
+export const TabBox = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`
