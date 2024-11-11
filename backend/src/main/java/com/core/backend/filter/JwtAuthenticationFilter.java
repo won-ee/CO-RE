@@ -1,6 +1,6 @@
 package com.core.backend.filter;
 
-import com.core.backend.data.dto.Users.AuthenticatedUserDto;
+import com.core.backend.data.dto.users.AuthenticatedUserDto;
 import com.core.backend.exception.InCorrectAccessTokenException;
 import com.core.backend.service.JwtTokenService;
 import jakarta.servlet.FilterChain;

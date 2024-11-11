@@ -1,4 +1,4 @@
-package com.core.backend.data.dto.Users;
+package com.core.backend.data.dto.users;
 
 public record UserGroupsDto(
         String groupKey,

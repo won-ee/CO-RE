@@ -1,15 +1,20 @@
 server:
-  port:8080
+  port:${SERVER_PORT}
 
 spring:
   config:
     import: optional:file:.env[.properties]
   application:
     name: backend
+  cloud:
+    config:
+      uri: https://k11s106.p.ssafy.io/config
+  properties:
+    active: backend
   datasource:
-    url: jdbc:mysql://localhost:3306/core
-    username: ssafy
-    password: ssafy
+    url: ${MYSQL_URL}
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: update
