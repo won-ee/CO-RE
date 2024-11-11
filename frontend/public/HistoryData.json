@@ -1,101 +1,88 @@
 [
   {
-    "prId": 49,
-    "title": "기능1 ",
+    "prId": 72,
+    "title": "TEST",
     "content": " 요약본",
     "base": "develop",
-    "head": "#1",
+    "head": "feat1",
     "commits": [
       {
-        "sha": "64604f8d3fb9167e2e028efb43f71dc20bb3ae85",
-        "message": "1번",
-        "date": "2024-11-06T02:27:44.780215",
-        "parent": "8ea42637db2e64eccbcf7a5fcb16b23b1ee00089",
-        "secondParent": null
+        "sha": "5024c345f05c106a4dea7653dd5603ee78e9bdb8",
+        "message": "Update Add.md",
+        "writerId": "JEM1224",
+        "writerImg": "https://avatars.githubusercontent.com/u/101504594?v=4",
+        "date": "2024-11-08T04:48:58",
+        "parent": "b88c643fde5e1e7e134e6500eab1644d5fa93514",
+        "secondParent": null,
+        "id": 1
       },
       {
-        "sha": "b5ccb68f4c11922489115225dab6cf77d3bd5841",
-        "message": "2번",
-        "date": "2024-11-06T02:27:44.789259",
-        "parent": "64604f8d3fb9167e2e028efb43f71dc20bb3ae85",
-        "secondParent": null
+        "sha": "dfc4e8d6fa773671e8f4a03e5741cb10847d0f53",
+        "message": "Rename Add.md to Add.java",
+        "writerId": "JEM1224",
+        "writerImg": "https://avatars.githubusercontent.com/u/101504594?v=4",
+        "date": "2024-11-08T04:49:08",
+        "parent": "5024c345f05c106a4dea7653dd5603ee78e9bdb8",
+        "secondParent": null,
+        "id": 2
       }
     ]
   },
   {
-    "prId": 50,
-    "title": "기능3 ",
+    "prId": 73,
+    "title": "TEST",
     "content": " 요약본",
     "base": "develop",
-    "head": "#3",
+    "head": "feat3",
     "commits": [
       {
-        "sha": "0dc3d439ca58165c160f09587b6f8f2bca7f1b94",
-        "message": "3번",
-        "date": "2024-11-06T02:30:17.497357",
-        "parent": "8ea42637db2e64eccbcf7a5fcb16b23b1ee00089",
-        "secondParent": null
+        "sha": "241c524e58cc2b6ad1f1ae9d858e11b087ef06df",
+        "message": "Update THISISFORFRONTEND.md",
+        "writerId": "JEM1224",
+        "writerImg": "https://avatars.githubusercontent.com/u/101504594?v=4",
+        "date": "2024-11-08T04:51:59",
+        "parent": "4e48aa71539694ecbb61966ae7b6bf1aed2d5b0e",
+        "secondParent": null,
+        "id": 3
       },
       {
-        "sha": "c42be74ba83b8f97aee5299ece7793ba80efac6c",
-        "message": "4번",
-        "date": "2024-11-06T02:30:17.503124",
-        "parent": "0dc3d439ca58165c160f09587b6f8f2bca7f1b94",
-        "secondParent": null
+        "sha": "5866560dad843a4993e446c8980c061931c8a782",
+        "message": "Update THISISFORFRONTEND.md",
+        "writerId": "JEM1224",
+        "writerImg": "https://avatars.githubusercontent.com/u/101504594?v=4",
+        "date": "2024-11-08T04:52:06",
+        "parent": "241c524e58cc2b6ad1f1ae9d858e11b087ef06df",
+        "secondParent": null,
+        "id": 4
       }
     ]
   },
   {
-    "prId": 51,
-    "title": "기능3 ",
-    "content": " 요약본",
-    "base": "develop",
-    "head": "#2",
-    "commits": [
-      {
-        "sha": "e3dc7c570d844d47ef4894a6ce5673fa444bcb1a",
-        "message": "5번",
-        "date": "2024-11-06T02:30:31.747374",
-        "parent": "8ea42637db2e64eccbcf7a5fcb16b23b1ee00089",
-        "secondParent": null
-      },
-      {
-        "sha": "83916e45612a581e291155d95a3e837d40df40cb",
-        "message": "6번",
-        "date": "2024-11-06T02:31:16.677924",
-        "parent": "e3dc7c570d844d47ef4894a6ce5673fa444bcb1a",
-        "secondParent": "34a30d21523239fbee233d184e3dddfc23877fb8"
-      }
-    ]
-  },
-  {
-    "prId": 52,
-    "title": "마스터머지",
+    "prId": 74,
+    "title": "TEST",
     "content": " 요약본",
     "base": "master",
     "head": "develop",
     "commits": [
       {
-        "sha": "771f3b7f60ac0f0bbd14991e9659e631369c63d3",
-        "message": "7번",
-        "date": "2024-11-06T02:31:16.664955",
-        "parent": "8ea42637db2e64eccbcf7a5fcb16b23b1ee00089",
-        "secondParent": "b5ccb68f4c11922489115225dab6cf77d3bd5841"
+        "sha": "457dc53900edb31149b67e4d430ff04ba321b962",
+        "message": "Merge pull request #72 from JEM1224/feat1\n\nTEST",
+        "writerId": "JEM1224",
+        "writerImg": "https://avatars.githubusercontent.com/u/101504594?v=4",
+        "date": "2024-11-08T04:52:38",
+        "parent": "4e48aa71539694ecbb61966ae7b6bf1aed2d5b0e",
+        "secondParent": "dfc4e8d6fa773671e8f4a03e5741cb10847d0f53",
+        "id": 5
       },
       {
-        "sha": "34a30d21523239fbee233d184e3dddfc23877fb8",
-        "message": "8번",
-        "date": "2024-11-06T02:31:16.667571",
-        "parent": "771f3b7f60ac0f0bbd14991e9659e631369c63d3",
-        "secondParent": "c42be74ba83b8f97aee5299ece7793ba80efac6c"
-      },
-
-      {
-        "sha": "0470c587ef4ea3f2f96ec40d3c31bdcc7879e7d0",
-        "message": "9번",
-        "date": "2024-11-06T02:31:16.679915",
-        "parent": "34a30d21523239fbee233d184e3dddfc23877fb8",
-        "secondParent": "83916e45612a581e291155d95a3e837d40df40cb"
+        "sha": "b5d5548a829c3a8a1f393d2835eb80bf34ef4c70",
+        "message": "Merge pull request #73 from JEM1224/feat3\n\nTEST",
+        "writerId": "JEM1224",
+        "writerImg": "https://avatars.githubusercontent.com/u/101504594?v=4",
+        "date": "2024-11-08T04:52:48",
+        "parent": "457dc53900edb31149b67e4d430ff04ba321b962",
+        "secondParent": "5866560dad843a4993e446c8980c061931c8a782",
+        "id": 6
       }
     ]
   }

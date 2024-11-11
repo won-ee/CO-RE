@@ -34,6 +34,7 @@ const AppComponent: React.FC = () => {
           <Route path="/pullrequest/create" element={<CreatePRPage />} />
           <Route path="/issue" element={<IssuePage />} />
           <Route path="/history" element={<HistoryPage />} />
+          <Route path="/history/:id" element={<HistoryPage />} />
           <Route path="/calendar" element={<CalendarPage />} />
           <Route path="/member" element={<MemberPage />} />
           <Route path="/setting" element={<SettingPage />} />
