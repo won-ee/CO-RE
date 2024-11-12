@@ -1,8 +1,7 @@
 import axios from 'axios';
-import { PRDataType, CalendarPRParamsType, PRDetailParamsType, CreatePRType,TotalReviewsType } from '../Types/pullRequestType';
+import { PRDataType, CalendarPRParamsType, PRDetailParamsType, CreatePRType, TotalReviewsType, BranchListParams, BranchType } from '../Types/pullRequestType';
 
 const BASE_URL ='http://54.180.83.239:8080'; 
-
 
 export const getCalendarPR = async ({
     owner,
@@ -56,4 +55,15 @@ export const postPRReview = async({owner,repo,pullId,reviewData,} : {
   }
 );
 return data;
+}
+
+export const getBranchList = async({owner,repo}: BranchListParams): Promise<BranchType[]>=>{
+  try{
+    const response = await axios.get<BranchType[]>(`${BASE_URL}/branch/${owner}/${repo}`);
+    return response.data;
+  }
+  catch (error) {
+    console.error("Error fetching branch list:", error);
+    throw error;
+  }
 }
