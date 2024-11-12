@@ -7,8 +7,7 @@ export const GlobalStyle = createGlobalStyle`
     padding: 0;
     color: #00ff80;
     text-shadow: 0 0 0.5px;
-    word-wrap: break-word;
-    font-family: MeyrinRegular, monospace;
+    
   }
 
   html * {
@@ -26,7 +25,8 @@ export const GitGraphContainer = styled.div`
   transform: scale(0.6);
   transform-origin: top;
   margin-bottom: 20px;
-  margin-right: 50px;
+  margin-left: 200px;
+  margin-top: 30px;
   .gitgraph-commit-author {
     display: none !important;
   }

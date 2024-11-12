@@ -1,80 +1,57 @@
-import React from 'react'
-import { CommitMessageBox, CommitMessageContent, CommitMessageTitle, Container, DateBox } from './SectionCommits.styled';
+import React from 'react';
+import { CommitMessageBox, CommitMessageContent, CommitMessageTitle, Container, Date, DateBox } from './SectionCommits.styled';
 import { CommitType } from '../../Types/pullRequestType';
 
-interface Commit {
-  title: string;
-  content: string;
+interface SectionCommitsProps {
+  commits: CommitType[] | undefined;
 }
 
-interface CommitHistoryProps {
-  date: string;
-  commits: Commit[];
-}
+const SectionCommits: React.FC<SectionCommitsProps> = ({ commits }) => {
+  const groupedCommits = commits?.reduce((acc: { [key: string]: CommitType[] }, commit) => {
+    const date = commit.date.split("T")[0];
+    if (!acc[date]) {
+      acc[date] = [];
+    }
+    acc[date].push(commit);
+    return acc;
+  }, {});
 
-const sectionsData: CommitHistoryProps[] = [
-  {
-    date: 'Oct 15, 2024',
-    commits: [
-      {
-        title: 'Frontend',
-        content: "Merge branch 'fe/feature/S11P21C205-386-fe-사용자-추천-피드-api-연결' into 'frontend'",
-      },
-      {
-        title: 'Hotfix',
-        content: "Merge branch 'fe/feature/S11P21C205-356' into 'frontend'",
-      },
-    ],
-  },
-  {
-    date: 'Oct 13, 2024',
-    commits: [
-      {
-        title: '무한스크롤 수정',
-        content: "Merge branch 'fe/feature/S11P21C205-386-fe-사용자-추천-피드-api-연결' into 'frontend'",
-      },
-      {
-        title: '여행 계획 마커 지도에 찍히게 만듦',
-        content: "Merge branch 'fe/feature/S11P21C205-386-fe-사용자-추천-피드-api-연결' into 'frontend'",
-      },
-      {
-        title: '페이지네이션 오류 수정',
-        content: "Merge branch 'fe/feature/S11P21C205-386-fe-사용자-추천-피드-api-연결' into 'frontend'",
-      },
-      {
-        title: '메인페이지 수정',
-        content: "Merge branch 'fe/feature/S11P21C205-386-fe-사용자-추천-피드-api-연결' into 'frontend'",
-      },
-    ],
-  },
-];
+  const result = groupedCommits
+    ? Object.keys(groupedCommits).map(date => ({
+        date,
+        commits: groupedCommits[date]
+      }))
+    : [];
 
-interface SectionCommitsProps{
-  data : CommitType[]|undefined
-}
-
-const SectionCommits:React.FC<SectionCommitsProps> = (data) => {
-  console.log(data);
-  
   return (
-    <>
-      <Container>
-        {sectionsData.map((section, index) => (
-          <div key={index}>
-            <DateBox>
-              <Date>{section.date}</Date>
-            </DateBox>
-            {section.commits.map((commit, idx) => (
-              <CommitMessageBox>
-                <CommitMessageTitle key={idx}>{commit.title}</CommitMessageTitle>
-                <CommitMessageContent key={idx}>{commit.content}</CommitMessageContent>
-              </CommitMessageBox>
-            ))}
-          </div>
-        ))}
+    <Container>
+      {result.map((commitGroup, index) => (
+        <div key={commitGroup.commits?.[index]?.id || index}>
+          <DateBox>
+            <Date>
+              {new window.Date(commitGroup.date).toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+              })}
+            </Date>
+          </DateBox>
+          {commitGroup.commits.map((commit) => (
+            <CommitMessageBox key={commit.id}>
+              <CommitMessageTitle>{commit.message}</CommitMessageTitle>
+              <CommitMessageContent>
+                {new window.Date(commit.date).toLocaleTimeString('en-US', {
+                  hour: 'numeric',
+                  minute: 'numeric',
+                  hour12: true,
+                })}
+              </CommitMessageContent>
+            </CommitMessageBox>
+          ))}
+        </div>
+      ))}
     </Container>
-    </>
-  )
-}
+  );
+};
 
-export default SectionCommits
+export default SectionCommits;

@@ -51,42 +51,7 @@ const SectionOverview:React.FC<SectionOverviewProps> = ({data}) => {
         </OverviewInfoBox>
         <OverviewContentBox>
           <OverviewContent>
-            This commit includes 2 main features with a total of 10 changes.
-            <br />
-            Main Feature
-            <br />
-            1. Refactored authentication service to improve token validation
-            efficiency.
-            <br />
-            2. Added caching mechanism for frequently accessed user data to
-            reduce database load.
-            <br />
-            3. Updated user interface to enhance accessibility for visually
-            impaired users.
-            <br />
-            4. Implemented a new logging system for better error tracking and
-            monitoring in production.
-            <br />
-            5. Optimized API response time by streamlining data serialization
-            and reducing payload size.
-            <br />
-            Sub Feature
-            <br />
-            1. Fixed minor bug in password reset flow that caused invalid tokens
-            to be accepted.
-            <br />
-            2. Added input validation for user registration forms to prevent
-            injection attacks.
-            <br />
-            3. Improved error messages for failed login attempts to provide more
-            helpful feedback to users.
-            <br />
-            4. Updated localization files to support new languages (Spanish and
-            French).
-            <br />
-            5. Enhanced front-end performance by lazy loading images and
-            deferring non-critical scripts.
-            <br />
+            {data?.description}
           </OverviewContent>
         </OverviewContentBox>
         <OverviewCoreBox>

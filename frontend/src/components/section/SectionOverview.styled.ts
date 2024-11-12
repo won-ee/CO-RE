@@ -153,11 +153,13 @@ export const OverviewApproveContent = styled.div`
 `
 
 export const OverviewInput = styled.textarea`
-    width: 90%;
-    height: 200px;
+    width: 88.5%;
+    height: 190px;
     margin-top: 20px;
     margin-left: 40px;
     border-radius: 5px;
+    resize: none;
+    padding: 10px;
 `
 
 export const Container = styled.div`

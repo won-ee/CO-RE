@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import EditIcon from "../../assets/DashboardEditButton.png";
 import {
   FilterAndGraphLayout,
   FilterBox,
@@ -9,20 +8,8 @@ import {
   FilterLabel,
   DropdownSelect,
   GraphContainer,
-  VersionNoteWrapper,
-  NoteToggleButton,
-  SelectedTagsContainer,
-  Tag,
-  OptionContainer,
-  OptionHeader,
-  Checkbox,
-  OptionLabel,
-  SubOptionsContainer,
-  SubOptionLabel,
-  ChevronIcon,
-  EditIconImage,
 } from "./FilterAndGraphSection.styled";
-import { FaFilter, FaRedo, FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { FaFilter, FaRedo } from "react-icons/fa";
 import {
   AreaChart,
   Area,
@@ -33,6 +20,7 @@ import {
   CartesianGrid,
   DotProps,
 } from "recharts";
+import NoteSection from "./NoteSection";
 
 type CategoryData = { day: number; value: number }[];
 type MonthlyData = { [month: string]: { [category: string]: CategoryData } };
@@ -71,7 +59,6 @@ const FilterAndGraphSection: React.FC = () => {
   const [selectedMonth, setSelectedMonth] = useState("Oct");
   const [selectedCategory, setSelectedCategory] = useState("Commit");
   const [graphData, setGraphData] = useState<CategoryData>([]);
-  const [noteContent, setNoteContent] = useState<string>("");
 
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
 
@@ -99,13 +86,6 @@ const FilterAndGraphSection: React.FC = () => {
   }, [selectedVersion]);
 
   useEffect(() => {
-    if (defaultVersionNotes[selectedVersion]) {
-      const savedNote = localStorage.getItem(`${selectedVersion}-note`);
-      setNoteContent(savedNote ?? defaultVersionNotes[selectedVersion]);
-    }
-  }, [selectedVersion, defaultVersionNotes]);
-
-  useEffect(() => {
     const categoryData = monthlyData[selectedMonth]?.[selectedCategory] || [];
     setGraphData(categoryData);
   }, [selectedMonth, selectedCategory, monthlyData]);
@@ -116,16 +96,6 @@ const FilterAndGraphSection: React.FC = () => {
       JSON.stringify(selectedOptions),
     );
   }, [selectedOptions, selectedVersion]);
-
-  const handleNoteChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const updatedNote = e.target.value;
-    setNoteContent(updatedNote);
-    localStorage.setItem(`${selectedVersion}-note`, updatedNote);
-  };
-
-  const toggleNote = () => setShowNote((prev) => !prev);
-
-  const toggleEditing = () => setIsEditing((prev) => !prev);
 
   const handleVersionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const version = e.target.value;
@@ -214,7 +184,6 @@ const FilterAndGraphSection: React.FC = () => {
             setSelectedVersion("1.9.1");
             setSelectedMonth("Sep");
             setSelectedCategory("Commit");
-            setSelectedOptions([]);
           }}
         >
           <FaRedo /> Reset Filter
@@ -259,123 +228,20 @@ const FilterAndGraphSection: React.FC = () => {
         </ResponsiveContainer>
       </GraphContainer>
 
-      <NoteToggleButton onClick={toggleNote}>
-        {showNote ? <FaChevronUp /> : <FaChevronDown />}
-        <span>Version Note</span>
-      </NoteToggleButton>
-
-      {showNote && (
-        <VersionNoteWrapper>
-          <EditIconImage
-            src={EditIcon}
-            alt="Edit Icon"
-            onClick={toggleEditing}
-          />
-
-          <div style={{ display: "flex", gap: "40px" }}>
-            <div style={{ flex: 1 }}>
-              <div className="header">
-                <h2>Version Note</h2>
-              </div>
-              {isEditing ? (
-                <textarea
-                  value={noteContent}
-                  onChange={handleNoteChange}
-                  rows={10}
-                  style={{
-                    width: "100%",
-                    borderRadius: "10px",
-                    padding: "10px",
-                  }}
-                />
-              ) : (
-                <pre style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
-                  {noteContent}
-                </pre>
-              )}
-            </div>
-
-            <div style={{ flex: 1, marginTop: "40px" }}>
-              {[
-                {
-                  label: "업무별",
-                  subOptions: ["믹싱/극판", "조립", "화성", "모듈/팩", "ESS"],
-                },
-                {
-                  label: "사이트별(중대형)",
-                  subOptions: [
-                    "울산",
-                    "헝가리1",
-                    "헝가리2",
-                    "시안",
-                    "SPE",
-                    "천안",
-                  ],
-                },
-              ].map((option) => {
-                const isExpanded = expandedSections.includes(option.label);
-                const subOptions = option.subOptions || [];
-                const isSelected = selectedOptions.includes(option.label);
-
-                return (
-                  <OptionContainer key={option.label}>
-                    <OptionHeader onClick={() => toggleSection(option.label)}>
-                      <Checkbox
-                        type="checkbox"
-                        checked={
-                          isSelected ||
-                          (subOptions.length > 0 &&
-                            subOptions.every((sub) =>
-                              selectedOptions.includes(sub),
-                            ))
-                        }
-                        onChange={() =>
-                          handleOptionChange(option.label, subOptions)
-                        }
-                        disabled={!isEditing}
-                      />
-                      <OptionLabel isSelected={isSelected}>
-                        {option.label}
-                      </OptionLabel>
-                      <SelectedTagsContainer>
-                        {selectedOptions
-                          .filter((opt) => subOptions.includes(opt))
-                          .map((selected) => (
-                            <Tag key={selected}>{selected}</Tag>
-                          ))}
-                      </SelectedTagsContainer>
-                      {subOptions.length > 0 && (
-                        <ChevronIcon>
-                          {isExpanded ? <FaChevronUp /> : <FaChevronDown />}
-                        </ChevronIcon>
-                      )}
-                    </OptionHeader>
-                    {isExpanded && subOptions.length > 0 && (
-                      <SubOptionsContainer>
-                        {subOptions.map((subOption) => (
-                          <OptionHeader key={subOption}>
-                            <Checkbox
-                              type="checkbox"
-                              checked={selectedOptions.includes(subOption)}
-                              onChange={() => handleOptionChange(subOption)}
-                              disabled={!isEditing}
-                            />
-                            <SubOptionLabel
-                              isSelected={selectedOptions.includes(subOption)}
-                            >
-                              {subOption}
-                            </SubOptionLabel>
-                          </OptionHeader>
-                        ))}
-                      </SubOptionsContainer>
-                    )}
-                  </OptionContainer>
-                );
-              })}
-            </div>
-          </div>
-        </VersionNoteWrapper>
-      )}
+      <NoteSection
+        isEditing={isEditing}
+        showNote={showNote}
+        expandedSections={expandedSections}
+        selectedOptions={selectedOptions}
+        setShowNote={setShowNote}
+        setIsEditing={setIsEditing}
+        selectedVersion={selectedVersion}
+        selectedMonth={selectedMonth}
+        selectedCategory={selectedCategory}
+        defaultVersionNotes={defaultVersionNotes}
+        toggleSection={toggleSection}
+        handleOptionChange={handleOptionChange}
+      />
     </FilterAndGraphLayout>
   );
 };
