@@ -82,3 +82,12 @@ export interface TotalReviewsType{
     event: string,
     comments: ReviewType[]
 }
+
+export interface BranchListParams{
+  owner:string;
+  repo:string;
+}
+
+export interface BranchType{
+  name:string;
+}

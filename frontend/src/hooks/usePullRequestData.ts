@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query';
-import { getCalendarPR, getPRDetail } from '../api/pullRequestAPI';
-import { PRDataType, CalendarPRParamsType, PRDetailParamsType } from '../Types/pullRequestType';
+import { getCalendarPR, getPRDetail, getBranchList } from '../api/pullRequestAPI';
+import { PRDataType, CalendarPRParamsType, PRDetailParamsType, BranchType, BranchListParams } from '../Types/pullRequestType';
 
 export const useQueryCalendarPR = (params: CalendarPRParamsType) => {
   return useQuery<PRDataType[], Error>(
@@ -23,3 +23,12 @@ export const useQueryPRDetail = (params: PRDetailParamsType) => {
     }
   );
 };
+
+export const useQueryBranch = (params: BranchListParams)=>{
+  return useQuery<BranchType[], Error>(
+    ['branchList',params],()=>getBranchList(params),{
+      enabled: !!params.owner && !!params.repo,
+      staleTime: 1000*60*5,
+    }
+  )
+}

@@ -10,11 +10,11 @@ interface Props{
 }
 
 function CardSelectBranch({ name, selectedOp, handleChange, option }: Props) {
-  const isSingleOption = (option: typeof selectedOp): option is OptionType => {
-    return !!option && typeof option === 'object' && 'label' in option;
-  };
+  // const isSingleOption = (option: typeof selectedOp): option is OptionType => {
+  //   return !!option && typeof option === 'object' && 'label' in option;
+  // };
 
-  const commitInfo = isSingleOption(selectedOp) ? JSON.parse(selectedOp.value) : null;
+  // const commitInfo = isSingleOption(selectedOp) ? JSON.parse(selectedOp.value) : null;
 
   return (
     <CardSelectBranchLayout>
@@ -31,7 +31,7 @@ function CardSelectBranch({ name, selectedOp, handleChange, option }: Props) {
             getOptionValue={(option) => option.value}
         />
         <BranchBox>
-          {commitInfo ? (
+          {/* {commitInfo ? (
             <>
               <div>커밋 이름: {commitInfo.commitName}</div>
               <div>작성자: {commitInfo.author}</div>
@@ -39,7 +39,7 @@ function CardSelectBranch({ name, selectedOp, handleChange, option }: Props) {
             </>
           ) : (
             'Select a branch to compare'
-          )}
+          )} */}
         </BranchBox>
     </CardSelectBranchLayout>
   )
