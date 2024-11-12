@@ -1,13 +1,11 @@
 import { create } from 'zustand';
+import { UserStoreType } from '../Types/userType';
 
-interface UserStore {
-  isLogin: boolean;
-  login: () => void;
-  logout: () => void;
-}
 
-const useUserStore = create<UserStore>((set) => ({
-  isLogin: true, 
+const useUserStore = create<UserStoreType>((set) => ({
+  userInfo: null,
+  isLogin: false, 
+  setUserInfo: (userInfo) => set({ userInfo }),
   login: () => set({ isLogin: true }), 
   logout: () => set({ isLogin: false }), 
 }));

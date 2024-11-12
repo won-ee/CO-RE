@@ -21,7 +21,8 @@ import HistoryPage from "./pages/HistoryPage";
 
 const AppComponent: React.FC = () => {
   const { isLogin } = useUserStore();
-
+  console.log(isLogin);
+  
   return (
     <>
       {isLogin && <Sidebar />}
