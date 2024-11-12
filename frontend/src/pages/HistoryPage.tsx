@@ -20,6 +20,12 @@ const HistoryPage: React.FC = () => {
     graphError,
   } = useHistoryData();
 
+  // useEffect(() => {
+  //   if (graphError) {
+  //     navigate("/404");
+  //   }
+  // }, [graphError, navigate]);
+
   const handleSelectChange = (selectedId: string) => {
     setSelectedRepoId(selectedId);
     if (!selectedId) {
