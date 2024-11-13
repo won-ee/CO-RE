@@ -2,10 +2,7 @@ package com.core.api.controller;
 
 import com.core.api.data.dto.ChangeDto;
 import com.core.api.data.dto.commit.CommitMessageDto;
-import com.core.api.data.dto.pullrequest.PullRequestDateFilterDto;
-import com.core.api.data.dto.pullrequest.PullRequestDto;
-import com.core.api.data.dto.pullrequest.PullRequestFilterDto;
-import com.core.api.data.dto.pullrequest.PullRequestInputDto;
+import com.core.api.data.dto.pullrequest.*;
 import com.core.api.data.dto.response.MergeResponseDto;
 import com.core.api.service.PullRequestService;
 import lombok.RequiredArgsConstructor;
@@ -35,13 +32,13 @@ public class PullRequestController {
     }
 
     @GetMapping("/{owner}/{repo}")
-    public ResponseEntity<List<PullRequestDto>> getPullRequestList(
+    public ResponseEntity<List<PullRequestSimpleDto>> getPullRequestList(
             @PathVariable String owner,
             @PathVariable String repo,
             @RequestParam String state
     ) {
 
-        List<PullRequestDto> pullRequestList = switch (state) {
+        List<PullRequestSimpleDto> pullRequestList = switch (state) {
             case "sent" -> pullRequestService.getPullRequestListByWriter(owner, repo);
             case "received" -> pullRequestService.getPullRequestListByReviewer(owner, repo);
             default -> List.of();
@@ -57,12 +54,12 @@ public class PullRequestController {
     }
 
     @GetMapping("/{owner}/{repo}/user")
-    public ResponseEntity<List<PullRequestDto>> getPullRequestListByFilter(
+    public ResponseEntity<List<PullRequestSimpleDto>> getPullRequestListByFilter(
             @PathVariable String owner,
             @PathVariable String repo,
             @ModelAttribute PullRequestFilterDto filter
     ) {
-        List<PullRequestDto> pullRequestList = pullRequestService.getPullRequestListByFilter(
+        List<PullRequestSimpleDto> pullRequestList = pullRequestService.getPullRequestListByFilter(
                 PullRequestDateFilterDto.of(owner, repo, filter)
         );
         return ResponseEntity.ok(pullRequestList);

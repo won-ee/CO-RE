@@ -1,8 +1,9 @@
 package com.core.api.controller;
 
 
-import com.core.api.data.dto.review.ReviewInputDto;
-import com.core.api.data.dto.review.ReviewSimpleDto;
+import com.core.api.data.dto.review.CommentDto;
+import com.core.api.data.dto.review.CommentSimpleDto;
+import com.core.api.data.dto.review.ReviewBaseDto;
 import com.core.api.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -32,9 +33,9 @@ public class ReviewController {
             @PathVariable String owner,
             @PathVariable String repo,
             @RequestParam Long id,
-            @RequestBody ReviewSimpleDto reviewSimpleDto
+            @RequestBody CommentSimpleDto commentSimpleDto
     ) {
-        reviewService.updateCommentToServer(owner, repo, id, reviewSimpleDto);
+        reviewService.updateCommentToServer(owner, repo, id, commentSimpleDto);
         return ResponseEntity.ok()
                 .build();
     }
@@ -51,31 +52,31 @@ public class ReviewController {
     }
 
 
-    @PostMapping("/{owner}/{repo}/{pullId}/review")
+    @PostMapping("/{owner}/{repo}/{pullId}")
     public ResponseEntity<Void> createReview(
             @PathVariable String owner,
             @PathVariable String repo,
             @PathVariable int pullId,
-            @RequestBody ReviewInputDto reviewInputDto
+            @RequestBody ReviewBaseDto reviewBaseDto
     ) {
-        reviewService.createReviewToServer(owner, repo, pullId, reviewInputDto);
+        reviewService.createReviewToServer(owner, repo, pullId, reviewBaseDto);
         return ResponseEntity.ok()
                 .build();
     }
 
-    @PatchMapping("/{owner}/{repo}/review")
+    @PatchMapping("/{owner}/{repo}")
     public ResponseEntity<Void> updateReview(
             @PathVariable String owner,
             @PathVariable String repo,
             @RequestParam Long id,
-            @RequestBody ReviewSimpleDto reviewSimpleDto
+            @RequestBody CommentSimpleDto commentSimpleDto
     ) {
-        reviewService.updateReviewToServer(owner, repo, id, reviewSimpleDto);
+        reviewService.updateReviewToServer(owner, repo, id, commentSimpleDto);
         return ResponseEntity.ok()
                 .build();
     }
 
-    @DeleteMapping("/{owner}/{repo}/review")
+    @DeleteMapping("/{owner}/{repo}")
     public ResponseEntity<Void> deleteReview(
             @PathVariable String owner,
             @PathVariable String repo,
