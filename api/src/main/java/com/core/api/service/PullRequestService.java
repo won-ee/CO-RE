@@ -122,7 +122,7 @@ public class PullRequestService {
     }
 
     public void closedPullRequest(PullRequestServerDto pullRequest) {
-        pullRequestRepository.findByOwnerAndRepoAndBaseAndHead(pullRequest.getOwner(), pullRequest.getRepo(), pullRequest.getBase(), pullRequest.getHead())
+        pullRequestRepository.findByOwnerAndRepoAndBaseAndHeadAndVersionIsNull(pullRequest.getOwner(), pullRequest.getRepo(), pullRequest.getBase(), pullRequest.getHead())
                 .ifPresent(pr -> {
                     pr.updateMergeStatus(pullRequest.getMergeStatus());
                     pullRequestRepository.save(pr);
