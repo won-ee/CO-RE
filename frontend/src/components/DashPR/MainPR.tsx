@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   PullRequestsLayout,
-  // TableWrapper,
   TableRowItem,
   TableHeaderCell,
   TableDataCell,
@@ -11,37 +10,13 @@ import {
   ScrollableTableWrapper,
   StyledTable,
 } from "./MainPR.styled";
+import { DashPRDataType } from "../../Types/dashboardType";
 
-// import styled from "styled-components";
-
-interface PullRequest {
-  NAME: string;
-  MESSAGE: string;
-  DEADLINE: string;
-  COMMENT: number;
-  STATUS: "Approved" | "Processing" | "Rejected";
+interface MainPRProps {
+  data: DashPRDataType[];
 }
 
-const parseDeadline = (deadline: string): number => {
-  return parseInt(deadline.replace("D-", ""), 10);
-};
-
-const MainPR: React.FC = () => {
-  const [pullRequests, setPullRequests] = useState<PullRequest[]>([]);
-
-  useEffect(() => {
-    fetch("/DashboardPR.json")
-      .then((response) => response.json())
-      .then((data) => {
-        const sortedData = data.sort(
-          (a: PullRequest, b: PullRequest) =>
-            parseDeadline(a.DEADLINE) - parseDeadline(b.DEADLINE),
-        );
-        setPullRequests(sortedData);
-      })
-      .catch((error) => console.error("Error fetching pull requests:", error));
-  }, []);
-
+const MainPR: React.FC<MainPRProps> = ({ data }) => {
   return (
     <PullRequestsLayout>
       <SectionTitleText>Pull Requests</SectionTitleText>
@@ -59,17 +34,25 @@ const MainPR: React.FC = () => {
       <ScrollableTableWrapper>
         <StyledTable>
           <tbody>
-            {pullRequests.map((request, index) => (
-              <TableRowItem key={index}>
-                <TableDataCell>{request.NAME}</TableDataCell>
-                <TableDataCell>{request.MESSAGE}</TableDataCell>
-                <TableDataCell>{request.DEADLINE}</TableDataCell>
+            {data.map((item: DashPRDataType) => (
+              <TableRowItem key={item.pullRequestId}>
+                <TableDataCell>{item.writer.writerId}</TableDataCell>
+                <TableDataCell>{item.title}</TableDataCell>
+                <TableDataCell>{item.deadline}</TableDataCell>
                 <TableDataCell>
-                  <CommentCountLabel>{request.COMMENT}</CommentCountLabel>
+                  <CommentCountLabel>{item.commentCount}</CommentCountLabel>
                 </TableDataCell>
                 <TableDataCell>
-                  <StatusLabel $status={request.STATUS}>
-                    {request.STATUS}
+                  <StatusLabel
+                    $status={
+                      item.status === "Approved" ||
+                      item.status === "Processing" ||
+                      item.status === "Rejected"
+                        ? item.status
+                        : "Processing"
+                    }
+                  >
+                    {item.status || "Processing"}
                   </StatusLabel>
                 </TableDataCell>
               </TableRowItem>
