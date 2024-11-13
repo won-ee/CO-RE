@@ -5,6 +5,7 @@ import com.core.backend.handler.JiraOAuth2LoginFailureHandler;
 import com.core.backend.service.JwtTokenService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -43,6 +44,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                         .requestMatchers("/callback/oauth2/**").permitAll()
                         .requestMatchers("/jira/**").permitAll()
                         .requestMatchers("/ssafy/atlassian/**").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2Login -> oauth2Login

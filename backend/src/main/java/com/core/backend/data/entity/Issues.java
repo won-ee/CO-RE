@@ -1,0 +1,40 @@
+package com.core.backend.data.entity;
+
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "Issues")
+@AllArgsConstructor
+@Builder
+public class Issues extends Base {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "issue_id")
+    private Long id;
+
+    @Column(name = "issue_title", nullable = false)
+    private String title;
+
+    @Column(name = "issue_content", nullable = false)
+    private String content;
+
+    @Column(name = "issue_number", nullable = false)
+    private String issueNumber;
+
+    @Column(name = "issue_priority", nullable = false)
+    private int issuePriority;
+
+    @Column(name = "issue_deadline", nullable = false)
+    private LocalDateTime deadLine;
+
+    @ManyToOne
+    @JoinColumn(name = "project_user_id", nullable = false)
+    private ProjectUsers projectUser;
+
+}

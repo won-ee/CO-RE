@@ -6,11 +6,6 @@ spring:
     import: optional:file:.env[.properties]
   application:
     name: backend
-  cloud:
-    config:
-      uri: https://k11s106.p.ssafy.io/config
-  profiles:
-    active: backend
   datasource:
     url: ${MYSQL_URL}
     username: ${MYSQL_USERNAME}
