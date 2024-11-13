@@ -65,7 +65,7 @@ public class WebHookController {
 
 
         Map<?, ?> data = objectMapper.readValue(payload, Map.class);
-        ReviewDto review = ReviewDto.from(data);
+        ReviewDto review = ReviewDto.fromApiResponse(data);
 
         String action = (String) data.get("action");
         EventEnum eventEnum = EventEnum.valueOf(action.toUpperCase());
