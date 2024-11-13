@@ -5,7 +5,7 @@ import useUserStore from '../store/userStore';
 
 
 
-export const useQueryPRDetail = () => {
+export const useQueryUserInfo = () => {
     const setUserInfo = useUserStore((state) => state.setUserInfo);
 
     return useQuery<UserInfoType, Error>(

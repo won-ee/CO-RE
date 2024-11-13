@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import Select,{SingleValue} from "react-select"
 import { OptionType } from '../Types/SelectType';
 import { ChoiceStyles, HeaderLayout } from '../App.Styled';
+import useUserStore from '../store/userStore';
 
 const tempOption = [
     { value: 'Projec01',label:'Project01'},
@@ -55,6 +56,9 @@ const ParseHeader = (str: string) => {
 const Header:React.FC = () => {
     const location = useLocation()
     const [selectedOp,setSelectedOp] = useState<SingleValue<OptionType>>(null);
+    const userInfo = useUserStore()
+    console.log(userInfo);
+    
   const handleChange = (option: SingleValue<OptionType>)=>{
     setSelectedOp(option)
   }
