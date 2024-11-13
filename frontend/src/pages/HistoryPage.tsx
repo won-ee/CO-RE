@@ -36,7 +36,7 @@ const HistoryPage: React.FC = () => {
   };
 
   if (isLoadingRepos) return <LoadingPage />;
-  if (graphError) return <NotFoundPage />;
+  if (graphError) return <NotFoundPage errorNumber={404}/>;
 
   return (
     <div>
