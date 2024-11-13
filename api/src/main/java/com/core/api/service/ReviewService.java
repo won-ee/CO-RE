@@ -41,8 +41,19 @@ public class ReviewService {
         gitHubClient.deleteReview(owner, repo, reviewId);
     }
 
+    @Transactional
     public void saveReview(ReviewDto reviewDto) {
-        Review review = Review.from(reviewDto);
+        PullRequest pr = pullRequestRepository.findByOwnerAndRepoAndPullRequestId(reviewDto.getOwner(), reviewDto.getRepo(), reviewDto.getPrId())
+                .orElseThrow(() -> new RuntimeException("Reviewer not found with id: " + reviewDto.getWriterId()));
+        List<Reviewer> reviewers = pr.getReviewers();
+
+        Reviewer reviewer = reviewers.stream()
+                .filter(re -> re.getReviewerId()
+                        .equals(reviewDto.getWriterId()))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Reviewer not found with id: " + reviewDto.getWriterId()));
+
+        Review review = Review.from(reviewDto, reviewer);
         reviewRepository.save(review);
     }
 
