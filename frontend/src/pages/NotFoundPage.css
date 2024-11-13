@@ -33,17 +33,6 @@
   }
 }
 
-.bg-purple {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: url(http://salehriaz.com/404Page/img/bg_purple.png) no-repeat center center;
-  background-size: cover;
-  z-index: 50;
-}
-
 .btn-go-home {
   position: relative;
   z-index: 200;
@@ -69,10 +58,6 @@
   box-shadow: 0px 20px 20px rgba(0, 0, 0, 0.1);
 }
 
-.central-body {
-  padding: 17% 5% 10% 5%;
-  text-align: center;
-}
 
 .objects img {
   z-index: 90;

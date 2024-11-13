@@ -1,17 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom';
 import Select,{SingleValue} from "react-select"
 import { OptionType } from '../Types/SelectType';
 import { ChoiceStyles, HeaderLayout } from '../App.Styled';
-import useUserStore from '../store/userStore';
+import { useQueryUserInfo } from '../hooks/useUser';
 
-const tempOption = [
-    { value: 'Projec01',label:'Project01'},
-    { value: 'Projec02',label:'Project02'},
-    { value: 'Projec03',label:'Project03'}
-  ]
-  
-  const page = [
+const page = [
     '',
     'dashboard',
     'pullrequest',
@@ -44,6 +38,9 @@ const ParseHeader = (str: string) => {
     if (!page.includes(result)) {
         return 'Error';
     }
+    if (result === 'project') {
+        return '프로젝트를 선택해 주세요';
+    }
 
     if (result === 'pullrequest') {
         return 'Pull Request';
@@ -56,8 +53,19 @@ const ParseHeader = (str: string) => {
 const Header:React.FC = () => {
     const location = useLocation()
     const [selectedOp,setSelectedOp] = useState<SingleValue<OptionType>>(null);
-    const userInfo = useUserStore()
+    const [tempOption,setTempOption] = useState<{ value: string; label: string; }[]>();
+    const { data: userInfo } = useQueryUserInfo();
     console.log(userInfo);
+    
+    useEffect(() => {
+        if (userInfo && userInfo.projects) {
+          const tempOption = userInfo.projects.map((project) => ({
+            value: project.name,
+            label: project.name,
+          }));
+          setTempOption(tempOption);
+        }
+      }, [userInfo]); 
     
   const handleChange = (option: SingleValue<OptionType>)=>{
     setSelectedOp(option)
