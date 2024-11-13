@@ -1,0 +1,78 @@
+pipeline {
+    agent any
+    environment {
+        REMOTE_USER = 'ubuntu'
+        REMOTE_SERVER_IP = credentials("deployServerIP")
+        MATTERMOST_URL = credentials("mattermost-url")
+        BUILD_DIR = 'frontend'
+    }
+
+    stages {
+        stage('Notify Start') {
+            steps {
+                script {
+                    def Author_Name = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
+                    def Author_Email = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
+
+                    mattermostSend(
+                        color: '#CDC1FF',
+                        message: "### :hungry_koongya: **<${env.BUILD_URL}|Frontend #${env.BUILD_NUMBER}> 빌드 시작**\n\n${Author_Name}(${Author_Email})\n\n![](https://media.giphy.com/media/JdCz7YXOZAURq/giphy.gif)",
+                        endpoint: MATTERMOST_URL, 
+                        channel: 'jenkins'
+                    )
+                }
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                dir('frontend') {
+                    sh 'npm ci'
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir('frontend') {
+                    sh 'npm run build'
+                }
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                sshagent(credentials: ['remote-server']) {
+                    sh "rsync -avz -e 'ssh -o StrictHostKeyChecking=no' ./frontend/dist/ ${REMOTE_USER}@${REMOTE_SERVER_IP}:/var/www/core"
+                }
+            }
+        }
+    }
+
+    post { 
+        success {
+            script {
+                def Author_Name = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
+                def Author_Email = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
+                mattermostSend(
+                    color: '#BFECFF', 
+                    message: "### :koongya_zoom_close: **<${env.BUILD_URL}|Frontend #${env.BUILD_NUMBER}> 빌드 성공!**\n\n${Author_Name}(${Author_Email})\n\n![](https://media.giphy.com/media/jtFkrEYzGlf9xtdef0/giphy.gif)",
+                    endpoint: MATTERMOST_URL, 
+                    channel: 'jenkins'
+                )
+            }
+        }
+        failure {
+            script {
+                def Author_Name = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
+                def Author_Email = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
+                mattermostSend(
+                    color: '#FFCCEA', 
+                    message: "### :onion_koongya2: **<${env.BUILD_URL}|Frontend #${env.BUILD_NUMBER}> 빌드 실패**\n\nJenkins log 확인이 필요해요.\n${Author_Name}(${Author_Email})\n\n![](https://media.giphy.com/media/pm4VOSkAgkj3q/giphy.gif)",
+                    endpoint: MATTERMOST_URL, 
+                    channel: 'jenkins'
+                )
+            }
+        }
+    }
+}

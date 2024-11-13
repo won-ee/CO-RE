@@ -1,0 +1,108 @@
+pipeline {
+    agent any
+    environment {
+        // 공통 env 변수
+        REMOTE_USER = 'ubuntu'
+        REMOTE_SERVER_IP = credentials("deployServerIP")
+        MATTERMOST_URL = credentials("mattermost-url")
+
+        // build env
+        JAR_NAME = 'config-0.0.1-SNAPSHOT.jar'
+        IMAGE_NAME = 'config'
+        REMOTE_PATH = '/home/ubuntu/config'
+
+        GITHUB_PASSWORD = credentials('GITHUB_PASSWORD')
+        GITHUB_USERNAME = credentials('GITHUB_USERNAME')
+        GITHUB_REPO = credentials('GITHUB_REPO')
+        EUREKA_SERVER_URL = 'http://eureka:8761/eureka'
+    }
+
+    stages {
+        stage('Notify Start') {
+            steps {
+                script {
+                    def Author_Name = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
+                    def Author_Email = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
+
+                    mattermostSend(
+                        color: '#CDC1FF',
+                        message: "### :hungry_koongya: **<${env.BUILD_URL}|Config #${env.BUILD_NUMBER}> 빌드 시작**\n\n${Author_Name}(${Author_Email})\n\n![](https://media.giphy.com/media/JdCz7YXOZAURq/giphy.gif)",
+                        endpoint: MATTERMOST_URL,
+                        channel: 'jenkins'
+                    )
+                }
+            }
+        }
+
+        stage ('Build') {
+            steps {
+                dir('config') {
+                    sh 'chmod +x gradlew'
+                    sh './gradlew build'
+                }
+            }
+        }
+
+        stage('Transfer Files') {
+            steps {
+                sshagent(credentials: ['remote-server']) {
+                    sh """
+                        scp ./config/build/libs/${JAR_NAME} ${REMOTE_USER}@${REMOTE_SERVER_IP}:${REMOTE_PATH}
+                        scp ./config/Dockerfile ${REMOTE_USER}@${REMOTE_SERVER_IP}:${REMOTE_PATH}
+                    """
+                }
+            }
+        }
+
+        stage('Deploy on Remote Server') {
+            steps {
+                sshagent(credentials: ['remote-server']) {
+                    sh """
+                        ssh ${REMOTE_USER}@${REMOTE_SERVER_IP} '
+                        cd ${REMOTE_PATH} &&
+                        sudo docker build -t ${IMAGE_NAME} . &&
+                        sudo docker stop ${IMAGE_NAME} || true &&
+                        sudo docker rm ${IMAGE_NAME} || true &&
+                        sudo docker run -d \
+                         -p 8888:8888 \
+                         --name ${IMAGE_NAME} \
+                         --network docker-network \
+                         -e GITHUB_REPO=${GITHUB_REPO} \
+                         -e GITHUB_USERNAME=${GITHUB_USERNAME} \
+                         -e GITHUB_PASSWORD=${GITHUB_PASSWORD} \
+                         -e EUREKA_SERVER_URL=${EUREKA_SERVER_URL} \
+                         ${IMAGE_NAME}'
+                    """
+                }
+            }
+        }
+    }
+
+
+    post {
+        success {
+            script {
+                def Author_Name = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
+                def Author_Email = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
+                mattermostSend(
+                    color: '#BFECFF',
+                    message: "### :koongya_zoom_close: **<${env.BUILD_URL}|Config #${env.BUILD_NUMBER}> 빌드 성공!**\n\n${Author_Name}(${Author_Email})\n\n![](https://media.giphy.com/media/jtFkrEYzGlf9xtdef0/giphy.gif)",
+                    endpoint: MATTERMOST_URL,
+                    channel: 'jenkins'
+                )
+            }
+        }
+        failure {
+            script {
+                def Author_Name = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
+                def Author_Email = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
+                mattermostSend(
+                    color: '#FFCCEA',
+                    message: "### :onion_koongya2: **<${env.BUILD_URL}|Config #${env.BUILD_NUMBER}> 빌드 실패**\n\nJenkins log 확인이 필요해요.\n${Author_Name}(${Author_Email})\n\n![](https://media.giphy.com/media/pm4VOSkAgkj3q/giphy.gif)",
+                    endpoint: MATTERMOST_URL,
+                    channel: 'jenkins'
+                )
+            }
+        }
+    }
+}

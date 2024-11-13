@@ -1,0 +1,66 @@
+server:
+  port: ${SERVER_PORT:8082}
+
+spring:
+  config:
+    import: optional:file:.env[.properties]
+  application:
+    name: backend
+  cloud:
+    config:
+      uri: http://config:8888
+  profiles:
+    active: backend
+  datasource:
+    url: ${MYSQL_URL}
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    generate-ddl: true
+  security:
+    oauth2:
+      client:
+        registration:
+          jira:
+            client-id: ${JIRA_CLIENT}
+            client-secret: ${JIRA_SECRET}
+            authorization-grant-type: authorization_code
+            redirect-uri: ${JIRA_CALLBACK}
+        provider:
+          jira:
+            token-uri: https://auth.atlassian.com/oauth/token
+            authorization-uri: https://auth.atlassian.com/authorize?audience=api.atlassian.com
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      password: ${REDIS_PASSWORD}
+
+jwt:
+  secretKey: ${JWT_SECRET_KEY}
+  access:
+    expiration: ${JWT_ACCESS_TOKEN_EXPIRED}
+    header: ${JWT_ACCESS_HEADER}
+  refresh:
+    expiration: ${JWT_REFRESH_TOKEN_EXPIRED}
+    header: ${JWT_REFRESH_HEADER}
+
+logging:
+  level:
+    com.core.backend: DEBUG
+    com.core.backend.filter: DEBUG
+front:
+  url: ${FRONT_URL}
+jira:
+  scopes: read:me read:jira-work manage:jira-project manage:jira-configuration read:jira-user manage:jira-webhook write:jira-work offline_access
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    lease-renewal-interval-in-seconds: 10
+  client:
+    service-url:
+      defaultZone: http://eureka:8761/eureka/

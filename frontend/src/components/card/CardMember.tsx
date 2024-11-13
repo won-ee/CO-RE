@@ -1,0 +1,31 @@
+import React from 'react'
+import { CardLow, ContainerLayout, Email, Image, Name, Title } from './CardMember.styled';
+
+interface CardMemberProps{
+    profile: {
+        image: string;
+        name: string;
+        title: string;
+        email: string;
+    }
+}
+
+const CardMember:React.FC<CardMemberProps> = ({profile}) => {
+  return (
+    <>
+        <ContainerLayout>
+            <Image src={profile.image} alt={profile.name} />
+            <Name>{profile.name}</Name>
+            <Title>{profile.title}</Title>
+            <CardLow>
+                <Title>마케팅/</Title>
+                <Title>사원</Title>
+            </CardLow>
+            <Email>{profile.email}</Email>
+        </ContainerLayout>
+    </>
+
+)
+}
+
+export default CardMember 

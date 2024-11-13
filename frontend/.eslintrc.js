@@ -71,9 +71,9 @@ export default [
       // TypeScript 관련 규칙 추가
       "@typescript-eslint/no-unused-vars": ["error", { args: "none" }],
       "@typescript-eslint/explicit-module-boundary-types": "off",
-      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-explicit-any": "off", 
       "@typescript-eslint/no-var-requires": "off",
       // 기타 TypeScript 관련 규칙을 추가할 수 있음
-    },
+    },    
   },
 ];
