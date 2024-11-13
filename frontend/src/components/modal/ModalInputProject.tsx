@@ -1,8 +1,8 @@
 import React from 'react';
-import { Input, LoginBoxContainer, Title, UserBox, Label, RegisterText, FormBox  } from './ModalLogin.styled';
+import { Input, LoginBoxContainer, Title, UserBox, Label, RegisterText, FormBox  } from './ModalInputProject.styled';
 
 
-const ModalLogin: React.FC = () => {
+const ModalInputProject: React.FC = () => {
   return (
     <LoginBoxContainer>
       <Title>Project Input</Title>
@@ -21,4 +21,4 @@ const ModalLogin: React.FC = () => {
   );
 };
 
-export default ModalLogin;
+export default ModalInputProject;

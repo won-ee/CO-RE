@@ -19,7 +19,7 @@ import Header from "./components/Header";
 import NotFoundPage from "./pages/NotFoundPage";
 import HistoryPage from "./pages/HistoryPage";
 import PrivacyNotice from "./pages/PrivacyNotice";
-import ModalLogin from "./components/modal/ModalLogin";
+import ModalInputProject from "./components/modal/ModalInputProject";
 
 const AppComponent: React.FC = () => {
   const { isLogin } = useUserStore();
@@ -47,7 +47,7 @@ const AppComponent: React.FC = () => {
           <Route path="*" element={<NotFoundPage errorNumber={404} />} />
           <Route path="/403ERROR" element={<NotFoundPage errorNumber={403} />} />
           <Route path="/privacy" element={<PrivacyNotice />} />
-          <Route path="/project" element={<ModalLogin />} />
+          <Route path="/project" element={<ModalInputProject />} />
         </Routes>
       </NavLayout>
     </>

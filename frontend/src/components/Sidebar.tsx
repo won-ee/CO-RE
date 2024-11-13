@@ -1,5 +1,5 @@
 import { MainLogo, SidebarLayout, ButtonLayout,ButtonBottomGroup,Divider } from "./Sidebar.Styled.ts"
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import ButtonSidebar from "./buttons/ButtonSidebar.tsx"
 
 import Logo from '../assets/logo.png'
@@ -18,7 +18,8 @@ function Sidebar() {
   const { logout } = useUserStore()
   const test = true
   const navigate = useNavigate()
-  
+  const location = useLocation()
+
   useEffect(() => {
     if (test) {
       navigate("/project");
