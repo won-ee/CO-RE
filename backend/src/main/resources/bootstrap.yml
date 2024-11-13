@@ -6,11 +6,6 @@ spring:
     import: optional:file:.env[.properties]
   application:
     name: backend
-  cloud:
-    config:
-      uri: http://config:8888
-  profiles:
-    active: backend
   datasource:
     url: ${MYSQL_URL}
     username: ${MYSQL_USERNAME}
@@ -56,11 +51,3 @@ front:
   url: ${FRONT_URL}
 jira:
   scopes: read:me read:jira-work manage:jira-project manage:jira-configuration read:jira-user manage:jira-webhook write:jira-work offline_access
-
-eureka:
-  instance:
-    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
-    lease-renewal-interval-in-seconds: 10
-  client:
-    service-url:
-      defaultZone: http://eureka:8761/eureka/

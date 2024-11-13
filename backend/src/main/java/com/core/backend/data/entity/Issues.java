@@ -1,5 +1,6 @@
 package com.core.backend.data.entity;
 
+import com.core.backend.data.enums.StatusEnum;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -32,6 +33,10 @@ public class Issues extends Base {
 
     @Column(name = "issue_deadline", nullable = false)
     private LocalDateTime deadLine;
+
+    @Column(name = "issue_status")
+    @Enumerated(EnumType.STRING)
+    private StatusEnum status;
 
     @ManyToOne
     @JoinColumn(name = "project_user_id", nullable = false)
