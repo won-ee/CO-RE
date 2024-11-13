@@ -20,9 +20,9 @@ public class ReviewController {
             @PathVariable String owner,
             @PathVariable String repo,
             @PathVariable int pullId,
-            @RequestBody ReviewSimpleDto reviewSimpleDto
+            @RequestBody CommentDto comment
     ) {
-        reviewService.createCommentToServer(owner, repo, pullId, reviewSimpleDto);
+        reviewService.createComment(owner, repo, pullId, comment);
         return ResponseEntity.ok()
                 .build();
     }

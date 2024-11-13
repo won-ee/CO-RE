@@ -16,9 +16,23 @@ public class ReviewService {
 
     private final GitHubClient gitHubClient;
     private final ReviewRepository reviewRepository;
+    private final PullRequestRepository pullRequestRepository;
 
-    public void createCommentToServer(String owner, String repo, int pullId, ReviewSimpleDto reviewSimpleDto) {
-        gitHubClient.createComment(owner, repo, pullId, reviewSimpleDto);
+    @Transactional
+    public void createComment(String owner, String repo, int pullId, CommentDto comment) {
+        // TODO: 토큰으로 작성자 확인
+        String userId = "JEM1224";
+        PullRequest pullRequest = pullRequestRepository.findByOwnerAndRepoAndPullRequestId(owner, repo, pullId)
+                .orElseThrow(() -> new RuntimeException("PullRequest not found for id: " + pullId));
+
+        Reviewer reviewer = pullRequest.getReviewers()
+                .stream()
+                .filter(r -> r.getReviewerId()
+                        .equals(userId))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Reviewer not found for user: " + userId));
+        reviewer.updateReviewer(comment);
+        gitHubClient.createComment(owner, repo, pullId, CommentSimpleDto.from(comment));
     }
 
     public void updateCommentToServer(String owner, String repo, Long commentId, ReviewSimpleDto reviewSimpleDto) {
