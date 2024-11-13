@@ -91,3 +91,46 @@ export interface BranchListParams{
 export interface BranchType{
   name:string;
 }
+
+export interface CommitListParams{
+  owner : string;
+  repo : string;
+  base : string;
+  head : string;
+}
+
+export interface CommitListType{
+  message: string;
+  writerName: string;
+  date: string;
+}
+
+export interface PRListParams{
+  owner: string;
+  repo: string;
+  state: string;
+}
+
+export interface PRListReviwersType{
+  writerId: string;
+  writerImg: string;
+}
+
+export interface PRListWriterType{
+  writerId: string;
+  writerImg: string;
+}
+
+export interface PRListType{
+  pullRequestId: number;
+  title: string;
+  writer: PRListWriterType;
+  head: string;
+  base: string;
+  status: string;
+  priority: string;
+  afterReview: boolean;
+  deadline: string;
+  reviewers: PRListWriterType[];
+  commentCount: number;
+}
