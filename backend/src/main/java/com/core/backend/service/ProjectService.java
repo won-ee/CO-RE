@@ -31,6 +31,7 @@ public class ProjectService {
     private final GroupService groupService;
     private final RoleService roleService;
     private final ProjectUserRepository projectUserRepository;
+    private final IssueService issueService;
 
     public List<Map<String, Object>> getAllProjects(String accessToken, String cloudId) {
         try {
@@ -158,6 +159,10 @@ public class ProjectService {
                     }
 
                     roleService.saveProjectRolesIfNotExists(accessToken, selfUrl, newProject, user);
+                    
+                    issueService.saveIssueListToJira(accessToken, selfUrl, newProject, user);
+
+
                 }
             }
         } catch (Exception ex) {
