@@ -33,7 +33,8 @@ export interface CreatePRType{
   afterReview: boolean,
   deadline: string,
   priority: number,
-  writerId: string
+  writerId: string;
+  reviewers:string[];
 }
 
 export interface CalendarPRParamsType {
