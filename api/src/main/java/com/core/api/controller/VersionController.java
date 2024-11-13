@@ -17,13 +17,13 @@ public class VersionController {
     private final VersionService versionService;
 
     @GetMapping("/{owner}/{repo}")
-    public ResponseEntity<List<VersionDto>> getVersion(@PathVariable String owner, @PathVariable String repo) {
-        List<VersionDto> versionList = versionService.getVersion(owner, repo);
+    public ResponseEntity<List<VersionSimpleDto>> getVersion(@PathVariable String owner, @PathVariable String repo) {
+        List<VersionSimpleDto> versionList = versionService.getVersions(owner, repo);
         return ResponseEntity.ok(versionList);
     }
 
-    @GetMapping("/{owner}/{repo}/history")
-    public ResponseEntity<List<VersionHistoryDto>> getVersionDetailById(@PathVariable String owner, @PathVariable String repo, @RequestParam Long id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<List<VersionHistoryDto>> getVersionDetailById(@PathVariable Long id) {
         List<VersionHistoryDto> versionList = versionService.getVersionHistoryById(id);
         return ResponseEntity.ok(versionList);
     }

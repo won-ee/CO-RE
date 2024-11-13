@@ -2,6 +2,7 @@ package com.core.api.service;
 
 import com.core.api.data.dto.VersionDto;
 import com.core.api.data.dto.VersionHistoryDto;
+import com.core.api.data.dto.VersionSimpleDto;
 import com.core.api.data.dto.github.CommitServerDto;
 import com.core.api.data.dto.github.PullRequestServerDto;
 import com.core.api.data.entity.PullRequest;
@@ -13,7 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -43,10 +46,10 @@ public class VersionService {
 
     }
 
-    public List<VersionDto> getVersion(String owner, String repo) {
+    public List<VersionSimpleDto> getVersions(String owner, String repo) {
         return versionRepository.findAllByOwnerAndRepo(owner, repo)
                 .map(list -> list.stream()
-                        .map(VersionDto::of)
+                        .map(VersionSimpleDto::of)
                         .toList())
                 .orElseGet(Collections::emptyList);
     }
@@ -71,4 +74,5 @@ public class VersionService {
                 .toList();
         return VersionHistoryDto.from(pullRequest, commitList);
     }
+
 }
