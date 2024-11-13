@@ -27,4 +27,12 @@ public class VersionController {
         List<VersionHistoryDto> versionList = versionService.getVersionHistoryById(id);
         return ResponseEntity.ok(versionList);
     }
+
+    @PatchMapping("/note/{id}")
+    public ResponseEntity<Void> updateVersion(@PathVariable Long id, @RequestBody VersionDto version) {
+        versionService.updateVersion(id, version);
+        return ResponseEntity.ok()
+                .build();
+    }
+
 }

@@ -54,6 +54,13 @@ public class VersionService {
                 .orElseGet(Collections::emptyList);
     }
 
+    @Transactional
+    public void updateVersion(Long id, VersionDto versionDto) {
+        Version version = versionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Version with ID " + id + " not found"));
+        version.updateVersion(versionDto);
+    }
+
     public List<VersionHistoryDto> getVersionHistoryById(Long id) {
         Version version = versionRepository.findById(id)
 
