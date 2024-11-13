@@ -53,16 +53,20 @@ public class VersionService {
 
     public List<VersionHistoryDto> getVersionHistoryById(Long id) {
         Version version = versionRepository.findById(id)
+
                 .orElseThrow(() -> new RuntimeException("Version with ID " + id + " not found"));
+        Set<String> uniqueCommitShas = new HashSet<>();
+
         return version.getPullRequests()
                 .stream()
-                .map(this::convertToVersionHistoryDto)
+                .map(pullRequest -> convertToVersionHistoryDto(pullRequest, uniqueCommitShas))
                 .toList();
     }
 
-    private VersionHistoryDto convertToVersionHistoryDto(PullRequest pullRequest) {
+    private VersionHistoryDto convertToVersionHistoryDto(PullRequest pullRequest, Set<String> uniqueCommitShas) {
         List<CommitServerDto> commitList = pullRequest.getCommits()
                 .stream()
+                .filter(commit -> uniqueCommitShas.add(commit.getSha()))
                 .map(CommitServerDto::from)
                 .toList();
         return VersionHistoryDto.from(pullRequest, commitList);
