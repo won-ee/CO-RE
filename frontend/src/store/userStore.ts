@@ -4,7 +4,7 @@ import { UserStoreType } from '../Types/userType';
 
 const useUserStore = create<UserStoreType>((set) => ({
   userInfo: null,
-  isLogin: false, 
+   isLogin: true, 
   setUserInfo: (userInfo) => set({ userInfo }),
   login: () => set({ isLogin: true }), 
   logout: () => set({ isLogin: false }), 
