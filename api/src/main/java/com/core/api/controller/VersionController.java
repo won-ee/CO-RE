@@ -2,6 +2,7 @@ package com.core.api.controller;
 
 import com.core.api.data.dto.VersionDto;
 import com.core.api.data.dto.VersionHistoryDto;
+import com.core.api.data.dto.VersionSimpleDto;
 import com.core.api.service.VersionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +34,12 @@ public class VersionController {
         versionService.updateVersion(id, version);
         return ResponseEntity.ok()
                 .build();
+    }
+
+    @GetMapping("/note/{id}")
+    public ResponseEntity<VersionDto> updateVersion(@PathVariable Long id) {
+        VersionDto version = versionService.getVersion(id);
+        return ResponseEntity.ok(version);
     }
 
 }

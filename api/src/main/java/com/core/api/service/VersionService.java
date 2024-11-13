@@ -82,4 +82,10 @@ public class VersionService {
         return VersionHistoryDto.from(pullRequest, commitList);
     }
 
+    public VersionDto getVersion(Long id) {
+        Version version = versionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Version with ID " + id + " not found"));
+        return VersionDto.from(version);
+    }
+
 }
