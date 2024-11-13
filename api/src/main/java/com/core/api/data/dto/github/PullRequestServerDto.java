@@ -1,11 +1,8 @@
 package com.core.api.data.dto.github;
 
-import com.core.api.data.dto.ReviewerDto;
-import com.core.api.data.dto.commit.CommitDto;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.util.List;
 import java.util.Map;
 
 
@@ -21,9 +18,6 @@ public class PullRequestServerDto {
     String repo;
     String owner;
     Boolean mergeStatus;
-    List<CommitDto> commits;
-    List<ReviewerDto> reviewers;
-
 
     public static PullRequestServerDto from(Map<?, ?> payload) {
 
