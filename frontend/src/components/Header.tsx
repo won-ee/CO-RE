@@ -21,6 +21,7 @@ const tempOption = [
     'member',
     'setting',
     'pullrequest',
+    'privacy',
 ];
 
 const ParseHeader = (str: string) => {

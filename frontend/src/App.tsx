@@ -18,6 +18,7 @@ import PullRequestPageDetail from "./pages/PullRequestPageDetail";
 import Header from "./components/Header";
 import NotFoundPage from "./pages/NotFoundPage";
 import HistoryPage from "./pages/HistoryPage";
+import PrivacyNotice from "./pages/PrivacyNotice";
 
 const AppComponent: React.FC = () => {
   const { isLogin } = useUserStore();
@@ -44,6 +45,7 @@ const AppComponent: React.FC = () => {
             element={<PullRequestPageDetail />}
           />
           <Route path="*" element={<NotFoundPage />} />
+          <Route path="/privacy" element={<PrivacyNotice />} />
         </Routes>
       </NavLayout>
     </>
