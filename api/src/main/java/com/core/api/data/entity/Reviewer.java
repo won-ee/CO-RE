@@ -16,7 +16,7 @@ public class Reviewer extends Base {
     private String reviewerId;
 
     @Column(name = "reviewer_score")
-    private int score;
+    private Integer score;
 
     @ManyToOne
     @JoinColumn(name = "pr_id", nullable = false)
