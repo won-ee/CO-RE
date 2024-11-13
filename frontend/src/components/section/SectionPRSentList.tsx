@@ -1,12 +1,24 @@
+import { useQueryPRList } from '../../hooks/usePullRequestData';
+import useUserStore from '../../store/userStore';
 import { SectionPRSentListLayout,FilterLayout, GridTable , GridHeader, GridHeaderCell, GridRow, GridCell,CommentBox,StatusBox,PriorityBox, DeadLineBox, TitleBox} from './SectionPRSentList.styled'
+import { differenceInDays } from 'date-fns'
 
-const data = [
-  { col1: 'Frame Adjusement', col2: 'Frame into frontend', col3: 'D-1', col4: 'IMAGES', col5: '5', col6: 'HIGH', col7: 'Approved' },
-  { col1: 'Sound Add', col2: 'Adjustment into frontend', col3: 'D-2', col4: 'IMAGES', col5: '21', col6: 'MIDDLE', col7: 'Processing' },
-  { col1: 'Schedule Page total Direct & Create', col2: 'Row 3 Col 2', col3: 'After Review', col4: 'IMAGES', col5: '3', col6: 'LOW', col7: 'Rejected' },
-];
+// const data = [
+//   { col1: 'Frame Adjusement', col2: 'Frame into frontend', col3: 'D-1', col4: 'IMAGES', col5: '5', col6: 'HIGH', col7: 'Approved' },
+//   { col1: 'Sound Add', col2: 'Adjustment into frontend', col3: 'D-2', col4: 'IMAGES', col5: '21', col6: 'MIDDLE', col7: 'Processing' },
+//   { col1: 'Schedule Page total Direct & Create', col2: 'Row 3 Col 2', col3: 'After Review', col4: 'IMAGES', col5: '3', col6: 'LOW', col7: 'Rejected' },
+// ];
 
 function SectionPRSentList() {
+  const userInfo = useUserStore((state) => state.userInfo);
+  const params = {
+    owner : userInfo?.projects.githubOwner,
+    repo : userInfo?.projects.githubRepo,
+    state : 'sent'
+  }
+  const {data,error,isLoading} = useQueryPRList(params)
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
   return (
     <SectionPRSentListLayout>
       <FilterLayout>
@@ -26,27 +38,39 @@ function SectionPRSentList() {
           <GridHeaderCell align="center">STATUS</GridHeaderCell>
         </GridHeader>
 
-        {/* Body (Rows) */}        {data.map((row, index) => (
+        {/* Body (Rows) */}        
+        {data && data.map((row, index) => {
+          const deadlineDate = new Date(row.deadline);
+          const today = new Date();
+          const dayDifference = differenceInDays(deadlineDate, today);
+          const deadlineText = dayDifference > 0 ? `D-${dayDifference}` : `D-day`;
+ 
+
+        return(
+
           <GridRow key={index}>
             <GridCell>
-              <TitleBox>{row.col1}</TitleBox>
+              <TitleBox>{row.title}</TitleBox>
               </GridCell>
-            <GridCell>{row.col2}</GridCell>
+            <GridCell>{row.head} into {row.base}</GridCell>
             <GridCell align="center">
-              <DeadLineBox status={row.col3}>{row.col3}</DeadLineBox>
+              <DeadLineBox status={deadlineText} afterReview={row.afterReview}>{deadlineText}</DeadLineBox>
               </GridCell>
-            <GridCell>{row.col4}</GridCell>
+            <GridCell>{row.reviewers.map((reviewers,index)=>(
+              <img src={reviewers.writerImg} key={index}/>
+            ))}</GridCell>
             <GridCell align="center">
-              <CommentBox status={row.col5}>{row.col5}</CommentBox>
+              <CommentBox status={String(row.commentCount)}>{row.commentCount}</CommentBox>
             </GridCell>
             <GridCell align="center">
-              <PriorityBox status={row.col6}>{row.col6}</PriorityBox>
+              <PriorityBox status={row.priority}>{row.priority.toUpperCase()}</PriorityBox>
               </GridCell>
             <GridCell align="center">
-              <StatusBox status={row.col7}>{row.col7}</StatusBox>
+              <StatusBox status={row.status}>{row.status.charAt(0).toUpperCase() + row.status.slice(1)}</StatusBox>
               </GridCell>
           </GridRow>
-        ))}
+        )
+        })}
       </GridTable>
     </SectionPRSentListLayout>
   );

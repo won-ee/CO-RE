@@ -5,6 +5,7 @@ interface GridCellProps {
   }
 interface StringProps {
     status:string;
+    afterReview?: boolean;
 }
 // Section과 Filter 레이아웃
 export const SectionPRSentListLayout = styled.div`
@@ -76,11 +77,11 @@ export const StatusBox = styled.div<StringProps>`
   border-radius: 4px;
   background-color: ${(props) => {
   switch (props.status) {
-    case 'Approved':
+    case 'approved':
       return '#CCF0EB'; 
-    case 'Processing':
+    case 'processing':
       return '#E0D4FC'; 
-    case 'Rejected':
+    case 'rejected':
       return '#FCD7D4'; 
     default:
       return 'white'; // 기본 배경색
@@ -88,11 +89,11 @@ export const StatusBox = styled.div<StringProps>`
   }};
   color: ${(props) => {
   switch (props.status) {
-    case 'Approved':
+    case 'approved':
       return '#00B69B'; 
-    case 'Processing':
+    case 'processing':
       return '#6226EF'; 
-    case 'Rejected':
+    case 'rejected':
       return '#EF3826'; 
     default:
       return 'white'; // 기본 배경색
@@ -111,11 +112,11 @@ export const PriorityBox = styled.div<StringProps>`
   color: white;
   background-color: ${(props) => {
   switch (props.status) {
-    case 'HIGH':
+    case 'high':
       return '#FF0000'; 
-    case 'MIDDLE':
+    case 'middle':
       return '#67C658'; 
-    case 'LOW':
+    case 'low':
       return '#78C7FF'; 
     default:
       return 'white'; // 기본 배경색
@@ -125,7 +126,7 @@ export const PriorityBox = styled.div<StringProps>`
 export const DeadLineBox = styled.div<StringProps>`
   font-weight: bold;
   white-space: nowrap;
-  color: ${(props)=>(props.status=="After Review" ? '#723CF1': parseInt(props.status.replace('D-',''),10) < 2 ? 'red':'black')};
+  color: ${(props)=>(props.afterReview==true ? '#723CF1': parseInt(props.status.replace('D-',''),10) < 2 ? 'red': props.status =='D-day' ? 'red':'black')};
 `
 export const TitleBox = styled.div`
   font-weight: bold;
