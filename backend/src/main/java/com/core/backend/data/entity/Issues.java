@@ -31,7 +31,7 @@ public class Issues extends Base {
     @Column(name = "issue_priority", nullable = false)
     private int issuePriority;
 
-    @Column(name = "issue_deadline", nullable = false)
+    @Column(name = "issue_deadline")
     private LocalDateTime deadLine;
 
     @Column(name = "issue_status")
