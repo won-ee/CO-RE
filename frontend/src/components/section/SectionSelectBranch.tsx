@@ -4,13 +4,8 @@ import ButtonCreateNewPR from '../../components/buttons/ButtonCreateNewPR'
 import CardSelectBranch from '../../components/card/CardSelectBranch'
 import { SingleValue } from 'react-select'
 import { OptionType } from '../../Types/SelectType'
-import { useQueryBranch } from '../../hooks/usePullRequestData'
-
-const tempOption = {
-  owner: 'JEM1224',
-  repo: 'github-api',
-};
-
+import { useQueryBranchList } from '../../hooks/usePullRequestData'
+import useUserStore from '../../store/userStore'
 
 interface Prop{
     BtnAction:()=>void
@@ -22,15 +17,23 @@ interface Prop{
 
 
 function SectionSelectBranch({BtnAction, sourceBranch, targetBranch, setSourceBranch, setTargetBranch}:Prop) {
-  const {data,error,isLoading} = useQueryBranch(tempOption)
+  const userInfo = useUserStore((state)=>state.userInfo)
+  const trueOption = {
+    // owner : userInfo?.projects.githubOwner,
+    // repo : userInfo?.projects.githubRepo,
+    owner: 'JEM1224',
+    repo: 'github-api',
+  };
+  const {data,error,isLoading} = useQueryBranchList(trueOption)
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
   // BranchType 배열을 OptionType 배열로 변환
   const branchOptions = (data || []).map((branch) => ({
     label: branch.name, // BranchType에 있는 이름을 OptionType의 label에 맞춤
-    value: branch.name, // 동일한 값을 value로 사용
+    value: JSON.stringify(branch.lastCommit), // 객체를 문자열로 변환해 사용
   }));
+  
 
   const handleSourceBranch = (option: SingleValue<OptionType>) => {
     if (option) setSourceBranch(option); // `label`을 저장하거나 `value`를 저장하도록 선택

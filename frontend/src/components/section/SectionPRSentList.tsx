@@ -12,8 +12,10 @@ import { differenceInDays } from 'date-fns'
 function SectionPRSentList() {
   const userInfo = useUserStore((state) => state.userInfo);
   const params = {
-    owner : userInfo?.projects.githubOwner,
-    repo : userInfo?.projects.githubRepo,
+    owner: 'JEM1224',
+    repo: 'github-api',
+    // owner : userInfo?.projects.githubOwner,
+    // repo : userInfo?.projects.githubRepo,
     state : 'sent'
   }
   const {data,error,isLoading} = useQueryPRList(params)

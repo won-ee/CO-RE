@@ -1,4 +1,4 @@
-import { SectionCreateBranchLayout, TitleInput, DescriptionTextArea, SelectBox, MergeDirectionBox, HighLightBox, DateInputContainer, DatePickerImg, DeadLineBox, DatePickerBox, UrgentBox, UrgentButton, PriorityBox, CreateButtonBox, TabBox  } from "./SectionCreateBranch.styled";
+import { SectionCreateBranchLayout, TitleInput, DescriptionTextArea, SelectBox, MergeDirectionBox, HighLightBox, DateInputContainer, DatePickerImg, DeadLineBox, DatePickerBox, UrgentBox, UrgentButton, PriorityBox, CreateButtonBox, TabBox, RandomButton  } from "./SectionCreateBranch.styled";
 import Select, { MultiValue, SingleValue, StylesConfig } from "react-select";
 import { OptionType } from "../../Types/SelectType";
 import { useState, ChangeEvent } from "react";
@@ -13,6 +13,7 @@ import { useMutationCreatePR, useMutationpostPRReview } from "../../hooks/useMut
 import ButtonSimpleSquare from "../buttons/ButtonSimpleSquare";
 import { TotalReviewsType, ReviewType } from "../../Types/pullRequestType";
 import CardFinalCodeReview from "../card/CardFinalCodeReview";
+import useUserStore from "../../store/userStore";
 
 // 옵션 예시
 const TempOption: OptionType[] = [
@@ -53,6 +54,7 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
   const event = "COMMENT"
   const [comments,setComments] = useState<ReviewType[]>([])
   const [isFinalReviewOpen,setIsFinalReviewOpen] = useState(false)
+  const userInfo = useUserStore((state) => state.userInfo);
 
   const handlesIsFinalReviewOpen = ()=>{
     setIsFinalReviewOpen((isFinalReviewOpen)=>!isFinalReviewOpen)
@@ -71,17 +73,18 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
 
   const handlePostPR=()=>{
     const pullRequestData = {
-      title: "Feature Update",
-      body: "This update includes several feature improvements and bug fixes.",
-      base: "main",
-      head: "feat",
-      owner: "JEM1224",
-      repo: "github-api",
-      description: "Detailed description of the pull request with all necessary information.",
+      title: title,
+      body: body,
+      base: sourceBranch?.value,
+      head: targetBranch?.value,
+      owner: userInfo?.projects.githubOwner,
+      repo : userInfo?.projects.githubRepo,
+      description: content,
       afterReview: false,
-      deadline: "2024-12-31T23:59:59",
-      priority: 1,
-      writerId: "JEM1224"
+      deadline: selectedDate,
+      priority: priority,
+      writerId: userInfo?.id,
+      reviewers: selectedOptions
     };
 
     mutationCreatePR.mutate(pullRequestData);
@@ -161,6 +164,12 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
     handleFinishReview(); // API 호출
 };
 
+  const handleRandomSelect = (count: number) => {
+    const shuffled = TempOption.sort(() => 0.5 - Math.random()); // Shuffle the options
+    const randomSelection = shuffled.slice(0, count); // Select specified count
+    setSelectedOptions(randomSelection);
+  };
+
   return (
     <SectionCreateBranchLayout>
         <MergeDirectionBox>
@@ -170,15 +179,23 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
         <TitleInput type="text" placeholder="Type your title..." onChange={handleTitle} value={title}/>
         Description
         <DescriptionTextArea placeholder="Type your Details..." onChange={handleContent} value={content}/>
-        Reviewers
-        <Select<OptionType, true>  // 타입을 명시하여 isMulti가 true임을 지정
-            styles={SelectBox as StylesConfig<OptionType, true>}
-            options={TempOption}
-            value={selectedOptions}
-            onChange={handleChange}
-            isMulti={true}          // 다중 선택 가능
-            isClearable
-        />
+        <DeadLineBox>
+          <DatePickerBox>
+          Reviewers
+            <Select<OptionType, true>  // 타입을 명시하여 isMulti가 true임을 지정
+                styles={SelectBox as StylesConfig<OptionType, true>}
+                options={TempOption}
+                value={selectedOptions}
+                onChange={handleChange}
+                isMulti={true}          // 다중 선택 가능
+                isClearable
+            />
+          </DatePickerBox>
+          <UrgentBox>
+            Random Assign
+            <RandomButton onClick={() => handleRandomSelect(2)}>Random</RandomButton>
+          </UrgentBox>
+        </DeadLineBox>
         <DeadLineBox>
           <DatePickerBox>
             Deadline

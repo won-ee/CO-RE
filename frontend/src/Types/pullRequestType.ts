@@ -37,7 +37,8 @@ export interface CreatePRType{
   afterReview: boolean,
   deadline: string,
   priority: number,
-  writerId: string
+  writerId: string;
+  reviewers:string[];
 }
 
 export interface CalendarPRParamsType {
@@ -104,8 +105,19 @@ export interface BranchListParams{
   repo:string;
 }
 
-export interface BranchType{
+export interface LastCommitType{
+  sha:string;
+  message:string;
+  writerId: string,
+  writerImg: string;
+  date: string,
+  parent: string,
+  secondParent: string;
+}
+
+export interface BranchListType{
   name:string;
+  lastCommit:LastCommitType;
 }
 
 export interface CommitListParams{
@@ -128,6 +140,7 @@ export interface PRListType{
   writer: ReviewerType;
   head: string;
   base: string;
+  createadDate:string;
   status: string;
   priority: string;
   afterReview: boolean;
