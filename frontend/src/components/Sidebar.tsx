@@ -26,13 +26,13 @@ function Sidebar() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  useEffect(() => {
-    if (test) {
-      navigate("/project");
-    } else {
-      navigate("/403ERROR");
-    }
-  }, [test, navigate]);
+  // useEffect(() => {
+  //   if (test) {
+  //     navigate("/project");
+  //   } else {
+  //     navigate("/403ERROR");
+  //   }
+  // }, [test, navigate]);
 
   const handleLogout = () => {
     logout();

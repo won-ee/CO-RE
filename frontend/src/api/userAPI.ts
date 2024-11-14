@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const BASE_URL ='https://k11s106.p.ssafy.io/api'; 
-const TOKEN ='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImlkIjoxLCJleHAiOjE3MzE2ODE3MzEsImVtYWlsIjoiaGtrMzYyNkBuYXZlci5jb20ifQ.3FxW0IZs_DL2BHNHt6VcNPo10SWvGjo17orcOwTDkJCYKOSnQR5Fx4laldpHoxH3gCOYh8_aV-1uo8Htt0r3Eg'
+const TOKEN ='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImlkIjoxLCJleHAiOjE3MzE3NjcyMzMsImVtYWlsIjoiaGtrMzYyNkBuYXZlci5jb20ifQ.gU8GHjNf53K2gATceT67qRTambUe2F68LeCOteluUctx32OYVQUhZZ_ezmwYUcXV85UDl6cWgZkR8PV24pu9Mw'
 
 export const getUserInfo = async () => {
   const response = await axios.get(
@@ -12,6 +12,8 @@ export const getUserInfo = async () => {
       }
     },
   );  
+  console.log(response.data);
+  
   return response.data;
 };
 
