@@ -28,10 +28,27 @@ public class IssueService {
     private final RestTemplate restTemplate;
 
     public List<IssueListDto> getIssueListToProject(Long projectUserId) {
+        List<Issues> getIssueList = issueRepository.findByProjectUserId(projectUserId);
 
         List<IssueListDto> issueList = new ArrayList<>();
 
+        for (Issues issue : getIssueList) {
 
+            IssueListDto newIssueDto = new IssueListDto(
+                    issue.getId(),
+                    issue.getTitle(),
+                    issue.getContent(),
+                    issue.getIssueNumber(),
+                    issue.getIssuePriority(),
+                    issue.getDeadLine(),
+                    issue.getStatus(),
+                    issue.getProjectUser().getId(),
+                    issue.getProjectUser().getUser().getProfile(),
+                    issue.getProjectUser().getUser().getName()
+            );
+            issueList.add(newIssueDto);
+
+        }
         return issueList;
     }
 

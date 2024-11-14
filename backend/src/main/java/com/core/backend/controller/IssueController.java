@@ -21,8 +21,8 @@ public class IssueController {
     private final IssueService issueService;
 
     @GetMapping("/search/list/{projectUserId}")
-    public ResponseEntity<List<IssueListDto>> search(@PathVariable("projectUserId") String projectUserId) {
-        return new ResponseEntity<>(issueService.getIssueListToProject(Long.parseLong(projectUserId)), HttpStatus.OK);
+    public ResponseEntity<List<IssueListDto>> searchProjectIssueList(@PathVariable Long projectUserId) {
+        return new ResponseEntity<>(issueService.getIssueListToProject(projectUserId), HttpStatus.OK);
     }
 
 

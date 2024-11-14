@@ -61,9 +61,6 @@ public class Projects {
     @Column(name = "project_review_template")
     private String reviewTemplate;
 
-    @Column(name = "project_pr_template")
-    private String prTemplate;
-
     @Column(name = "")
     private String githubRepo;
 
