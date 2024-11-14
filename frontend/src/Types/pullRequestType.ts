@@ -89,8 +89,19 @@ export interface BranchListParams{
   repo:string;
 }
 
-export interface BranchType{
+export interface LastCommitType{
+  sha:string;
+  message:string;
+  writerId: string,
+  writerImg: string;
+  date: string,
+  parent: string,
+  secondParent: string;
+}
+
+export interface BranchListType{
   name:string;
+  lastCommit:LastCommitType;
 }
 
 export interface CommitListParams{
@@ -112,11 +123,6 @@ export interface PRListParams{
   state: string;
 }
 
-export interface PRListReviwersType{
-  writerId: string;
-  writerImg: string;
-}
-
 export interface PRListWriterType{
   writerId: string;
   writerImg: string;
@@ -128,6 +134,7 @@ export interface PRListType{
   writer: PRListWriterType;
   head: string;
   base: string;
+  createadDate:string;
   status: string;
   priority: string;
   afterReview: boolean;

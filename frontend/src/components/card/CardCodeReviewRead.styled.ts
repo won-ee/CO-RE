@@ -1,4 +1,3 @@
-import exp from "constants";
 import styled from "styled-components";
 
 export const CardCodeReviewReadLayout = styled.div`
