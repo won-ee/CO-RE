@@ -75,21 +75,23 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
     const pullRequestData = {
       title: title,
       body: body,
-      base: sourceBranch?.value,
-      head: targetBranch?.value,
-      owner: userInfo?.projects.githubOwner,
-      repo : userInfo?.projects.githubRepo,
+      base: sourceBranch?.value || "", // undefined일 경우 빈 문자열로 대체
+      head: targetBranch?.value || "", // undefined일 경우 빈 문자열로 대체
+      // owner: userInfo?.projects.githubOwner,
+      // repo : userInfo?.projects.githubRepo,
+      owner: 'JEM1224',
+      repo: 'github-api',
       description: content,
       afterReview: false,
-      deadline: selectedDate,
-      priority: priority,
-      writerId: userInfo?.id,
-      reviewers: selectedOptions
+      deadline: selectedDate ? selectedDate.toISOString() : "",
+      priority: priority || "",
+      writerId: userInfo?.id.toString() || "",
+      reviewers: selectedOptions.map((idx)=>idx.value)
     };
-
     mutationCreatePR.mutate(pullRequestData);
   }
 
+  
   const changesData = [
     {
       file: {

@@ -36,7 +36,7 @@ export interface CreatePRType{
   description: string,
   afterReview: boolean,
   deadline: string,
-  priority: number,
+  priority: string,
   writerId: string;
   reviewers:string[];
 }
