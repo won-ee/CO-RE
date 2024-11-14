@@ -23,5 +23,10 @@ public class StatsController {
         return ResponseEntity.ok(stats);
     }
 
+    @GetMapping("/{owner}/{repo}")
+    public ResponseEntity<StatsDto> getStats(@PathVariable("owner") String owner, @PathVariable("repo") String repo) {
+        StatsDto stats = statsService.getStats(owner, repo);
+        return ResponseEntity.ok(stats);
+    }
 
 }
