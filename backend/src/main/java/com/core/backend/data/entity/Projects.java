@@ -46,6 +46,12 @@ public class Projects {
     @Column(name = "project_owner_id", nullable = false, length = 1000)
     private String ownerId;
 
+    @Column(name = "project_git_owner", length = 1000)
+    private String githubOwner;
+
+    @Column(name = "project_git_repository", length = 1000)
+    private String githubRepository;
+
     @Column(name = "project_target_score", nullable = false)
     private int targetScore = 0;
 
@@ -57,6 +63,9 @@ public class Projects {
 
     @Column(name = "project_pr_template")
     private String prTemplate;
+
+    @Column(name = "")
+    private String githubRepo;
 
     @OneToMany(mappedBy = "project")
     private List<ProjectUsers> projectUsersList = new ArrayList<>();

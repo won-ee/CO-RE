@@ -1,5 +1,6 @@
 package com.core.backend.service;
 
+import com.core.backend.data.dto.projects.UpdateGitHubRequestDto;
 import com.core.backend.data.dto.users.UserGroupsDto;
 import com.core.backend.data.entity.JiraGroups;
 import com.core.backend.data.entity.ProjectUsers;
@@ -15,10 +16,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -149,19 +147,19 @@ public class ProjectService {
                         projectRepository.save(newProject);
                     }
 
-                    if (!projectUserRepository.existsByUserAndProjectJiraId(user, newProject.getJiraId())) {
-                        ProjectUsers projectUser = ProjectUsers.builder()
+                    ProjectUsers projectUser = projectUserRepository.findByUserAndProjectJiraId(user, newProject.getJiraId());
+                    if (projectUser == null) {
+                        projectUser = ProjectUsers.builder()
                                 .user(user)
                                 .project(newProject)
                                 .build();
 
-                        projectUserRepository.save(projectUser);
+                        projectUser = projectUserRepository.save(projectUser);
                     }
 
                     roleService.saveProjectRolesIfNotExists(accessToken, selfUrl, newProject, user);
-                    
-                    issueService.saveIssueListToJira(accessToken, selfUrl, newProject, user);
 
+                    issueService.getIssueListToJira(accessToken, selfUrl, newProject, projectUser);
 
                 }
             }
@@ -172,6 +170,43 @@ public class ProjectService {
 
     public List<Projects> getProjectsByUserId(Long userId) {
         return projectUserRepository.findProjectsByUserId(userId);
+    }
+
+    public boolean updateGitHubToProject(Long userId, UpdateGitHubRequestDto updateGitHubRequestDto) {
+        try {
+            if (projectUserRepository.existsByUserIdAndProjectId(userId, updateGitHubRequestDto.projectId())) {
+                // 업데이트 작업 진행할것
+                Optional<Projects> getProjects = projectRepository.findById(updateGitHubRequestDto.projectId());
+
+                if (getProjects.isPresent()) {
+                    Projects project = getProjects.get();
+
+                    project = Projects.builder()
+                            .id(project.getId())
+                            .jiraId(project.getJiraId())
+                            .name(project.getName())
+                            .key(project.getKey())
+                            .selfUrl(project.getSelfUrl())
+                            .image(project.getImage())
+                            .categoryName(project.getCategoryName())
+                            .categoryId(project.getCategoryId())
+                            .ownerId(project.getOwnerId())
+                            .ownerName(project.getOwnerName())
+                            .jiraGroup(project.getJiraGroup())
+                            .rolesList(project.getRolesList())
+                            .projectUsersList(project.getProjectUsersList())
+                            .githubOwner(updateGitHubRequestDto.githubOwner())
+                            .githubRepository(updateGitHubRequestDto.githubRepository())
+                            .build();
+
+                    projectRepository.save(project);
+                    return true;
+                }
+            }
+        } catch (Exception ex) {
+            log.info("updateGitHubToProject error: {}", ex.getMessage());
+        }
+        return false;
     }
 
 

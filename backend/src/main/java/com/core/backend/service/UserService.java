@@ -65,7 +65,7 @@ public class UserService {
 
         return UserLoginDto.builder()
                 .userInfo(getUserDto)
-                .groupList(getProListDto)
+                .projects(getProListDto)
                 .build();
     }
 

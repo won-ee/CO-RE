@@ -13,6 +13,10 @@ public interface ProjectUserRepository extends JpaRepository<ProjectUsers, Long>
 
     boolean existsByUserAndProjectJiraId(Users user, String projectJiraId);
 
+    ProjectUsers findByUserAndProjectJiraId(Users user, String projectJiraId);
+
     @Query("SELECT pu.project FROM ProjectUsers pu WHERE pu.user.id = :userId")
     List<Projects> findProjectsByUserId(@Param("userId") Long userId);
+    
+    boolean existsByUserIdAndProjectId(Long userId, Long projectId);
 }

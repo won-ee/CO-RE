@@ -8,6 +8,6 @@ import java.util.ArrayList;
 @Builder
 public record UserLoginDto(
         InfoResponseUserDto userInfo,
-        ArrayList<InfoResponseProjectListDto> groupList
+        ArrayList<InfoResponseProjectListDto> projects
 ) {
 }

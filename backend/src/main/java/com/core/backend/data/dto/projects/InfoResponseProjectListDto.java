@@ -10,7 +10,9 @@ public record InfoResponseProjectListDto(
         String ownerId,
         String ownerName,
         Long groupId,
-        String groupName
+        String groupName,
+        String githunOwner,
+        String githubRepo
 ) {
 
 }
