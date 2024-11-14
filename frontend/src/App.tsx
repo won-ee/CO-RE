@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
 import { ThemeProvider } from "styled-components";
 import { GlobalStyle, theme } from "./styles/GlobalStyled";
 import { DisplayLayout, NavLayout } from "./App.Styled";
@@ -35,6 +34,7 @@ const AppComponent: React.FC = () => {
           <Route path="/pullrequest/create" element={<CreatePRPage />} />
           <Route path="/issue" element={<IssuePage />} />
           <Route path="/history" element={<HistoryPage />} />
+          <Route path="/history/:id" element={<HistoryPage />} />
           <Route path="/calendar" element={<CalendarPage />} />
           <Route path="/member" element={<MemberPage />} />
           <Route path="/setting" element={<SettingPage />} />
@@ -50,20 +50,16 @@ const AppComponent: React.FC = () => {
 };
 
 const App: React.FC = () => {
-  const queryClient = new QueryClient();
   return (
     <>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider theme={theme}>
-          <GlobalStyle />
-          <DisplayLayout>
-            <Router>
-              <AppComponent />
-            </Router>
-          </DisplayLayout>
-        </ThemeProvider>
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
+      <ThemeProvider theme={theme}>
+        <GlobalStyle />
+        <DisplayLayout>
+          <Router>
+            <AppComponent />
+          </Router>
+        </DisplayLayout>
+      </ThemeProvider>
     </>
   );
 };

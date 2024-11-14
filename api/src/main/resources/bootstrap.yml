@@ -1,0 +1,11 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: api
+  cloud:
+    config:
+      uri: http://config:8888
+  profiles:
+    active: api

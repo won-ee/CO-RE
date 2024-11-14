@@ -5,12 +5,12 @@ import SectionOverview from '../components/section/SectionOverview'
 import SectionCommits from '../components/section/SectionCommits'
 // import SectionChanges from '../components/section/SectionChanges'
 import { useQueryPRDetail } from '../hooks/usePullRequestData'
-import { PRDegailParamsType } from '../Types/pullRequestType'
+import { PRDetailParamsType } from '../Types/pullRequestType'
 
-const params: PRDegailParamsType = {
+const params: PRDetailParamsType = {
     owner: 'JEM1224',
     repo: 'github-api',
-    pullId: 52
+    pullId: 76
 };
   
 const PullRequestPageDetail:React.FC = () => {
@@ -24,7 +24,7 @@ const PullRequestPageDetail:React.FC = () => {
         <ContainerLayout>
             <TabPullRequest isSeleted={isSeleted} setIsSeleted={setIsSeleted}/>
             {isSeleted === 'Overview' && <SectionOverview data={data} />}
-            {isSeleted === 'Commits' && <SectionCommits data={data?.commits} />}
+            {isSeleted === 'Commits' && <SectionCommits commits={data?.commits} />}
             {/* {isSeleted === 'Changes' && <SectionChanges />} */}
         </ContainerLayout>   
     </>

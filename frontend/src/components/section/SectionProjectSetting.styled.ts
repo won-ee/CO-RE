@@ -41,6 +41,7 @@ export const TemplateInput = styled.textarea`
     width: 820px;
     font-size: 14px;
     color: #718EBF;
+    resize: none;
     &::placeholder{
         font-family: 'Pretendard';
         font-size: 14px;

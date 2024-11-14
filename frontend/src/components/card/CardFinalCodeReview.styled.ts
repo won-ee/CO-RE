@@ -10,15 +10,14 @@ export const CardCodeReviewLayout = styled.div<CardCodeReviewLayoutProps>`
     padding: 6px;
     border-top: 1px solid #e1e4e8;
     border-bottom: 1px solid #e1e4e8;
-    ${({ isAbsolute }) => isAbsolute && `
-        position: absolute;
-        top:100%
-        left: 0;
-        right: 0;
-        z-index: 10; /* 다른 요소 위에 표시 */
-        background-color: white; /* 배경색 추가하여 다른 요소와 구분 */
-        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
-  `}
+    position: absolute;
+    top:100%;
+    right: 0;
+    z-index: 10; /* 다른 요소 위에 표시 */
+    background-color: white; /* 배경색 추가하여 다른 요소와 구분 */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+    border-radius: 5px;
+    width: 400%;
 `
 export const ReviewTextArea = styled.textarea`
     font-family: 'Pretendard';
@@ -33,7 +32,15 @@ export const ReviewTextArea = styled.textarea`
 `
 export const ButtonBox = styled.div`
     display: flex;
-    gap: 6px;
+    gap: 12px;
     justify-content: end;
     margin-top: 6px;
+`
+export const PendingSpan = styled.span`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 400;
+    font-size: 12px;
+    color: #59636E;
 `
