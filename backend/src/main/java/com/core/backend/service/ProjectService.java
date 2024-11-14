@@ -1,5 +1,6 @@
 package com.core.backend.service;
 
+import com.core.backend.data.dto.projects.ProjectSetDto;
 import com.core.backend.data.dto.projects.UpdateGitHubRequestDto;
 import com.core.backend.data.dto.users.UserGroupsDto;
 import com.core.backend.data.entity.JiraGroups;
@@ -179,26 +180,7 @@ public class ProjectService {
                 Optional<Projects> getProjects = projectRepository.findById(updateGitHubRequestDto.projectId());
 
                 if (getProjects.isPresent()) {
-                    Projects project = getProjects.get();
-
-                    project = Projects.builder()
-                            .id(project.getId())
-                            .jiraId(project.getJiraId())
-                            .name(project.getName())
-                            .key(project.getKey())
-                            .selfUrl(project.getSelfUrl())
-                            .image(project.getImage())
-                            .categoryName(project.getCategoryName())
-                            .categoryId(project.getCategoryId())
-                            .ownerId(project.getOwnerId())
-                            .ownerName(project.getOwnerName())
-                            .jiraGroup(project.getJiraGroup())
-                            .rolesList(project.getRolesList())
-                            .projectUsersList(project.getProjectUsersList())
-                            .githubOwner(updateGitHubRequestDto.githubOwner())
-                            .githubRepository(updateGitHubRequestDto.githubRepository())
-                            .build();
-
+                    Projects project = getProjects.get().updateGitHub(updateGitHubRequestDto);
                     projectRepository.save(project);
                     return true;
                 }
@@ -207,6 +189,29 @@ public class ProjectService {
             log.info("updateGitHubToProject error: {}", ex.getMessage());
         }
         return false;
+    }
+
+    public ProjectSetDto findSetToProject(Long projectId) {
+
+        Projects project = projectRepository.findById(projectId).orElse(null);
+
+        if(project != null) {
+            return ProjectSetDto.builder()
+                    .targetScore(project.getTargetScore())
+                    .reviewerCount(project.getReviewerCount())
+                    .template(project.getReviewTemplate())
+                    .build();
+        }
+        return null;
+    }
+
+    public void updateSetToProject(Long projectId, ProjectSetDto projectSetDto) {
+        Projects project = projectRepository.findById(projectId).orElse(null);
+
+        if(project != null) {
+            Projects newProject = project.updateSet(projectSetDto);
+            projectRepository.save(newProject);
+        }
     }
 
 

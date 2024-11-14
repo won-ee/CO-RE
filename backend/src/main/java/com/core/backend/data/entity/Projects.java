@@ -1,5 +1,7 @@
 package com.core.backend.data.entity;
 
+import com.core.backend.data.dto.projects.ProjectSetDto;
+import com.core.backend.data.dto.projects.UpdateGitHubRequestDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -55,14 +57,11 @@ public class Projects {
     @Column(name = "project_target_score", nullable = false)
     private int targetScore = 0;
 
-    @Column(name = "project_reviewer_auto", nullable = false)
-    private boolean reviewerAuto = true;
+    @Column(name = "project_reviewer_count", nullable = false)
+    private int reviewerCount = 1;
 
     @Column(name = "project_review_template")
     private String reviewTemplate;
-
-    @Column(name = "")
-    private String githubRepo;
 
     @OneToMany(mappedBy = "project")
     private List<ProjectUsers> projectUsersList = new ArrayList<>();
@@ -73,5 +72,48 @@ public class Projects {
 
     @OneToMany(mappedBy = "project")
     private List<Roles> rolesList = new ArrayList<>();
+
+    public Projects updateGitHub(UpdateGitHubRequestDto updateGitHubRequestDto) {
+        return Projects.builder()
+                .id(this.id)
+                .jiraId(this.jiraId)
+                .name(this.name)
+                .key(this.key)
+                .image(this.image)
+                .selfUrl(this.selfUrl)
+                .categoryName(this.categoryName)
+                .categoryId(this.categoryId)
+                .ownerName(this.ownerName)
+                .ownerId(this.ownerId)
+                .githubOwner(updateGitHubRequestDto.githubOwner())
+                .githubRepository(updateGitHubRequestDto.githubRepository())
+                .targetScore(this.targetScore)
+                .reviewerCount(this.reviewerCount)
+                .reviewTemplate(this.reviewTemplate)
+                .jiraGroup(this.jiraGroup)
+                .build();
+    }
+
+    public Projects updateSet(ProjectSetDto projectSetDto) {
+        return Projects.builder()
+                .id(this.id)
+                .jiraId(this.jiraId)
+                .name(this.name)
+                .key(this.key)
+                .image(this.image)
+                .selfUrl(this.selfUrl)
+                .categoryName(this.categoryName)
+                .categoryId(this.categoryId)
+                .ownerName(this.ownerName)
+                .ownerId(this.ownerId)
+                .githubOwner(this.githubOwner)
+                .githubRepository(this.githubRepository)
+                .targetScore(projectSetDto.targetScore())
+                .reviewerCount(projectSetDto.reviewerCount())
+                .reviewTemplate(projectSetDto.template())
+                .jiraGroup(this.jiraGroup)
+                .build();
+    }
+
 
 }
