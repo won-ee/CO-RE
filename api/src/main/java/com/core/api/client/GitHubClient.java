@@ -4,8 +4,8 @@ import com.core.api.data.dto.FileDto;
 import com.core.api.data.dto.github.CommitMessageServerDto;
 import com.core.api.data.dto.github.PullRequestInputServerDto;
 import com.core.api.data.dto.response.MergeResponseDto;
-import com.core.api.data.dto.review.ReviewInputDto;
-import com.core.api.data.dto.review.ReviewSimpleDto;
+import com.core.api.data.dto.review.CommentSimpleDto;
+import com.core.api.data.dto.review.ReviewBaseDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,6 +51,14 @@ public interface GitHubClient {
             @PathVariable("repo") String repo
     );
 
+
+    @GetMapping("/repos/{owner}/{repo}/commits/{sha}")
+    Map<String, Object> getCommit(
+            @PathVariable("owner") String owner,
+            @PathVariable("repo") String repo,
+            @PathVariable("sha") String sha
+    );
+
     @GetMapping("/repos/{owner}/{repo}/compare/{baseHead}")
     Map<String, Object> compareBranchHead(
             @PathVariable("owner") String owner,
@@ -63,7 +71,7 @@ public interface GitHubClient {
             @PathVariable("owner") String owner,
             @PathVariable("repo") String repo,
             @PathVariable("pullId") int pullId,
-            @RequestBody ReviewSimpleDto reviewSimpleDto
+            @RequestBody CommentSimpleDto commentSimpleDto
     );
 
     @PatchMapping("/repos/{owner}/{repo}/issues/comments/{commentId}")
@@ -71,7 +79,7 @@ public interface GitHubClient {
             @PathVariable("owner") String owner,
             @PathVariable("repo") String repo,
             @PathVariable("commentId") Long commentId,
-            @RequestBody ReviewSimpleDto reviewSimpleDto
+            @RequestBody CommentSimpleDto commentSimpleDto
     );
 
     @DeleteMapping("/repos/{owner}/{repo}/issues/comments/{commentId}")
@@ -86,7 +94,7 @@ public interface GitHubClient {
             @PathVariable("owner") String owner,
             @PathVariable("repo") String repo,
             @PathVariable("pullId") int pullId,
-            @RequestBody ReviewInputDto reviewInputDto
+            @RequestBody ReviewBaseDto reviewBaseDto
     );
 
     @PatchMapping("/repos/{owner}/{repo}/pulls/comments/{commentId}")
@@ -94,7 +102,7 @@ public interface GitHubClient {
             @PathVariable("owner") String owner,
             @PathVariable("repo") String repo,
             @PathVariable("commentId") Long commentId,
-            @RequestBody ReviewSimpleDto reviewSimpleDto
+            @RequestBody CommentSimpleDto commentSimpleDto
     );
 
     @DeleteMapping("/repos/{owner}/{repo}/pulls/comments/{commentId}")

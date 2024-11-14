@@ -1,56 +1,84 @@
 package com.core.api.data.dto.pullrequest;
 
-import com.core.api.data.dto.ReviewerDto;
+import com.core.api.data.dto.WriterDto;
 import com.core.api.data.dto.commit.CommitDto;
+import com.core.api.data.dto.review.CommentDto;
+import com.core.api.data.dto.review.CommentGroupDto;
+import com.core.api.data.dto.review.ReviewGroupDto;
 import com.core.api.data.entity.PullRequest;
-import lombok.Builder;
+import com.core.api.data.entity.Review;
+import com.core.api.data.entity.Reviewer;
 import lombok.Getter;
+import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-@Builder
+@SuperBuilder
 @Getter
-public class PullRequestDto {
+public class PullRequestDto extends PullRequestSimpleDto {
     Long id;
-    String title;
-    Integer pullRequestId;
-    String writerId;
-    String writerImg;
     String summary;
     String description;
-    String head;
-    String base;
     Boolean mergeStatus;
-    Integer priority;
-    Boolean afterReview;
-    String deadline;
-    LocalDateTime createdDate;
     List<CommitDto> commits;
-    List<ReviewerDto> reviewers;
+    List<ReviewGroupDto> reviews;
+    List<CommentGroupDto> comments;
 
-    public static PullRequestDto from(PullRequest pullRequest, List<CommitDto> commits, List<ReviewerDto> reviewers) {
-
-        //TODO : 유저 정보에서 writerImg 받아오기
+    public static PullRequestDto from(PullRequest pullRequest, List<CommitDto> commits, List<Reviewer> reviewers) {
+        List<WriterDto> reviewerInfo = mapToReviewerInfo(reviewers);
+        Integer commentCount = calculateCommentCount(reviewers);
+        List<ReviewGroupDto> reviews = convertReview(reviewers);
+        List<CommentGroupDto> comments = convertComment(reviewers);
         return PullRequestDto.builder()
-                .writerImg("https://i.namu.wiki/i/-eAh3vYcyIrcsJuRa27seExMXV5xAz6q58Tjspbgyv99by_od90qDZVqwZRkpx4eyh43u1P8aKCh1XL652gd0kkfPyYac0oiGWKItHx0ZhODdD3QqZsRmdfwaeYslKrnSak_76X4OZ6FndPEHJUd9g.webp")
                 .id(pullRequest.getId())
                 .title(pullRequest.getTitle())
                 .pullRequestId(pullRequest.getPullRequestId())
-                .writerId(pullRequest.getWriterId())
-                .summary(pullRequest.getSummary())
+                .writer(WriterDto.from(pullRequest.getWriterId(), ""))
                 .head(pullRequest.getHead())
-                .description(pullRequest.getDescription())
                 .base(pullRequest.getBase())
-                .mergeStatus(pullRequest.getMergeStatus())
+                .status(pullRequest.getStatus())
                 .priority(pullRequest.getPriority())
                 .afterReview(pullRequest.getAfterReview())
-                .deadline(pullRequest.getDeadline()
-                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
-                .createdDate(pullRequest.getCreatedDate())
+                .deadline(formatTime(pullRequest.getDeadline()))
+                .reviewers(reviewerInfo)
+                .commentCount(commentCount)
+                .summary(pullRequest.getSummary())
+                .description(pullRequest.getDescription())
+                .mergeStatus(pullRequest.getMergeStatus())
+                .createdDate(formatTime(pullRequest.getCreatedDate()))
                 .commits(commits)
-                .reviewers(reviewers)
+                .comments(comments)
+                .reviews(reviews)
                 .build();
+    }
+
+    private static List<CommentGroupDto> convertComment(List<Reviewer> reviewers) {
+        return reviewers.stream()
+                .map(reviewer -> CommentGroupDto.from(
+                        WriterDto.fromReviewers(reviewer),
+                        CommentDto.from(reviewer)
+                ))
+                .toList();
+    }
+
+    private static List<ReviewGroupDto> convertReview(List<Reviewer> reviewers) {
+        List<Review> allReviews = reviewers.stream()
+                .flatMap(reviewer -> reviewer.getReviews()
+                        .stream())
+                .toList();
+
+        Map<Long, List<Review>> reviewsGroupedByParentId = allReviews.stream()
+                .collect(Collectors.groupingBy(review ->
+                        review.getParentId() != null ? review.getParentId() : -1L
+                ));
+
+        return Optional.ofNullable(reviewsGroupedByParentId.get(-1L))
+                .map(parents -> parents.stream()
+                        .map(parent -> ReviewGroupDto.from(reviewsGroupedByParentId.getOrDefault(parent.getId(), List.of()), parent))
+                        .toList())
+                .orElse(List.of());
     }
 }

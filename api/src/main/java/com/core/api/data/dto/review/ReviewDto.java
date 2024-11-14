@@ -1,5 +1,7 @@
 package com.core.api.data.dto.review;
 
+import com.core.api.data.entity.Review;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -10,107 +12,63 @@ import java.util.Map;
 public class ReviewDto {
     private Long id;
     private Integer prId;
-    private Boolean isIssue;
-    private Integer parentId;
-    private Integer startLine;
-    private Integer endLine;
+    private String path;
+    private Long parentId;
+    private Integer line;
     private String content;
-    private String commitId;
-    private String writer;
-    private String ownerName;
-    private String repoName;
+    private String writerId;
 
-    public static ReviewDto from(Map<?, ?> map) {
-        Map<?, ?> comment = getComment(map);
-        Integer parentId = getParentId(map, comment);
+    @JsonIgnore
+    private String owner;
 
-        Map<?, ?> repo = (Map<?, ?>) map.get("repository");
-        String ownerName = getOwnerName(repo);
-        String repoName = getRepoName(repo);
+    @JsonIgnore
+    private String repo;
 
-        Map<?, ?> pullRequest = getPullRequest(map);
-        Integer prId = getPrId(pullRequest);
-        Long id = getId(comment);
-        String commitId = getCommitId(comment);
-        String writer = getWriter(comment);
-        String content = getContent(comment);
-        Integer startLine = getStartLine(comment);
-        Integer endLine = getEndLine(comment);
-
-        Boolean isIssue = isIssue(map);
+    public static ReviewDto from(Review review) {
         return ReviewDto.builder()
-                .id(id)
-                .prId(prId)
-                .isIssue(isIssue)
-                .parentId(parentId)
-                .startLine(startLine)
-                .endLine(endLine)
-                .content(content)
-                .commitId(commitId)
-                .writer(writer)
-                .ownerName(ownerName)
-                .repoName(repoName)
+                .id(review.getId())
+                .prId(review.getPrId())
+                .path(review.getPath())
+                .parentId(review.getParentId())
+                .line(review.getLine())
+                .content(review.getContent())
+                .writerId(review.getReviewer()
+                        .getReviewerId())
                 .build();
     }
 
-    private static boolean isComment(Map<?, ?> map) {
+    public static ReviewDto fromApiResponse(Map<?, ?> map) {
+        Map<?, ?> review = getReview(map);
+        Map<?, ?> repo = (Map<?, ?>) map.get("repository");
+        Map<?, ?> owner = (Map<?, ?>) repo.get("owner");
+        Map<?, ?> writer = (Map<?, ?>) review.get("user");
+        Map<?, ?> pullRequest = (Map<?, ?>) map.get("pull_request");
+        Long parentId = getParentId(map, review);
+
+        return ReviewDto.builder()
+                .id(((Number) review.get("id")).longValue())
+                .prId(((Number) pullRequest.get("number")).intValue())
+                .path((String) review.get("path"))
+                .parentId(parentId)
+                .line((Integer) review.get("line"))
+                .content((String) review.get("body"))
+                .writerId((String) writer.get("login"))
+                .owner((String) owner.get("login"))
+                .repo((String) repo.get("name"))
+                .build();
+    }
+
+    private static boolean isChild(Map<?, ?> map) {
         return map.get("comment") != null;
     }
 
-    private static boolean isIssue(Map<?, ?> map) {
-        return map.get("issue") != null;
+    private static Map<?, ?> getReview(Map<?, ?> map) {
+        return isChild(map) ? (Map<?, ?>) map.get("comment") : (Map<?, ?>) map.get("review");
     }
 
-    private static Map<?, ?> getComment(Map<?, ?> map) {
-        return isComment(map) ? (Map<?, ?>) map.get("comment") : (Map<?, ?>) map.get("review");
+    private static Long getParentId(Map<?, ?> map, Map<?, ?> comment) {
+        return isChild(map) ? (Long) comment.get("pull_request_review_id") : null;
     }
 
-    private static Integer getParentId(Map<?, ?> map, Map<?, ?> comment) {
-        return isComment(map) ? (Integer) comment.get("pull_request_review_id") : null;
-    }
-
-    private static String getOwnerName(Map<?, ?> repo) {
-        Map<?, ?> owner = (Map<?, ?>) repo.get("owner");
-        return (String) owner.get("login");
-    }
-
-    private static String getRepoName(Map<?, ?> repo) {
-        return (String) repo.get("name");
-    }
-
-    private static Map<?, ?> getPullRequest(Map<?, ?> map) {
-        return isIssue(map) ? (Map<?, ?>) map.get("issue") : (Map<?, ?>) map.get("pull_request");
-    }
-
-    private static Integer getPrId(Map<?, ?> pullRequest) {
-        return (Integer) pullRequest.get("number");
-    }
-
-    private static Long getId(Map<?, ?> comment) {
-        return comment != null && comment.get("id") instanceof Number
-                ? ((Number) comment.get("id")).longValue()
-                : null;
-    }
-
-    private static String getCommitId(Map<?, ?> comment) {
-        return (String) comment.get("commit_id");
-    }
-
-    private static String getWriter(Map<?, ?> comment) {
-        Map<?, ?> user = (Map<?, ?>) comment.get("user");
-        return (String) user.get("login");
-    }
-
-    private static String getContent(Map<?, ?> comment) {
-        return (String) comment.get("body");
-    }
-
-    private static Integer getStartLine(Map<?, ?> comment) {
-        return (Integer) comment.get("start_line");
-    }
-
-    private static Integer getEndLine(Map<?, ?> comment) {
-        return (Integer) comment.get("line");
-    }
 
 }

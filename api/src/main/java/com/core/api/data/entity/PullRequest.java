@@ -30,6 +30,7 @@ public class PullRequest extends Base {
     @Column(name = "pr_owner", nullable = false)
     private String owner;
 
+
     @Column(name = "pr_repo", nullable = false)
     private String repo;
 
@@ -52,8 +53,11 @@ public class PullRequest extends Base {
     @ColumnDefault("false")
     private Boolean mergeStatus;
 
+    @Column(name = "pr_status")
+    private String status;
+
     @Column(name = "pr_priority")
-    private Integer priority;
+    private String priority;
 
     @Column(name = "pr_after_review", nullable = false)
     @ColumnDefault("false")
@@ -83,6 +87,7 @@ public class PullRequest extends Base {
         pullRequest.pullRequestId = pullRequestId;
         pullRequest.afterReview = pullRequestInputDto.afterReview();
         pullRequest.mergeStatus = false;
+        pullRequest.status = "processing";
         pullRequest.deadline = LocalDate.parse(pullRequestInputDto.deadline(), DateTimeFormatter.ofPattern("yyyy-MM-dd"))
                 .atStartOfDay();
         pullRequest.priority = pullRequestInputDto.priority();
