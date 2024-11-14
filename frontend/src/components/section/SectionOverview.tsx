@@ -8,7 +8,7 @@ interface SectionOverviewProps{
 
 const SectionOverview:React.FC<SectionOverviewProps> = ({data}) => {
   const [dDay, setDDay] = useState(0);
-  const [createDate,setCreateDate] = useState(0)
+  const [createDate,setCreateDate] = useState(0)  
 
   useEffect(() => {
     if (data?.deadline) {
@@ -42,9 +42,11 @@ const SectionOverview:React.FC<SectionOverviewProps> = ({data}) => {
           <OverviewHeaderText>{data?.title}</OverviewHeaderText>
         </OverviewHeaderBox>
         <OverviewInfoBox>
-          <OverviewProfileImg src={data?.writerImg} />
-          <OverviewName>{data?.writerId}</OverviewName>
-          <OverviewDayText>{createDate}days ago</OverviewDayText>
+          <OverviewProfileImg src={data?.writer.writerImg} />
+          <OverviewName>{data?.writer.writerId}</OverviewName>
+          <OverviewDayText>
+            {createDate === 0 ? "today" : `${createDate} days ago`}
+          </OverviewDayText>
           <OverviewSourceText>{data?.base}</OverviewSourceText>
           <OverviewText>into</OverviewText>
           <OverviewTargetText>{data?.head}</OverviewTargetText>
@@ -64,17 +66,22 @@ const SectionOverview:React.FC<SectionOverviewProps> = ({data}) => {
           </OverviewCoreContentBox>
         </OverviewCoreBox>
         <OverviewApproveBox>
-          <OverviewApproveHeader>
-            <OverviewProfileImg src="https://i.pravatar.cc/150?img=1" />
-            <OverviewName>Brooks</OverviewName>
-            <OverviewDayText>3days ago</OverviewDayText>
-            <OverviewApproveButton>Approved</OverviewApproveButton>
-          </OverviewApproveHeader>
-          <OverviewApproveContent>
-            You did Great Job!
-            <br />
-            like your Componenet style and effieciency of Algorithm
-          </OverviewApproveContent>
+        {data?.comments.map((comment) => (
+          <div key={comment.writer.writerId}>
+            <OverviewApproveHeader>
+              <OverviewProfileImg src={comment.writer.writerImg} />
+              <OverviewName>{comment.writer.writerId}</OverviewName>
+              <OverviewDayText>3 days ago</OverviewDayText>
+              <OverviewApproveButton $status={comment.comment.status}>
+               {comment.comment.status === true ? "approve" : `reject`}
+              </OverviewApproveButton>
+            </OverviewApproveHeader>
+            <OverviewApproveContent>
+            {comment.comment.content}
+            </OverviewApproveContent>
+          </div>
+        ))}
+
         </OverviewApproveBox>
         <OverviewInput placeholder="Write a comment" />
         <Container>
