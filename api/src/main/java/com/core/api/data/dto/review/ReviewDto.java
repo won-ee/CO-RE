@@ -14,8 +14,7 @@ public class ReviewDto {
     private Integer prId;
     private String path;
     private Long parentId;
-    private Integer startLine;
-    private Integer endLine;
+    private Integer line;
     private String content;
     private String writerId;
 
@@ -31,8 +30,7 @@ public class ReviewDto {
                 .prId(review.getPrId())
                 .path(review.getPath())
                 .parentId(review.getParentId())
-                .startLine(review.getStartLine())
-                .endLine(review.getEndLine())
+                .line(review.getLine())
                 .content(review.getContent())
                 .writerId(review.getReviewer()
                         .getReviewerId())
@@ -52,9 +50,8 @@ public class ReviewDto {
                 .prId(((Number) pullRequest.get("number")).intValue())
                 .path((String) review.get("path"))
                 .parentId(parentId)
-                .startLine((Integer) review.get("start_line"))
-                .endLine((Integer) review.get("line"))
-                .content((String) map.get("body"))
+                .line((Integer) review.get("line"))
+                .content((String) review.get("body"))
                 .writerId((String) writer.get("login"))
                 .owner((String) owner.get("login"))
                 .repo((String) repo.get("name"))
