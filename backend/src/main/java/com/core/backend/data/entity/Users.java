@@ -55,4 +55,9 @@ public class Users extends Base {
                 .build();
     }
 
+    public void updateInfo(String name, String email, String profile) {
+        this.name = name;
+        this.email = email;
+        this.profile = profile;
+    }
 }
