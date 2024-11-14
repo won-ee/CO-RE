@@ -1,7 +1,7 @@
 import { CardSelectBranchLayout, CardSelectBranchHeader, ChoiceStyles, BranchBox, WriterImg, TitleBox, NameBox } from "./CardSelectBranch.styled";
 import Select, { OptionsOrGroups, GroupBase, SingleValue } from 'react-select'
 import { OptionType } from "../../Types/SelectType";
-import DateDiffCalculator from "../DateDiffCalculator";
+import useDateDiff from "../../hooks/useDateDiff";
 
 interface Props{
     name:string;
@@ -16,6 +16,7 @@ function CardSelectBranch({ name, selectedOp, handleChange, option }: Props) {
   };
 
   const commitInfo = isSingleOption(selectedOp) ? JSON.parse(selectedOp.value) : null;
+  const dateDiff = useDateDiff(commitInfo?.date || null);
   
   return (
     <CardSelectBranchLayout>
@@ -39,7 +40,7 @@ function CardSelectBranch({ name, selectedOp, handleChange, option }: Props) {
                 {commitInfo.message}
                 <NameBox>
                   <span>{commitInfo.writerId}</span>
-                  <DateDiffCalculator date={commitInfo.date}/>
+                  <span>{dateDiff}</span>
                 </NameBox>
               </TitleBox>
             </>
