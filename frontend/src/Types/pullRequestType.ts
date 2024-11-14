@@ -110,7 +110,7 @@ export interface LastCommitType{
   message:string;
   writerId: string,
   writerImg: string;
-  date: string | null | undefined,
+  date: string,
   parent: string,
   secondParent: string;
 }
