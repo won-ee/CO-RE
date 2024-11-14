@@ -6,8 +6,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.OffsetDateTime;
 
 @Entity
 @Getter
@@ -40,12 +39,8 @@ public class Commit {
     @Column(name = "commit_second_parent")
     private String secondParent;
 
-    @OneToMany(mappedBy = "commit", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Review> reviews = new ArrayList<>();
-
     @Column(name = "created_date", nullable = false, updatable = false)
     private LocalDateTime createdDate;
-
 
     public static Commit from(CommitServerDto commitServerDto, PullRequest pullRequest) {
         Commit commit = new Commit();
@@ -54,7 +49,8 @@ public class Commit {
         commit.pullRequest = pullRequest;
         commit.parent = commitServerDto.parent();
         commit.secondParent = commitServerDto.secondParent();
-        commit.createdDate = LocalDateTime.parse(commitServerDto.date());
+        commit.createdDate = OffsetDateTime.parse(commitServerDto.date())
+                .toLocalDateTime();
         commit.writerId = commitServerDto.writerId();
         commit.writerImg = commitServerDto.writerImg();
         return commit;

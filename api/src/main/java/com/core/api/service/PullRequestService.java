@@ -2,9 +2,7 @@ package com.core.api.service;
 
 import com.core.api.client.GitHubClient;
 import com.core.api.data.dto.ChangeDto;
-import com.core.api.data.dto.CommentDto;
 import com.core.api.data.dto.FileDto;
-import com.core.api.data.dto.ReviewerDto;
 import com.core.api.data.dto.commit.CommitDto;
 import com.core.api.data.dto.commit.CommitMessageDto;
 import com.core.api.data.dto.github.CommitMessageServerDto;
@@ -14,6 +12,7 @@ import com.core.api.data.dto.github.PullRequestServerDto;
 import com.core.api.data.dto.pullrequest.PullRequestDateFilterDto;
 import com.core.api.data.dto.pullrequest.PullRequestDto;
 import com.core.api.data.dto.pullrequest.PullRequestInputDto;
+import com.core.api.data.dto.pullrequest.PullRequestSimpleDto;
 import com.core.api.data.dto.response.MergeResponseDto;
 import com.core.api.data.entity.Commit;
 import com.core.api.data.entity.PullRequest;
@@ -52,35 +51,35 @@ public class PullRequestService {
                 .stream()
                 .map(commitData -> CommitServerDto.fromApiResponse((Map<?, ?>) commitData))
                 .map(commitDto -> Commit.from(commitDto, pr))
+                .filter(commit -> !commitRepository.existsBySha(commit.getSha()))
                 .forEach(commitRepository::save);
-
     }
 
-    public List<PullRequestDto> getPullRequestListByReviewer(String owner, String repo) {
+
+    public List<PullRequestSimpleDto> getPullRequestListByReviewer(String owner, String repo) {
 
         //TODO : 요청한 유저의 아이디로 변경
-        String userId = "jmeve24";
+        String userId = "JEM1224";
         List<PullRequest> prList = pullRequestRepository.findAllByOwnerAndRepoWhereReviewerIs(owner, repo, userId)
                 .orElse(List.of());
 
-        return prList
-                .stream()
-                .map(this::toPullRequestDto)
+        return prList.stream()
+                .map(pr -> PullRequestSimpleDto.from(pr, pr.getReviewers()))
                 .toList();
 
     }
 
-    public List<PullRequestDto> getPullRequestListByWriter(String owner, String repo) {
+    public List<PullRequestSimpleDto> getPullRequestListByWriter(String owner, String repo) {
 
         //TODO : 요청한 유저의 아이디로 변경
-        String userId = "jmeve24";
+        String userId = "JEM1224";
         List<PullRequest> prList = pullRequestRepository.findAllByOwnerAndRepoWhereWriterIs(owner, repo, userId)
                 .orElse(List.of());
 
-        return prList
-                .stream()
-                .map(this::toPullRequestDto)
+        return prList.stream()
+                .map(pr -> PullRequestSimpleDto.from(pr, pr.getReviewers()))
                 .toList();
+
     }
 
     public PullRequestDto getPullRequest(String owner, String repo, Integer pullId) {
@@ -90,12 +89,12 @@ public class PullRequestService {
         return toPullRequestDto(pr);
     }
 
-    public List<PullRequestDto> getPullRequestListByFilter(PullRequestDateFilterDto filter) {
+    public List<PullRequestSimpleDto> getPullRequestListByFilter(PullRequestDateFilterDto filter) {
         List<PullRequest> prList = pullRequestRepository.findAllByOwnerRepoByFilter(filter)
                 .orElseThrow(() -> new RuntimeException("Pull Request not found"));
 
         return prList.stream()
-                .map(this::toPullRequestDto)
+                .map(pr -> PullRequestSimpleDto.from(pr, pr.getReviewers()))
                 .toList();
     }
 
@@ -122,7 +121,7 @@ public class PullRequestService {
     }
 
     public void closedPullRequest(PullRequestServerDto pullRequest) {
-        pullRequestRepository.findByOwnerAndRepoAndBaseAndHead(pullRequest.getOwner(), pullRequest.getRepo(), pullRequest.getBase(), pullRequest.getHead())
+        pullRequestRepository.findByOwnerAndRepoAndBaseAndHeadAndVersionIsNull(pullRequest.getOwner(), pullRequest.getRepo(), pullRequest.getBase(), pullRequest.getHead())
                 .ifPresent(pr -> {
                     pr.updateMergeStatus(pullRequest.getMergeStatus());
                     pullRequestRepository.save(pr);
@@ -133,23 +132,9 @@ public class PullRequestService {
     private PullRequestDto toPullRequestDto(PullRequest pr) {
         List<CommitDto> commits = pr.getCommits()
                 .stream()
-                .map(this::toCommitDto)
+                .map(CommitDto::from)
                 .toList();
-
-        List<ReviewerDto> reviewers = pr.getReviewers()
-                .stream()
-                .map(ReviewerDto::from)
-                .toList();
-
-        return PullRequestDto.from(pr, commits, reviewers);
-    }
-
-    private CommitDto toCommitDto(Commit commit) {
-        List<CommentDto> comments = commit.getReviews()
-                .stream()
-                .map(CommentDto::from)
-                .toList();
-        return CommitDto.from(commit, comments);
+        return PullRequestDto.from(pr, commits, pr.getReviewers());
     }
 
 

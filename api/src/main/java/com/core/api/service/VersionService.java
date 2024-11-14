@@ -2,6 +2,7 @@ package com.core.api.service;
 
 import com.core.api.data.dto.VersionDto;
 import com.core.api.data.dto.VersionHistoryDto;
+import com.core.api.data.dto.VersionSimpleDto;
 import com.core.api.data.dto.github.CommitServerDto;
 import com.core.api.data.dto.github.PullRequestServerDto;
 import com.core.api.data.entity.PullRequest;
@@ -13,7 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -43,28 +46,46 @@ public class VersionService {
 
     }
 
-    public List<VersionDto> getVersion(String owner, String repo) {
+    public List<VersionSimpleDto> getVersions(String owner, String repo) {
         return versionRepository.findAllByOwnerAndRepo(owner, repo)
                 .map(list -> list.stream()
-                        .map(VersionDto::of)
+                        .map(VersionSimpleDto::of)
                         .toList())
                 .orElseGet(Collections::emptyList);
     }
 
-    public List<VersionHistoryDto> getVersionHistoryById(Long id) {
+    @Transactional
+    public void updateVersion(Long id, VersionDto versionDto) {
         Version version = versionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Version with ID " + id + " not found"));
+        version.updateVersion(versionDto);
+    }
+
+    public List<VersionHistoryDto> getVersionHistoryById(Long id) {
+        Version version = versionRepository.findById(id)
+
+                .orElseThrow(() -> new RuntimeException("Version with ID " + id + " not found"));
+        Set<String> uniqueCommitShas = new HashSet<>();
+
         return version.getPullRequests()
                 .stream()
-                .map(this::convertToVersionHistoryDto)
+                .map(pullRequest -> convertToVersionHistoryDto(pullRequest, uniqueCommitShas))
                 .toList();
     }
 
-    private VersionHistoryDto convertToVersionHistoryDto(PullRequest pullRequest) {
+    private VersionHistoryDto convertToVersionHistoryDto(PullRequest pullRequest, Set<String> uniqueCommitShas) {
         List<CommitServerDto> commitList = pullRequest.getCommits()
                 .stream()
+                .filter(commit -> uniqueCommitShas.add(commit.getSha()))
                 .map(CommitServerDto::from)
                 .toList();
         return VersionHistoryDto.from(pullRequest, commitList);
     }
+
+    public VersionDto getVersion(Long id) {
+        Version version = versionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Version with ID " + id + " not found"));
+        return VersionDto.from(version);
+    }
+
 }

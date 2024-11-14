@@ -17,36 +17,30 @@ public class Review extends Base {
     private Integer prId;
 
     @Column(name = "review_parent_id")
-    private Integer parentId;
+    private Long parentId;
 
-    @Column(name = "review_is_Issue", nullable = false)
-    private Boolean isIssue;
+    @Column(name = "review_line")
+    private Integer line;
 
-    @Column(name = "review_start_line")
-    private Integer startLine;
-
-    @Column(name = "review_end_line")
-    private Integer endLine;
+    @Column(name = "review_path")
+    private String path;
 
     @Column(name = "review_content", length = 2000)
     private String content;
 
     @ManyToOne
-    @JoinColumn(name = "commit_id", nullable = false)
-    private Commit commit;
-
-    @ManyToOne
-    @JoinColumn(name = "reviewer_user_id", nullable = false)
+    @JoinColumn(name = "reviewer_id", nullable = false)
     private Reviewer reviewer;
 
-    public static Review from(ReviewDto dto) {
+    public static Review from(ReviewDto dto, Reviewer reviewer) {
         Review review = new Review();
         review.id = dto.getId();
+        review.prId = dto.getPrId();
         review.parentId = dto.getParentId();
-        review.startLine = dto.getStartLine();
-        review.isIssue = dto.getIsIssue();
-        review.endLine = dto.getEndLine();
+        review.line = dto.getLine();
         review.content = dto.getContent();
+        review.path = dto.getPath();
+        review.reviewer = reviewer;
         return review;
     }
 

@@ -39,7 +39,7 @@ const ParseHeader = (str: string) => {
         return 'Error';
     }
     if (result === 'project') {
-        return '프로젝트를 선택해 주세요';
+        return '프로젝트를 선택해';
     }
 
     if (result === 'pullrequest') {
@@ -55,7 +55,6 @@ const Header:React.FC = () => {
     const [selectedOp,setSelectedOp] = useState<SingleValue<OptionType>>(null);
     const [tempOption,setTempOption] = useState<{ value: string; label: string; }[]>();
     const { data: userInfo } = useQueryUserInfo();
-    console.log(userInfo);
     
     useEffect(() => {
         if (userInfo && userInfo.projects) {
