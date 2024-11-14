@@ -39,9 +39,6 @@ public class WebHookController {
         EventEnum eventEnum = EventEnum.valueOf(action.toUpperCase());
 
         switch (eventEnum) {
-            case EDITED:
-                pullRequestService.updatePullRequest(pullRequest);
-                break;
             case CLOSED:
                 if (Boolean.FALSE.equals(pullRequest.getMergeStatus())) {
                     return new ResponseEntity<>(HttpStatus.OK);
@@ -65,7 +62,7 @@ public class WebHookController {
 
 
         Map<?, ?> data = objectMapper.readValue(payload, Map.class);
-        ReviewDto review = ReviewDto.from(data);
+        ReviewDto review = ReviewDto.fromApiResponse(data);
 
         String action = (String) data.get("action");
         EventEnum eventEnum = EventEnum.valueOf(action.toUpperCase());

@@ -1,14 +1,16 @@
 package com.core.api.data.dto.response;
 
-import java.util.Map;
+import com.core.api.data.dto.github.CommitServerDto;
 
 public record BranchResponseDto(
-        String name
+        String name,
+        CommitServerDto lastCommit
 ) {
 
-    public static BranchResponseDto from(Map<String, Object> map) {
+    public static BranchResponseDto from(String name, CommitServerDto commit) {
         return new BranchResponseDto(
-                (String) map.get("name")
+                name,
+                commit
         );
     }
 

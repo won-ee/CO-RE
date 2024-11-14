@@ -14,7 +14,7 @@ public interface PullRequestRepository extends JpaRepository<PullRequest, Long> 
 
     Optional<List<PullRequest>> findAllByOwnerAndRepo(String owner, String repo);
 
-    Optional<PullRequest> findByOwnerAndRepoAndBaseAndHead(String owner, String repo, String base, String head);
+    Optional<PullRequest> findByOwnerAndRepoAndBaseAndHeadAndVersionIsNull(String owner, String repo, String base, String head);
 
     Optional<PullRequest> findByOwnerAndRepoAndPullRequestId(String owner, String repo, Integer pullRequestId);
 
@@ -31,8 +31,7 @@ public interface PullRequestRepository extends JpaRepository<PullRequest, Long> 
             "WHERE pr.owner = :owner " +
             "AND pr.repo = :repo " +
             "AND r.reviewerId = :reviewerId " +
-            "AND pr.mergeStatus = false " +
-            "AND pr.afterReview = true")
+            "AND (pr.mergeStatus = false OR pr.afterReview = true)")
     Optional<List<PullRequest>> findAllByOwnerAndRepoWhereReviewerIs(
             @Param("owner") String owner,
             @Param("repo") String repo,
@@ -42,8 +41,7 @@ public interface PullRequestRepository extends JpaRepository<PullRequest, Long> 
             "WHERE pr.owner = :owner " +
             "AND pr.repo = :repo " +
             "AND pr.writerId = :writerId " +
-            "AND pr.mergeStatus = false " +
-            "AND pr.afterReview = true")
+            "AND (pr.mergeStatus = false OR pr.afterReview = true)")
     Optional<List<PullRequest>> findAllByOwnerAndRepoWhereWriterIs(
             @Param("owner") String owner,
             @Param("repo") String repo,

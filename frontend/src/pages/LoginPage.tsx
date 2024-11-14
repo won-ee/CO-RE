@@ -6,8 +6,7 @@ import useUserStore from '../store/userStore'
 
 
 const LoginPage:React.FC = () => {
-  const { login,isLogin } = useUserStore()
-  console.log(isLogin);
+  const { login } = useUserStore()
   
   const handleLogin = () => {
     login()
