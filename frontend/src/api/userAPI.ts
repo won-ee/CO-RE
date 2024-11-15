@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { ProjectSettingType } from '../Types/userType';
 
 const BASE_URL ='https://k11s106.p.ssafy.io/api'; 
 const TOKEN ='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImlkIjoxLCJleHAiOjE3MzE3ODAwMTksImVtYWlsIjoiaGtrMzYyNkBuYXZlci5jb20ifQ.ifGnDqIPFQ3F43841OrCAaXdIzjwEgPONNlcu3IV30Enj6FH-1aQzSjF7DqDsyI5F4doXo0kMhLJ_ySqDyvhYg'
@@ -29,3 +30,33 @@ export const getMemberList = async (selectedProjectId:number) => {
   return response.data;
 };
 
+export const getProjectData = async (selectedProjectId:number) => {
+  const response = await axios.get(
+    `${BASE_URL}/project/search/set/${selectedProjectId}`,{
+      headers: {
+        // withCredentials: true,
+        Authorization: `Bearer ${TOKEN}`
+      }
+    },
+  );  
+  
+  return response.data;
+};
+
+export const patchProjectSetting = async (
+  selectedProjectId: number,
+  projectData: ProjectSettingType
+) => {
+  console.log(selectedProjectId);
+  
+  const response = await axios.patch(
+    `${BASE_URL}/project/update/set/${selectedProjectId}`,
+    projectData,
+    {
+      headers: {
+        Authorization: `Bearer ${TOKEN}`,
+      },
+    }
+  );  
+  return response.data;
+};
