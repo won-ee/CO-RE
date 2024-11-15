@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { Button, Container, ContainerLayout, DeadLineBox, OverviewApproveBox, OverviewApproveButton, OverviewApproveContent, OverviewApproveHeader, OverviewContent, OverviewContentBox, OverviewCoreBox, OverviewCoreContentBox, OverviewCoreHeader, OverviewCoreImg, OverviewCoreText, OverviewDayText, OverviewHeaderBox, OverviewHeaderText, OverviewInfoBox, OverviewInput, OverviewName, OverviewProfileImg, OverviewSourceText, OverviewTargetText, OverviewText, RadioButton, RadioCol, RadioGroup, RadioText, Text } from './SectionOverview.styled'
 import core from '../../assets/Core.png'
 import { PRDataType } from '../../Types/pullRequestType';
+import ReactMarkdown from 'react-markdown';
+
 interface SectionOverviewProps{
   data:PRDataType|undefined
 }
@@ -66,7 +68,7 @@ const SectionOverview:React.FC<SectionOverviewProps> = ({data}) => {
         </OverviewInfoBox>
         <OverviewContentBox>
           <OverviewContent>
-            {data?.description}
+            <ReactMarkdown>{data?.description}</ReactMarkdown>
           </OverviewContent>
         </OverviewContentBox>
         <OverviewCoreBox>
