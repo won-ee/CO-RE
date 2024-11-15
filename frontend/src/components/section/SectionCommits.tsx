@@ -1,13 +1,13 @@
 import React from 'react';
 import { CommitMessageBox, CommitMessageContent, CommitMessageTitle, Container, Date, DateBox } from './SectionCommits.styled';
-import { CommitType } from '../../Types/pullRequestType';
+import { CommitListType } from '../../Types/pullRequestType';
 
 interface SectionCommitsProps {
-  commits: CommitType[] | undefined;
+  commits: CommitListType[] | undefined;
 }
 
 const SectionCommits: React.FC<SectionCommitsProps> = ({ commits }) => {
-  const groupedCommits = commits?.reduce((acc: { [key: string]: CommitType[] }, commit) => {
+  const groupedCommits = commits?.reduce((acc: { [key: string]: CommitListType[] }, commit) => {
     const date = commit.date.split("T")[0];
     if (!acc[date]) {
       acc[date] = [];
@@ -26,7 +26,7 @@ const SectionCommits: React.FC<SectionCommitsProps> = ({ commits }) => {
   return (
     <Container>
       {result.map((commitGroup, index) => (
-        <div key={commitGroup.commits?.[index]?.id || index}>
+        <div key={index}>
           <DateBox>
             <Date>
               {new window.Date(commitGroup.date).toLocaleDateString('en-US', {
@@ -37,7 +37,7 @@ const SectionCommits: React.FC<SectionCommitsProps> = ({ commits }) => {
             </Date>
           </DateBox>
           {commitGroup.commits.map((commit) => (
-            <CommitMessageBox key={commit.id}>
+            <CommitMessageBox>
               <CommitMessageTitle>{commit.message}</CommitMessageTitle>
               <CommitMessageContent>
                 {new window.Date(commit.date).toLocaleTimeString('en-US', {

@@ -7,14 +7,14 @@ import 'react-datepicker/dist/react-datepicker.css';
 import CalendarIcon from '../../assets/icon_calender.png'
 import TabChange from "../tab/TabChange";
 import SectionChanges from "./SectionChanges";
-// import SectionCommits from "./SectionCommits";
+import SectionCommits from "./SectionCommits";
 import ButtonCreateNewPR from "../buttons/ButtonCreateNewPR";
 import { useMutationCreatePR, useMutationpostPRReview } from "../../hooks/useMutationCreatePR";
 import ButtonSimpleSquare from "../buttons/ButtonSimpleSquare";
 import { TotalReviewsType, ReviewType } from "../../Types/pullRequestType";
 import CardFinalCodeReview from "../card/CardFinalCodeReview";
 import {useUserStore, useProjectStore} from "../../store/userStore";
-import { useQueryChangeList } from "../../hooks/usePullRequestData";
+import { useQueryChangeList, useQueryCommitList } from "../../hooks/usePullRequestData";
 
 // 옵션 예시
 const TempOption: OptionType[] = [
@@ -123,11 +123,18 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
     pullId: projectInfo.selectedProjectId,
   }
 
+  const commitParams = {
+    owner: projectInfo.selectedOwner,
+    repo : projectInfo.selectedRepo,
+    base: sourceBranch?.label || "", // undefined일 경우 빈 문자열로 대체
+    head: targetBranch?.label || "", // undefined일 경우 빈 문자열로 대체
+  }
+
   const changesData = useQueryChangeList(changeParams)
+  const commitData = useQueryCommitList(commitParams)
 
   const tabComponents = {
-    // [TabsEnum.Commit]: <SectionCommits changes={changesData} onUpdateReviews={handleUpdateComments} />,
-    [TabsEnum.Commit]: <SectionChanges changes={changesData.data || []} onUpdateReviews={handleUpdateComments} />,
+    [TabsEnum.Commit]: <SectionCommits commits={commitData.data || []}/>,
     [TabsEnum.Change]: <SectionChanges changes={changesData.data || []} onUpdateReviews={handleUpdateComments} />,
   };
 
