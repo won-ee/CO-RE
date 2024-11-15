@@ -28,4 +28,5 @@ public class ProjectUserController {
         List<ProjectUserInfoDto> projectUserList = projectUserService.findProjectUserList(projectId);
         return new ResponseEntity<>(projectUserList, HttpStatus.OK);
     }
+
 }

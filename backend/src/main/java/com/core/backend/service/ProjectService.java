@@ -195,7 +195,7 @@ public class ProjectService {
 
         Projects project = projectRepository.findById(projectId).orElse(null);
 
-        if(project != null) {
+        if (project != null) {
             return ProjectSetDto.builder()
                     .targetScore(project.getTargetScore())
                     .reviewerCount(project.getReviewerCount())
@@ -208,11 +208,15 @@ public class ProjectService {
     public void updateSetToProject(Long projectId, ProjectSetDto projectSetDto) {
         Projects project = projectRepository.findById(projectId).orElse(null);
 
-        if(project != null) {
+        if (project != null) {
             Projects newProject = project.updateSet(projectSetDto);
             projectRepository.save(newProject);
         }
     }
 
+    public String findTemplateToProject(Long projectId) {
+        Projects project = projectRepository.findById(projectId).orElse(null);
+        return project.getReviewTemplate();
+    }
 
 }

@@ -26,14 +26,19 @@ public class ProjectController {
         return isUpdate ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping("/set/search/{projectId}")
+    @GetMapping("/search/set/{projectId}")
     public ResponseEntity<ProjectSetDto> findProjectSet(@PathVariable Long projectId) {
         return new ResponseEntity<>(projectService.findSetToProject(projectId), HttpStatus.OK);
     }
 
-    @PatchMapping("/set/update/{projectId}")
+    @PatchMapping("/update/set/{projectId}")
     public ResponseEntity<Void> updateProjectSet(@PathVariable Long projectId, @RequestBody ProjectSetDto projectSetDto) {
         projectService.updateSetToProject(projectId, projectSetDto);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/search/template/{projectId}")
+    public ResponseEntity<String> findProjectTemplate(@PathVariable Long projectId) {
+        return new ResponseEntity<>(projectService.findTemplateToProject(projectId), HttpStatus.OK);
     }
 }

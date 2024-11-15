@@ -27,9 +27,10 @@ public class UserController {
     @GetMapping("/user-info")
     public ResponseEntity<UserLoginDto> getUserInfo(@AuthenticationPrincipal AuthenticatedUserDto authenticatedUser) {
         Long id = Long.parseLong(authenticatedUser.getId());
-
         return new ResponseEntity<>(userService.getUserInfo(id), HttpStatus.OK);
     }
-
+//
+//    @GetMapping("/search/my-info")
+//    public ResponseEntity<>
 
 }
