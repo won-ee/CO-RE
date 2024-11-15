@@ -5,5 +5,7 @@ public record ProjectUserInfoDto(
         Long projectUserId,
         Long projectId,
         String userUrl,
-        String userName) {
+        String userName,
+        String userNickName,
+        String userEmail) {
 }

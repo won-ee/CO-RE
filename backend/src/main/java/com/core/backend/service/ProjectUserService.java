@@ -30,7 +30,9 @@ public class ProjectUserService {
                     projectUsers.getId(),
                     projectUsers.getProject().getId(),
                     projectUsers.getUser().getProfile(),
-                    projectUsers.getUser().getName()
+                    projectUsers.getUser().getName(),
+                    projectUsers.getUser().getNickname(),
+                    projectUsers.getUser().getEmail()
             );
             projectUserInfoDtoList.add(infoDto);
         }
