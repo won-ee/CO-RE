@@ -5,7 +5,7 @@ import CardSelectBranch from '../../components/card/CardSelectBranch'
 import { SingleValue } from 'react-select'
 import { OptionType } from '../../Types/SelectType'
 import { useQueryBranchList } from '../../hooks/usePullRequestData'
-import useUserStore from '../../store/userStore'
+import { useProjectStore } from '../../store/userStore'
 
 interface Prop{
     BtnAction:()=>void
@@ -17,12 +17,10 @@ interface Prop{
 
 
 function SectionSelectBranch({BtnAction, sourceBranch, targetBranch, setSourceBranch, setTargetBranch}:Prop) {
-  const userInfo = useUserStore((state)=>state.userInfo)
+  const projectInfo = useProjectStore((state)=>state)
   const trueOption = {
-    // owner : userInfo?.projects.githubOwner,
-    // repo : userInfo?.projects.githubRepo,
-    owner: 'JEM1224',
-    repo: 'github-api',
+    owner : projectInfo.selectedOwner,
+    repo : projectInfo.selectedRepo,
   };
   const {data,error,isLoading} = useQueryBranchList(trueOption)
   if (isLoading) return <p>Loading...</p>;

@@ -1,5 +1,5 @@
 import { ReviewType } from "../../Types/pullRequestType";
-import useUserStore from "../../store/userStore";
+import {useUserStore} from "../../store/userStore";
 import { CardCodeReviewReadLayout, CardCodeReviewReadBox, ContentBox, NameBox, NameSpan, HourSpan, BodyBox } from "./CardCodeReviewRead.styled";
 
 interface CardCodeReviewReadProps{
@@ -12,10 +12,10 @@ function CardCodeReviewRead({review}:CardCodeReviewReadProps) {
   return (
     <CardCodeReviewReadLayout>
       <CardCodeReviewReadBox>
-        IMG
+        {userInfo?.userInfo.image}
         <ContentBox>
           <NameBox>
-            <NameSpan>Name</NameSpan>
+            <NameSpan>{userInfo?.userInfo.id}</NameSpan>
             <HourSpan>Hour</HourSpan>
           </NameBox>
           <BodyBox>
