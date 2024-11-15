@@ -38,6 +38,15 @@ public class Issues extends Base {
     @Enumerated(EnumType.STRING)
     private StatusEnum status;
 
+    @Column(name = "issue_jira_id")
+    private String jiraId;
+
+    @Column(name = "issue_jira_url")
+    private String jiraUrl;
+
+    @Column(name = "issue_epic_name")
+    private String EpicName;
+
     @ManyToOne
     @JoinColumn(name = "project_user_id", nullable = false)
     private ProjectUsers projectUser;
