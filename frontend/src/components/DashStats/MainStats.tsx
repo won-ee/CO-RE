@@ -1,11 +1,12 @@
-import "slick-carousel/slick/slick.css"; 
+import React from "react";
+import { StatsDataType } from "../../Types/dashboardType";
+import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import statsDownIcon from "../../assets/DashboardStatsDown.png";
 import statsUpIcon from "../../assets/DashboardStatsUp.png";
-import CommentIcon from "../../assets/DashboardComment.png";
 import CommitIcon from "../../assets/DashboardCommit.png";
 import PRIcon from "../../assets/DashboardPR.png";
-import IssueIcon from "../../assets/DashboardIssueIcon.png";
+import CommentIcon from "../../assets/DashboardComment.png";
 import HotFixIcon from "../../assets/DashboardHotFix.png";
 import {
   StatTitle,
@@ -18,50 +19,7 @@ import {
   Card,
 } from "./MainStats.styled";
 
-const STATS_DATA = [
-  {
-    id: 1,
-    TITLE: "Total Commit",
-    VALUE: "2,512",
-    CHANGE: "8.5%",
-    POSITIVE: true,
-    ICON: CommitIcon,
-  },
-  {
-    id: 2,
-    TITLE: "Total Comment",
-    VALUE: "1,293",
-    CHANGE: "1.3%",
-    POSITIVE: true,
-    ICON: CommentIcon,
-  },
-  {
-    id: 3,
-    TITLE: "Total Issue",
-    VALUE: "8,900",
-    CHANGE: "4.3%",
-    POSITIVE: false,
-    ICON: IssueIcon,
-  },
-  {
-    id: 4,
-    TITLE: "Total Pull Request",
-    VALUE: "204",
-    CHANGE: "1.8%",
-    POSITIVE: true,
-    ICON: PRIcon,
-  },
-  {
-    id: 5,
-    TITLE: "Total HotFix",
-    VALUE: "204",
-    CHANGE: "1.8%",
-    POSITIVE: true,
-    ICON: HotFixIcon,
-  },
-];
-
-export default function SimpleSlider() {
+const MainStats: React.FC<{ data: StatsDataType }> = ({ data }) => {
   const settings = {
     infinite: true,
     speed: 500,
@@ -70,32 +28,62 @@ export default function SimpleSlider() {
     autoplaySpeed: 2000,
     slidesToShow: 3,
     slidesToScroll: 1,
-    variableWidth: true, 
-    centerPadding: '0px',
+    variableWidth: true,
+    centerPadding: "0px",
   };
+
+  const statsItems = [
+    {
+      title: "Total Commit",
+      value: data.totalCommit,
+      weekly: data.commitGrowthRate,
+      icon: CommitIcon,
+    },
+    {
+      title: "Total Pull Request",
+      value: data.totalPullRequest,
+      weekly: data.pullRequestGrowthRate,
+      icon: PRIcon,
+    },
+    {
+      title: "Total Review",
+      value: data.totalReview,
+      weekly: data.reviewGrowthRate,
+      icon: CommentIcon,
+    },
+    {
+      title: "Total HotFix",
+      value: data.totalHotfix,
+      weekly: data.hotfixGrowthRate,
+      icon: HotFixIcon,
+    },
+  ];
 
   return (
     <CardBox>
       <StyledSlider {...settings}>
-        {STATS_DATA.map((stat) => (
-          <Card key={stat.id} style={{ width: 285}}>
+        {statsItems.map((stat, index) => (
+          <Card key={index} style={{ width: 285 }}>
             <StatHeaderWrapper>
-              <StatTitle>{stat.TITLE}</StatTitle>
+              <StatTitle>{stat.title}</StatTitle>
               <StatIconWrapper>
-                <img src={stat.ICON} alt={`${stat.TITLE} Icon`} />
+                <img src={stat.icon} alt={`${stat.title} Icon`} />
               </StatIconWrapper>
             </StatHeaderWrapper>
-            <StatValue>{stat.VALUE}</StatValue>
-            <StatChangeLabel $positive={stat.POSITIVE}>
+            <StatValue>{stat.value.toLocaleString()}</StatValue>
+            <StatChangeLabel $positive={stat.weekly >= 0}>
               <img
-                src={stat.POSITIVE ? statsUpIcon : statsDownIcon}
-                alt={stat.POSITIVE ? "Up Icon" : "Down Icon"}
+                src={stat.weekly >= 0 ? statsUpIcon : statsDownIcon}
+                alt="Change Icon"
               />
-              {stat.CHANGE} {stat.POSITIVE ? "Up" : "Down"} from past week
+              {Math.abs(stat.weekly).toLocaleString()}{" "}
+              {stat.weekly >= 0 ? "Up" : "Down"} from past week
             </StatChangeLabel>
           </Card>
         ))}
       </StyledSlider>
     </CardBox>
   );
-}
+};
+
+export default MainStats;
