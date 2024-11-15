@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query';
-import { getCalendarPR, getPRDetail, getBranchList, getCommitList, getPRList } from '../api/pullRequestAPI';
-import { PRDataType, CalendarPRParamsType, PRDetailParamsType, BranchListType, BranchListParams, CommitListParams, CommitListType, PRListParams, PRListType } from '../Types/pullRequestType';
+import { getCalendarPR, getPRDetail, getBranchList, getCommitList, getPRList, getChangeList } from '../api/pullRequestAPI';
+import { PRDataType, CalendarPRParamsType, PRDetailParamsType, BranchListType, BranchListParams, CommitListParams, CommitListType, PRListParams, PRListType, ChangeListParams, ChangeType } from '../Types/pullRequestType';
 
 export const useQueryCalendarPR = (params: CalendarPRParamsType) => {
   return useQuery<PRDataType[], Error>(
@@ -46,6 +46,15 @@ export const useQueryPRList = (params: PRListParams)=>{
   return useQuery<PRListType[],Error>(
     ['PRList',params],()=>getPRList(params),{
       enabled: !!params.owner && !!params.repo && !!params.state,
+      staleTime: 1000* 60*5
+    }
+  )
+}
+
+export const useQueryChangeList = (params: ChangeListParams)=>{
+  return useQuery<ChangeType[],Error>(
+    ['ChangeList',params],()=>getChangeList(params),{
+      enabled: !!params.owner && !!params.pullId && !!params.repo,
       staleTime: 1000* 60*5
     }
   )
