@@ -4,6 +4,7 @@ import com.core.backend.data.dto.projects.InfoResponseProjectListDto;
 import com.core.backend.data.dto.users.InfoResponseUserDto;
 import com.core.backend.data.dto.users.UserInfoDto;
 import com.core.backend.data.dto.users.UserLoginDto;
+import com.core.backend.data.entity.ProjectUsers;
 import com.core.backend.data.entity.Projects;
 import com.core.backend.data.entity.Users;
 import com.core.backend.data.repository.ProjectRepository;
@@ -50,8 +51,12 @@ public class UserService {
         ArrayList<InfoResponseProjectListDto> getProListDto = new ArrayList<>();
         for (Projects project : projectList) {
 
+            ProjectUsers projectUsers = projectUserRepository.findByUserIdAndProjectId(user.getId(), project.getId());
+            assert projectUsers != null;
+
             InfoResponseProjectListDto getProDto = InfoResponseProjectListDto.builder()
                     .id(project.getId())
+                    .projectUserId(projectUsers.getId())
                     .name(project.getName())
                     .image(project.getImage())
                     .ownerId(project.getOwnerId())

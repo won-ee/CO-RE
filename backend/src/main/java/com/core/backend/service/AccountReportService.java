@@ -2,15 +2,12 @@ package com.core.backend.service;
 
 import com.core.backend.data.repository.UserRepository;
 import com.core.backend.util.JwtUtil;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -22,7 +19,7 @@ public class AccountReportService {
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
 
-    @Scheduled(fixedRate = 86400000) // 하루에 한 번 실행
+    //    @Scheduled(fixedRate = 86400000)
     public void reportAccountsToAtlassian() {
         // 사용자 계정 목록 가져오기
         List<String> accountIds = getUserAccountIds();
@@ -62,16 +59,10 @@ public class AccountReportService {
         }
     }
 
-    @PostConstruct
-    public void init() {
-        // 애플리케이션 시작 시 실행
-        reportAccountsToAtlassian();
-    }
-
     private List<String> getUserAccountIds() {
         List<String> accountIds = userRepository.findAllAccountIdsBy();
 
-        if(accountIds.isEmpty()) {
+        if (accountIds.isEmpty()) {
             return List.of("5b10ac8d82e05b22cc7d4ef5", "5b10ac8d82e05b22cc7d4ef6");
         }
 
