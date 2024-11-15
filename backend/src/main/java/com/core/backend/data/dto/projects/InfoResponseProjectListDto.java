@@ -12,7 +12,7 @@ public record InfoResponseProjectListDto(
         String ownerName,
         Long groupId,
         String groupName,
-        String githunOwner,
+        String githubOwner,
         String githubRepo
 ) {
 
