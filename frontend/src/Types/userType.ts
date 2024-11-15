@@ -78,3 +78,8 @@ export interface ProjectSettingType {
   reviewerCount: number;
   template: string;
 }
+
+export interface patchUserInfoType {
+  nickName : string;
+  gitToken : string;
+}

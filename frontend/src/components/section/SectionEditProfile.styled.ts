@@ -30,7 +30,7 @@ export const FormBox = styled.div`
     margin-left: 50px;
 `;
 
-export const Form = styled.form`
+export const Form = styled.div`
     display: flex;
     flex-direction: column;
 `;
@@ -97,7 +97,7 @@ export const GitTokenInput = styled.input`
     color: grey;
 `;
 
-export const SaveButton = styled.button`
+export const SaveButton = styled.div`
     grid-column: span 2;
     margin-top: 50px;
     margin-left: 565px;

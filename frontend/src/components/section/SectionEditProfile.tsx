@@ -1,10 +1,32 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { ProfileBox, Label, Form, SaveButton, ContainerLayout, FormBox, ProfileImg, FormLow, FormLeft, FormRight, LabelBox, GitTokenBox, GitTokenInput, ImgBox, NickNameInput } from './SectionEditProfile.styled'
 import { useUserStore } from '../../store/userStore';
+import { useMutationPatchUserInfo } from '../../hooks/useMutationCreatePR';
+import { patchUserInfoType } from '../../Types/userType';
 
 
 const SectionEditProfile:React.FC = () => {
     const {userInfo} = useUserStore()
+    const mutation = useMutationPatchUserInfo()
+    const [nickName,setNickName] = useState(userInfo?.userInfo.nickName)
+    const [gitToken,setGitToken] = useState(userInfo?.userInfo.gitToken)
+
+    const handleNickNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setNickName(e.target.value);
+    };
+    
+    const handleGitTokenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setGitToken(e.target.value);
+    };
+
+    const saveUserInfo =()=>{
+        mutation.mutate({
+            userInfotData: {
+                nickName,
+                gitToken,
+            } as patchUserInfoType,
+          });
+    };
 
     return (
         <>
@@ -22,7 +44,10 @@ const SectionEditProfile:React.FC = () => {
                                 </LabelBox>
                                 <LabelBox>
                                     <Label>Nick Name</Label>
-                                    <NickNameInput type="text" defaultValue={userInfo?.userInfo.nickName}/>           
+                                    <NickNameInput 
+                                    type="text" 
+                                    defaultValue={userInfo?.userInfo.nickName}                    
+                                    onChange={handleNickNameChange}/>       
                                 </LabelBox>
                             </FormLeft>
                             <FormRight>
@@ -35,9 +60,11 @@ const SectionEditProfile:React.FC = () => {
                     </Form>
                     <GitTokenBox>
                             <Label >Github token</Label> 
-                            <GitTokenInput type="text" defaultValue={userInfo?.userInfo.gitToken}/>
+                            <GitTokenInput type="text" 
+                            defaultValue={userInfo?.userInfo.gitToken}
+                            onChange={handleGitTokenChange}/>
                         </GitTokenBox>
-                        <SaveButton>Save</SaveButton>   
+                        <SaveButton onClick={saveUserInfo}>Save</SaveButton>   
                 </FormBox>
             </ContainerLayout>
         </>

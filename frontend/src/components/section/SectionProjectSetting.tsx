@@ -3,7 +3,7 @@ import { FormLayout, FormRow, Input, Label, LabelBox, SaveButton, TemplateInput 
 import { useProjectData } from '../../hooks/useUser'
 import { useProjectStore } from '../../store/userStore'
 import { ProjectSettingType } from '../../Types/userType'
-import { useMutationCreateProjectSetting } from '../../hooks/useMutationCreatePR'
+import { useMutationPatchProjectSetting } from '../../hooks/useMutationCreatePR'
 
 const SectionProjectSetting:React.FC = () => {
     const {selectedProjectId}=useProjectStore()
@@ -11,7 +11,7 @@ const SectionProjectSetting:React.FC = () => {
     const [targetScore, setTargetScore] = useState(data?.targetScore || 0);
     const [reviewerCount, setReviewerCount] = useState(data?.reviewerCount || 0); 
     const [template, setTemplate] = useState(data?.template || '');
-    const mutation = useMutationCreateProjectSetting();
+    const mutation = useMutationPatchProjectSetting();
     
     const handleTargetScoreChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setTargetScore(e.target.value);
@@ -24,9 +24,8 @@ const SectionProjectSetting:React.FC = () => {
     const handleTemplateChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setTemplate(e.target.value);
     };
-    const saveProjectSettings =()=>{
-        console.log('Saving project settings...');
 
+    const saveProjectSettings =()=>{
         mutation.mutate({
             selectedProjectId, 
             projectData: {
@@ -35,7 +34,8 @@ const SectionProjectSetting:React.FC = () => {
                 template,
             } as ProjectSettingType,
           });
-        };
+    };
+    
   return (
     <>
         <FormLayout>
