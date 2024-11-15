@@ -36,12 +36,6 @@ public class Projects {
     @Column(name = "project_self_url", nullable = false, length = 1000)
     private String selfUrl;
 
-    @Column(name = "project_category_name", length = 1000)
-    private String categoryName;
-
-    @Column(name = "project_category_id", length = 1000)
-    private String categoryId;
-
     @Column(name = "project_owner_name", nullable = false, length = 100)
     private String ownerName;
 
@@ -81,8 +75,6 @@ public class Projects {
                 .key(this.key)
                 .image(this.image)
                 .selfUrl(this.selfUrl)
-                .categoryName(this.categoryName)
-                .categoryId(this.categoryId)
                 .ownerName(this.ownerName)
                 .ownerId(this.ownerId)
                 .githubOwner(updateGitHubRequestDto.githubOwner())
@@ -102,8 +94,6 @@ public class Projects {
                 .key(this.key)
                 .image(this.image)
                 .selfUrl(this.selfUrl)
-                .categoryName(this.categoryName)
-                .categoryId(this.categoryId)
                 .ownerName(this.ownerName)
                 .ownerId(this.ownerId)
                 .githubOwner(this.githubOwner)

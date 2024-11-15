@@ -104,8 +104,9 @@ public class IssueService {
 
                         if (responseBody != null) {
                             issues = (List<Map<String, Object>>) responseBody.get("issues");
-
-                            log.info("issues: " + issues.toString());
+                            if(issues == null || issues.isEmpty()) {
+                                break;
+                            }
 
                             allIssues.addAll(issues);
 
@@ -119,7 +120,15 @@ public class IssueService {
                         }
                     }
 
-                    saveIssueListToJira(extractIssueDetails(issues), user, accessToken);
+
+                    // epicName
+                    Map<String, Object> epicObject = (Map<String, Object>) epic.get("fields");
+                    String epicName = null;
+                    if(epicObject != null) {
+                        epicName = epicObject.get("summary").toString();
+                    }
+
+                    saveIssueListToJira(epicName,extractIssueDetails(issues), user, accessToken);
                 }
 
             } catch (Exception ex) {
@@ -155,14 +164,8 @@ public class IssueService {
                     Map<String, Object> assignee = (Map<String, Object>) fields.get("assignee");
                     if (assignee != null) {
                         return (String) assignee.get("accountId");
-                    } else {
-                        log.info("getSubtaskAssigneeAccountId Assignee 정보가 없습니다.");
                     }
-                } else {
-                    log.info("getSubtaskAssigneeAccountId Fields 정보가 없습니다.");
                 }
-            } else {
-                log.info("getSubtaskAssigneeAccountId Response body가 null입니다.");
             }
         } catch (Exception ex) {
             log.info("getSubtaskAssigneeAccountId: {}", ex.getMessage());
@@ -170,27 +173,9 @@ public class IssueService {
         return null;
     }
 
-    public String getAssigneeAccountId(Map<String, Object> issueData) {
-        Map<String, Object> fields = (Map<String, Object>) issueData.get("fields");
-        if (fields != null) {
-            // assignee 객체 가져오기
-            Map<String, Object> assignee = (Map<String, Object>) fields.get("assignee");
-            if (assignee != null) {
-                // accountId 반환
-                return (String) assignee.get("accountId");
-            }
-        }
-        return null;
-    }
-
-    public void saveIssueListToJira(List<Map<String, Object>> extractedIssues, ProjectUsers user, String accessToken) {
+    public void saveIssueListToJira(String epic, List<Map<String, Object>> extractedIssues, ProjectUsers user, String accessToken) {
 
         for (Map<String, Object> extractedIssue : extractedIssues) {
-
-            if (extractedIssue.get("key").equals("S11P31S106-40")) {
-                boolean isinin = true;
-            }
-
             //subtask먼저 작업하기
             if (extractedIssue.get("subtasks") != null) {
                 List<Map<String, Object>> subtasks = (List<Map<String, Object>>) extractedIssue.get("subtasks");
@@ -203,21 +188,25 @@ public class IssueService {
 
                             if (user.getUser().getAccountId().equals(assigneeAccountId)) {
                                 String keyNumber = (String) subtask.get("key");
+                                String jiraId = (String) subtask.get("id");
+                                String jiraUrl = (String) subtask.get("self");
 
                                 if (!issueRepository.existsByIssueNumber(keyNumber)) {
                                     String statusName = (String) subtask.get("status");
                                     StatusEnum status = mapToStatusEnum(statusName);
 
-                                    if (Objects.equals((String) subtask.get("summary"), "이슈 리스트 조회 API 개발")) {
-                                        boolean isin = true;
-                                    }
+                                    String priorityName = (String) subtask.get("priority");
+                                    int priority = changePriorityToNumber(priorityName);
 
                                     Issues issue = Issues.builder()
                                             .title((String) subtask.get("summary"))
                                             .content((String) subtask.get("summary"))
                                             .issueNumber(keyNumber)
-                                            .issuePriority(1)
+                                            .issuePriority(priority)
                                             .status(status)
+                                            .jiraId(jiraId)
+                                            .jiraUrl(jiraUrl)
+                                            .EpicName(epic)
                                             .projectUser(user)
                                             .build();
 
@@ -233,28 +222,48 @@ public class IssueService {
             if ((extractedIssue.get("assigneeAccountId") == null) ||
                     (!extractedIssue.get("assigneeAccountId").equals(user.getUser().getAccountId())) ||
                     (!extractedIssue.get("issuetypeName").equals("작업"))) {
-                return;
+                continue;
             }
 
 
             String keyNumber = (String) extractedIssue.get("key");
+            String jiraId = (String) extractedIssue.get("id");
+            String jiraUrl = (String) extractedIssue.get("self");
 
             if (!issueRepository.existsByIssueNumber(keyNumber)) {
                 String statusName = (String) extractedIssue.get("statusName");
                 StatusEnum status = mapToStatusEnum(statusName);
 
+                String priorityName = (String) extractedIssue.get("priority");
+                int priority = changePriorityToNumber(priorityName);
+
                 Issues issue = Issues.builder()
                         .title((String) extractedIssue.get("summary"))
                         .content((String) extractedIssue.get("summary"))
                         .issueNumber(keyNumber)
-                        .issuePriority(1)
+                        .issuePriority(priority)
                         .status(status)
+                        .jiraId(jiraId)
+                        .jiraUrl(jiraUrl)
+                        .EpicName(epic)
                         .projectUser(user)
                         .build();
 
                 issueRepository.save(issue);
             }
         }
+    }
+
+    private int changePriorityToNumber(String priorityName) {
+        if(priorityName == null)
+            return 3;
+        return switch (priorityName){
+            case "Highest" -> 1;
+            case "High" -> 2;
+            case "Low" -> 4;
+            case "Lowest" -> 5;
+            default -> 3;
+        };
     }
 
     public StatusEnum mapToStatusEnum(String statusName) {
@@ -290,6 +299,10 @@ public class IssueService {
                 if (fields != null) {
                     // summary
                     extractedIssue.put("summary", fields.get("summary"));
+
+                    //priority
+                    Map<String, Object> priority = (Map<String, Object>) fields.get("priority");
+                    extractedIssue.put("priority", priority.get("name"));
 
                     // subtasks
                     List<Map<String, Object>> subtasks = (List<Map<String, Object>>) fields.get("subtasks");

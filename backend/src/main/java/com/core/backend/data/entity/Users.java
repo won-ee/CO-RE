@@ -35,7 +35,7 @@ public class Users extends Base {
     @Column(name = "user_email", nullable = false, length = 100)
     private String email;
 
-    @Column(name = "user_git_token", nullable = false)
+    @Column(name = "user_git_token")
     private String gitToken;
 
     @OneToMany(mappedBy = "user")

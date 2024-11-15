@@ -123,11 +123,6 @@ public class ProjectService {
                     Map<String, Object> avatarUrlsMap = (Map<String, Object>) projectData.get("avatarUrls");
                     String image = avatarUrlsMap != null ? (String) avatarUrlsMap.get("48x48") : null;
 
-                    Map<String, Object> projectCategoryMap = (Map<String, Object>) projectData.get("projectCategory");
-                    String categoryName = projectCategoryMap != null ? (String) projectCategoryMap.get("name") : null;
-                    String categoryId = projectCategoryMap != null ? (String) projectCategoryMap.get("id") : null;
-
-
                     Map<String, String> projectOwner = getProjectOwner(accessToken, selfUrl);
                     String ownerAccountId = projectOwner.get("accountId");
                     String ownerName = projectOwner.get("accountName");
@@ -139,8 +134,6 @@ public class ProjectService {
                             .key(key)
                             .selfUrl(selfUrl)
                             .image(image)
-                            .categoryName(categoryName)
-                            .categoryId(categoryId)
                             .ownerId(ownerAccountId)
                             .ownerName(ownerName)
                             .build();
