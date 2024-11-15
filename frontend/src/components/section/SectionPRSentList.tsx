@@ -1,5 +1,5 @@
 import { useQueryPRList } from '../../hooks/usePullRequestData';
-import { useUserStore } from '../../store/userStore';
+import { useProjectStore } from '../../store/userStore';
 import { SectionPRSentListLayout,FilterLayout, GridTable , GridHeader, GridHeaderCell, GridRow, GridCell,CommentBox,StatusBox,PriorityBox, DeadLineBox, TitleBox} from './SectionPRSentList.styled'
 import { differenceInDays } from 'date-fns'
 
@@ -10,12 +10,12 @@ import { differenceInDays } from 'date-fns'
 // ];
 
 function SectionPRSentList() {
-  const userInfo = useUserStore((state) => state.userInfo);
+  const projectInfo = useProjectStore((state)=>state);
   const params = {
-    owner: 'JEM1224',
-    repo: 'github-api',
-    // owner : userInfo?.projects.githubOwner,
-    // repo : userInfo?.projects.githubRepo,
+    // owner: 'JEM1224',
+    // repo: 'github-api',
+    owner : projectInfo.selectedOwner,
+    repo : projectInfo.selectedRepo,
     state : 'sent'
   }
   const {data,error,isLoading} = useQueryPRList(params)

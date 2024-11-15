@@ -25,6 +25,8 @@ function SectionSelectBranch({BtnAction, sourceBranch, targetBranch, setSourceBr
   const {data,error,isLoading} = useQueryBranchList(trueOption)
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
+  
+  
 
   // BranchType 배열을 OptionType 배열로 변환
   const branchOptions = (data || []).map((branch) => ({

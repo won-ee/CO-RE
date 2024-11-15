@@ -8,10 +8,10 @@ import NotFoundPage from "./NotFoundPage";
 
 // import { useDashboard, useDashPR } from "../hooks/useDashboard";
 import { useDashPR } from "../hooks/useDashboard";
-import { useUserStore } from "../store/userStore";
+import { useProjectStore } from "../store/userStore";
 
 const Dashboard: React.FC = () => {
-  const userInfo = useUserStore((state) => state.userInfo);
+  const projectInfo = useProjectStore((state) => state);
   // const {
   //   data: dashboardData,
   //   isLoading: isDashboardLoading,
@@ -23,8 +23,8 @@ const Dashboard: React.FC = () => {
     isLoading: isDashPRLoading,
     error: dashPRError,
   } = useDashPR({
-    owner: userInfo?.projects.githubOwner,
-    repo: userInfo?.projects.githubRepo,
+    owner: projectInfo.selectedOwner,
+    repo: projectInfo.selectedRepo,
     state: "receive",
   });
 
