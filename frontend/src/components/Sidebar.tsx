@@ -26,13 +26,13 @@ function Sidebar() {
   const navigate = useNavigate();
   const location = useLocation();
   
-  useEffect(() => {
-    if (selectedOwner||selectedRepo) {
-      navigate("/project");
-    } else {
-      navigate("/403ERROR");
-    }
-  }, [navigate]);
+  // useEffect(() => {
+  //   if (selectedOwner||selectedRepo) {
+  //     navigate("/project");
+  //   } else {
+  //     navigate("/403ERROR");
+  //   }
+  // }, [navigate]);
 
   const handleLogout = () => {
     logout();

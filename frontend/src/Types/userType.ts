@@ -14,6 +14,7 @@ export interface ProjectType {
     ownerID: string; 
     ownerName: string;
     groupID: number;
+    projectUserId:number;
     groupName: string; 
     githubOwner:string;
     githubRepo:string;
@@ -35,10 +36,12 @@ export interface UserInfoDataType {
 
 
 export interface ProjectStoreType {
-  selectedOwner:string|null,
-  selectedRepo:string|null,
-  setSelectedOwner: (Owner: string | null) => void;
-  setSelectedPRepo: (Repo: string | null) => void;
+  selectedOwner:string,
+  selectedRepo:string,
+  selectedProjectId:number,
+  setSelectedOwner: (Owner: string ) => void;
+  setSelectedPRepo: (Repo: string ) => void;
+  setSelectedProjectId: (ProjectId: number ) => void;
 }
 
 export interface OptionType {
@@ -46,4 +49,5 @@ export interface OptionType {
   label: string;
   githubOwner: string;
   githubRepo: string;
+  projectUserId:number;
 }

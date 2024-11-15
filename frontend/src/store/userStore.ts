@@ -11,9 +11,11 @@ export const useUserStore = create<UserStoreType>((set) => ({
 }));
 
 export const useProjectStore = create<ProjectStoreType>((set) => ({
-  selectedOwner:null,
-  selectedRepo:null,
+  selectedOwner:'',
+  selectedRepo:'',
+  selectedProjectId:0,
   setSelectedOwner: (Owner) => set({ selectedOwner: Owner }),
   setSelectedPRepo: (Repo) => set({ selectedRepo: Repo }),
+  setSelectedProjectId: (ProjectId) => set({ selectedProjectId: ProjectId }),
 }));
 

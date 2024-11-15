@@ -57,6 +57,7 @@ export interface CommentType{
   content: string;
   score: number;
   status: boolean;
+  date:string;
 }
 
 export interface CommentsType{
