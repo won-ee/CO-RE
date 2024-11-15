@@ -45,6 +45,7 @@ public class UserService {
                 .name(user.getName())
                 .nickName(user.getNickname())
                 .image(user.getProfile())
+                .gitToken(user.getGitToken())
                 .build();
 
         List<Projects> projectList = projectService.getProjectsByUserId(id);

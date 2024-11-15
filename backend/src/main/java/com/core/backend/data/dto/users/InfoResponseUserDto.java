@@ -9,6 +9,7 @@ public record InfoResponseUserDto(
         String email,
         String name,
         String nickName,
-        String image
+        String image,
+        String gitToken
 ) {
 }

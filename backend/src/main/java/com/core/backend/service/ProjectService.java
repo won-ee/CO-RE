@@ -1,5 +1,6 @@
 package com.core.backend.service;
 
+import com.core.backend.data.dto.projects.ProjectGitSetDto;
 import com.core.backend.data.dto.projects.ProjectSetDto;
 import com.core.backend.data.dto.projects.UpdateGitHubRequestDto;
 import com.core.backend.data.dto.users.UserGroupsDto;
@@ -214,10 +215,14 @@ public class ProjectService {
         }
     }
 
-    public String findTemplateToProject(String repo, String owner) {
+    public ProjectGitSetDto findGitSetToProject(String repo, String owner) {
         Projects project = projectRepository.findByGithubOwnerAndGithubRepository(owner, repo).orElse(null);
         assert project != null;
-        return project.getReviewTemplate();
+
+        return ProjectGitSetDto.builder()
+                .template(project.getReviewTemplate())
+                .score(project.getTargetScore())
+                .build();
     }
 
 }

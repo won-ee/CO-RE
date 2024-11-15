@@ -1,5 +1,6 @@
 package com.core.backend.controller;
 
+import com.core.backend.data.dto.projects.ProjectGitSetDto;
 import com.core.backend.data.dto.projects.ProjectSetDto;
 import com.core.backend.data.dto.projects.UpdateGitHubRequestDto;
 import com.core.backend.data.dto.users.AuthenticatedUserDto;
@@ -37,8 +38,8 @@ public class ProjectController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/search/template")
-    public ResponseEntity<String> findProjectTemplate(@RequestParam("repo") String repo, @RequestParam("owner") String owner) {
-        return new ResponseEntity<>(projectService.findTemplateToProject(repo, owner), HttpStatus.OK);
+    @GetMapping("/search/git-set")
+    public ResponseEntity<ProjectGitSetDto> findProjectSetGit(@RequestParam("repo") String repo, @RequestParam("owner") String owner) {
+        return new ResponseEntity<>(projectService.findGitSetToProject(repo, owner), HttpStatus.OK);
     }
 }
