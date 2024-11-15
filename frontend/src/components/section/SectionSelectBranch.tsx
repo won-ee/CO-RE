@@ -18,13 +18,11 @@ interface Prop{
 
 function SectionSelectBranch({BtnAction, sourceBranch, targetBranch, setSourceBranch, setTargetBranch}:Prop) {
   const projectInfo = useProjectStore((state)=>state)
-  console.log(projectInfo);
   const trueOption = {
     owner : projectInfo.selectedOwner,
     repo : projectInfo.selectedRepo,
   };
   const {data,error,isLoading} = useQueryBranchList(trueOption)
-  console.log('데이터',data);
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
   
