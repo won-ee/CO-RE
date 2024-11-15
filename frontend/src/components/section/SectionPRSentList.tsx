@@ -1,5 +1,5 @@
 import { useQueryPRList } from '../../hooks/usePullRequestData';
-import useUserStore from '../../store/userStore';
+import { useUserStore } from '../../store/userStore';
 import { SectionPRSentListLayout,FilterLayout, GridTable , GridHeader, GridHeaderCell, GridRow, GridCell,CommentBox,StatusBox,PriorityBox, DeadLineBox, TitleBox} from './SectionPRSentList.styled'
 import { differenceInDays } from 'date-fns'
 

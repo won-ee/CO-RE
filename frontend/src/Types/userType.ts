@@ -1,7 +1,7 @@
 export interface UserStoreType {
-    userInfo: UserInfoType | null;
+    userInfo: UserInfoDataType | null;
     isLogin: boolean;
-    setUserInfo: (userInfo: UserInfoType) => void;
+    setUserInfo: (userInfo: UserInfoDataType) => void;
     login: () => void;
     logout: () => void;
   }
@@ -17,14 +17,33 @@ export interface ProjectType {
     groupName: string; 
     githubOwner:string;
     githubRepo:string;
-  }
+}
   
+
 export interface UserInfoType {
     id: number; 
     email: string;
     name: string;
     nickName: string;
     image: string;
-    projects: ProjectType[];
 }
-  
+
+export interface UserInfoDataType {
+  projects:ProjectType[]
+  userInfo:UserInfoType
+}
+
+
+export interface ProjectStoreType {
+  selectedOwner:string|null,
+  selectedRepo:string|null,
+  setSelectedOwner: (Owner: string | null) => void;
+  setSelectedPRepo: (Repo: string | null) => void;
+}
+
+export interface OptionType {
+  value: string;
+  label: string;
+  githubOwner: string;
+  githubRepo: string;
+}
