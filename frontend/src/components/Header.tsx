@@ -85,7 +85,7 @@ const Header: React.FC = () => {
   const location = useLocation();
   const [tempOption, setTempOption] = useState<OptionType[]>([]); 
   const { data: userInfo } = useQueryUserInfo(); 
-  const { setSelectedOwner, setSelectedPRepo,setSelectedProjectId } = useProjectStore();
+  const { setSelectedOwner, setSelectedPRepo,setSelectedProjectId, selectedProjectId } = useProjectStore();
   const [selectedOp, setSelectedOp] = useState<SingleValue<OptionType | null>>(null); 
     
   useEffect(() => {

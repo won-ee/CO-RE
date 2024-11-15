@@ -11,7 +11,6 @@ interface SectionOverviewProps{
 const SectionOverview:React.FC<SectionOverviewProps> = ({data}) => {
   const [dDay, setDDay] = useState(0);
   const [createDate,setCreateDate] = useState(0)  
-  console.log(data);
 
   const formatRelativeDate = (dateString: string): string => {
     const date = new Date(dateString);
