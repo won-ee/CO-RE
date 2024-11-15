@@ -32,6 +32,7 @@ export const postCreatePR =async (PRData:CreatePRType)=>{
   );
   return data;
 }
+
 export const getPRDetail = async ({
   owner,
   repo,

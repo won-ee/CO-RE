@@ -28,6 +28,7 @@ export interface UserInfoType {
     nickName: string;
     image: string;
     accountId:string;
+    gitToken:string;
 }
 
 export interface UserInfoDataType {
@@ -45,7 +46,6 @@ export interface ProjectStoreType {
   setSelectedPRepo: (Repo: string ) => void;
   setSelectedProjectId: (ProjectId: number ) => void;
   setSelectedOwnerId: (OwnerId:string ) => void;
-
 }
 
 export interface OptionType {
@@ -66,3 +66,15 @@ export interface ProjectMemberType {
   userEmail:string;
   userNickName:string
 };
+
+export interface ProjectDataType {
+  targetScore:string;
+  reviewerCount:string;
+  template:string;
+}
+
+export interface ProjectSettingType {
+  targetScore: number;
+  reviewerCount: number;
+  template: string;
+}
