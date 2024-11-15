@@ -153,5 +153,4 @@ export interface PRListParams{
 export interface ChangeListParams{
   owner: string;
   repo: string;
-  pullId: number;
 }
