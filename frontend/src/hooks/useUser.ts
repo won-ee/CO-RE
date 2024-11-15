@@ -1,12 +1,12 @@
 import { useQuery } from 'react-query';
-import { UserInfoType } from '../Types/userType';
+import { UserInfoDataType } from '../Types/userType';
 import { getUserInfo } from '../api/userAPI';
-import useUserStore from '../store/userStore';
+import { useUserStore } from '../store/userStore';
 
 export const useQueryUserInfo = () => {
   const setUserInfo = useUserStore((state) => state.setUserInfo);
 
-  const query = useQuery<UserInfoType, Error>(
+  const query = useQuery<UserInfoDataType, Error>(
     ['userData'],
     () => getUserInfo(),
     {
