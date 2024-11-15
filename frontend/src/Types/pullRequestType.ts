@@ -11,9 +11,9 @@ export interface CommitType {
   date: string;
 }
 export type ReviewType = {
-  writer: ReviewerType;
-  content: string;
-  reviews: ChildReviewType[];
+  path: string;
+  line: number;
+  body: string;
 };
 
 export interface ChangeType {
@@ -49,11 +49,6 @@ export interface CalendarPRParamsType {
   year: number;
 }
 
-export type ChildReviewType = {
-  body: string;
-  path: string;
-  line: number;
-};
 export interface CommentType{
   content: string;
   score: number;
@@ -83,7 +78,7 @@ export interface PRDataType {
   description: string;
   mergeStatus: boolean;
   commits: CommitType[];
-  reviews: ReviewType[];
+  reviews: TotalReviewsType[];
   comments: CommentsType[];
 }
 
@@ -94,10 +89,9 @@ export interface PRDetailParamsType {
 }
 
 export interface TotalReviewsType{
-    commit_id: string,
     body: string,
     event: string,
-    comments: ReviewType[]
+    reviews: ReviewType[]
 }
 
 export interface BranchListParams{
@@ -153,4 +147,10 @@ export interface PRListParams{
   owner: string;
   repo: string;
   state: string;
+}
+
+export interface ChangeListParams{
+  owner: string;
+  repo: string;
+  pullId: number;
 }

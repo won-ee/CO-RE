@@ -14,6 +14,7 @@ import ButtonSimpleSquare from "../buttons/ButtonSimpleSquare";
 import { TotalReviewsType, ReviewType } from "../../Types/pullRequestType";
 import CardFinalCodeReview from "../card/CardFinalCodeReview";
 import useUserStore from "../../store/userStore";
+import { useQueryChangeList } from "../../hooks/usePullRequestData";
 
 // 옵션 예시
 const TempOption: OptionType[] = [
@@ -48,11 +49,9 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
   const [selectedTab, setSelectedTab] = useState<TabsEnum>(TabsEnum.Commit);
   const [title, setTitle] = useState<string>('')
   const [content, setContent] = useState<string>('')
-  // const [commit_id,setCommit_Id] = useState<string>('')
-  const commit_id=''
   const [body,setBody] = useState<string>('')
   const event = "COMMENT"
-  const [comments,setComments] = useState<ReviewType[]>([])
+  const [reviews,setReviews] = useState<ReviewType[]>([])
   const [isFinalReviewOpen,setIsFinalReviewOpen] = useState(false)
   const userInfo = useUserStore((state) => state.userInfo);
 
@@ -61,7 +60,7 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
   }
 
   const handleUpdateComments = (updatedReviews: ReviewType[]) => {
-    setComments(updatedReviews);
+    setReviews(updatedReviews);
   };
 
   const handleTabChange = (tab: TabsEnum) => {
@@ -118,6 +117,13 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
       content: "aaasdsadasdaasd",
     }
   ];
+  const changeParams ={
+    owner: userInfo?.projects.githubOwner,
+    repo : userInfo?.projects.githubRepo,
+    pullId: u;
+  }
+
+  const changesData = useQueryChangeList()
 
   const tabComponents = {
     // [TabsEnum.Commit]: <SectionCommits changes={changesData} onUpdateReviews={handleUpdateComments} />,
@@ -148,14 +154,13 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
 
   const handleFinishReview = ()=>{
     const TotalReview : TotalReviewsType ={
-      commit_id,
       body,
       event,
-      comments,
+      reviews,
     }
     mutationpostPRReview.mutate({
       owner:'JEM1224',
-      repo:'',
+      repo:'github-api',
       pullId:'',
       reviewData:TotalReview
     })
@@ -237,10 +242,10 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
           <TabChange values={Object.values(TabsEnum)} 
             selectedTab={selectedTab} 
             onTabChange={handleTabChange} />
-          {comments && 
+          {reviews && 
           <div style={{position:'relative'}}>
           <ButtonSimpleSquare text="Finish Review" color="white" bgc="#1C8139" btnEvent={handlesIsFinalReviewOpen}/>
-          {isFinalReviewOpen && <CardFinalCodeReview onAdd={handleAddReview} commentNums={comments.length}/>}
+          {isFinalReviewOpen && <CardFinalCodeReview onAdd={handleAddReview} commentNums={reviews.length}/>}
           </div>}
         </TabBox>
           {tabComponents[selectedTab]}

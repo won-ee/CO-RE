@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { PRDataType, CalendarPRParamsType, PRDetailParamsType, CreatePRType, TotalReviewsType, BranchListParams, BranchListType, CommitListParams, CommitListType, PRListParams, PRListType } from '../Types/pullRequestType';
+import { PRDataType, CalendarPRParamsType, PRDetailParamsType, CreatePRType, TotalReviewsType, BranchListParams, BranchListType, CommitListParams, CommitListType, PRListParams, PRListType, ChangeListParams, ChangeType } from '../Types/pullRequestType';
 
 const BASE_URL ='http://54.180.83.239:8080'; 
 
@@ -87,5 +87,16 @@ export const getPRList = async({owner,repo,state}: PRListParams): Promise<PRList
   catch(error){
     console.error("Error fetching PR list:", error);
     throw error;
+  }
+}
+
+export const getChangeList = async({owner,repo,pullId}: ChangeListParams): Promise<ChangeType[]>=>{
+  try{
+    const response = await axios.get<ChangeType[]>(`${BASE_URL}/pull-request/${owner}/${repo}/${pullId}/files`);
+    return response.data
+  }
+  catch(error){
+    console.log("Error fetching Change list:", error);
+    throw error;    
   }
 }
