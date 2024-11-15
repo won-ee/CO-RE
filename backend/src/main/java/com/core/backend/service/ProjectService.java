@@ -224,13 +224,17 @@ public class ProjectService {
     }
 
     public ProjectGitSetDto findGitSetToProject(String repo, String owner) {
-        Projects project = projectRepository.findByGithubOwnerAndGithubRepository(owner, repo).orElse(null);
+        Projects project = getProjectGit(repo, owner);
         assert project != null;
 
         return ProjectGitSetDto.builder()
                 .template(project.getReviewTemplate())
                 .score(project.getTargetScore())
                 .build();
+    }
+
+    public Projects getProjectGit(String repo, String owner) {
+        return projectRepository.findByGithubOwnerAndGithubRepository(owner, repo).orElse(null);
     }
 
 }

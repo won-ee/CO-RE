@@ -1,7 +1,9 @@
 package com.core.backend.service;
 
+import com.core.backend.data.dto.projectUsers.ProjectNameAndUserEmailDto;
 import com.core.backend.data.dto.projectUsers.ProjectUserInfoDto;
 import com.core.backend.data.entity.ProjectUsers;
+import com.core.backend.data.entity.Projects;
 import com.core.backend.data.repository.ProjectUserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProjectUserService {
 
+    private final ProjectService projectService;
     private final ProjectUserRepository projectUserRepository;
 
     public List<ProjectUserInfoDto> findProjectUserList(Long projectId) {
@@ -38,5 +41,12 @@ public class ProjectUserService {
             projectUserInfoDtoList.add(infoDto);
         }
         return projectUserInfoDtoList;
+    }
+
+    public ProjectNameAndUserEmailDto getProjectNameAndUsersEmail(Projects project) {
+        List<String> userEmailList = projectUserRepository.findAllByProjectId(project.getId()).stream()
+                .map(projectUsers -> projectUsers.getUser().getEmail())
+                .toList();
+        return new ProjectNameAndUserEmailDto(project.getName(), userEmailList);
     }
 }

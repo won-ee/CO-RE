@@ -22,7 +22,6 @@ public class CallbackService {
 
     private final JiraOAuthTokenService jiraOAuthTokenService;
     private final JiraService jiraService;
-    private final JwtTokenService jwtTokenService;
     private final UserService userService;
     private final GroupService groupService;
     private final UserRepository userRepository;
