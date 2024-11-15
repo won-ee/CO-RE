@@ -2,13 +2,26 @@ import React, { useEffect, useState } from 'react'
 import { Button, Container, ContainerLayout, DeadLineBox, OverviewApproveBox, OverviewApproveButton, OverviewApproveContent, OverviewApproveHeader, OverviewContent, OverviewContentBox, OverviewCoreBox, OverviewCoreContentBox, OverviewCoreHeader, OverviewCoreImg, OverviewCoreText, OverviewDayText, OverviewHeaderBox, OverviewHeaderText, OverviewInfoBox, OverviewInput, OverviewName, OverviewProfileImg, OverviewSourceText, OverviewTargetText, OverviewText, RadioButton, RadioCol, RadioGroup, RadioText, Text } from './SectionOverview.styled'
 import core from '../../assets/Core.png'
 import { PRDataType } from '../../Types/pullRequestType';
+import ReactMarkdown from 'react-markdown';
+
 interface SectionOverviewProps{
   data:PRDataType|undefined
 }
 
 const SectionOverview:React.FC<SectionOverviewProps> = ({data}) => {
   const [dDay, setDDay] = useState(0);
-  const [createDate,setCreateDate] = useState(0)
+  const [createDate,setCreateDate] = useState(0)  
+
+  const formatRelativeDate = (dateString: string): string => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const differenceInTime = now.getTime() - date.getTime();
+    const differenceInDays = Math.floor(differenceInTime / (1000 * 60 * 60 * 24));
+    
+    if (differenceInDays === 0) return 'today';
+    if (differenceInDays === 1) return 'yesterday';
+    return `${differenceInDays} days ago`;
+  };
 
   useEffect(() => {
     if (data?.deadline) {
@@ -32,6 +45,7 @@ const SectionOverview:React.FC<SectionOverviewProps> = ({data}) => {
       }
       formatCreateDate();
     }
+
   }, []);
   
   return (
@@ -42,16 +56,18 @@ const SectionOverview:React.FC<SectionOverviewProps> = ({data}) => {
           <OverviewHeaderText>{data?.title}</OverviewHeaderText>
         </OverviewHeaderBox>
         <OverviewInfoBox>
-          <OverviewProfileImg src={data?.writerImg} />
-          <OverviewName>{data?.writerId}</OverviewName>
-          <OverviewDayText>{createDate}days ago</OverviewDayText>
+          <OverviewProfileImg src={data?.writer.writerImg} />
+          <OverviewName>{data?.writer.writerId}</OverviewName>
+          <OverviewDayText>
+            {createDate === 0 ? "today" : `${createDate} days ago`}
+          </OverviewDayText>
           <OverviewSourceText>{data?.base}</OverviewSourceText>
           <OverviewText>into</OverviewText>
           <OverviewTargetText>{data?.head}</OverviewTargetText>
         </OverviewInfoBox>
         <OverviewContentBox>
           <OverviewContent>
-            {data?.description}
+            <ReactMarkdown>{data?.description}</ReactMarkdown>
           </OverviewContent>
         </OverviewContentBox>
         <OverviewCoreBox>
@@ -64,17 +80,22 @@ const SectionOverview:React.FC<SectionOverviewProps> = ({data}) => {
           </OverviewCoreContentBox>
         </OverviewCoreBox>
         <OverviewApproveBox>
-          <OverviewApproveHeader>
-            <OverviewProfileImg src="https://i.pravatar.cc/150?img=1" />
-            <OverviewName>Brooks</OverviewName>
-            <OverviewDayText>3days ago</OverviewDayText>
-            <OverviewApproveButton>Approved</OverviewApproveButton>
-          </OverviewApproveHeader>
-          <OverviewApproveContent>
-            You did Great Job!
-            <br />
-            like your Componenet style and effieciency of Algorithm
-          </OverviewApproveContent>
+        {data?.comments.map((comment) => (
+          <div key={comment.writer.writerId}>
+            <OverviewApproveHeader>
+              <OverviewProfileImg src={comment.writer.writerImg} />
+              <OverviewName>{comment.writer.writerId}</OverviewName>
+                <OverviewDayText>{formatRelativeDate(comment.comment.date)}</OverviewDayText>
+              <OverviewApproveButton $status={comment.comment.status}>
+               {comment.comment.status === true ? "approve" : `reject`}
+              </OverviewApproveButton>
+            </OverviewApproveHeader>
+            <OverviewApproveContent>
+            {comment.comment.content}
+            </OverviewApproveContent>
+          </div>
+        ))}
+
         </OverviewApproveBox>
         <OverviewInput placeholder="Write a comment" />
         <Container>

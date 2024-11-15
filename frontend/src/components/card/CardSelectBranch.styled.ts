@@ -51,3 +51,24 @@ export const BranchBox = styled.div`
     padding: 20px;
     box-sizing: border-box;
 `
+export const WriterImg = styled.img`
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
+  object-fit: cover;
+  margin-right: 10px;
+`
+export const TitleBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  font-weight: 600;
+  gap: 5px;
+`
+export const NameBox = styled.div`
+  display : flex;
+  font-size: 14px;
+  font-weight: 400;
+  gap: 10px;
+  color: #767983;
+`

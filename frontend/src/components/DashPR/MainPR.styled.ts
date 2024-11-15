@@ -1,9 +1,5 @@
 import styled from "styled-components";
 
-interface StatusLabelProps {
-  $status: "Approved" | "Processing" | "Rejected";
-}
-
 export const PullRequestsLayout = styled.div`
   width: 52%;
   background: #fff;
@@ -45,19 +41,24 @@ export const TableDataCell = styled.td`
   vertical-align: middle;
 `;
 
-export const StatusLabel = styled.span<StatusLabelProps>`
+export const StatusLabel = styled.span<{ $status: string }>`
   background: ${(props) =>
     props.$status === "Approved"
       ? "rgba(0, 182, 155, 0.2)"
       : props.$status === "Processing"
         ? "rgba(98, 38, 239, 0.2)"
-        : "rgba(239, 56, 38, 0.2)"};
+        : props.$status === "Rejected"
+          ? "rgba(239, 56, 38, 0.2)"
+          : "rgba(200, 200, 200, 0.2)"};
+
   color: ${(props) =>
     props.$status === "Approved"
       ? "#00B69B"
       : props.$status === "Processing"
         ? "#6226EF"
-        : "#EF3826"};
+        : props.$status === "Rejected"
+          ? "#EF3826"
+          : "#666"};
   padding: 5px 10px;
   border-radius: 4.5px;
   font-size: 12px;

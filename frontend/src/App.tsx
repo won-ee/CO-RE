@@ -12,16 +12,18 @@ import LoginPage from "./pages/LoginPage";
 import MemberPage from "./pages/MemberPage";
 import SettingPage from "./pages/SettingPage";
 import CalendarPage from "./pages/CalendarPage";
-import useUserStore from "./store/userStore";
+import { useUserStore } from "./store/userStore";
 import CreatePRPage from "./pages/CreatePRPage";
 import PullRequestPageDetail from "./pages/PullRequestPageDetail";
 import Header from "./components/Header";
 import NotFoundPage from "./pages/NotFoundPage";
 import HistoryPage from "./pages/HistoryPage";
+import PrivacyNotice from "./pages/PrivacyNotice";
+import ModalInputProject from "./components/modal/ModalInputProject";
 
 const AppComponent: React.FC = () => {
   const { isLogin } = useUserStore();
-
+  
   return (
     <>
       {isLogin && <Sidebar />}
@@ -42,7 +44,10 @@ const AppComponent: React.FC = () => {
             path="/pullrequest/:pullRequestId"
             element={<PullRequestPageDetail />}
           />
-          <Route path="*" element={<NotFoundPage />} />
+          <Route path="*" element={<NotFoundPage errorNumber={404} />} />
+          <Route path="/403ERROR" element={<NotFoundPage errorNumber={403} />} />
+          <Route path="/privacy" element={<PrivacyNotice />} />
+          <Route path="/project" element={<ModalInputProject />} />
         </Routes>
       </NavLayout>
     </>

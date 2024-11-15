@@ -10,7 +10,7 @@ public record PullRequestInputDto(
         String description,
         Boolean afterReview,
         String deadline,
-        Integer priority,
+        String priority,
         String writerId
 ) {
 

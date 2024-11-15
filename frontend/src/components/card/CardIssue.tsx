@@ -1,7 +1,6 @@
 import React from 'react';
 import { 
     ArrowIcon, 
-    CommentText, 
     TaskContainerLayout,
     TaskIdText,
     TaskItemBox,      
@@ -21,7 +20,6 @@ interface CardIssueProps {
         id: string; 
         title: string; 
         status: string; 
-        comment: string; 
         priority: string; 
     }; 
     index: number;
@@ -39,7 +37,6 @@ const CardIssue: React.FC<CardIssueProps> = ({ task, index }) => {
                 <TaskIdText>{task.id}</TaskIdText>
                 <TaskTitleBox status={task.title}>{task.title}</TaskTitleBox>
                 <TaskStatusBox status={task.status}>{task.status}</TaskStatusBox>
-                <CommentText>{task.comment}</CommentText> 
                 <ArrowIcon src={
                             task.priority === 'high' ? highIcon 
                             : task.priority === 'middle' ? middleIcon 

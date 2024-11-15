@@ -21,7 +21,7 @@ const CalenderPage:React.FC = () => {
   const navigate = useNavigate(); 
   const { data, error, isLoading } = useQueryCalendarPR(params);
   if (isLoading) return <LoadingPage />;
-  if (error) return <NotFoundPage/>;
+  if (error) return <NotFoundPage errorNumber={404}/>;
 
   const handleEventClick = (info:any) => {
     const pullRequestId = info.event.id;

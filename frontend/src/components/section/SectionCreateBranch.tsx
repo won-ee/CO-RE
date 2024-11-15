@@ -1,4 +1,4 @@
-import { SectionCreateBranchLayout, TitleInput, DescriptionTextArea, SelectBox, MergeDirectionBox, HighLightBox, DateInputContainer, DatePickerImg, DeadLineBox, DatePickerBox, UrgentBox, UrgentButton, PriorityBox, CreateButtonBox, TabBox  } from "./SectionCreateBranch.styled";
+import { SectionCreateBranchLayout, TitleInput, DescriptionTextArea, SelectBox, MergeDirectionBox, HighLightBox, DateInputContainer, DatePickerImg, DeadLineBox, DatePickerBox, UrgentBox, UrgentButton, PriorityBox, CreateButtonBox, TabBox, RandomButton  } from "./SectionCreateBranch.styled";
 import Select, { MultiValue, SingleValue, StylesConfig } from "react-select";
 import { OptionType } from "../../Types/SelectType";
 import { useState, ChangeEvent } from "react";
@@ -13,6 +13,8 @@ import { useMutationCreatePR, useMutationpostPRReview } from "../../hooks/useMut
 import ButtonSimpleSquare from "../buttons/ButtonSimpleSquare";
 import { TotalReviewsType, ReviewType } from "../../Types/pullRequestType";
 import CardFinalCodeReview from "../card/CardFinalCodeReview";
+import {useUserStore, useProjectStore} from "../../store/userStore";
+import { useQueryChangeList } from "../../hooks/usePullRequestData";
 
 // 옵션 예시
 const TempOption: OptionType[] = [
@@ -47,19 +49,19 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
   const [selectedTab, setSelectedTab] = useState<TabsEnum>(TabsEnum.Commit);
   const [title, setTitle] = useState<string>('')
   const [content, setContent] = useState<string>('')
-  // const [commit_id,setCommit_Id] = useState<string>('')
-  const commit_id=''
   const [body,setBody] = useState<string>('')
   const event = "COMMENT"
-  const [comments,setComments] = useState<ReviewType[]>([])
+  const [reviews,setReviews] = useState<ReviewType[]>([])
   const [isFinalReviewOpen,setIsFinalReviewOpen] = useState(false)
+  const userInfo = useUserStore((state) => state.userInfo);
+  const projectInfo = useProjectStore((state)=>state)
 
   const handlesIsFinalReviewOpen = ()=>{
     setIsFinalReviewOpen((isFinalReviewOpen)=>!isFinalReviewOpen)
   }
 
   const handleUpdateComments = (updatedReviews: ReviewType[]) => {
-    setComments(updatedReviews);
+    setReviews(updatedReviews);
   };
 
   const handleTabChange = (tab: TabsEnum) => {
@@ -71,53 +73,62 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
 
   const handlePostPR=()=>{
     const pullRequestData = {
-      title: "Feature Update",
-      body: "This update includes several feature improvements and bug fixes.",
-      base: "main",
-      head: "feat",
-      owner: "JEM1224",
-      repo: "github-api",
-      description: "Detailed description of the pull request with all necessary information.",
+      title: title,
+      body: body,
+      base: sourceBranch?.value || "", // undefined일 경우 빈 문자열로 대체
+      head: targetBranch?.value || "", // undefined일 경우 빈 문자열로 대체
+      owner: projectInfo.selectedOwner,
+      repo : projectInfo.selectedRepo,
+      description: content,
       afterReview: false,
-      deadline: "2024-12-31T23:59:59",
-      priority: 1,
-      writerId: "JEM1224"
+      deadline: selectedDate ? selectedDate.toISOString() : "",
+      priority: priority || "",
+      writerId: userInfo?.userInfo.id.toString() || "",
+      reviewers: selectedOptions.map((idx)=>idx.value)
     };
-
     mutationCreatePR.mutate(pullRequestData);
   }
 
-  const changesData = [
-    {
-      file: {
-        filename: "THISISFRONT-1.md",
-        status: "modified",
-        contents_url: "https://api.github.com/repos/JEM1224/github-api/contents/THISISFRONT-1.md?ref=1aafe0e18d189773f6fbddc5119c4a03eb3b806d",
-        additions: 12,
-        deletions: 14,
-        changes: 26,
-        patch: "@@ -1,26 +1,17 @@\n \n 천방지축 얼렁뚱땅 악동짱구\n 저\n-하늘에\n-햇님\n-달님\n-사\n-랑\n-으\n-로\n-비\n-춰\n-주\n-면\n-오\n-늘\n-은\n \n 또\n 무\n 슨\n 장\n 난\n+한\n+고통\n+절망\n+슳픔\n+분노\n 말썽\n 쟁이\n \n@@ -31,6 +22,13 @@\n 산하\n 눈\n 내린\n+사나이로\n+태어나서\n+할 일도 만다만\n+너와나 하나되어\n+\n+\n 벌판을\n 우리는 \n 간다\n+",
-      },
-      content: "\n천방지축 얼렁뚱땅 악동짱구\n저\n\n또\n무\n슨\n장\n난\n한\n고통\n절망\n슳픔\n분노\n말썽\n쟁이\n\n\n높은산\n깊은골\n적막한\n산하\n눈\n내린\n사나이로\n태어나서\n할 일도 만다만\n너와나 하나되어\n\n\n벌판을\n우리는 \n간다\n\n",
-    },
-    {
-      file: {
-        filename: "sds/sssddsdsd.md",
-        status: "added",
-        contents_url: "https://api.github.com/repos/JEM1224/github-api/contents/sds%2Fsssddsdsd.md?ref=1aafe0e18d189773f6fbddc5119c4a03eb3b806d",
-        additions: 1,
-        deletions: 0,
-        changes: 1,
-        patch: "@@ -0,0 +1 @@\n+aaasdsadasdaasd\n\\ No newline at end of file",
-      },
-      content: "aaasdsadasdaasd",
-    }
-  ];
+  
+  // const changesData = [
+  //   {
+  //     file: {
+  //       filename: "THISISFRONT-1.md",
+  //       status: "modified",
+  //       contents_url: "https://api.github.com/repos/JEM1224/github-api/contents/THISISFRONT-1.md?ref=1aafe0e18d189773f6fbddc5119c4a03eb3b806d",
+  //       additions: 12,
+  //       deletions: 14,
+  //       changes: 26,
+  //       patch: "@@ -1,26 +1,17 @@\n \n 천방지축 얼렁뚱땅 악동짱구\n 저\n-하늘에\n-햇님\n-달님\n-사\n-랑\n-으\n-로\n-비\n-춰\n-주\n-면\n-오\n-늘\n-은\n \n 또\n 무\n 슨\n 장\n 난\n+한\n+고통\n+절망\n+슳픔\n+분노\n 말썽\n 쟁이\n \n@@ -31,6 +22,13 @@\n 산하\n 눈\n 내린\n+사나이로\n+태어나서\n+할 일도 만다만\n+너와나 하나되어\n+\n+\n 벌판을\n 우리는 \n 간다\n+",
+  //     },
+  //     content: "\n천방지축 얼렁뚱땅 악동짱구\n저\n\n또\n무\n슨\n장\n난\n한\n고통\n절망\n슳픔\n분노\n말썽\n쟁이\n\n\n높은산\n깊은골\n적막한\n산하\n눈\n내린\n사나이로\n태어나서\n할 일도 만다만\n너와나 하나되어\n\n\n벌판을\n우리는 \n간다\n\n",
+  //   },
+  //   {
+  //     file: {
+  //       filename: "sds/sssddsdsd.md",
+  //       status: "added",
+  //       contents_url: "https://api.github.com/repos/JEM1224/github-api/contents/sds%2Fsssddsdsd.md?ref=1aafe0e18d189773f6fbddc5119c4a03eb3b806d",
+  //       additions: 1,
+  //       deletions: 0,
+  //       changes: 1,
+  //       patch: "@@ -0,0 +1 @@\n+aaasdsadasdaasd\n\\ No newline at end of file",
+  //     },
+  //     content: "aaasdsadasdaasd",
+  //   }
+  // ];
+
+  const changeParams ={
+    owner: projectInfo.selectedOwner,
+    repo : projectInfo.selectedRepo,
+    pullId: projectInfo.selectedProjectId,
+  }
+
+  const changesData = useQueryChangeList(changeParams)
 
   const tabComponents = {
     // [TabsEnum.Commit]: <SectionCommits changes={changesData} onUpdateReviews={handleUpdateComments} />,
-    [TabsEnum.Commit]: <SectionChanges changes={changesData} onUpdateReviews={handleUpdateComments} />,
-    [TabsEnum.Change]: <SectionChanges changes={changesData} onUpdateReviews={handleUpdateComments} />,
+    [TabsEnum.Commit]: <SectionChanges changes={changesData.data || []} onUpdateReviews={handleUpdateComments} />,
+    [TabsEnum.Change]: <SectionChanges changes={changesData.data || []} onUpdateReviews={handleUpdateComments} />,
   };
 
   // 다중 선택 onChange 핸들러
@@ -143,14 +154,13 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
 
   const handleFinishReview = ()=>{
     const TotalReview : TotalReviewsType ={
-      commit_id,
       body,
       event,
-      comments,
+      reviews,
     }
     mutationpostPRReview.mutate({
       owner:'JEM1224',
-      repo:'',
+      repo:'github-api',
       pullId:'',
       reviewData:TotalReview
     })
@@ -161,6 +171,12 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
     handleFinishReview(); // API 호출
 };
 
+  const handleRandomSelect = (count: number) => {
+    const shuffled = TempOption.sort(() => 0.5 - Math.random()); // Shuffle the options
+    const randomSelection = shuffled.slice(0, count); // Select specified count
+    setSelectedOptions(randomSelection);
+  };
+
   return (
     <SectionCreateBranchLayout>
         <MergeDirectionBox>
@@ -170,15 +186,23 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
         <TitleInput type="text" placeholder="Type your title..." onChange={handleTitle} value={title}/>
         Description
         <DescriptionTextArea placeholder="Type your Details..." onChange={handleContent} value={content}/>
-        Reviewers
-        <Select<OptionType, true>  // 타입을 명시하여 isMulti가 true임을 지정
-            styles={SelectBox as StylesConfig<OptionType, true>}
-            options={TempOption}
-            value={selectedOptions}
-            onChange={handleChange}
-            isMulti={true}          // 다중 선택 가능
-            isClearable
-        />
+        <DeadLineBox>
+          <DatePickerBox>
+          Reviewers
+            <Select<OptionType, true>  // 타입을 명시하여 isMulti가 true임을 지정
+                styles={SelectBox as StylesConfig<OptionType, true>}
+                options={TempOption}
+                value={selectedOptions}
+                onChange={handleChange}
+                isMulti={true}          // 다중 선택 가능
+                isClearable
+            />
+          </DatePickerBox>
+          <UrgentBox>
+            Random Assign
+            <RandomButton onClick={() => handleRandomSelect(2)}>Random</RandomButton>
+          </UrgentBox>
+        </DeadLineBox>
         <DeadLineBox>
           <DatePickerBox>
             Deadline
@@ -218,10 +242,10 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
           <TabChange values={Object.values(TabsEnum)} 
             selectedTab={selectedTab} 
             onTabChange={handleTabChange} />
-          {comments && 
+          {reviews && 
           <div style={{position:'relative'}}>
           <ButtonSimpleSquare text="Finish Review" color="white" bgc="#1C8139" btnEvent={handlesIsFinalReviewOpen}/>
-          {isFinalReviewOpen && <CardFinalCodeReview onAdd={handleAddReview} commentNums={comments.length}/>}
+          {isFinalReviewOpen && <CardFinalCodeReview onAdd={handleAddReview} commentNums={reviews.length}/>}
           </div>}
         </TabBox>
           {tabComponents[selectedTab]}

@@ -20,6 +20,12 @@ const HistoryPage: React.FC = () => {
     graphError,
   } = useHistoryData();
 
+  // useEffect(() => {
+  //   if (graphError) {
+  //     navigate("/404");
+  //   }
+  // }, [graphError, navigate]);
+
   const handleSelectChange = (selectedId: string) => {
     setSelectedRepoId(selectedId);
     if (!selectedId) {
@@ -30,7 +36,7 @@ const HistoryPage: React.FC = () => {
   };
 
   if (isLoadingRepos) return <LoadingPage />;
-  if (graphError) return <NotFoundPage/>;
+  if (graphError) return <NotFoundPage errorNumber={404}/>;
 
   return (
     <div>

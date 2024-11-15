@@ -115,12 +115,9 @@ const SectionChanges: React.FC<SectionChangesProps> = ({ changes, onUpdateReview
   const [reviews,setReviews] = useState<ReviewType[]>([])
   const [path, setPath] = useState<string>('');
   const [startLine, setStartLine] = useState<number>(0);
-  const [endLine, setEndLine] = useState<number>(0);
-  // const [commitId, setCommitId] = useState("123abc456");
-  const commitId="123abc456"
   const [body, setBody] = useState(""); 
   if (body) {
-    //null
+    //EsLint예외처리
     }
 
   // 리뷰가 업데이트될 때마다 onUpdateReviews 호출
@@ -139,7 +136,6 @@ useEffect(() => {
   const handleReviewIndex = (index:number, filename:string)=>{
     setReviewLineIndex((prevIndex) => (prevIndex === index ? null : index)); // 동일 줄 클릭 시 닫힘
     setStartLine(index);
-    setEndLine(index+1)
     setPath(filename)
   }
 
@@ -150,9 +146,7 @@ useEffect(() => {
  const handleAddReview = (content: string) => {
   const newReview: ReviewType = {
     path,
-    startLine,
-    endLine,
-    commitId,
+    line: startLine,
     body:content,
   };
   
@@ -225,7 +219,7 @@ useEffect(() => {
                         </LineSymbol>
                         <LineContent className={line.type}>{line.content}</LineContent>
                       </LineContainer>
-                      {reviews.length > 0 ? (reviews.filter((review) => review.startLine === idx).map((review, index) => (
+                      {reviews.length > 0 ? (reviews.filter((review) => review.line === idx).map((review, index) => (
                               <CardCodeReviewReadBox>
                                 <CardCodeReviewRead key={index} review={review}/>
                               </CardCodeReviewReadBox>

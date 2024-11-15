@@ -6,18 +6,28 @@ import SectionCommits from '../components/section/SectionCommits'
 // import SectionChanges from '../components/section/SectionChanges'
 import { useQueryPRDetail } from '../hooks/usePullRequestData'
 import { PRDetailParamsType } from '../Types/pullRequestType'
+import LoadingPage from './LoadingPage'
+import NotFoundPage from './NotFoundPage'
+import { useProjectStore } from '../store/userStore'
+import { useParams } from 'react-router-dom'
 
-const params: PRDetailParamsType = {
-    owner: 'JEM1224',
-    repo: 'github-api',
-    pullId: 76
-};
+
   
 const PullRequestPageDetail:React.FC = () => {
     const [isSeleted, setIsSeleted] = useState('Overview')
+    const { selectedOwner, selectedRepo} = useProjectStore()
+    const { pullRequestId } = useParams<{ pullRequestId: string }>();
+
+    const params: PRDetailParamsType = {
+        owner: selectedOwner,
+        repo: selectedRepo,
+        pullId: Number(pullRequestId),
+    };
+    
+
     const { data, error, isLoading } = useQueryPRDetail(params);
-    if (isLoading) return <p>Loading...</p>;
-    if (error) return <p>Error: {error.message}</p>;
+    if (isLoading) return <LoadingPage/>;
+    if (error) return <NotFoundPage errorNumber={404}/>;
 
   return (
     <>

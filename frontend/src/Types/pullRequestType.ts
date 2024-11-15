@@ -1,17 +1,21 @@
-  export interface ReviewerType {
-    id: number;
-    reviewerId: string;
-    score: number;
-  }
-  
-  export interface CommitType {
-    id: string;
-    message: string;
-    writerId: string;
-    writerImg:string;
-    date: string;
-    comments:[];
-  }
+export interface ReviewerType {
+  writerId: string;
+  writerImg: string;
+}
+
+export interface CommitType {
+  id: string;
+  message: string;
+  writerId: string;
+  writerImg: string;
+  date: string;
+}
+export type ReviewType = {
+  path: string;
+  line: number;
+  body: string;
+};
+
 export interface ChangeType {
   file: {
     filename: string;
@@ -32,8 +36,9 @@ export interface CreatePRType{
   description: string,
   afterReview: boolean,
   deadline: string,
-  priority: number,
-  writerId: string
+  priority: string,
+  writerId: string;
+  reviewers:string[];
 }
 
 export interface CalendarPRParamsType {
@@ -44,41 +49,109 @@ export interface CalendarPRParamsType {
   year: number;
 }
 
+export interface CommentType{
+  content: string;
+  score: number;
+  status: boolean;
+  date:string;
+}
+
+export interface CommentsType{
+  comment:CommentType;
+  writer:ReviewerType;
+}
+
 export interface PRDataType {
-  id: number;
-  title: string;
   pullRequestId: number;
-  writerId: string;
-  writerImg:string
-  summary: string;
-  description:string;
+  title: string;
+  writer: ReviewerType;
   head: string;
   base: string;
-  mergeStatus: boolean;
-  priority: number;
+  status: string;
+  priority: string;
   afterReview: boolean;
-  deadline: string;
   createdDate: string;
-  commits: CommitType[];
+  deadline: string;
+  commentCount: number;
   reviewers: ReviewerType[];
+  id: number;
+  summary: string | null;
+  description: string;
+  mergeStatus: boolean;
+  commits: CommitType[];
+  reviews: TotalReviewsType[];
+  comments: CommentsType[];
 }
 
 export interface PRDetailParamsType {
   owner: string;
   repo: string;
   pullId: number;
+}
 
-}
-export interface ReviewType{
-  path: string,
-  startLine: number,
-  endLine: number,
-  commitId: string,
-  body: string//내용
-}
 export interface TotalReviewsType{
-    commit_id: string,
     body: string,
     event: string,
-    comments: ReviewType[]
+    reviews: ReviewType[]
+}
+
+export interface BranchListParams{
+  owner:string;
+  repo:string;
+}
+
+export interface LastCommitType{
+  sha:string;
+  message:string;
+  writerId: string,
+  writerImg: string;
+  date: string,
+  parent: string,
+  secondParent: string;
+}
+
+export interface BranchListType{
+  name:string;
+  lastCommit:LastCommitType;
+}
+
+export interface CommitListParams{
+  owner : string;
+  repo : string;
+  base : string;
+  head : string;
+}
+
+export interface CommitListType{
+  message: string;
+  writerName: string;
+  date: string;
+}
+
+
+export interface PRListType{
+  pullRequestId: number;
+  title: string;
+  writer: ReviewerType;
+  head: string;
+  base: string;
+  createadDate:string;
+  status: string;
+  priority: string;
+  afterReview: boolean;
+  deadline: string;
+  reviewers: ReviewerType[];
+  commentCount: number;
+}
+
+export interface PRListParams{
+  owner: string;
+  repo: string;
+  state: string;
+}
+
+export interface ChangeListParams{
+  owner: string;
+  repo: string;
+  pullId: number;
 }

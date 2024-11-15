@@ -125,14 +125,14 @@ export const OverviewApproveBox = styled.div`
     padding-bottom: 20px;
 ` 
 
-export const OverviewApproveButton= styled.div`
+export const OverviewApproveButton= styled.div<{ $status?: boolean }>`
     display: flex;
     align-items: center;
     justify-content: center;
     margin-top: 10px;
     margin-left: 20px;
-    background-color: rgba(0,182,155,0.2);
-    color: #00B69B;
+    background-color: ${(props) => (props.$status ? '#7667FF' : '#FF5F5F')};
+    color: white;
     width: 80px;
     height: 30px;
     border-radius: 5px;
