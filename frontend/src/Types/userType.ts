@@ -27,6 +27,7 @@ export interface UserInfoType {
     name: string;
     nickName: string;
     image: string;
+    accountId:string;
 }
 
 export interface UserInfoDataType {
@@ -39,9 +40,12 @@ export interface ProjectStoreType {
   selectedOwner:string,
   selectedRepo:string,
   selectedProjectId:number,
+  selectedOwnerId:string,
   setSelectedOwner: (Owner: string ) => void;
   setSelectedPRepo: (Repo: string ) => void;
   setSelectedProjectId: (ProjectId: number ) => void;
+  setSelectedOwnerId: (OwnerId:string ) => void;
+
 }
 
 export interface OptionType {
@@ -50,4 +54,15 @@ export interface OptionType {
   githubOwner: string;
   githubRepo: string;
   projectUserId:number;
+  ownerId:string;
 }
+
+export interface ProjectMemberType {
+  projectId: number;
+  projectUserId: number;
+  userId: number;
+  userName: string;
+  userUrl: string;
+  userEmail:string;
+  userNickName:string
+};

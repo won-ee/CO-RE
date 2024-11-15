@@ -39,10 +39,6 @@ const SectionEditProfile:React.FC<SectionEditProfileProps> = ({myInfo}) => {
                                 <Label>User Name</Label>
                                 <ProfileBox>{myInfo.nickName}</ProfileBox>           
                             </LabelBox>
-                            <LabelBox>
-                                <Label>company department / company rank</Label>
-                                <ProfileBox>마케팅 / 사원</ProfileBox>
-                            </LabelBox>
                         </FormRight>
                     </FormLow>
                 </Form>

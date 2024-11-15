@@ -16,3 +16,16 @@ export const getUserInfo = async () => {
   return response.data;
 };
 
+export const getMemberList = async (selectedProjectId:number) => {
+  const response = await axios.get(
+    `${BASE_URL}/project-users/search/list/${selectedProjectId}`,{
+      headers: {
+        // withCredentials: true,
+        Authorization: `Bearer ${TOKEN}`
+      }
+    },
+  );  
+  
+  return response.data;
+};
+
