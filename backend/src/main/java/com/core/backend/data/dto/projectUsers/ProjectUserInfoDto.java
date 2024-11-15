@@ -7,5 +7,6 @@ public record ProjectUserInfoDto(
         String userUrl,
         String userName,
         String userNickName,
-        String userEmail) {
+        String userEmail,
+        String userGitToken) {
 }

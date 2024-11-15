@@ -40,6 +40,7 @@ public class UserService {
 
         InfoResponseUserDto getUserDto = InfoResponseUserDto.builder()
                 .id(user.getId())
+                .accountId(user.getAccountId())
                 .email(user.getEmail())
                 .name(user.getName())
                 .nickName(user.getNickname())
