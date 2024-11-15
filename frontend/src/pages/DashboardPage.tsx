@@ -10,14 +10,14 @@ import { useDashboard, useDashPR } from "../hooks/useDashboard";
 import { useProjectStore } from "../store/userStore";
 
 const Dashboard: React.FC = () => {
-  const projectInfo = useProjectStore((state) => state);
+  const { selectedOwner, selectedRepo } = useProjectStore();
   const {
     data: dashboardData,
     isLoading: isDashboardLoading,
     error: dashboardError,
   } = useDashboard({
-    owner: projectInfo.selectedOwner,
-    repo: projectInfo.selectedRepo,
+    owner: selectedOwner,
+    repo: selectedRepo,
   });
 
   const {
@@ -25,8 +25,8 @@ const Dashboard: React.FC = () => {
     isLoading: isDashPRLoading,
     error: dashPRError,
   } = useDashPR({
-    owner: projectInfo.selectedOwner,
-    repo: projectInfo.selectedRepo,
+    owner: selectedOwner,
+    repo: selectedRepo,
     state: "receive",
   });
 
