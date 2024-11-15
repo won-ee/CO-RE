@@ -1,0 +1,13 @@
+spring:
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: approvecore106@gmail.com
+    password: lrby zgzz fqia padi
+    properties:
+      mail.smtp.debug: true
+      mail.smtp.connectiontimeout: 1000 #1초
+      mail.starttls.enable: true
+      mail.smtp.auth: true
