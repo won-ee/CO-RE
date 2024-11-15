@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 interface IssueStatusLabelProps {
-  $status: "In Progress" | "To Do";
+  $status: "IN_PROGRESS" | "TODO" | "DONE";
 }
 
 export const MainIssueLayout = styled.div`
@@ -87,11 +87,17 @@ export const IssueStatusWrapper = styled.div`
 
 export const IssueStatusLabel = styled.span<IssueStatusLabelProps>`
   background: ${(props) =>
-    props.$status === "In Progress"
+    props.$status === "IN_PROGRESS"
       ? "rgba(98, 38, 239, 0.2)"
-      : "rgba(32, 42, 48, 0.2)"};
+      : props.$status === "DONE"
+        ? "rgba(0, 182, 155, 0.2)"
+        : "rgba(32, 42, 48, 0.2)"};
   color: ${(props) =>
-    props.$status === "In Progress" ? "#6226EF" : "#202A30"};
+    props.$status === "IN_PROGRESS"
+      ? "#6226EF"
+      : props.$status === "DONE"
+        ? "#00B69B"
+        : "#202A30"};
   padding: 5px 10px;
   border-radius: 4.5px;
   font-size: 12px;

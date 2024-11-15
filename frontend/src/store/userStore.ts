@@ -1,6 +1,5 @@
-import { create } from 'zustand';
-import { ProjectStoreType, UserStoreType } from '../Types/userType';
-
+import { create } from "zustand";
+import { ProjectStoreType, UserStoreType } from "../Types/userType";
 
 export const useUserStore = create<UserStoreType>((set) => ({
   userInfo: null,
@@ -11,13 +10,15 @@ export const useUserStore = create<UserStoreType>((set) => ({
 }));
 
 export const useProjectStore = create<ProjectStoreType>((set) => ({
-  selectedOwner:'',
-  selectedRepo:'',
-  selectedProjectId:0,
-  selectedOwnerId:'',
+  selectedOwner: "",
+  selectedRepo: "",
+  selectedProjectId: 0,
+  selectedProjectUserId: 0,
+  selectedOwnerId: "",
   setSelectedOwner: (Owner) => set({ selectedOwner: Owner }),
   setSelectedPRepo: (Repo) => set({ selectedRepo: Repo }),
   setSelectedProjectId: (ProjectId) => set({ selectedProjectId: ProjectId }),
+  setSelectedProjectUserId: (ProjectUserId) =>
+    set({ selectedProjectUserId: ProjectUserId }),
   setSelectedOwnerId: (OwnerId) => set({ selectedOwnerId: OwnerId }),
 }));
-

@@ -6,11 +6,12 @@ import MainIssue from "../components/DashIssue/MainIssue";
 import LoadingPage from "./LoadingPage";
 import NotFoundPage from "./NotFoundPage";
 
-import { useDashboard, useDashPR } from "../hooks/useDashboard";
+import { useDashboard, useDashPR, useDashIssue } from "../hooks/useDashboard";
 import { useProjectStore } from "../store/userStore";
 
 const Dashboard: React.FC = () => {
-  const { selectedOwner, selectedRepo } = useProjectStore();
+  const { selectedOwner, selectedRepo, selectedProjectUserId } =
+    useProjectStore();
   const {
     data: dashboardData,
     isLoading: isDashboardLoading,
@@ -30,9 +31,17 @@ const Dashboard: React.FC = () => {
     state: "receive",
   });
 
-  if (isDashboardLoading || isDashPRLoading) return <LoadingPage />;
-  if (dashboardError || dashPRError) return <NotFoundPage errorNumber={404} />;
-  if (!dashboardData || !dashPRData) return null;
+  const {
+    data: dashIssueData,
+    isLoading: isDashIssueLoading,
+    error: dashIssueError,
+  } = useDashIssue(selectedProjectUserId);
+
+  if (isDashboardLoading || isDashPRLoading || isDashIssueLoading)
+    return <LoadingPage />;
+  if (dashboardError || dashPRError || dashIssueError)
+    return <NotFoundPage errorNumber={404} />;
+  if (!dashboardData || !dashPRData || !dashIssueData) return null;
 
   return (
     <div>
@@ -40,7 +49,7 @@ const Dashboard: React.FC = () => {
       <FilterAndGraphSection />
       <div>
         <MainPR data={dashPRData} />
-        <MainIssue />
+        <MainIssue data={dashIssueData} />
       </div>
     </div>
   );
