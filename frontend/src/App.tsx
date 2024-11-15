@@ -12,7 +12,7 @@ import LoginPage from "./pages/LoginPage";
 import MemberPage from "./pages/MemberPage";
 import SettingPage from "./pages/SettingPage";
 import CalendarPage from "./pages/CalendarPage";
-import useUserStore from "./store/userStore";
+import { useUserStore } from "./store/userStore";
 import CreatePRPage from "./pages/CreatePRPage";
 import PullRequestPageDetail from "./pages/PullRequestPageDetail";
 import Header from "./components/Header";

@@ -8,7 +8,7 @@ import NotFoundPage from "./NotFoundPage";
 
 // import { useDashboard, useDashPR } from "../hooks/useDashboard";
 import { useDashPR } from "../hooks/useDashboard";
-import useUserStore from "../store/userStore";
+import { useUserStore } from "../store/userStore";
 
 const Dashboard: React.FC = () => {
   const userInfo = useUserStore((state) => state.userInfo);
