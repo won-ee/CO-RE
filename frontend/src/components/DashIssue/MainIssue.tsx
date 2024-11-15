@@ -16,6 +16,11 @@ import {
 } from "./MainIssue.styled";
 
 import greenIcon from "../../assets/DashboardIssueIcon.png";
+import highestIcon from "../../assets/highest.png";
+import highIcon from "../../assets/high.png";
+import middleIcon from "../../assets/middle.png";
+import lowIcon from "../../assets/low.png";
+import lowestIcon from "../../assets/lowest.png";
 
 import { DashIssueType } from "../../Types/dashboardType";
 
@@ -42,7 +47,32 @@ const MainIssue: React.FC<MainIssueProps> = ({ data }) => {
                 <IssueStatusLabel $status={issue.issueStatus}>
                   {issue.issueStatus.replace("-", " ")}
                 </IssueStatusLabel>
-                <CommentCountLabel>{issue.issuePriority}</CommentCountLabel>
+                <CommentCountLabel>
+                  <img
+                    src={
+                      issue.issuePriority === 1
+                        ? highestIcon
+                        : issue.issuePriority === 2
+                          ? highIcon
+                          : issue.issuePriority === 3
+                            ? middleIcon
+                            : issue.issuePriority === 4
+                              ? lowIcon
+                              : lowestIcon
+                    }
+                    alt={
+                      issue.issuePriority === 1
+                        ? "Highest"
+                        : issue.issuePriority === 2
+                          ? "High"
+                          : issue.issuePriority === 3
+                            ? "Middle"
+                            : issue.issuePriority === 4
+                              ? "Low"
+                              : "Lowest"
+                    }
+                  />
+                </CommentCountLabel>
               </IssueStatusWrapper>
             </IssueItem>
           ))}

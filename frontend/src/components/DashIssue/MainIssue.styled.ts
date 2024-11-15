@@ -113,7 +113,7 @@ export const IssueStatusLabel = styled.span<IssueStatusLabelProps>`
 `;
 
 export const CommentCountLabel = styled.span`
-  background: #e0e0e0;
+  // background: #e0e0e0;
   color: #333;
   border-radius: 50%;
   width: 25px;
