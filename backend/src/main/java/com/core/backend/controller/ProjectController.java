@@ -33,9 +33,8 @@ public class ProjectController {
     }
 
     @PatchMapping("/update/set/{projectId}")
-    public ResponseEntity<Void> updateProjectSet(@PathVariable Long projectId, @RequestBody ProjectSetDto projectSetDto) {
-        projectService.updateSetToProject(projectId, projectSetDto);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<ProjectSetDto> updateProjectSet(@PathVariable Long projectId, @RequestBody ProjectSetDto projectSetDto) {
+        return new ResponseEntity<>(projectService.updateSetToProject(projectId, projectSetDto), HttpStatus.OK);
     }
 
     @GetMapping("/search/git-set")

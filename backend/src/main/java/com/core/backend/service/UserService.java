@@ -124,8 +124,10 @@ public class UserService {
         return UserAllInfoDto.toUserAllInfoDto(user);
     }
 
-    public String getGitTokenToUser(Long id) {
+    public UserTokenDto getGitTokenToUser(Long id) {
         Users user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
-        return user.getGitToken();
+        return UserTokenDto.builder()
+                .token(user.getGitToken())
+                .build();
     }
 }

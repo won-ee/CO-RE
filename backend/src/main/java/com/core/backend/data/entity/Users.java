@@ -52,9 +52,7 @@ public class Users extends Base {
     }
 
     public void createUserInfo(UserUpdateInfoDto userUpdateInfoDto) {
-        this.name = userUpdateInfoDto.name();
         this.nickname = userUpdateInfoDto.nickName();
-        this.email = userUpdateInfoDto.email();
         this.gitToken = userUpdateInfoDto.gitToken();
     }
 }

@@ -1,9 +1,6 @@
 package com.core.backend.controller;
 
-import com.core.backend.data.dto.users.AuthenticatedUserDto;
-import com.core.backend.data.dto.users.UserAllInfoDto;
-import com.core.backend.data.dto.users.UserLoginDto;
-import com.core.backend.data.dto.users.UserUpdateInfoDto;
+import com.core.backend.data.dto.users.*;
 import com.core.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +37,7 @@ public class UserController {
     }
 
     @GetMapping("/search/git-token")
-    public ResponseEntity<String> getGitToken(@AuthenticationPrincipal AuthenticatedUserDto authenticatedUser) {
+    public ResponseEntity<UserTokenDto> getGitToken(@AuthenticationPrincipal AuthenticatedUserDto authenticatedUser) {
         Long id = Long.parseLong(authenticatedUser.getId());
         return new ResponseEntity<>(userService.getGitTokenToUser(id), HttpStatus.OK);
     }

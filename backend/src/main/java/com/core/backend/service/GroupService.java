@@ -1,8 +1,10 @@
 package com.core.backend.service;
 
+import com.core.backend.data.dto.projects.ProjectInfoDto;
 import com.core.backend.data.dto.users.UserGroupsDto;
 import com.core.backend.data.entity.JiraGroups;
 import com.core.backend.data.repository.GroupRepository;
+import com.core.backend.data.repository.ProjectRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +20,7 @@ import java.util.Optional;
 public class GroupService {
 
     private final GroupRepository groupRepository;
+    private final ProjectRepository projectRepository;
 
     public void saveGroups(List<UserGroupsDto> groupList) {
         for (UserGroupsDto group : groupList) {
@@ -45,5 +48,21 @@ public class GroupService {
 
     public JiraGroups findGroup(String groupUrl) {
         return groupRepository.findByGroupUrl(groupUrl);
+    }
+
+    public List<ProjectInfoDto> findAllProjectsByGroups(Long groupId) {
+        return projectRepository.findAllByJiraGroup_Id(groupId).stream()
+                .map(project -> ProjectInfoDto.builder()
+                        .id(project.getId())
+                        .name(project.getName())
+                        .image(project.getImage())
+                        .ownerId(project.getOwnerId())
+                        .ownerName(project.getOwnerName())
+                        .groupId(project.getJiraGroup().getId())
+                        .groupName(project.getJiraGroup().getGroupName())
+                        .githubOwner(project.getGithubOwner())
+                        .githubRepo(project.getGithubRepository())
+                        .build())
+                .toList();
     }
 }

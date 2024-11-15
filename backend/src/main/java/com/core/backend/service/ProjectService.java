@@ -206,13 +206,21 @@ public class ProjectService {
         return null;
     }
 
-    public void updateSetToProject(Long projectId, ProjectSetDto projectSetDto) {
+    public ProjectSetDto updateSetToProject(Long projectId, ProjectSetDto projectSetDto) {
         Projects project = projectRepository.findById(projectId).orElse(null);
 
         if (project != null) {
             Projects newProject = project.updateSet(projectSetDto);
             projectRepository.save(newProject);
+
+            return ProjectSetDto.builder()
+                    .targetScore(project.getTargetScore())
+                    .reviewerCount(project.getReviewerCount())
+                    .template(project.getReviewTemplate())
+                    .build();
         }
+
+        return null;
     }
 
     public ProjectGitSetDto findGitSetToProject(String repo, String owner) {
