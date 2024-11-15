@@ -19,11 +19,9 @@ const PullRequestPageDetail:React.FC = () => {
     const { pullRequestId } = useParams<{ pullRequestId: string }>();
 
     const params: PRDetailParamsType = {
-        // owner: selectedOwner,
-        // repo: selectedRepo,
+        owner: selectedOwner,
+        repo: selectedRepo,
         pullId: Number(pullRequestId),
-        owner:"JEM1224",
-        repo:"github-api",
     };
     
 
