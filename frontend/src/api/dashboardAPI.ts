@@ -1,19 +1,22 @@
 import axios from "axios";
 import {
-  //   StatsDataType,
+  StatsDataType,
+  StatsParamsType,
   DashPRDataType,
   DashPRParamsType,
 } from "../Types/dashboardType";
 
 const BASE_URL = "http://54.180.83.239:8080";
 
-// export const getDashStatsData = async (): Promise<StatsDataType> => {
-//   const response = await axios.get<StatsDataType>(
-//     `${BASE_URL}/status/owner/repo`,
-//     // `${BASE_URL}/status/JEM1224/github-api`
-//   );
-//   return response.data;
-// };
+export const getDashStatsData = async ({
+  owner,
+  repo,
+}: StatsParamsType): Promise<StatsDataType> => {
+  const response = await axios.get<StatsDataType>(
+    `${BASE_URL}/status/${owner}/${repo}`,
+  );
+  return response.data;
+};
 
 export const getDashPRData = async ({
   owner,

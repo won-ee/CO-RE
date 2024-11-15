@@ -52,7 +52,7 @@ const SectionCommitList: React.FC<SectionCommitListProps> = ({owner,repo,base,he
             </Date>
           </DateBox>
           {commitGroup.commits.map((commit) => (
-            <CommitMessageBox key={commit.id}>
+            <CommitMessageBox>
               <CommitMessageTitle>{commit.message}</CommitMessageTitle>
               <CommitMessageContent>
                 {new window.Date(commit.date).toLocaleTimeString('en-US', {

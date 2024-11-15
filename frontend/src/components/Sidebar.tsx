@@ -17,12 +17,17 @@ import Icon_member from "../assets/icon_member.png";
 import Icon_pr from "../assets/icon_pr.png";
 import Icon_logout from "../assets/icon_logout.png";
 import Icon_setting from "../assets/icon_setting.png";
-import { useProjectStore, useUserStore } from "../store/userStore.ts";
-import { useEffect } from "react";
+import {  useUserStore } from "../store/userStore.ts";
+// import { useEffect } from "react";
 
 function Sidebar() {
+<<<<<<< HEAD
   const { logout,userInfo } = useUserStore();
   const { selectedOwner, selectedRepo,selectedOwnerId } = useProjectStore();
+=======
+  const { logout } = useUserStore();
+  // const { selectedOwner, selectedRepo } = useProjectStore();
+>>>>>>> 7200f32fd179104035e0725486cf98cb6030058d
   const navigate = useNavigate();
   const location = useLocation();
   
