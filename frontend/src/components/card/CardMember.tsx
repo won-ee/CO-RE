@@ -1,27 +1,19 @@
 import React from 'react'
-import { CardLow, ContainerLayout, Email, Image, Name, Title } from './CardMember.styled';
+import { ContainerLayout, Email, Image, Name, Title } from './CardMember.styled';
+import { ProjectMemberType } from '../../Types/userType';
 
 interface CardMemberProps{
-    profile: {
-        image: string;
-        name: string;
-        title: string;
-        email: string;
-    }
+    member: ProjectMemberType
 }
 
-const CardMember:React.FC<CardMemberProps> = ({profile}) => {
+const CardMember:React.FC<CardMemberProps> = ({member}) => {
   return (
     <>
         <ContainerLayout>
-            <Image src={profile.image} alt={profile.name} />
-            <Name>{profile.name}</Name>
-            <Title>{profile.title}</Title>
-            <CardLow>
-                <Title>마케팅/</Title>
-                <Title>사원</Title>
-            </CardLow>
-            <Email>{profile.email}</Email>
+            <Image src={member.userUrl} alt={member.userName} />
+            <Name>{member.userNickName}</Name>
+            <Title>{member.userName}</Title>
+            <Email>{member.userEmail}</Email>
         </ContainerLayout>
     </>
 

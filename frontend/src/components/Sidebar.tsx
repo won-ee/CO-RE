@@ -21,18 +21,19 @@ import { useProjectStore, useUserStore } from "../store/userStore.ts";
 import { useEffect } from "react";
 
 function Sidebar() {
-  const { logout } = useUserStore();
-  const { selectedOwner, selectedRepo } = useProjectStore();
+  const { logout,userInfo } = useUserStore();
+  const { selectedOwner, selectedRepo,selectedOwnerId } = useProjectStore();
   const navigate = useNavigate();
   const location = useLocation();
   
-  // useEffect(() => {
-  //   if (selectedOwner||selectedRepo) {
-  //     navigate("/project");
-  //   } else {
-  //     navigate("/403ERROR");
-  //   }
-  // }, [navigate]);
+  useEffect(() => {
+    if (selectedOwner||selectedRepo) {
+      if (userInfo?.userInfo.accountId === selectedOwnerId){
+        navigate("/project");
+      }else{
+        navigate("/403ERROR");
+      }
+  }}, [navigate]);
 
   const handleLogout = () => {
     logout();

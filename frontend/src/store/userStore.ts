@@ -14,8 +14,10 @@ export const useProjectStore = create<ProjectStoreType>((set) => ({
   selectedOwner:'',
   selectedRepo:'',
   selectedProjectId:0,
+  selectedOwnerId:'',
   setSelectedOwner: (Owner) => set({ selectedOwner: Owner }),
   setSelectedPRepo: (Repo) => set({ selectedRepo: Repo }),
   setSelectedProjectId: (ProjectId) => set({ selectedProjectId: ProjectId }),
+  setSelectedOwnerId: (OwnerId) => set({ selectedOwnerId: OwnerId }),
 }));
 

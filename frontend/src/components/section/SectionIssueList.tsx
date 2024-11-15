@@ -12,7 +12,6 @@ import { useProjectStore } from "../../store/userStore";
 
 const SectionIssueList:React.FC = () => {
   const {selectedProjectId} = useProjectStore();
-  
   const {data} = useQueryIssueList(selectedProjectId);
   console.log(data);
   
