@@ -37,8 +37,8 @@ public class ProjectController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/search/template/{projectId}")
-    public ResponseEntity<String> findProjectTemplate(@PathVariable Long projectId) {
-        return new ResponseEntity<>(projectService.findTemplateToProject(projectId), HttpStatus.OK);
+    @GetMapping("/search/template")
+    public ResponseEntity<String> findProjectTemplate(@RequestParam("repo") String repo, @RequestParam("owner") String owner) {
+        return new ResponseEntity<>(projectService.findTemplateToProject(repo, owner), HttpStatus.OK);
     }
 }

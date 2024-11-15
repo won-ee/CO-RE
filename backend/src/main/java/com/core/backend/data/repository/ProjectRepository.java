@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface ProjectRepository extends JpaRepository<Projects, Long> {
 
@@ -14,5 +16,5 @@ public interface ProjectRepository extends JpaRepository<Projects, Long> {
             "WHERE p.jiraGroup.groupUrl = :groupUrl AND p.jiraId = :jiraId")
     boolean existsByGroupUrlAndJiraId(@Param("groupUrl") String groupUrl, @Param("jiraId") String jiraId);
 
-
+    Optional<Projects> findByGithubOwnerAndGithubRepository(String githubOwner, String githubRepository);
 }

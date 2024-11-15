@@ -1,6 +1,6 @@
 package com.core.backend.data.entity;
 
-import com.core.backend.data.dto.users.UserInfoDto;
+import com.core.backend.data.dto.users.UserUpdateInfoDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -35,8 +35,8 @@ public class Users extends Base {
     @Column(name = "user_email", nullable = false, length = 100)
     private String email;
 
-    @Column(name = "user_git_check", nullable = false)
-    private boolean gitCheck = false;
+    @Column(name = "user_git_token", nullable = false)
+    private String gitToken;
 
     @OneToMany(mappedBy = "user")
     private List<ProjectUsers> projectUsersList = new ArrayList<>();
@@ -45,19 +45,16 @@ public class Users extends Base {
     private List<UserRoles> userRolesList = new ArrayList<>();
 
 
-    public static Users createUser(UserInfoDto userInfo) {
-        return Users.builder()
-                .accountId(userInfo.accountId())
-                .email(userInfo.email())
-                .name(userInfo.name())
-                .profile(userInfo.picture())
-                .nickname(userInfo.nickname())
-                .build();
-    }
-
     public void updateInfo(String name, String email, String profile) {
         this.name = name;
         this.email = email;
         this.profile = profile;
+    }
+
+    public void createUserInfo(UserUpdateInfoDto userUpdateInfoDto) {
+        this.name = userUpdateInfoDto.name();
+        this.nickname = userUpdateInfoDto.nickName();
+        this.email = userUpdateInfoDto.email();
+        this.gitToken = userUpdateInfoDto.gitToken();
     }
 }

@@ -214,8 +214,9 @@ public class ProjectService {
         }
     }
 
-    public String findTemplateToProject(Long projectId) {
-        Projects project = projectRepository.findById(projectId).orElse(null);
+    public String findTemplateToProject(String repo, String owner) {
+        Projects project = projectRepository.findByGithubOwnerAndGithubRepository(owner, repo).orElse(null);
+        assert project != null;
         return project.getReviewTemplate();
     }
 
