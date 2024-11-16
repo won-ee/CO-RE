@@ -34,4 +34,5 @@ public class Carrots extends Base {
     @JoinColumn(name = "project_user_approver_id")
     private ProjectUsers projectUserApprover;
 
+
 }

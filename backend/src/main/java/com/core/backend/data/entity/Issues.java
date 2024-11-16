@@ -56,5 +56,4 @@ public class Issues extends Base {
 
     @OneToMany(mappedBy = "issue")
     private List<Carrots> carrotsList = new ArrayList<>();
-
 }

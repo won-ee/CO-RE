@@ -41,27 +41,8 @@ public class IssueService {
         List<IssueListDto> issueList = new ArrayList<>();
 
         for (Issues issue : getIssueList) {
-
-            IssueListDto newIssueDto = new IssueListDto(
-                    issue.getId(),
-                    issue.getTitle(),
-                    issue.getContent(),
-                    issue.getIssueNumber(),
-                    issue.getIssuePriority(),
-                    issue.getDeadLine(),
-                    issue.getStatus(),
-                    issue.getProjectUser().getId(),
-                    issue.getProjectUser().getUser().getProfile(),
-                    issue.getProjectUser().getUser().getName(),
-                    Optional.ofNullable(issue.getEpic())
-                            .map(Epics::getName)
-                            .orElse(""),
-                    Optional.ofNullable(issue.getEpic())
-                            .map(Epics::getKey)
-                            .orElse("")
-            );
+            IssueListDto newIssueDto = IssueListDto.fromEntity(issue);
             issueList.add(newIssueDto);
-
         }
         return issueList;
     }
