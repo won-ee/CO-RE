@@ -6,6 +6,7 @@ import {
   getVersionData,
   getEditVersion,
   getVersionStatsData,
+  getVersionListData,
 } from "../api/dashboardAPI";
 import {
   StatsDataType,
@@ -15,12 +16,24 @@ import {
   DashIssueType,
   VersionDataType,
   VersionStatsDataType,
+  DashVersionDataType,
 } from "../Types/dashboardType";
 
 export const useDashboard = (params: StatsParamsType) => {
   return useQuery<StatsDataType, Error>(
     ["dashboardData", params],
     () => getDashStatsData(params),
+    {
+      enabled: !!params?.owner && !!params?.repo,
+      staleTime: 1000 * 60 * 5,
+    },
+  );
+};
+
+export const useVersionList = (params: StatsParamsType) => {
+  return useQuery<DashVersionDataType[], Error>(
+    ["dashVersionList", params],
+    () => getVersionListData(params),
     {
       enabled: !!params?.owner && !!params?.repo,
       staleTime: 1000 * 60 * 5,
@@ -80,7 +93,7 @@ export const useEditVersion = (selectedRepoId: string | null) => {
 };
 
 export const useVersionStats = (selectedRepoId: string | null) => {
-  return useQuery<VersionStatsDataType[]>(
+  return useQuery<VersionStatsDataType>(
     ["versionStatsData", selectedRepoId],
     () => getVersionStatsData(selectedRepoId!),
     { enabled: !!selectedRepoId, staleTime: 1000 * 60 * 5 },

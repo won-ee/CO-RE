@@ -21,15 +21,15 @@ import {
   DotProps,
 } from "recharts";
 import NoteSection from "./NoteSection";
-
+import { useProjectStore } from "../../store/userStore";
+import { useVersionList, useVersionStats } from "../../hooks/useDashboard";
 import {
-  DashVersionDataType,
-  VersionDataType,
-  CategoryDataType,
   VersionStatsDataType,
+  CategoryDataType,
 } from "../../Types/dashboardType";
-
-type StatusData = { [key: string]: CategoryDataType[] };
+type CategoryData = { day: number; value: number }[];
+type VersionData = { [version: string]: string[] };
+type VersionNotes = { [version: string]: string };
 
 const CustomDot: React.FC<DotProps & { index?: number }> = (props) => {
   const { cx, cy, index } = props;
@@ -39,70 +39,105 @@ const CustomDot: React.FC<DotProps & { index?: number }> = (props) => {
   return null;
 };
 
-interface MainGraphProps {
-  versiondata: DashVersionDataType[];
-  versionkeysdata: VersionStatsDataType[];
-  graphdata: CategoryDataType[];
-  notedata: VersionDataType[];
-}
+export type DropdownOption = "commits" | "pullRequests" | "reviews";
 
-const FilterAndGraphSection: React.FC<MainGraphProps> = ({
-  versiondata,
-  versionkeysdata,
-}) => {
-  const [versionData] = useState<DashVersionDataType[]>(versiondata || []);
-  const [statusData] = useState<StatusData>({});
-  const [versionDetails, setVersionDetails] = useState<VersionDataType | null>(
-    null,
-  );
-  const [graphData, setGraphData] = useState<CategoryDataType[]>([]);
+const FilterAndGraphSection: React.FC = () => {
+  const { selectedOwner, selectedRepo } = useProjectStore();
+  const [selectedVersion, setSelectedVersion] = useState<string>("1");
+  const [selectedData, setSelectedData] = useState<CategoryDataType[]>([]);
+  const [selectedCategory, setSelectedCategory] =
+    useState<DropdownOption>("commits");
 
-  const [selectedVersion, setSelectedVersion] = useState<string>("");
-  const [selectedKey, setSelectedKey] = useState<string>("");
+  const [graphData, setGraphData] = useState<CategoryData>([]);
 
-  const [showNote, setShowNote] = useState(false);
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
-  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
-  const [isEditing, setIsEditing] = useState(false);
 
-  const updateOptions = (option: string, subOptions: string[] = []) => {
-    if (selectedOptions.includes(option)) {
-      return selectedOptions.filter(
-        (opt) => ![option, ...subOptions].includes(opt),
-      );
+  //선택된 버젼
+
+  const {
+    data: versionList,
+    error: versionListError,
+    isLoading: versionListLoading,
+  } = useVersionList({
+    owner: selectedOwner,
+    repo: selectedRepo,
+  });
+  if (versionListError) {
+    <p>Loading...</p>;
+  }
+  if (versionListLoading) {
+    <p>Error</p>;
+  }
+
+  const {
+    data: VersionStats,
+    error: VersionStatsError,
+    isLoading: VersionStatsLoading,
+  } = useVersionStats(selectedVersion);
+  if (VersionStatsError) {
+    <p>Version Stats Loading...</p>;
+  }
+  if (VersionStatsLoading) {
+    <p>Version Stats Error</p>;
+  }
+
+  //전달할 데이터 설정
+  useEffect(() => {
+    if (VersionStats && selectedCategory) {
+      const filteredData = VersionStats[selectedCategory];
+      setSelectedData(filteredData || []);
     }
-    return Array.from(new Set([...selectedOptions, option, ...subOptions]));
+  }, [VersionStats, selectedCategory]);
+
+  //버젼
+  const handleVersionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const version = e.target.value;
+    setSelectedVersion(version);
   };
 
-  const handleOptionChange = (option: string, subOptions?: string[]) => {
-    setSelectedOptions(updateOptions(option, subOptions || []));
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedCategory(e.target.value as DropdownOption);
   };
 
-  const toggleSection = (section: string) => {
-    setExpandedSections((prev) =>
-      prev.includes(section)
-        ? prev.filter((s) => s !== section)
-        : [...prev, section],
-    );
-  };
+  // 노트 토글
+  // const toggleSection = (section: string) => {
+  //   setExpandedSections((prev) =>
+  //     prev.includes(section)
+  //       ? prev.filter((s) => s !== section)
+  //       : [...prev, section],
+  //   );
+  // };
 
-  useEffect(() => {
-    if (versiondata.length > 0) {
-      setSelectedVersion(versiondata[0].id);
-    }
-  }, [versiondata]);
-
-  useEffect(() => {
-    const keys = Object.keys(versionkeysdata);
-    if (keys.length > 0) {
-      setSelectedKey(keys[0]);
-    }
-  }, [versionkeysdata]);
-
-  useEffect(() => {
-    const data = selectedKey ? statusData[selectedKey] : undefined;
-    setGraphData(data || []);
-  }, [selectedKey, statusData]);
+  //노트 옵션
+  // const handleOptionChange = (option: string, subOptions?: string[]) => {
+  //   if (subOptions) {
+  //     if (selectedOptions.includes(option)) {
+  //       setSelectedOptions((prev) =>
+  //         prev.filter((opt) => ![option, ...subOptions].includes(opt)),
+  //       );
+  //     } else {
+  //       setSelectedOptions((prev) => {
+  //         const newOptions = [...prev, option, ...subOptions];
+  //         return Array.from(new Set(newOptions));
+  //       });
+  //     }
+  //   } else {
+  //     if (selectedOptions.includes(option)) {
+  //       setSelectedOptions((prev) => prev.filter((opt) => opt !== option));
+  //     } else {
+  //       setSelectedOptions((prev) => {
+  //         const newOptions = [...prev, option];
+  //         return Array.from(new Set(newOptions));
+  //       });
+  //     }
+  //   }
+  // };
+  const processedData = selectedData
+    .map((item) => ({
+      ...item,
+      day: `20${item.day}`,
+    }))
+    .sort((a, b) => new Date(a.day).getTime() - new Date(b.day).getTime());
 
   return (
     <FilterAndGraphLayout>
@@ -113,42 +148,29 @@ const FilterAndGraphSection: React.FC<MainGraphProps> = ({
           </FilterIconWrapper>
           <FilterLabel>Filter By</FilterLabel>
           <DropdownSelect
-            onChange={(e) => setSelectedVersion(e.target.value)}
+            onChange={handleVersionChange}
             value={selectedVersion}
           >
-            {versionData.map((version) => (
-              <option key={version.id} value={version.id}>
-                {version.name || version.id}
-              </option>
+            {versionList?.map((version, index: number) => (
+              <option key={index}>{version.id}</option>
             ))}
           </DropdownSelect>
           <DropdownSelect
-            onChange={(e) => setSelectedKey(e.target.value)}
-            value={selectedKey}
+            onChange={handleCategoryChange}
+            value={selectedCategory}
           >
-            {Object.keys(statusData).map((key) => (
-              <option key={key} value={key}>
-                {key}
-              </option>
-            ))}
+            <option value="commits">Commit</option>
+            <option value="pullRequests">Pull Requests</option>
+            <option value="reviews">Reviews</option>
           </DropdownSelect>
         </FilterGroupRow>
-        <ResetButtonBox
-          onClick={() => {
-            setSelectedVersion(versionData[0]?.id || "");
-            setSelectedKey(Object.keys(statusData)[0] || "");
-            setGraphData([]);
-          }}
-        >
-          <FaRedo /> Reset Filter
-        </ResetButtonBox>
       </FilterBox>
 
       <GraphContainer>
         <ResponsiveContainer width="100%" height={230}>
           <AreaChart
-            key={`${selectedVersion}-${selectedKey}`}
-            data={graphData}
+            key={`${selectedVersion}-${selectedCategory}`}
+            data={processedData}
             margin={{ left: -10, right: 10, top: 5, bottom: 5 }}
           >
             <defs>
@@ -158,11 +180,18 @@ const FilterAndGraphSection: React.FC<MainGraphProps> = ({
                 <stop offset="100%" stopColor="#E7EEFD" stopOpacity={0.1} />
               </linearGradient>
             </defs>
-            <XAxis dataKey="day" tickLine={false} interval={4} />
+            <XAxis
+              dataKey="day"
+              tickLine={false}
+              interval="preserveStartEnd"
+              tickFormatter={(tick) => tick}
+              tick={{ fontSize: 10, fill: "#555" }}
+            />
             <YAxis
               domain={["auto", "auto"]}
               tickLine={false}
               axisLine={false}
+              tick={{ fontSize: 12, fill: "#555" }}
             />
             <Tooltip />
             <CartesianGrid vertical={false} stroke="#EAEAEA" />
@@ -174,7 +203,7 @@ const FilterAndGraphSection: React.FC<MainGraphProps> = ({
               fill="url(#colorGradient)"
               connectNulls
               dot={<CustomDot />}
-              isAnimationActive
+              isAnimationActive={true}
               animationDuration={2500}
               animationEasing="ease-out"
             />
@@ -182,20 +211,20 @@ const FilterAndGraphSection: React.FC<MainGraphProps> = ({
         </ResponsiveContainer>
       </GraphContainer>
 
-      <NoteSection
+      {/* <NoteSection
         isEditing={isEditing}
         showNote={showNote}
         expandedSections={expandedSections}
         selectedOptions={selectedOptions}
         setShowNote={setShowNote}
-        selectedVersion={selectedVersion || ""}
-        versionDetails={versionDetails}
-        setVersionDetails={setVersionDetails}
+        setIsEditing={setIsEditing}
+        selectedVersion={selectedVersion}
+        selectedMonth={selectedMonth}
+        selectedCategory={selectedCategory}
+        defaultVersionNotes={defaultVersionNotes}
         toggleSection={toggleSection}
         handleOptionChange={handleOptionChange}
-        setIsEditing={setIsEditing}
-        selectedCategory="Commit"
-      />
+      /> */}
     </FilterAndGraphLayout>
   );
 };

@@ -7,6 +7,7 @@ import {
   DashIssueType,
   VersionDataType,
   VersionStatsDataType,
+  DashVersionDataType,
 } from "../Types/dashboardType";
 
 const BASE_URL = "http://54.180.83.239:8080";
@@ -26,6 +27,7 @@ export const getDashStatsData = async ({
       },
     },
   );
+  console.log(response.data);
   return response.data;
 };
 
@@ -76,6 +78,18 @@ export const getVersionData = async (id: string): Promise<VersionDataType> => {
   });
   return data;
 };
+export const getVersionListData = async ({
+  owner,
+  repo,
+}: StatsParamsType): Promise<DashVersionDataType[]> => {
+  const { data } = await axios.get(`${BASE_URL}/version/${owner}/${repo}`, {
+    headers: {
+      Authorization: `Bearer ${TOKEN}`,
+    },
+  });
+  console.log(data);
+  return data;
+};
 
 export const getEditVersion = async (
   id: string,
@@ -115,8 +129,8 @@ export const getEditVersion = async (
 
 export const getVersionStatsData = async (
   id: string,
-): Promise<VersionStatsDataType[]> => {
-  const response = await axios.get(`${BASE_URL}/status/${id}`, {
+): Promise<VersionStatsDataType> => {
+  const response = await axios.get(`${BASE_URL}/stats/${id}`, {
     headers: {
       Authorization: `Bearer ${TOKEN}`,
     },

@@ -69,7 +69,7 @@ export interface DashIssueType {
 
 export interface DashVersionDataType {
   id: string;
-  name: string | null;
+  name: string;
   owner: string;
   repo: string;
   content: string;
