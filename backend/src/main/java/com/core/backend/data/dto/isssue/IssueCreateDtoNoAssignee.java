@@ -1,16 +1,18 @@
 package com.core.backend.data.dto.isssue;
 
-
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+@Builder
 @Getter
-public class IssueCreateDto {
-
+@Setter
+public class IssueCreateDtoNoAssignee {
     @JsonProperty("fields")
     private Fields fields;
 
+    @Builder
     @Getter
     @Setter
     public static class Fields {
@@ -25,11 +27,9 @@ public class IssueCreateDto {
 
         @JsonProperty("priority")
         private Priority priority;
-
-        @JsonProperty("assignee")
-        private Assignee assignee;
     }
 
+    @Builder
     @Getter
     @Setter
     public static class Project {
@@ -37,6 +37,7 @@ public class IssueCreateDto {
         private String key;
     }
 
+    @Builder
     @Getter
     @Setter
     public static class IssueType {
@@ -44,17 +45,11 @@ public class IssueCreateDto {
         private String name;
     }
 
+    @Builder
     @Getter
     @Setter
     public static class Priority {
         @JsonProperty("name")
         private String name;
-    }
-
-    @Getter
-    @Setter
-    public static class Assignee {
-        @JsonProperty("accountId")
-        private String accountId;  // Assignee의 accountId
     }
 }

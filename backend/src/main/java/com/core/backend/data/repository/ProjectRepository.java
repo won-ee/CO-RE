@@ -20,4 +20,6 @@ public interface ProjectRepository extends JpaRepository<Projects, Long> {
     Optional<Projects> findByGithubOwnerAndGithubRepository(String githubOwner, String githubRepository);
 
     List<Projects> findAllByJiraGroup_Id(Long jiraGroupId);
+
+    Projects findByKey(String key);
 }

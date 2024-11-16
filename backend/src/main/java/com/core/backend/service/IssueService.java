@@ -1,13 +1,9 @@
 package com.core.backend.service;
 
-import com.core.backend.data.dto.isssue.IssueCreateDto;
-import com.core.backend.data.dto.isssue.IssueCreateEpicDto;
-import com.core.backend.data.dto.isssue.IssueListDto;
+import com.core.backend.data.dto.isssue.*;
 import com.core.backend.data.entity.*;
 import com.core.backend.data.enums.StatusEnum;
-import com.core.backend.data.repository.EpicRepository;
-import com.core.backend.data.repository.IssueRepository;
-import com.core.backend.data.repository.JiraOAuthTokenRepository;
+import com.core.backend.data.repository.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +32,8 @@ public class IssueService {
     private final JiraOAuthTokenRepository jiraOAuthTokenRepository;
     private final JiraOAuthTokenService jiraOAuthTokenService;
     private final EpicRepository epicRepository;
+    private final ProjectUserRepository projectUserRepository;
+    private final ProjectRepository projectRepository;
 
     public List<IssueListDto> getIssueListToProject(Long projectUserId) {
         List<Issues> getIssueList = issueRepository.findByProjectUserId(projectUserId);
@@ -533,6 +531,75 @@ public class IssueService {
     }
 
     public IssueListDto createIssueToJira(boolean isParent, ProjectUsers projectUsers, Object bodyDto, String deadline) throws IOException {
+
+        String projectKey = null;
+        if (isParent) {
+            IssueCreateEpicDto issueCreateEpicDto = (IssueCreateEpicDto) bodyDto;
+            projectKey = issueCreateEpicDto.getFields().getProject().getKey();
+
+        } else {
+            IssueCreateDto issueCreateDto = (IssueCreateDto) bodyDto;
+            projectKey = issueCreateDto.getFields().getProject().getKey();
+        }
+        Projects getProject = projectRepository.findByKey(projectKey);
+        List<ProjectUsers> projectUsersList = projectUserRepository.findAllByProjectId(getProject.getId());
+        ProjectUsers smallIssueUser = null;
+        int count = Integer.MAX_VALUE;
+        for (ProjectUsers pu : projectUsersList) {
+            if (pu.getIssueList().size() < count) {
+                smallIssueUser = pu;
+                count = pu.getIssueList().size();
+            }
+        }
+
+        if (smallIssueUser == null) {
+            if (isParent) {
+                bodyDto = IssueCreateEpicNoAssigneeDto.builder()
+                        .fields(IssueCreateEpicNoAssigneeDto.Fields.builder()
+                                .project(IssueCreateEpicNoAssigneeDto.Project.builder()
+                                        .key(((IssueCreateEpicDto) bodyDto).getFields().getProject().getKey())
+                                        .build())
+
+                                .summary(((IssueCreateEpicDto) bodyDto).getFields().getSummary())
+
+                                .issuetype(IssueCreateEpicNoAssigneeDto.IssueType.builder()
+                                        .name(((IssueCreateEpicDto) bodyDto).getFields().getIssuetype().getName())
+                                        .build())
+
+                                .parent(IssueCreateEpicNoAssigneeDto.Parent.builder()
+                                        .key(((IssueCreateEpicDto) bodyDto).getFields().getParent().getKey())
+                                        .build())
+
+                                .priority(IssueCreateEpicNoAssigneeDto.Priority.builder()
+                                        .name(((IssueCreateEpicDto) bodyDto).getFields().getPriority().getName())
+                                        .build())
+                                .build());
+            } else {
+                bodyDto = IssueCreateDtoNoAssignee.builder()
+                        .fields(IssueCreateDtoNoAssignee.Fields.builder()
+                                .project(IssueCreateDtoNoAssignee.Project.builder()
+                                        .key(((IssueCreateDto) bodyDto).getFields().getProject().getKey())
+                                        .build())
+
+                                .summary(((IssueCreateDto) bodyDto).getFields().getSummary())
+
+                                .issuetype(IssueCreateDtoNoAssignee.IssueType.builder()
+                                        .name(((IssueCreateDto) bodyDto).getFields().getIssuetype().getName())
+                                        .build())
+
+                                .priority(IssueCreateDtoNoAssignee.Priority.builder()
+                                        .name(((IssueCreateDto) bodyDto).getFields().getPriority().getName())
+                                        .build())
+                                .build());
+            }
+        } else {
+            if (isParent) {
+                ((IssueCreateEpicDto) bodyDto).getFields().getAssignee().setAccountId(smallIssueUser.getUser().getAccountId());
+            } else {
+                ((IssueCreateDto) bodyDto).getFields().getAssignee().setAccountId(smallIssueUser.getUser().getAccountId());
+            }
+        }
+
 
         JiraOAuthToken oAuthToken = jiraOAuthTokenService.getOAuthToken(projectUsers.getUser().getEmail());
         String accessToken = oAuthToken.getAccessToken();

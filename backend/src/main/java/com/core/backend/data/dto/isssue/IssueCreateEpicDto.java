@@ -13,7 +13,7 @@ public class IssueCreateEpicDto {
 
     @Getter
     @Setter
-    public static class Fields {
+    public class Fields {
         @JsonProperty("project")
         private Project project;
 

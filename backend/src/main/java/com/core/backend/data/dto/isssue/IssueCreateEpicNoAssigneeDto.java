@@ -1,35 +1,38 @@
 package com.core.backend.data.dto.isssue;
 
-
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+@Builder
 @Getter
-public class IssueCreateDto {
-
+@Setter
+public class IssueCreateEpicNoAssigneeDto {
     @JsonProperty("fields")
-    private Fields fields;
+    public Fields fields;
 
+    @Builder
     @Getter
     @Setter
     public static class Fields {
         @JsonProperty("project")
-        private Project project;
+        public Project project;
 
         @JsonProperty("summary")
-        private String summary;
+        public String summary;
 
         @JsonProperty("issuetype")
-        private IssueType issuetype;
+        public IssueType issuetype;
+
+        @JsonProperty("parent")
+        public Parent parent;
 
         @JsonProperty("priority")
-        private Priority priority;
-
-        @JsonProperty("assignee")
-        private Assignee assignee;
+        public Priority priority;
     }
 
+    @Builder
     @Getter
     @Setter
     public static class Project {
@@ -37,6 +40,7 @@ public class IssueCreateDto {
         private String key;
     }
 
+    @Builder
     @Getter
     @Setter
     public static class IssueType {
@@ -44,17 +48,19 @@ public class IssueCreateDto {
         private String name;
     }
 
+    @Builder
+    @Getter
+    @Setter
+    public static class Parent {
+        @JsonProperty("key")
+        private String key;
+    }
+
+    @Builder
     @Getter
     @Setter
     public static class Priority {
         @JsonProperty("name")
         private String name;
-    }
-
-    @Getter
-    @Setter
-    public static class Assignee {
-        @JsonProperty("accountId")
-        private String accountId;  // Assignee의 accountId
     }
 }
