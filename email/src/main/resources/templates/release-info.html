@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" as="style" crossorigin
+          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css"/>
+    <style>
+        body {
+            font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+        }
+
+        td {
+            font-family: inherit;
+        }
+    </style>
+    <title>core email notification</title>
+</head>
+<body>
+<div style="width:100%; padding-top:8px; margin: 12px; background-color: #ffffff">
+    <div style="width: fit-content; margin: 0 auto; padding: 14px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border: 1px solid #F2F2F2">
+        <table style="width: 700px; align-content: center; position: relative; overflow: hidden; margin: 0 auto; padding: 0;">
+            <tr>
+                <td style="height: 32px; padding-left: 6px; padding-right: 4px; padding-bottom: 10px">
+                    <img
+                            alt="core bot"
+                            style="width: 40px; height: 40px; vertical-align: middle;"
+                            src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2F8Zdzp%2FbtsKIDT9uWq%2FipEkbTqT36NOkYBBxbZ9X0%2Fimg.png"
+                    />
+                    <p style="font-size: 20px; font-weight: 554; text-align: left; display: inline-block; vertical-align: middle; margin-left: 12px;"
+                       th:text="'📢 ' + ${projectName} +  ' 버전 노트'">
+                        <!-- 제목 -->📢 코리 버전 노트
+                    </p>
+                </td>
+            </tr>
+            <!-- 구분선 -->
+            <tr>
+                <td colspan="2" style="height: 1px; background-color: darkgray; transform: scaleY(0.2);"></td>
+            </tr>
+            <tr>
+                <td colspan="2" style="height: 24px;"></td>
+            </tr>
+            <tr>
+                <td colspan="2"
+                    style="text-align: left; padding: 15px 16px; font-weight: 500; ">
+                    <!-- 내용 -->
+                    코리가 새로운 배포 내용을 알려드려요.
+                </td>
+            </tr>
+            <tr th:each="content : ${contents}">
+                <td colspan="2"
+                    style="text-align: left; padding: 11px 16px;" th:text="'💙 ' + ${content}">
+                    <!-- 내용 -->
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2"
+                    style="text-align: left; padding: 15px 16px; font-weight: 500; ">
+                    <!-- 내용 -->
+                    이번 버전의 코드 리뷰는?
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2"
+                    style="text-align: center; padding: 11px 16px; ">
+                    <table style="margin: 0 auto; text-align: left">
+                        <tr>
+                            <td style="width: 180px; padding: 11px;">총 커밋 수 🥳</td>
+                            <td style="font-weight: 500" th:number="${totalCommit}"></td>
+                        </tr>
+                        <tr>
+                            <td style="width: 180px; padding: 11px;">PR 수 💯</td>
+                            <td style="font-weight: 500" th:number="${totalPullRequest}"></td>
+                        </tr>
+                        <tr>
+                            <td style="width: 180px; padding: 11px;">리뷰 수 👏</td>
+                            <td style="font-weight: 500" th:number="${totalReview}"></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2" style="height: 24px;"></td>
+            </tr>
+
+            <!-- 구분선 -->
+            <tr>
+                <td colspan="2" style="height: 1px; background-color: darkgray; transform: scaleY(0.1);"></td>
+            </tr>
+            <tr>
+                <td colspan="2"
+                    style="font-size: 14px; font-weight: 244; text-align: center; color: gray; padding-top: 12px;">
+                    © 2024 CO:RE, All rights reserved.
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+</body>
+</html>
