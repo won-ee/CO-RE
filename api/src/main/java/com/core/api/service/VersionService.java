@@ -1,6 +1,7 @@
 package com.core.api.service;
 
 import com.core.api.client.BackendClient;
+import com.core.api.client.EmailClient;
 import com.core.api.data.dto.*;
 import com.core.api.data.dto.github.CommitServerDto;
 import com.core.api.data.dto.github.PullRequestServerDto;
@@ -24,6 +25,7 @@ public class VersionService {
 
     private final VersionRepository versionRepository;
     private final PullRequestRepository pullRequestRepository;
+    private final EmailClient emailClient;
     private final BackendClient backendClient;
 
     @Transactional
@@ -80,7 +82,7 @@ public class VersionService {
                 totalPullRequests,
                 totalReviews);
 
-        backendClient.sendEmail(email);
+        emailClient.sendEmail(email);
     }
 
     private void updateSinglePullRequestVersion(PullRequestServerDto pullRequest, Version version) {
