@@ -79,6 +79,11 @@ export interface ProjectSettingType {
 }
 
 export interface patchUserInfoType {
-  nickName: string;
-  gitToken: string;
+  nickName : string;
+  gitToken : string;
+}
+export interface githubInfoType {
+  projectId: number;
+  githubOwner: string;
+  githubRepo:string;
 }
