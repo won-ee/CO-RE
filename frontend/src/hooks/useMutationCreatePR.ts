@@ -1,8 +1,9 @@
 import { useMutation } from "react-query";
 import { postCreatePR,postPRReview } from "../api/pullRequestAPI";
 import { TotalReviewsType } from "../Types/pullRequestType";
-import { ProjectSettingType, patchUserInfoType } from "../Types/userType";
-import { patchProjectSetting, patchUserInfo } from "../api/userAPI";
+import { ProjectSettingType, githubInfoType, patchUserInfoType } from "../Types/userType";
+import { patchProjectSetting, patchUserInfo, postGithubInfo } from "../api/userAPI";
+import { postEpic, postNoEpic } from "../api/IssueAPI";
 
 export const useMutationCreatePR=()=>{
     return useMutation(postCreatePR)
@@ -39,3 +40,21 @@ export const useMutationPatchUserInfo = () => {
   });
 };
   
+
+export const useMutationGithubInfo=()=>{
+  return useMutation((params:githubInfoType) => postGithubInfo(params));
+}
+
+export const useMutationEpic = () => {
+  return useMutation(
+    ({ projectUserId, deadline, priority }: { projectUserId: number; deadline: string; priority: string }) => 
+      postEpic(projectUserId, deadline, priority)
+  );
+};
+
+export const useMutationNoEpic = () => {
+  return useMutation(
+    ({ projectUserId, deadline, priority }: { projectUserId: number; deadline: string; priority: string }) => 
+      postNoEpic(projectUserId, deadline, priority)
+  );
+};

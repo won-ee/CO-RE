@@ -124,7 +124,6 @@ export interface CommitListParams{
 
 export interface CommitListType{
   message: string;
-  writerName: string;
   date: string;
 }
 

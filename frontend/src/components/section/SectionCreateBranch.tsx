@@ -230,7 +230,7 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
           </DatePickerBox>
           <UrgentBox>
               Is it Urgent?
-              <UrgentButton onClick={handleIsUrgent} isUrgent={isUrgent}>
+              <UrgentButton onClick={handleIsUrgent} $isUrgent={isUrgent}>
                 {isUrgent ? 'Yes':'No'}
               </UrgentButton>
               *If you check this box, this request will not need approval.
