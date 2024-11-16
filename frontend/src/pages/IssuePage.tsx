@@ -6,6 +6,7 @@ import {
   FormContainerBox,
   FormWrapperBox,
   LeftSectionBox,
+  SelectInput,
   DividerLine,
   IssueContainerBox,
   IssueLayout,
@@ -28,6 +29,9 @@ const IssuePage:React.FC=()=>{
         <FormContainerBox>
           <FormWrapperBox>
             <LeftSectionBox>
+              <SelectInput>
+                <option>팀 선택</option>
+              </SelectInput>
               <ErrorInquiryButton
                 onClick={() => setIsErrorInquirySelected(true)}
                 $isErrorInquirySelected={isErrorInquirySelected}

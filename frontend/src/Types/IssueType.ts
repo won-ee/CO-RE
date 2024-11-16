@@ -13,3 +13,8 @@ export interface IssueListType {
     epicKey:string;
 };
   
+export interface EpicType {
+    id: number; 
+    key: string;
+    name: string; 
+  };

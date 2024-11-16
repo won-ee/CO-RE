@@ -64,6 +64,15 @@ export const RelocationButton = styled.button<ButtonProps>`
   background-color: ${({ $isErrorInquirySelected }) => ($isErrorInquirySelected ? '#4880FF' : 'white')};
 `;
 
+export const SelectInput = styled.select`
+  width: 100%;
+  padding: 10px;
+  font-size: 12px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+`;
+
 export const DividerLine = styled.div`
   width: 0.3px; 
   height: 300px; 
