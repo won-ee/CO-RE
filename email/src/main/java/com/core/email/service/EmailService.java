@@ -1,5 +1,6 @@
 package com.core.email.service;
 
+import com.core.email.data.dto.EmailRequestDto;
 import com.core.email.exception.EmailSendFailedException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -13,8 +14,6 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -25,16 +24,15 @@ public class EmailService {
     private final SpringTemplateEngine templateEngine;
 
     @Async
-    public void sendEmailNotice(String email, String subject, String title, List<String> contents) {
+    public void sendEmailNotice(String email, EmailRequestDto emailRequest) {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         try {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, "UTF-8");
             mimeMessageHelper.setTo(email);
 
             // 메일 제목 & 본문
-            mimeMessageHelper.setSubject("[CO:RE] " + subject);
-            mimeMessageHelper.setText(setContext(title,
-                    contents), true);
+            mimeMessageHelper.setSubject("[CO:RE] 🚀 새로운 버전이 배포되었어요.");
+            mimeMessageHelper.setText(setContext(emailRequest), true);
 
             mailSender.send(mimeMessage);
 
@@ -45,10 +43,13 @@ public class EmailService {
         }
     }
 
-    public String setContext(String title, List<String> contents) {
+    public String setContext(EmailRequestDto emailRequestDto) {
         Context context = new Context();
-        context.setVariable("title", title);
-        context.setVariable("contents", contents);
+        context.setVariable("contents", emailRequestDto.contents());
+        context.setVariable("projectName", emailRequestDto.projectName());
+        context.setVariable("totalCommit", emailRequestDto.totalCommit());
+        context.setVariable("totalPullRequest", emailRequestDto.totalPullRequest());
+        context.setVariable("totalReview", emailRequestDto.totalReview());
         return templateEngine.process("release-info", context);
     }
 }
