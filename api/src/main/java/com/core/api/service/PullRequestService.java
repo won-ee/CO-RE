@@ -98,22 +98,6 @@ public class PullRequestService {
                 .toList();
     }
 
-    public List<ChangeDto> getChangeFiles(String owner, String repo, String baseHead) {
-        Map<?, ?> data = gitHubClient.compareBranchHead(owner, repo, baseHead);
-        List<?> changeFiles = (List<?>) data.get("files");
-        return changeFiles.stream()
-                .map(file -> {
-                    FileDto fileDto = FileDto.of((Map<?, ?>) file);
-                    String path = URLUtils.parseFileName(fileDto.contentsUrl());
-                    String ref = URLUtils.parseRefValue(fileDto.contentsUrl());
-                    return Optional.ofNullable(gitHubClient.getContents(owner, repo, path, ref))
-                            .map(contentMap -> (String) contentMap.get("content"))
-                            .map(DecodingUtils::decodeBase64)
-                            .map(decodedContent -> ChangeDto.of(fileDto, decodedContent))
-                            .orElseThrow(() -> new RuntimeException("Content not found for path: " + path));
-                })
-                .toList();
-    }
 
     public MergeResponseDto mergePullRequest(String owner, String repo, int pullId, CommitMessageDto commitMessage) {
         return gitHubClient.mergePullRequest(owner, repo, pullId, CommitMessageServerDto.of(commitMessage));
