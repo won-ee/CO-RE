@@ -53,3 +53,16 @@ export interface DashPRDataType {
   reviewers: Reviewer[];
   commentCount: number;
 }
+
+export interface DashIssueType {
+  issueId: number;
+  issueTitle: string;
+  issueContent: string;
+  issueKey: string;
+  issuePriority: number;
+  issueDeadLine: string | null;
+  issueStatus: "TODO" | "IN_PROGRESS" | "DONE";
+  managerUserId: number;
+  managerUserImage: string;
+  managerUserName: string;
+}

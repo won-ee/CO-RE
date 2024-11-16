@@ -1,10 +1,15 @@
 import { useQuery } from "react-query";
-import { getDashStatsData, getDashPRData } from "../api/dashboardAPI";
+import {
+  getDashStatsData,
+  getDashPRData,
+  getDashIssueData,
+} from "../api/dashboardAPI";
 import {
   StatsDataType,
   StatsParamsType,
   DashPRDataType,
   DashPRParamsType,
+  DashIssueType,
 } from "../Types/dashboardType";
 
 export const useDashboard = (params: StatsParamsType) => {
@@ -24,6 +29,17 @@ export const useDashPR = (params: DashPRParamsType) => {
     () => getDashPRData(params),
     {
       enabled: !!params?.owner && !!params?.repo && !!params?.state,
+      staleTime: 1000 * 60 * 5,
+    },
+  );
+};
+
+export const useDashIssue = (selectedProjectUserId: number) => {
+  return useQuery<DashIssueType[], Error>(
+    ["dashIssueData", selectedProjectUserId],
+    () => getDashIssueData(selectedProjectUserId),
+    {
+      enabled: !!selectedProjectUserId,
       staleTime: 1000 * 60 * 5,
     },
   );
