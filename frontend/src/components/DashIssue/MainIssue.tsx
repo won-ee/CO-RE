@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   IssueInfoSection,
   IssueItem,
@@ -16,43 +16,63 @@ import {
 } from "./MainIssue.styled";
 
 import greenIcon from "../../assets/DashboardIssueIcon.png";
+import highestIcon from "../../assets/highest.png";
+import highIcon from "../../assets/high.png";
+import middleIcon from "../../assets/middle.png";
+import lowIcon from "../../assets/low.png";
+import lowestIcon from "../../assets/lowest.png";
 
-interface IssueData {
-  NAME: string;
-  ID: string;
-  STATUS: "In Progress" | "To Do";
-  COMMENTS: number;
+import { DashIssueType } from "../../Types/dashboardType";
+
+interface MainIssueProps {
+  data: DashIssueType[] | undefined;
 }
 
-const MainIssue: React.FC = () => {
-  const [issues, setIssues] = useState<IssueData[]>([]);
-
-  useEffect(() => {
-    fetch("/DashboardIssue.json")
-      .then((response) => response.json())
-      .then((data) => setIssues(data))
-      .catch((error) => console.error("Error loading issues:", error));
-  }, []);
-
+const MainIssue: React.FC<MainIssueProps> = ({ data }) => {
   return (
     <MainIssueLayout>
       <IssueInfoSection>
         <SectionTitleText>Issue Info</SectionTitleText>
         <IssuesListContainer>
-          {issues.map((issue, index) => (
+          {data?.map((issue, index) => (
             <IssueItem key={index}>
               <IssueDetailsWrapper>
                 <IssueIcon src={greenIcon} alt="Issue Icon" />
                 <IssueTextWrapper>
-                  <IssueNameLabel>{issue.NAME}</IssueNameLabel>
-                  <IssueIDLabel>{issue.ID}</IssueIDLabel>
+                  <IssueNameLabel>{issue.issueTitle}</IssueNameLabel>
+                  <IssueIDLabel>{issue.issueKey}</IssueIDLabel>
                 </IssueTextWrapper>
               </IssueDetailsWrapper>
               <IssueStatusWrapper>
-                <IssueStatusLabel $status={issue.STATUS}>
-                  {issue.STATUS.replace("-", " ")}
+                <IssueStatusLabel $status={issue.issueStatus}>
+                  {issue.issueStatus.replace("-", " ")}
                 </IssueStatusLabel>
-                <CommentCountLabel>{issue.COMMENTS}</CommentCountLabel>
+                <CommentCountLabel>
+                  <img
+                    src={
+                      issue.issuePriority === 1
+                        ? highestIcon
+                        : issue.issuePriority === 2
+                          ? highIcon
+                          : issue.issuePriority === 3
+                            ? middleIcon
+                            : issue.issuePriority === 4
+                              ? lowIcon
+                              : lowestIcon
+                    }
+                    alt={
+                      issue.issuePriority === 1
+                        ? "Highest"
+                        : issue.issuePriority === 2
+                          ? "High"
+                          : issue.issuePriority === 3
+                            ? "Middle"
+                            : issue.issuePriority === 4
+                              ? "Low"
+                              : "Lowest"
+                    }
+                  />
+                </CommentCountLabel>
               </IssueStatusWrapper>
             </IssueItem>
           ))}

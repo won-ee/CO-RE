@@ -189,7 +189,7 @@ export const PriorityBox : SingleSelectType = {
 
 export const CreateButtonBox = styled.div`
   margin-top: 25px;
-  margin-bottom: 100px;
+  margin-bottom: 25px;
 `
 export const TabBox = styled.div`
   display: flex;

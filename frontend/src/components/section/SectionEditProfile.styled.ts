@@ -3,19 +3,20 @@ import styled from "styled-components";
 export const ContainerLayout = styled.div`
     display: flex;
     flex-direction: row;
-`
+`;
 
 export const ImgBox = styled.div`
     position: relative;
     margin-left: 60px;
-`
+`;
 
 export const ProfileImg = styled.img`
     width: 130px;
     height: 130px;
     border-radius: 50%;
     margin-left: 20px;
-`
+`;
+
 export const EditImg = styled.img`
     position: absolute;
     width: 30px;
@@ -23,34 +24,34 @@ export const EditImg = styled.img`
     top: 85px;
     right: -5px;
     cursor: pointer;
-`
+`;
 
 export const FormBox = styled.div`
     margin-left: 50px;
-`
-
-export const Form = styled.form`
-
 `;
 
-export const FormLow = styled.form`
+export const Form = styled.div`
+    display: flex;
+    flex-direction: column;
+`;
+
+export const FormLow = styled.div`
     display: flex;
     flex-direction: row;
 `;
 
-export const FormLeft= styled.form`
-
+export const FormLeft = styled.div` 
 `;
 
-export const FormRight= styled.form`
-     margin-left: 20px; 
+export const FormRight = styled.div` 
+    margin-left: 20px;
 `;
 
 export const LabelBox = styled.div`
     display: flex;
     flex-direction: column;
     margin-top: 10px;
-`
+`;
 
 export const Label = styled.label`
     font-size: 14px;
@@ -68,6 +69,17 @@ export const ProfileBox = styled.div`
     color: #718EBF;
 `;
 
+export const NickNameInput = styled.input`
+    width: 300px;
+    height: 25px;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    color: gray;
+`;
+
 export const GitTokenBox = styled.div`
     grid-column: span 2;
     display: flex;
@@ -82,10 +94,10 @@ export const GitTokenInput = styled.input`
     border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 14px;
-    color: #718EBF;
+    color: grey;
 `;
 
-export const SaveButton = styled.button`
+export const SaveButton = styled.div`
     grid-column: span 2;
     margin-top: 50px;
     margin-left: 565px;

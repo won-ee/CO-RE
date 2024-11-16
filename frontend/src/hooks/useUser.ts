@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query';
-import { ProjectMemberType, UserInfoDataType } from '../Types/userType';
-import { getMemberList, getUserInfo } from '../api/userAPI';
+import { ProjectDataType, ProjectMemberType, UserInfoDataType } from '../Types/userType';
+import { getMemberList, getProjectData, getUserInfo } from '../api/userAPI';
 import { useUserStore } from '../store/userStore';
 
 export const useQueryUserInfo = () => {
@@ -26,6 +26,20 @@ export const useMemberList = (selectedProjectId:number) => {
   const query = useQuery<ProjectMemberType[], Error>(
     ['MemberList',selectedProjectId],
     () => getMemberList(selectedProjectId),
+    {
+      staleTime: 1000 * 60 * 5, 
+      enabled: !!selectedProjectId, 
+    }
+  );
+
+  return query;
+};
+
+export const useProjectData = (selectedProjectId:number) => {
+
+  const query = useQuery<ProjectDataType, Error>(
+    ['ProjectData',selectedProjectId],
+    () => getProjectData(selectedProjectId),
     {
       staleTime: 1000 * 60 * 5, 
       enabled: !!selectedProjectId, 

@@ -7,14 +7,14 @@ import 'react-datepicker/dist/react-datepicker.css';
 import CalendarIcon from '../../assets/icon_calender.png'
 import TabChange from "../tab/TabChange";
 import SectionChanges from "./SectionChanges";
-// import SectionCommits from "./SectionCommits";
+import SectionCommits from "./SectionCommits";
 import ButtonCreateNewPR from "../buttons/ButtonCreateNewPR";
 import { useMutationCreatePR, useMutationpostPRReview } from "../../hooks/useMutationCreatePR";
 import ButtonSimpleSquare from "../buttons/ButtonSimpleSquare";
 import { TotalReviewsType, ReviewType } from "../../Types/pullRequestType";
 import CardFinalCodeReview from "../card/CardFinalCodeReview";
 import {useUserStore, useProjectStore} from "../../store/userStore";
-import { useQueryChangeList } from "../../hooks/usePullRequestData";
+import { useQueryChangeList, useQueryCommitList } from "../../hooks/usePullRequestData";
 
 // 옵션 예시
 const TempOption: OptionType[] = [
@@ -120,14 +120,22 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
   const changeParams ={
     owner: projectInfo.selectedOwner,
     repo : projectInfo.selectedRepo,
-    pullId: projectInfo.selectedProjectId,
+    base: sourceBranch?.label || "", // undefined일 경우 빈 문자열로 대체
+    head: targetBranch?.label || "", // undefined일 경우 빈 문자열로 대체
+  }
+
+  const commitParams = {
+    owner: projectInfo.selectedOwner,
+    repo : projectInfo.selectedRepo,
+    base: sourceBranch?.label || "", // undefined일 경우 빈 문자열로 대체
+    head: targetBranch?.label || "", // undefined일 경우 빈 문자열로 대체
   }
 
   const changesData = useQueryChangeList(changeParams)
+  const commitData = useQueryCommitList(commitParams)
 
   const tabComponents = {
-    // [TabsEnum.Commit]: <SectionCommits changes={changesData} onUpdateReviews={handleUpdateComments} />,
-    [TabsEnum.Commit]: <SectionChanges changes={changesData.data || []} onUpdateReviews={handleUpdateComments} />,
+    [TabsEnum.Commit]: <SectionCommits commits={commitData.data || []}/>,
     [TabsEnum.Change]: <SectionChanges changes={changesData.data || []} onUpdateReviews={handleUpdateComments} />,
   };
 
@@ -213,7 +221,8 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
               <DateInputContainer >
                 <DatePickerImg src={CalendarIcon}/>
                 {selectedDate ? selectedDate.toLocaleDateString() : "Select Date"}
-              </DateInputContainer>}
+              </DateInputContainer>
+              }
               dateFormat="yyyy/MM/dd" // 날짜 포맷 설정
               portalId="root-portal"  // Portal을 사용하여 날짜 선택 창이 body에 직접 렌더링됨
               popperPlacement="bottom-start" // 창이 날짜 선택 필드 아래에 표시되도록 위치 지정
@@ -242,7 +251,7 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
           <TabChange values={Object.values(TabsEnum)} 
             selectedTab={selectedTab} 
             onTabChange={handleTabChange} />
-          {reviews && 
+          {reviews.length>0 && 
           <div style={{position:'relative'}}>
           <ButtonSimpleSquare text="Finish Review" color="white" bgc="#1C8139" btnEvent={handlesIsFinalReviewOpen}/>
           {isFinalReviewOpen && <CardFinalCodeReview onAdd={handleAddReview} commentNums={reviews.length}/>}

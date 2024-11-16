@@ -30,17 +30,9 @@ public class Version {
     @Column(name = "version_content")
     private String content;
 
-    @Column(name = "version_commit_count")
-    private Integer commitCount;
-
-    @Column(name = "version_review_count")
-    private Integer reviewCount;
-
-    @Column(name = "version_pull_request_count")
-    private Integer pullRequestCount;
-
-    @Column(name = "version_hotfix_count")
-    private Integer hotfixCount;
+    @Column(name = "version_hotfix")
+    @ColumnDefault("false")
+    private Boolean hotfix = false;
 
     @Column(name = "version_mixing_kneading")
     @ColumnDefault("false")
@@ -89,15 +81,17 @@ public class Version {
     @OneToMany(mappedBy = "version")
     private List<PullRequest> pullRequests = new ArrayList<>();
 
-    public static Version createVersion(PullRequestServerDto pullRequest) {
+    public static Version createVersion(PullRequestServerDto pullRequest, Boolean hotfix) {
         Version version = new Version();
         version.owner = pullRequest.getOwner();
         version.repo = pullRequest.getRepo();
         version.content = pullRequest.getDescription();
+        version.hotfix = hotfix;
         return version;
     }
 
     public void updateVersion(VersionDto versionDto) {
+        this.hotfix = versionDto.getHotfix();
         this.name = versionDto.getName();
         this.content = versionDto.getContent();
         this.mixingKneading = versionDto.getMixingKneading();
@@ -111,5 +105,9 @@ public class Version {
         this.xian = versionDto.getXian();
         this.spe = versionDto.getSpe();
         this.cheonan = versionDto.getCheonan();
+    }
+
+    public void updateContent(String content) {
+        this.content = content;
     }
 }

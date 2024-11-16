@@ -91,7 +91,7 @@ public class PullRequest extends Base {
         pullRequest.deadline = LocalDate.parse(pullRequestInputDto.deadline(), DateTimeFormatter.ofPattern("yyyy-MM-dd"))
                 .atStartOfDay();
         pullRequest.priority = pullRequestInputDto.priority();
-        pullRequest.description = pullRequestInputDto.description();
+        pullRequest.description = pullRequestInputDto.body();
         pullRequest.writerId = pullRequestInputDto.writerId();
         pullRequest.owner = pullRequestInputDto.owner();
         pullRequest.repo = pullRequestInputDto.repo();

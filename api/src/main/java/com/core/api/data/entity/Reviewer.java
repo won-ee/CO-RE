@@ -36,6 +36,14 @@ public class Reviewer extends Base {
     private PullRequest pullRequest;
 
 
+    public static Reviewer createReviewer(String reviewerId, PullRequest pullRequest) {
+        Reviewer reviewer = new Reviewer();
+        reviewer.reviewerId = reviewerId;
+        reviewer.pullRequest = pullRequest;
+        reviewer.status = false;
+        return reviewer;
+    }
+
     public void updateReviewer(CommentDto comment) {
         this.score = comment.score();
         this.content = comment.content();

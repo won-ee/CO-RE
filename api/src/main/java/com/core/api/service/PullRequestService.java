@@ -1,8 +1,6 @@
 package com.core.api.service;
 
 import com.core.api.client.GitHubClient;
-import com.core.api.data.dto.ChangeDto;
-import com.core.api.data.dto.FileDto;
 import com.core.api.data.dto.commit.CommitDto;
 import com.core.api.data.dto.commit.CommitMessageDto;
 import com.core.api.data.dto.github.CommitMessageServerDto;
@@ -16,17 +14,16 @@ import com.core.api.data.dto.pullrequest.PullRequestSimpleDto;
 import com.core.api.data.dto.response.MergeResponseDto;
 import com.core.api.data.entity.Commit;
 import com.core.api.data.entity.PullRequest;
+import com.core.api.data.entity.Reviewer;
 import com.core.api.data.repository.CommitRepository;
 import com.core.api.data.repository.PullRequestRepository;
-import com.core.api.utils.DecodingUtils;
-import com.core.api.utils.URLUtils;
+import com.core.api.data.repository.ReviewerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +31,7 @@ public class PullRequestService {
 
     private final GitHubClient gitHubClient;
     private final PullRequestRepository pullRequestRepository;
+    private final ReviewerRepository reviewerRepository;
     private final CommitRepository commitRepository;
 
     @Transactional
@@ -47,6 +45,12 @@ public class PullRequestService {
         PullRequest pr = PullRequest.from(pullRequestInputDto, number);
         pullRequestRepository.save(pr);
 
+        pullRequestInputDto.reviewers()
+                .stream()
+                .map(reviewerName -> Reviewer.createReviewer(reviewerName, pr))
+                .forEach(reviewerRepository::save);
+
+
         gitHubClient.getCommits(pullRequestInputDto.owner(), pullRequestInputDto.repo(), number)
                 .stream()
                 .map(commitData -> CommitServerDto.fromApiResponse((Map<?, ?>) commitData))
@@ -58,8 +62,7 @@ public class PullRequestService {
 
     public List<PullRequestSimpleDto> getPullRequestListByReviewer(String owner, String repo) {
 
-        //TODO : 요청한 유저의 아이디로 변경
-        String userId = "JEM1224";
+        String userId = getUser();
         List<PullRequest> prList = pullRequestRepository.findAllByOwnerAndRepoWhereReviewerIs(owner, repo, userId)
                 .orElse(List.of());
 
@@ -71,8 +74,7 @@ public class PullRequestService {
 
     public List<PullRequestSimpleDto> getPullRequestListByWriter(String owner, String repo) {
 
-        //TODO : 요청한 유저의 아이디로 변경
-        String userId = "JEM1224";
+        String userId = getUser();
         List<PullRequest> prList = pullRequestRepository.findAllByOwnerAndRepoWhereWriterIs(owner, repo, userId)
                 .orElse(List.of());
 
@@ -98,22 +100,6 @@ public class PullRequestService {
                 .toList();
     }
 
-    public List<ChangeDto> getChangeFiles(String owner, String repo, String baseHead) {
-        Map<?, ?> data = gitHubClient.compareBranchHead(owner, repo, baseHead);
-        List<?> changeFiles = (List<?>) data.get("files");
-        return changeFiles.stream()
-                .map(file -> {
-                    FileDto fileDto = FileDto.of((Map<?, ?>) file);
-                    String path = URLUtils.parseFileName(fileDto.contentsUrl());
-                    String ref = URLUtils.parseRefValue(fileDto.contentsUrl());
-                    return Optional.ofNullable(gitHubClient.getContents(owner, repo, path, ref))
-                            .map(contentMap -> (String) contentMap.get("content"))
-                            .map(DecodingUtils::decodeBase64)
-                            .map(decodedContent -> ChangeDto.of(fileDto, decodedContent))
-                            .orElseThrow(() -> new RuntimeException("Content not found for path: " + path));
-                })
-                .toList();
-    }
 
     public MergeResponseDto mergePullRequest(String owner, String repo, int pullId, CommitMessageDto commitMessage) {
         return gitHubClient.mergePullRequest(owner, repo, pullId, CommitMessageServerDto.of(commitMessage));
@@ -135,6 +121,12 @@ public class PullRequestService {
                 .map(CommitDto::from)
                 .toList();
         return PullRequestDto.from(pr, commits, pr.getReviewers());
+    }
+
+    private String getUser() {
+        Map<?, ?> user = gitHubClient.getUser();
+        return user.get("login")
+                .toString();
     }
 
 

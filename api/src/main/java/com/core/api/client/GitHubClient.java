@@ -1,8 +1,10 @@
 package com.core.api.client;
 
+import com.core.api.config.GithubFeignConfig;
 import com.core.api.data.dto.FileDto;
 import com.core.api.data.dto.github.CommitMessageServerDto;
 import com.core.api.data.dto.github.PullRequestInputServerDto;
+import com.core.api.data.dto.github.WebhookDto;
 import com.core.api.data.dto.response.MergeResponseDto;
 import com.core.api.data.dto.review.CommentSimpleDto;
 import com.core.api.data.dto.review.ReviewBaseDto;
@@ -12,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-@FeignClient(name = "github", url = "https://api.github.com")
+@FeignClient(name = "github", url = "https://api.github.com", configuration = GithubFeignConfig.class)
 public interface GitHubClient {
 
     @PostMapping("/repos/{owner}/{repo}/pulls")
@@ -118,4 +120,28 @@ public interface GitHubClient {
             @PathVariable("repo") String repo,
             @PathVariable("pullId") Integer pullId
     );
+
+    @GetMapping("/repos/{owner}/{repo}/pulls/{pullId}")
+    Map<String, Object> getPullRequest(
+            @PathVariable("owner") String owner,
+            @PathVariable("repo") String repo,
+            @PathVariable("pullId") Integer pullId
+    );
+
+    @GetMapping("/repos/{owner}/{repo}/pulls/{pullId}/comments")
+    List<Map<String, Object>> getReviews(
+            @PathVariable("owner") String owner,
+            @PathVariable("repo") String repo,
+            @PathVariable("pullId") Integer pullId
+    );
+
+    @PostMapping("/repos/{owner}/{repo}/hooks")
+    void createWebhook(
+            @PathVariable("owner") String owner,
+            @PathVariable("repo") String repo,
+            @RequestBody WebhookDto webhookDto
+    );
+
+    @GetMapping("/user")
+    Map<String, Object> getUser();
 }
