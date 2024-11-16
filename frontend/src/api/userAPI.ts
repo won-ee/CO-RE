@@ -89,3 +89,15 @@ export const postGithubInfo = async (
   return response.data;
 };
 
+export const getAllProject = async (projectUserId:number) => {
+  const response = await axios.get(
+    `${BASE_URL}/group/search/project-list/${projectUserId}`,{
+      headers: {
+        // withCredentials: true,
+        Authorization: `Bearer ${TOKEN}`
+      }
+    },
+  );  
+  
+  return response.data;
+};

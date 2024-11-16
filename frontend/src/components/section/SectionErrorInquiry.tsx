@@ -39,7 +39,6 @@ const SectionErrorInquiry: React.FC = () => {
   const [selectedEpic, setSelectedEpic] = useState<string>("");
   const { mutate: mutateEpic } = useMutationEpic();
   const { mutate: mutateNoEpic } = useMutationNoEpic();
-  console.log(selectedDate);
   
   const handlePriorityChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedPriority(event.target.value);
