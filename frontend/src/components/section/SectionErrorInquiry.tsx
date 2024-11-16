@@ -50,6 +50,7 @@ const SectionErrorInquiry: React.FC = () => {
   };
 
   const test = () => {
+    setSelectedDate(new Date())
     if (selectedDate) {
       const formattedDate = selectedDate.toLocaleDateString("en-CA");
       if (selectedEpic) {
@@ -90,10 +91,7 @@ const SectionErrorInquiry: React.FC = () => {
         <div>
           <FormLabel>[필수] 마감일자를 선택해주세요</FormLabel>
           <StyledDatePicker
-            selected={selectedDate}
-            onChange={(date: Date) => setSelectedDate(date)}
-            dateFormat="yyyy-MM-dd"
-            placeholderText="날짜를 선택하세요"
+    
           />
         </div>
       </FormRow>
