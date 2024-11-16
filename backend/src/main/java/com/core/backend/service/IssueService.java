@@ -215,6 +215,7 @@ public class IssueService {
                                     .name(epicName)
                                     .url(epicUrl)
                                     .jiraId(epicId)
+                                    .project(project)
                                     .build());
 
                     saveIssueListToJira(newEpic, extractIssueDetails(allIssues), user, accessToken);

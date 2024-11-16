@@ -1,5 +1,6 @@
 package com.core.backend.service;
 
+import com.core.backend.data.dto.epics.EpicListDto;
 import com.core.backend.data.dto.projects.ProjectGitSetDto;
 import com.core.backend.data.dto.projects.ProjectSetDto;
 import com.core.backend.data.dto.projects.UpdateGitHubRequestDto;
@@ -8,6 +9,8 @@ import com.core.backend.data.entity.JiraGroups;
 import com.core.backend.data.entity.ProjectUsers;
 import com.core.backend.data.entity.Projects;
 import com.core.backend.data.entity.Users;
+import com.core.backend.data.repository.EpicRepository;
+import com.core.backend.data.repository.IssueRepository;
 import com.core.backend.data.repository.ProjectRepository;
 import com.core.backend.data.repository.ProjectUserRepository;
 import jakarta.transaction.Transactional;
@@ -19,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +36,8 @@ public class ProjectService {
     private final RoleService roleService;
     private final ProjectUserRepository projectUserRepository;
     private final IssueService issueService;
+    private final EpicRepository epicRepository;
+    private final IssueRepository issueRepository;
 
     public List<Map<String, Object>> getAllProjects(String accessToken, String cloudId) {
         try {
@@ -228,6 +234,16 @@ public class ProjectService {
 
     public Projects getProjectGit(String repo, String owner) {
         return projectRepository.findByGithubOwnerAndGithubRepository(owner, repo).orElse(null);
+    }
+
+    public List<EpicListDto> getAllEpicToProject(Long projectId) {
+        return epicRepository.findByProjectId(projectId).stream()
+                .map(epic -> EpicListDto.builder()
+                        .id(epic.getId())
+                        .key(epic.getKey())
+                        .name(epic.getName())
+                        .build())
+                .collect(Collectors.toList());
     }
 
 }

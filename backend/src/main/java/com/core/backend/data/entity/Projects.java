@@ -67,6 +67,9 @@ public class Projects {
     @OneToMany(mappedBy = "project")
     private List<Roles> rolesList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "project")
+    private List<Epics> epicsList = new ArrayList<>();
+
     public Projects updateGitHub(UpdateGitHubRequestDto updateGitHubRequestDto) {
         return Projects.builder()
                 .id(this.id)

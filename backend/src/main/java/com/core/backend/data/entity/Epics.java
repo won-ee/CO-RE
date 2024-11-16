@@ -32,4 +32,9 @@ public class Epics {
 
     @OneToMany(mappedBy = "epic")
     private List<Issues> issuesList = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "project_id", nullable = false)
+    private Projects project;
+
 }

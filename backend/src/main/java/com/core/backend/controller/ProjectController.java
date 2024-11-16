@@ -1,5 +1,6 @@
 package com.core.backend.controller;
 
+import com.core.backend.data.dto.epics.EpicListDto;
 import com.core.backend.data.dto.projects.ProjectGitSetDto;
 import com.core.backend.data.dto.projects.ProjectSetDto;
 import com.core.backend.data.dto.projects.UpdateGitHubRequestDto;
@@ -11,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -40,6 +43,11 @@ public class ProjectController {
     @GetMapping("/search/git-set")
     public ResponseEntity<ProjectGitSetDto> findProjectSetGit(@RequestParam("repo") String repo, @RequestParam("owner") String owner) {
         return new ResponseEntity<>(projectService.findGitSetToProject(repo, owner), HttpStatus.OK);
+    }
+
+    @GetMapping("/search/epic-list/{projectId}")
+    public ResponseEntity<List<EpicListDto>> findAllEpicToProject(@PathVariable Long projectId) {
+        return new ResponseEntity<>(projectService.getAllEpicToProject(projectId), HttpStatus.OK);
     }
 
 }
