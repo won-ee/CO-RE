@@ -1,5 +1,7 @@
 package com.core.api.data.dto.pullrequest;
 
+import java.util.List;
+
 public record PullRequestInputDto(
         String title,
         String body,
@@ -11,7 +13,8 @@ public record PullRequestInputDto(
         Boolean afterReview,
         String deadline,
         String priority,
-        String writerId
+        String writerId,
+        List<String> reviewers
 ) {
 
 
