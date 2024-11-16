@@ -15,7 +15,7 @@ const SectionIssueList: React.FC = () => {
   const { selectedProjectId } = useProjectStore();
   const { data } = useQueryIssueList(selectedProjectId);
   const [searchTerm, setSearchTerm] = useState("");
-
+  
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };

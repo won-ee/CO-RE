@@ -82,9 +82,9 @@ export const TaskStatusBox = styled.div<TaskStatusProps>`
   font-weight: bold;
   color: ${(props) => {
     switch (props.status) {
-      case 'In Progress':
+      case 'IN_PROGRESS':
         return '#6226EF';
-      case 'To Do':
+      case 'TODO':
         return '#202A30'; 
       case 'DONE':
         return '#00B69B'; 
@@ -94,9 +94,9 @@ export const TaskStatusBox = styled.div<TaskStatusProps>`
   }};
   background-color: ${(props) => {
     switch (props.status) {
-      case 'In Progress':
+      case 'IN_PROGRESS':
         return 'rgba(98, 38, 239, 0.2)';
-      case 'To Do':
+      case 'TODO':
         return 'rgba(32, 42, 48, 0.2)'; 
       case 'DONE':
         return 'rgba(0, 192, 155, 0.2)'; 
