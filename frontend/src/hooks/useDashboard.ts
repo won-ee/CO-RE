@@ -1,17 +1,22 @@
 import { useQuery } from "react-query";
-// import { getDashStatsData, getDashPRData } from "../api/dashboardAPI";
-import { getDashPRData } from "../api/dashboardAPI";
+import { getDashStatsData, getDashPRData } from "../api/dashboardAPI";
 import {
-  //   StatsDataType,
+  StatsDataType,
+  StatsParamsType,
   DashPRDataType,
   DashPRParamsType,
 } from "../Types/dashboardType";
 
-// export const useDashboard = () => {
-//   return useQuery<StatsDataType, Error>("dashboardData", getDashStatsData, {
-//     staleTime: 1000 * 60 * 5,
-//   });
-// };
+export const useDashboard = (params: StatsParamsType) => {
+  return useQuery<StatsDataType, Error>(
+    ["dashboardData", params],
+    () => getDashStatsData(params),
+    {
+      enabled: !!params?.owner && !!params?.repo,
+      staleTime: 1000 * 60 * 5,
+    },
+  );
+};
 
 export const useDashPR = (params: DashPRParamsType) => {
   return useQuery<DashPRDataType[], Error>(

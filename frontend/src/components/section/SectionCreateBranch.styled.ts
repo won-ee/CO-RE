@@ -140,6 +140,18 @@ export const UrgentButton = styled.div<UrgentProps>`
   color: white;
   cursor: pointer;
 `
+export const RandomButton = styled.div`
+  width: 110px;
+  height: 30px;
+  background-color: #197433;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  cursor: pointer;
+`
+
 export const PriorityBox : SingleSelectType = {
   control: (provided) => ({
     ...provided,
@@ -177,7 +189,7 @@ export const PriorityBox : SingleSelectType = {
 
 export const CreateButtonBox = styled.div`
   margin-top: 25px;
-  margin-bottom: 100px;
+  margin-bottom: 25px;
 `
 export const TabBox = styled.div`
   display: flex;

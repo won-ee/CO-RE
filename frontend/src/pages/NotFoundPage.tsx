@@ -7,11 +7,12 @@ interface NotFoundPageProps {
 }
 
 const NotFoundPage: React.FC<NotFoundPageProps> = ({ errorNumber }) => {
+  
   return (
-    <Background errorNumber={errorNumber}>
+    <Background $errorNumber={errorNumber}>
       <div className="stars">
         <div className="custom-navbar"></div>
-        <TextBox errorNumber={errorNumber}>
+        <TextBox $errorNumber={errorNumber}>
           <NotFoundText>{errorNumber}</NotFoundText>
           <ErrorText>ERROR</ErrorText>
           <a href="/dashboard" className="btn-go-home">GO BACK HOME</a>

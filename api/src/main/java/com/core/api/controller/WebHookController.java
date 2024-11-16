@@ -39,9 +39,6 @@ public class WebHookController {
         EventEnum eventEnum = EventEnum.valueOf(action.toUpperCase());
 
         switch (eventEnum) {
-            case EDITED:
-                pullRequestService.updatePullRequest(pullRequest);
-                break;
             case CLOSED:
                 if (Boolean.FALSE.equals(pullRequest.getMergeStatus())) {
                     return new ResponseEntity<>(HttpStatus.OK);

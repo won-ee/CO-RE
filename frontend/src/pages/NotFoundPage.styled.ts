@@ -1,18 +1,5 @@
 import styled, { css } from 'styled-components';
 
-
-
-
-export const TextBox = styled.div<{ errorNumber: number }>`
-  padding: 17% 5% 10% 5%;
-  text-align: center;
-  ${({ errorNumber }) =>
-    errorNumber === 403 &&
-    css`
-      margin-left: -100px;
-    `}
-`
-
 export const NotFoundText = styled.div`
   position: relative;
   border: none;
@@ -37,7 +24,18 @@ export const ErrorText = styled.div`
   pointer-events: none;
 `;
 
-export const Background = styled.div<{ errorNumber: number }>`
+
+export const TextBox = styled.div<{ $errorNumber: number }>`
+  padding: 17% 5% 10% 5%;
+  text-align: center;
+  ${({ $errorNumber }) =>
+    $errorNumber === 403 &&
+    css`
+      margin-left: -100px;
+    `}
+`;
+
+export const Background = styled.div<{ $errorNumber: number }>`
   position: fixed;
   width: 100%;
   height: 100%;
@@ -45,8 +43,8 @@ export const Background = styled.div<{ errorNumber: number }>`
   background-size: cover;
   z-index: 0;
   
-  ${({ errorNumber }) =>
-    errorNumber !== 403 &&
+  ${({ $errorNumber }) =>
+    $errorNumber !== 403 &&
     css`
       top: 0;
       left: 0;

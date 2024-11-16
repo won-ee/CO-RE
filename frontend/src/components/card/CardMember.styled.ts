@@ -32,11 +32,6 @@ export const Title = styled.p`
   margin: 5px 0;
 `;
 
-export const CardLow = styled.div`
-  display: flex;
-  flex-direction: row;
-`;
-
 export const Email = styled.p`
   font-size: 12px;
   color: #555;

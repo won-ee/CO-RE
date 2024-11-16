@@ -1,12 +1,12 @@
 import styled from "styled-components";
 
-export const FormLayout = styled.form`
+export const FormLayout = styled.div`
     display: flex;
     flex-direction:column;
     margin-left: 50px;
 `;
 
-export const FormRow = styled.form`
+export const FormRow = styled.div`
     display: flex;
     flex-direction: row;
     margin-bottom: 30px;
@@ -27,7 +27,7 @@ export const Input = styled.input`
     border-radius: 5px;
     width: 345px;
     font-size: 14px;
-    color: #718EBF;
+    color: gray;
     margin-left: 30px;
 
 `;
@@ -40,8 +40,9 @@ export const TemplateInput = styled.textarea`
     border-radius: 5px;
     width: 820px;
     font-size: 14px;
-    color: #718EBF;
+    color: gray;
     resize: none;
+    font-family: 'Pretendard';
     &::placeholder{
         font-family: 'Pretendard';
         font-size: 14px;
@@ -49,7 +50,7 @@ export const TemplateInput = styled.textarea`
     }
 `;
 
-export const SaveButton = styled.button`
+export const SaveButton = styled.div`
     grid-column: span 2;
     margin-top: 50px;
     margin-left: 770px;

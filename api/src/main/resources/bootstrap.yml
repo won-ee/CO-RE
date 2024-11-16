@@ -1,19 +1,14 @@
 server:
-  port: 8888
+  port: 8081
 
 spring:
   application:
-    name: config
+    name: api
   cloud:
     config:
-      server:
-        git:
-          uri: ${GITHUB_REPO}
-          default-label: main
-          basedir: config
-          searchPaths: config
-          username: ${GITHUB_USERNAME}
-          password: ${GITHUB_PASSWORD}
+      uri: http://config:8888
+  profiles:
+    active: api
 
 eureka:
   instance:

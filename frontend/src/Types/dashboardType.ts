@@ -1,12 +1,28 @@
 export interface StatsDataType {
   totalCommit: number;
+  currentWeekCommit: number;
+  lastWeekCommit: number;
+  commitGrowthRate: number;
+
   totalPullRequest: number;
+  currentWeekPullRequest: number;
+  lastWeekPullRequest: number;
+  pullRequestGrowthRate: number;
+
   totalReview: number;
+  currentWeekReview: number;
+  lastWeekReview: number;
+  reviewGrowthRate: number;
+
   totalHotfix: number;
-  weeklyCommit: number;
-  weeklyPullRequest: number;
-  weeklyReview: number;
-  weeklyHotfix: number;
+  currentWeekHotfix: number;
+  lastWeekHotfix: number;
+  hotfixGrowthRate: number;
+}
+
+export interface StatsParamsType {
+  owner: string | null;
+  repo: string | null;
 }
 
 export interface DashPRParamsType {

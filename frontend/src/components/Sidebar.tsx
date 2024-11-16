@@ -17,22 +17,23 @@ import Icon_member from "../assets/icon_member.png";
 import Icon_pr from "../assets/icon_pr.png";
 import Icon_logout from "../assets/icon_logout.png";
 import Icon_setting from "../assets/icon_setting.png";
-import useUserStore from "../store/userStore.ts";
+import { useProjectStore, useUserStore } from "../store/userStore.ts";
 import { useEffect } from "react";
 
 function Sidebar() {
-  const { logout } = useUserStore();
-  const test = true;
+  const { logout,userInfo } = useUserStore();
+  const { selectedOwner, selectedRepo,selectedOwnerId } = useProjectStore();
   const navigate = useNavigate();
   const location = useLocation();
-
+  
   useEffect(() => {
-    if (test) {
-      navigate("/project");
-    } else {
-      navigate("/403ERROR");
-    }
-  }, [test, navigate]);
+    if (selectedOwner||selectedRepo) {
+      if (userInfo?.userInfo.accountId === selectedOwnerId){
+        navigate("/project");
+      }else{
+        navigate("/403ERROR");
+      }
+  }}, [navigate]);
 
   const handleLogout = () => {
     logout();

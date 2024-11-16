@@ -1,6 +1,7 @@
-import { CardSelectBranchLayout, CardSelectBranchHeader, ChoiceStyles, BranchBox } from "./CardSelectBranch.styled";
+import { CardSelectBranchLayout, CardSelectBranchHeader, ChoiceStyles, BranchBox, WriterImg, TitleBox, NameBox } from "./CardSelectBranch.styled";
 import Select, { OptionsOrGroups, GroupBase, SingleValue } from 'react-select'
 import { OptionType } from "../../Types/SelectType";
+import useDateDiff from "../../hooks/useDateDiff";
 
 interface Props{
     name:string;
@@ -10,12 +11,13 @@ interface Props{
 }
 
 function CardSelectBranch({ name, selectedOp, handleChange, option }: Props) {
-  // const isSingleOption = (option: typeof selectedOp): option is OptionType => {
-  //   return !!option && typeof option === 'object' && 'label' in option;
-  // };
+  const isSingleOption = (option: typeof selectedOp): option is OptionType => {
+    return !!option && typeof option === 'object' && 'label' in option;
+  };
 
-  // const commitInfo = isSingleOption(selectedOp) ? JSON.parse(selectedOp.value) : null;
-
+  const commitInfo = isSingleOption(selectedOp) ? JSON.parse(selectedOp.value) : null;
+  const dateDiff = useDateDiff(commitInfo?.date || null);
+  
   return (
     <CardSelectBranchLayout>
         <CardSelectBranchHeader>
@@ -31,15 +33,20 @@ function CardSelectBranch({ name, selectedOp, handleChange, option }: Props) {
             getOptionValue={(option) => option.value}
         />
         <BranchBox>
-          {/* {commitInfo ? (
+          {commitInfo ? (
             <>
-              <div>커밋 이름: {commitInfo.commitName}</div>
-              <div>작성자: {commitInfo.author}</div>
-              <div>날짜: {commitInfo.date}</div>
+              <WriterImg src={commitInfo.writerImg}/>
+              <TitleBox>
+                {commitInfo.message}
+                <NameBox>
+                  <span>{commitInfo.writerId}</span>
+                  <span>{dateDiff}</span>
+                </NameBox>
+              </TitleBox>
             </>
           ) : (
             'Select a branch to compare'
-          )} */}
+          )}
         </BranchBox>
     </CardSelectBranchLayout>
   )
