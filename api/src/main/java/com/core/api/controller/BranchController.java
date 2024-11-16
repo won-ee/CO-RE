@@ -1,6 +1,7 @@
 package com.core.api.controller;
 
 
+import com.core.api.data.dto.ChangeDto;
 import com.core.api.data.dto.response.BranchResponseDto;
 import com.core.api.data.dto.response.CompareBranchResponseDto;
 import com.core.api.service.BranchService;
@@ -30,5 +31,11 @@ public class BranchController {
     public ResponseEntity<List<CompareBranchResponseDto>> compareBranchHead(@PathVariable String owner, @PathVariable String repo, @PathVariable String baseHead) {
         List<CompareBranchResponseDto> branchList = branchService.compareBranchHead(owner, repo, baseHead);
         return ResponseEntity.ok(branchList);
+    }
+
+    @GetMapping("/{owner}/{repo}/{baseHead}/files")
+    public ResponseEntity<List<ChangeDto>> getChangeFiles(@PathVariable String owner, @PathVariable String repo, @PathVariable String baseHead) {
+        List<ChangeDto> changeFiles = branchService.getChangeFiles(owner, repo, baseHead);
+        return ResponseEntity.ok(changeFiles);
     }
 }

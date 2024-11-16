@@ -4,10 +4,17 @@ package com.core.api.controller;
 import com.core.api.data.dto.review.CommentDto;
 import com.core.api.data.dto.review.CommentSimpleDto;
 import com.core.api.data.dto.review.ReviewBaseDto;
+import com.core.api.data.dto.review.ReviewDto;
+import com.core.api.enums.EventEnum;
 import com.core.api.service.ReviewService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/review")
@@ -15,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 public class ReviewController {
 
     private final ReviewService reviewService;
+    private final ObjectMapper objectMapper;
 
     @PostMapping("/{owner}/{repo}/{pullId}/comment")
     public ResponseEntity<Void> createComment(
@@ -86,5 +94,36 @@ public class ReviewController {
         return ResponseEntity.ok()
                 .build();
     }
+
+
+    @PostMapping(value = "/webhook", consumes = "application/x-www-form-urlencoded")
+    public ResponseEntity<Void> handleReviewWebhook(
+            @RequestHeader("X-GitHub-Event") String event,
+            @RequestHeader("X-GitHub-Delivery") String deliveryId,
+            @RequestHeader("X-GitHub-Hook-ID") String hookId,
+            @RequestParam String payload) throws JsonProcessingException {
+
+
+        Map<?, ?> data = objectMapper.readValue(payload, Map.class);
+        ReviewDto review = ReviewDto.fromApiResponse(data);
+
+        String action = (String) data.get("action");
+        EventEnum eventEnum = EventEnum.valueOf(action.toUpperCase());
+        switch (eventEnum) {
+            case CREATED, SUBMITTED:
+                reviewService.saveReview(review);
+                break;
+            case EDITED:
+                reviewService.updateReview(review);
+                break;
+            case DELETED:
+                reviewService.deleteReview(review.getId());
+                break;
+            default:
+                return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }
 

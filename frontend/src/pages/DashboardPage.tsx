@@ -6,11 +6,12 @@ import MainIssue from "../components/DashIssue/MainIssue";
 import LoadingPage from "./LoadingPage";
 import NotFoundPage from "./NotFoundPage";
 
-import { useDashboard, useDashPR } from "../hooks/useDashboard";
+import { useDashboard, useDashPR, useDashIssue } from "../hooks/useDashboard";
 import { useProjectStore } from "../store/userStore";
 
 const Dashboard: React.FC = () => {
-  const { selectedOwner, selectedRepo } = useProjectStore();
+  const { selectedOwner, selectedRepo, selectedProjectUserId } =
+    useProjectStore();
   const {
     data: dashboardData,
     isLoading: isDashboardLoading,
@@ -19,7 +20,6 @@ const Dashboard: React.FC = () => {
     owner: selectedOwner,
     repo: selectedRepo,
   });
-
   const {
     data: dashPRData,
     isLoading: isDashPRLoading,
@@ -29,10 +29,21 @@ const Dashboard: React.FC = () => {
     repo: selectedRepo,
     state: "receive",
   });
+  // console.log(dashboardData?.commitGrowthRate);
+  const {
+    data: dashIssueData,
+    isLoading: isDashIssueLoading,
+    error: dashIssueError,
+  } = useDashIssue(selectedProjectUserId);
 
-  if (isDashboardLoading || isDashPRLoading) return <LoadingPage />;
-  if (dashboardError || dashPRError) return <NotFoundPage errorNumber={404} />;
-  if (!dashboardData || !dashPRData) return null;
+  if (isDashboardLoading || isDashPRLoading || isDashIssueLoading)
+    return <LoadingPage />;
+  if (dashboardError || dashPRError || dashIssueError)
+    return <NotFoundPage errorNumber={404} />;
+  if (!dashboardData) return null;
+  if (!dashPRData) {
+    console.log("현재 데이터가 없습니다.");
+  }
 
   return (
     <div>
@@ -40,7 +51,7 @@ const Dashboard: React.FC = () => {
       <FilterAndGraphSection />
       <div>
         <MainPR data={dashPRData} />
-        <MainIssue />
+        <MainIssue data={dashIssueData} />
       </div>
     </div>
   );
