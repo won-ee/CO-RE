@@ -27,10 +27,10 @@ const CardIssue: React.FC<CardIssueProps> = ({ issue, index }) => {
             <TaskItemBox key={index}> 
                 <TaskNameBox>
                     <img src={taskImg} alt="" />
-                    <TaskNameText>{issue.issueContent}</TaskNameText> 
+                    <TaskNameText>{issue.issueTitle}</TaskNameText> 
                 </TaskNameBox>
                 <TaskIdText>{issue.issueKey}</TaskIdText>
-                <TaskTitleBox status={""}>{issue.issueTitle}</TaskTitleBox>
+                <TaskTitleBox status={""}>{issue.epicName}</TaskTitleBox>
                 <TaskStatusBox status={issue.issueStatus}>{issue.issueStatus}</TaskStatusBox>
                 <ArrowIcon src={
                             issue.issuePriority === 1 ? highIcon 

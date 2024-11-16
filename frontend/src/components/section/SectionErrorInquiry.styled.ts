@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 export const RightSectionLayout = styled.div`
   flex: 2;
@@ -58,16 +60,32 @@ export const FormRow = styled.div`
 `;
 
 export const TextInput = styled.textarea`
-  width: 580px;
+  width: 500px;
+  height: 50px;
   padding: 10px;
   font-size: 16px;
   border-radius: 5px;
   border: 1px solid #ccc;
   resize: vertical;
   box-sizing: border-box;
+  resize: none;
 `;
 
 export const SubmitButton = styled(BaseButton)`
   width: auto;
   padding: 10px 20px;
+`;
+
+export const StyledDatePicker = styled(DatePicker)`
+  width: 250px;
+  padding: 10px;
+  font-size: 12px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+
+  &:focus {
+    outline: none;
+    border-color: #007bff;
+  }
 `;
