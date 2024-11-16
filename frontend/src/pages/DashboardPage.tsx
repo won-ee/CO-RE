@@ -29,7 +29,7 @@ const Dashboard: React.FC = () => {
     repo: selectedRepo,
     state: "receive",
   });
-  console.log(dashboardData?.commitGrowthRate);
+  // console.log(dashboardData?.commitGrowthRate);
   const {
     data: dashIssueData,
     isLoading: isDashIssueLoading,
@@ -42,7 +42,7 @@ const Dashboard: React.FC = () => {
     return <NotFoundPage errorNumber={404} />;
   if (!dashboardData) return null;
   if (!dashPRData) {
-    console.log("안 되는중");
+    console.log("현재 데이터가 없습니다.");
   }
 
   return (

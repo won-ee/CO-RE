@@ -1,4 +1,3 @@
-import React from "react";
 import { StatsDataType } from "../../Types/dashboardType";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -20,7 +19,7 @@ import {
 } from "./MainStats.styled";
 
 export default function MainStats({ data }: { data: StatsDataType }) {
-  console.log("Received data in MainStats:", data);
+  // console.log("Received data in MainStats:", data);
   const settings = {
     infinite: true,
     speed: 500,
