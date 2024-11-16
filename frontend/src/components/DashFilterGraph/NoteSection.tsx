@@ -1,11 +1,13 @@
-import React from "react";
-import useNoteStore from "../../store/noteStore";
-import EditIcon from "../../assets/DashboardEditButton.png";
+import React, { useEffect, useCallback } from "react";
 import {
   VersionNoteWrapper,
   NoteToggleButton,
-  SelectedTagsContainer,
-  Tag,
+  NoteContainer,
+  NoteContent,
+  NoteTitle,
+  NoteTextarea,
+  NotePre,
+  EditIconImage,
   OptionContainer,
   OptionHeader,
   Checkbox,
@@ -13,27 +15,25 @@ import {
   SubOptionsContainer,
   SubOptionLabel,
   ChevronIcon,
-  EditIconImage,
-  NoteContainer,
-  NoteContent,
-  NoteTitle,
-  NoteTextarea,
-  NotePre,
+  SelectedTagsContainer,
+  Tag,
   OptionListContainer,
 } from "./FilterAndGraphSection.styled";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
-
-type VersionNotes = { [version: string]: string };
+import { FaChevronUp, FaChevronDown } from "react-icons/fa";
+import EditIcon from "../../assets/DashboardEditButton.png";
+import { VersionDataType } from "../../Types/dashboardType";
 
 type NoteSectionProps = {
   isEditing: boolean;
+  selectedOptions: string[];
   showNote: boolean;
   expandedSections: string[];
-  selectedOptions: string[];
   selectedVersion: string;
-  selectedMonth: string;
+  versionDetails: VersionDataType | null;
   selectedCategory: string;
-  defaultVersionNotes: VersionNotes;
+  setVersionDetails: React.Dispatch<
+    React.SetStateAction<VersionDataType | null>
+  >;
   setShowNote: React.Dispatch<React.SetStateAction<boolean>>;
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
   toggleSection: (section: string) => void;
@@ -43,17 +43,32 @@ type NoteSectionProps = {
 const NoteSection: React.FC<NoteSectionProps> = ({
   isEditing,
   showNote,
-  expandedSections,
   selectedOptions,
+  expandedSections,
+  selectedVersion,
+  versionDetails,
+  setVersionDetails,
   setShowNote,
   setIsEditing,
   toggleSection,
   handleOptionChange,
+  // selectedCategory,
 }) => {
-  const { noteContent, setNoteContent } = useNoteStore();
+  const initialSelectedOptions = useCallback(() => {
+    if (!versionDetails) return [];
+    return Object.entries(versionDetails)
+      .filter(([value]) => typeof value === "boolean" && value)
+      .map(([key]) => key);
+  }, [versionDetails]);
+
+  useEffect(() => {
+    console.log("Initial selected options:", initialSelectedOptions());
+  }, [versionDetails, initialSelectedOptions]);
 
   const handleNoteChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setNoteContent(e.target.value);
+    if (versionDetails) {
+      setVersionDetails({ ...versionDetails, content: e.target.value });
+    }
   };
 
   const toggleNote = () => setShowNote((prev) => !prev);
@@ -66,7 +81,7 @@ const NoteSection: React.FC<NoteSectionProps> = ({
         <span>Version Note</span>
       </NoteToggleButton>
 
-      {showNote && (
+      {showNote && versionDetails && (
         <VersionNoteWrapper>
           <EditIconImage
             src={EditIcon}
@@ -75,15 +90,15 @@ const NoteSection: React.FC<NoteSectionProps> = ({
           />
           <NoteContainer>
             <NoteContent>
-              <NoteTitle>Version Note</NoteTitle>
+              <NoteTitle>Version Note for {selectedVersion}</NoteTitle>
               {isEditing ? (
                 <NoteTextarea
-                  value={noteContent}
+                  value={versionDetails.content || ""}
                   onChange={handleNoteChange}
                   rows={10}
                 />
               ) : (
-                <NotePre>{noteContent}</NotePre>
+                <NotePre>{versionDetails.content}</NotePre>
               )}
             </NoteContent>
 
@@ -91,17 +106,23 @@ const NoteSection: React.FC<NoteSectionProps> = ({
               {[
                 {
                   label: "업무별",
-                  subOptions: ["믹싱/극판", "조립", "화성", "모듈/팩", "ESS"],
+                  subOptions: [
+                    "mixingKneading",
+                    "assembly",
+                    "modulePack",
+                    "chemicalProcessing",
+                    "ess",
+                  ],
                 },
                 {
                   label: "사이트별(중대형)",
                   subOptions: [
-                    "울산",
-                    "헝가리1",
-                    "헝가리2",
-                    "시안",
-                    "SPE",
-                    "천안",
+                    "ulsan",
+                    "hungary1",
+                    "hungary2",
+                    "xian",
+                    "spe",
+                    "cheonan",
                   ],
                 },
               ].map((option) => {
@@ -115,10 +136,9 @@ const NoteSection: React.FC<NoteSectionProps> = ({
                         type="checkbox"
                         checked={
                           isSelected ||
-                          (option.subOptions.length > 0 &&
-                            option.subOptions.every((sub) =>
-                              selectedOptions.includes(sub),
-                            ))
+                          option.subOptions.every((sub) =>
+                            selectedOptions.includes(sub),
+                          )
                         }
                         onChange={() =>
                           handleOptionChange(option.label, option.subOptions)
@@ -153,7 +173,9 @@ const NoteSection: React.FC<NoteSectionProps> = ({
                               <Checkbox
                                 type="checkbox"
                                 checked={selectedOptions.includes(subOption)}
-                                onChange={() => handleOptionChange(subOption)}
+                                onChange={() =>
+                                  handleOptionChange(subOption, undefined)
+                                }
                                 disabled={!isEditing}
                               />
                               <SubOptionLabel

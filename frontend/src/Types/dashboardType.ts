@@ -66,3 +66,38 @@ export interface DashIssueType {
   managerUserImage: string;
   managerUserName: string;
 }
+
+export interface DashVersionDataType {
+  id: string;
+  name: string | null;
+  owner: string;
+  repo: string;
+  content: string;
+}
+
+export interface VersionDataType {
+  name: string;
+  content: string;
+  mixingKneading: boolean;
+  assembly: boolean;
+  modulePack: boolean;
+  chemicalProcessing: boolean;
+  ess: boolean;
+  ulsan: boolean;
+  hungary1: boolean;
+  hungary2: boolean;
+  xian: boolean;
+  spe: boolean;
+  cheonan: boolean;
+}
+
+export interface CategoryDataType {
+  day: string;
+  count: number;
+}
+
+export interface VersionStatsDataType {
+  commits: CategoryDataType[];
+  pullRequests: CategoryDataType[];
+  reviews: CategoryDataType[];
+}

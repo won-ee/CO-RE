@@ -22,10 +22,14 @@ import {
 } from "recharts";
 import NoteSection from "./NoteSection";
 
-type CategoryData = { day: number; value: number }[];
-type MonthlyData = { [month: string]: { [category: string]: CategoryData } };
-type VersionData = { [version: string]: string[] };
-type VersionNotes = { [version: string]: string };
+import {
+  DashVersionDataType,
+  VersionDataType,
+  CategoryDataType,
+  VersionStatsDataType,
+} from "../../Types/dashboardType";
+
+type StatusData = { [key: string]: CategoryDataType[] };
 
 const CustomDot: React.FC<DotProps & { index?: number }> = (props) => {
   const { cx, cy, index } = props;
@@ -35,80 +39,43 @@ const CustomDot: React.FC<DotProps & { index?: number }> = (props) => {
   return null;
 };
 
-const FilterAndGraphSection: React.FC = () => {
-  const [versionData, setVersionData] = useState<VersionData>({});
-  const [monthlyData, setMonthlyData] = useState<MonthlyData>({});
-  const [defaultVersionNotes, setDefaultVersionNotes] = useState<VersionNotes>(
-    {},
+interface MainGraphProps {
+  versiondata: DashVersionDataType[];
+  versionkeysdata: VersionStatsDataType[];
+  graphdata: CategoryDataType[];
+  notedata: VersionDataType[];
+}
+
+const FilterAndGraphSection: React.FC<MainGraphProps> = ({
+  versiondata,
+  versionkeysdata,
+}) => {
+  const [versionData] = useState<DashVersionDataType[]>(versiondata || []);
+  const [statusData] = useState<StatusData>({});
+  const [versionDetails, setVersionDetails] = useState<VersionDataType | null>(
+    null,
   );
+  const [graphData, setGraphData] = useState<CategoryDataType[]>([]);
+
+  const [selectedVersion, setSelectedVersion] = useState<string>("");
+  const [selectedKey, setSelectedKey] = useState<string>("");
+
   const [showNote, setShowNote] = useState(false);
+  const [expandedSections, setExpandedSections] = useState<string[]>([]);
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [isEditing, setIsEditing] = useState(false);
 
-  const [selectedVersion, setSelectedVersion] = useState(() => {
-    const savedVersion = localStorage.getItem("lastSelectedVersion");
-    return savedVersion ? savedVersion : "1.9.1";
-  });
-
-  const [selectedOptions, setSelectedOptions] = useState<string[]>(() => {
-    const savedOptions = localStorage.getItem(
-      `selectedOptions-${selectedVersion}`,
-    );
-    return savedOptions ? JSON.parse(savedOptions) : [];
-  });
-
-  const [selectedMonth, setSelectedMonth] = useState("Oct");
-  const [selectedCategory, setSelectedCategory] = useState("Commit");
-  const [graphData, setGraphData] = useState<CategoryData>([]);
-
-  const [expandedSections, setExpandedSections] = useState<string[]>([]);
-
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const response = await fetch("/version_data.json");
-        const data = await response.json();
-        setVersionData(data.versionData);
-        setMonthlyData(data.monthlyData);
-        setDefaultVersionNotes(data.defaultVersionNotes);
-      } catch (error) {
-        console.error("Error loading data:", error);
-      }
-    };
-    loadData();
-  }, []);
-
-  useEffect(() => {
-    const savedOptions = localStorage.getItem(
-      `selectedOptions-${selectedVersion}`,
-    );
-    setSelectedOptions(savedOptions ? JSON.parse(savedOptions) : []);
-    localStorage.setItem("lastSelectedVersion", selectedVersion);
-  }, [selectedVersion]);
-
-  useEffect(() => {
-    const categoryData = monthlyData[selectedMonth]?.[selectedCategory] || [];
-    setGraphData(categoryData);
-  }, [selectedMonth, selectedCategory, monthlyData]);
-
-  useEffect(() => {
-    localStorage.setItem(
-      `selectedOptions-${selectedVersion}`,
-      JSON.stringify(selectedOptions),
-    );
-  }, [selectedOptions, selectedVersion]);
-
-  const handleVersionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const version = e.target.value;
-    setSelectedVersion(version);
-    setSelectedMonth(versionData[version][0]);
+  const updateOptions = (option: string, subOptions: string[] = []) => {
+    if (selectedOptions.includes(option)) {
+      return selectedOptions.filter(
+        (opt) => ![option, ...subOptions].includes(opt),
+      );
+    }
+    return Array.from(new Set([...selectedOptions, option, ...subOptions]));
   };
 
-  const handleMonthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedMonth(e.target.value);
-  };
-
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedCategory(e.target.value);
+  const handleOptionChange = (option: string, subOptions?: string[]) => {
+    setSelectedOptions(updateOptions(option, subOptions || []));
   };
 
   const toggleSection = (section: string) => {
@@ -119,29 +86,23 @@ const FilterAndGraphSection: React.FC = () => {
     );
   };
 
-  const handleOptionChange = (option: string, subOptions?: string[]) => {
-    if (subOptions) {
-      if (selectedOptions.includes(option)) {
-        setSelectedOptions((prev) =>
-          prev.filter((opt) => ![option, ...subOptions].includes(opt)),
-        );
-      } else {
-        setSelectedOptions((prev) => {
-          const newOptions = [...prev, option, ...subOptions];
-          return Array.from(new Set(newOptions));
-        });
-      }
-    } else {
-      if (selectedOptions.includes(option)) {
-        setSelectedOptions((prev) => prev.filter((opt) => opt !== option));
-      } else {
-        setSelectedOptions((prev) => {
-          const newOptions = [...prev, option];
-          return Array.from(new Set(newOptions));
-        });
-      }
+  useEffect(() => {
+    if (versiondata.length > 0) {
+      setSelectedVersion(versiondata[0].id);
     }
-  };
+  }, [versiondata]);
+
+  useEffect(() => {
+    const keys = Object.keys(versionkeysdata);
+    if (keys.length > 0) {
+      setSelectedKey(keys[0]);
+    }
+  }, [versionkeysdata]);
+
+  useEffect(() => {
+    const data = selectedKey ? statusData[selectedKey] : undefined;
+    setGraphData(data || []);
+  }, [selectedKey, statusData]);
 
   return (
     <FilterAndGraphLayout>
@@ -152,38 +113,31 @@ const FilterAndGraphSection: React.FC = () => {
           </FilterIconWrapper>
           <FilterLabel>Filter By</FilterLabel>
           <DropdownSelect
-            onChange={handleVersionChange}
+            onChange={(e) => setSelectedVersion(e.target.value)}
             value={selectedVersion}
           >
-            {Object.keys(versionData).map((version) => (
-              <option key={version} value={version}>
-                {version}
-              </option>
-            ))}
-          </DropdownSelect>
-          <DropdownSelect onChange={handleMonthChange} value={selectedMonth}>
-            {versionData[selectedVersion]?.map((month) => (
-              <option key={month} value={month}>
-                {month} 2024
+            {versionData.map((version) => (
+              <option key={version.id} value={version.id}>
+                {version.name || version.id}
               </option>
             ))}
           </DropdownSelect>
           <DropdownSelect
-            onChange={handleCategoryChange}
-            value={selectedCategory}
+            onChange={(e) => setSelectedKey(e.target.value)}
+            value={selectedKey}
           >
-            <option value="Commit">Commit</option>
-            <option value="Comment">Comment</option>
-            <option value="Issue">Issue</option>
-            <option value="PR">Pull Requests</option>
-            <option value="HotFix">HotFix</option>
+            {Object.keys(statusData).map((key) => (
+              <option key={key} value={key}>
+                {key}
+              </option>
+            ))}
           </DropdownSelect>
         </FilterGroupRow>
         <ResetButtonBox
           onClick={() => {
-            setSelectedVersion("1.9.1");
-            setSelectedMonth("Sep");
-            setSelectedCategory("Commit");
+            setSelectedVersion(versionData[0]?.id || "");
+            setSelectedKey(Object.keys(statusData)[0] || "");
+            setGraphData([]);
           }}
         >
           <FaRedo /> Reset Filter
@@ -193,7 +147,7 @@ const FilterAndGraphSection: React.FC = () => {
       <GraphContainer>
         <ResponsiveContainer width="100%" height={230}>
           <AreaChart
-            key={`${selectedMonth}-${selectedCategory}-${graphData.length}`}
+            key={`${selectedVersion}-${selectedKey}`}
             data={graphData}
             margin={{ left: -10, right: 10, top: 5, bottom: 5 }}
           >
@@ -214,13 +168,13 @@ const FilterAndGraphSection: React.FC = () => {
             <CartesianGrid vertical={false} stroke="#EAEAEA" />
             <Area
               type="linear"
-              dataKey="value"
+              dataKey="count"
               stroke="#3f51b5"
               strokeWidth={2}
               fill="url(#colorGradient)"
               connectNulls
               dot={<CustomDot />}
-              isAnimationActive={true}
+              isAnimationActive
               animationDuration={2500}
               animationEasing="ease-out"
             />
@@ -234,13 +188,13 @@ const FilterAndGraphSection: React.FC = () => {
         expandedSections={expandedSections}
         selectedOptions={selectedOptions}
         setShowNote={setShowNote}
-        setIsEditing={setIsEditing}
-        selectedVersion={selectedVersion}
-        selectedMonth={selectedMonth}
-        selectedCategory={selectedCategory}
-        defaultVersionNotes={defaultVersionNotes}
+        selectedVersion={selectedVersion || ""}
+        versionDetails={versionDetails}
+        setVersionDetails={setVersionDetails}
         toggleSection={toggleSection}
         handleOptionChange={handleOptionChange}
+        setIsEditing={setIsEditing}
+        selectedCategory="Commit"
       />
     </FilterAndGraphLayout>
   );
