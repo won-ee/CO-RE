@@ -26,7 +26,7 @@ interface CardCodeReviewProps {
               <PendingSpan>
                 {commentNums} pending comment
               </PendingSpan>
-              <ButtonSimpleSquare text='Submit Review' color='white' bgc='#1F883D' btnEvent={handleAddReview}/>
+              <ButtonSimpleSquare $text='Submit Review' $color='white' $bgc='#1F883D' btnEvent={handleAddReview}/>
             </ButtonBox>
         </CardCodeReviewLayout>
     )

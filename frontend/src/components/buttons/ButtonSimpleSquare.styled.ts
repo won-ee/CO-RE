@@ -1,15 +1,15 @@
 import styled from "styled-components";
 
 interface ButtonSimpleSquareLayoutProps{
-    color:string;
-    bgc:string;
+    $color:string;
+    $bgc:string;
 }
 
 export const ButtonSimpleSquareLayout = styled.div<ButtonSimpleSquareLayoutProps>`
-    background-color: ${({bgc})=>bgc};
+    background-color: ${({$bgc})=>$bgc};
     border-radius: 5px;
     font-size: 14px;
-    color: ${({color})=>color};
+    color: ${({$color})=>$color};
     padding: 6px 12px;
     font-weight: normal;
     cursor: pointer;

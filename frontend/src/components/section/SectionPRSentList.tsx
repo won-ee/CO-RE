@@ -1,8 +1,9 @@
 import React from 'react';
 import { useQueryPRList } from '../../hooks/usePullRequestData';
 import { useProjectStore } from '../../store/userStore';
-import { SectionPRSentListLayout,FilterLayout, GridTable , GridHeader, GridHeaderCell, GridRow, GridCell,CommentBox,StatusBox,PriorityBox, DeadLineBox, TitleBox} from './SectionPRSentList.styled'
+import { SectionPRSentListLayout,FilterLayout, GridTable , GridHeader, GridHeaderCell, GridRow, GridCell,CommentBox,StatusBox,PriorityBox, DeadLineBox, TitleBox, ReviewerImg, ImgBox} from './SectionPRSentList.styled'
 import { differenceInDays } from 'date-fns'
+import etcIcon from '../../assets/icon_Etc.png'
 
 // const data = [
 //   { col1: 'Frame Adjusement', col2: 'Frame into frontend', col3: 'D-1', col4: 'IMAGES', col5: '5', col6: 'HIGH', col7: 'Approved' },
@@ -13,8 +14,6 @@ import { differenceInDays } from 'date-fns'
 function SectionPRSentList(): React.ReactElement {
   const projectInfo = useProjectStore((state)=>state);
   const params = {
-    // owner: 'JEM1224',
-    // repo: 'github-api',
     owner : projectInfo.selectedOwner,
     repo : projectInfo.selectedRepo,
     state : 'sent'
@@ -59,9 +58,11 @@ function SectionPRSentList(): React.ReactElement {
             <GridCell $align="center">
               <DeadLineBox $status={deadlineText} $afterReview={row.afterReview}>{deadlineText}</DeadLineBox>
               </GridCell>
-            <GridCell>{row.reviewers.map((reviewers,index)=>(
-              <img src={reviewers.writerImg} key={index}/>
-            ))}</GridCell>
+            <GridCell>
+              <ImgBox>{row.reviewers.slice(0, 3).map((reviewer, index) => (
+                <ReviewerImg src={reviewer.writerImg} key={index} />))}
+                {row.reviewers.length > 3 && <img src={etcIcon}/>}
+              </ImgBox></GridCell>
             <GridCell $align="center">
               <CommentBox $status={String(row.commentCount)}>{row.commentCount}</CommentBox>
             </GridCell>
