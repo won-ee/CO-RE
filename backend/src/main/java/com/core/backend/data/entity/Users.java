@@ -32,7 +32,7 @@ public class Users extends Base {
     @Column(name = "user_account_id")
     private String accountId;
 
-    @Column(name = "user_email", nullable = false, length = 100)
+    @Column(name = "user_email", nullable = false, length = 100, unique = true)
     private String email;
 
     @Column(name = "user_git_token")
