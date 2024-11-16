@@ -31,15 +31,23 @@ const SectionErrorInquiry:React.FC = () => {
           </SelectInput>
         </div>
       </FormRow>
-
-      <div>
-        <FormLabel>[선택] 내용을 입력해 주세요</FormLabel>
+      <FormRow>
+        <div>
+          <FormLabel>[선택] 에픽을 선택해주세요</FormLabel>
+          <SelectInput>
+            <option>옵션선택</option>
+          </SelectInput>
+        </div>
+      </FormRow>
+        <FormLabel>[선택] 제목을 입력해 주세요</FormLabel>
+      <FormRow>
         <TextInput rows={4} />
-      </div>
+        <div style={{ textAlign: "right", marginLeft: "32px" }}>
+          <SubmitButton>SEND</SubmitButton>
+        </div>
+      </FormRow>
 
-      <div style={{ textAlign: "right", marginRight: "32px" }}>
-        <SubmitButton>SEND</SubmitButton>
-      </div>
+ 
     </RightSectionLayout>
   );
 };

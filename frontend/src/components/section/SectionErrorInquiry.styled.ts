@@ -59,12 +59,14 @@ export const FormRow = styled.div`
 
 export const TextInput = styled.textarea`
   width: 580px;
+  height: 50px;
   padding: 10px;
   font-size: 16px;
   border-radius: 5px;
   border: 1px solid #ccc;
   resize: vertical;
   box-sizing: border-box;
+  resize: none;
 `;
 
 export const SubmitButton = styled(BaseButton)`

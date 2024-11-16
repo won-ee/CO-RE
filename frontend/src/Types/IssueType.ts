@@ -9,5 +9,7 @@ export interface IssueListType {
     managerUserId: number;
     managerUserImage: string;
     managerUserName: string;
+    epicName:string;
+    epicKey:string;
 };
   
