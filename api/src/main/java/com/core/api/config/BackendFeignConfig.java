@@ -11,8 +11,10 @@ public class BackendFeignConfig {
     @Bean
     public RequestInterceptor requestInterceptor() {
         return requestTemplate -> {
+            System.out.println(requestTemplate.url());
             if (!requestTemplate.url()
                     .equals("/users/search/git-token")) {
+                System.out.println("testestestsetset");
                 String token = getAccessToken();
                 requestTemplate.header("Authorization", token);
             }

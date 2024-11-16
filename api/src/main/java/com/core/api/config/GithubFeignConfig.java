@@ -49,8 +49,6 @@ public class GithubFeignConfig {
     private String getGitHubToken() throws AccessDeniedException {
         Authentication authentication = SecurityContextHolder.getContext()
                 .getAuthentication();
-        System.out.println(authentication);
-        System.out.println(authentication.getDetails());
         if (authentication != null && authentication.getDetails() != null) {
             return authentication.getDetails()
                     .toString();
