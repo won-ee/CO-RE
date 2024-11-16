@@ -127,8 +127,10 @@ public class IssueService {
                     if(epicObject != null) {
                         epicName = epicObject.get("summary").toString();
                     }
+                    String epicKey = epic.get("key").toString();
+                    String epicUrl = epic.get("self").toString();
 
-                    saveIssueListToJira(epicName,extractIssueDetails(issues), user, accessToken);
+                    saveIssueListToJira(epicName,epicKey,epicUrl,extractIssueDetails(issues), user, accessToken);
                 }
 
             } catch (Exception ex) {
@@ -173,7 +175,7 @@ public class IssueService {
         return null;
     }
 
-    public void saveIssueListToJira(String epic, List<Map<String, Object>> extractedIssues, ProjectUsers user, String accessToken) {
+    public void saveIssueListToJira(String epic,String epicKey,String epicUrl, List<Map<String, Object>> extractedIssues, ProjectUsers user, String accessToken) {
 
         for (Map<String, Object> extractedIssue : extractedIssues) {
             //subtask먼저 작업하기
@@ -206,7 +208,9 @@ public class IssueService {
                                             .status(status)
                                             .jiraId(jiraId)
                                             .jiraUrl(jiraUrl)
-                                            .EpicName(epic)
+                                            .epicName(epic)
+                                            .epicKey(epicKey)
+                                            .epicUrl(epicUrl)
                                             .projectUser(user)
                                             .build();
 
@@ -245,7 +249,9 @@ public class IssueService {
                         .status(status)
                         .jiraId(jiraId)
                         .jiraUrl(jiraUrl)
-                        .EpicName(epic)
+                        .epicName(epic)
+                        .epicKey(epicKey)
+                        .epicUrl(epicUrl)
                         .projectUser(user)
                         .build();
 
