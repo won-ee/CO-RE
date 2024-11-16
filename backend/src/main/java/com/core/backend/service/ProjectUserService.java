@@ -49,4 +49,8 @@ public class ProjectUserService {
                 .toList();
         return new ProjectNameAndUserEmailDto(project.getName(), userEmailList);
     }
+
+    public ProjectUsers getProjectUser(Long projectUserId) {
+        return projectUserRepository.findById(projectUserId).orElse(null);
+    }
 }

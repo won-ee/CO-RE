@@ -1,21 +1,28 @@
 package com.core.backend.service;
 
+import com.core.backend.data.dto.isssue.IssueCreateDto;
+import com.core.backend.data.dto.isssue.IssueCreateEpicDto;
 import com.core.backend.data.dto.isssue.IssueListDto;
-import com.core.backend.data.entity.Issues;
-import com.core.backend.data.entity.ProjectUsers;
-import com.core.backend.data.entity.Projects;
+import com.core.backend.data.entity.*;
 import com.core.backend.data.enums.StatusEnum;
+import com.core.backend.data.repository.EpicRepository;
 import com.core.backend.data.repository.IssueRepository;
+import com.core.backend.data.repository.JiraOAuthTokenRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.IOException;
 import java.net.URI;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -26,6 +33,9 @@ public class IssueService {
 
     private final IssueRepository issueRepository;
     private final RestTemplate restTemplate;
+    private final JiraOAuthTokenRepository jiraOAuthTokenRepository;
+    private final JiraOAuthTokenService jiraOAuthTokenService;
+    private final EpicRepository epicRepository;
 
     public List<IssueListDto> getIssueListToProject(Long projectUserId) {
         List<Issues> getIssueList = issueRepository.findByProjectUserId(projectUserId);
@@ -44,7 +54,13 @@ public class IssueService {
                     issue.getStatus(),
                     issue.getProjectUser().getId(),
                     issue.getProjectUser().getUser().getProfile(),
-                    issue.getProjectUser().getUser().getName()
+                    issue.getProjectUser().getUser().getName(),
+                    Optional.ofNullable(issue.getEpic())
+                            .map(Epics::getName)
+                            .orElse(""),
+                    Optional.ofNullable(issue.getEpic())
+                            .map(Epics::getKey)
+                            .orElse("")
             );
             issueList.add(newIssueDto);
 
@@ -56,13 +72,76 @@ public class IssueService {
     public void getIssueListToJira(String accessToken, String jiraBaseUrl, Projects project, ProjectUsers user) {
 
         List<Map<String, Object>> allEpicIssues = getEpicListToJira(accessToken, jiraBaseUrl, project);
+        jiraBaseUrl = jiraBaseUrl.replaceAll("/project/\\d+", "/search");
+
+
+        //epic이 존재하지 않는 이슈만 반환
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBearerAuth(accessToken);
+            headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            HttpEntity<String> entity = new HttpEntity<>(headers);
+
+            // JQL 쿼리 작성
+            String jqlQuery = String.format(
+                    "\"Epic Link\" is empty AND issuetype in (Story, Task)"
+            );
+
+            int maxResults = 50;
+            int startAt = 0;
+
+            List<Map<String, Object>> allIssues = new ArrayList<>();
+
+            List<Map<String, Object>> issues = null;
+            while (true) {
+
+                URI apiUrl = UriComponentsBuilder.fromHttpUrl(jiraBaseUrl)
+                        .queryParam("jql", jqlQuery)
+                        .queryParam("startAt", startAt)
+                        .queryParam("maxResults", maxResults)
+                        .build()
+                        .toUri();
+
+                ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
+                        apiUrl,
+                        HttpMethod.GET,
+                        entity,
+                        new ParameterizedTypeReference<Map<String, Object>>() {
+                        }
+                );
+
+                Map<String, Object> responseBody = response.getBody();
+
+                if (responseBody != null) {
+                    issues = (List<Map<String, Object>>) responseBody.get("issues");
+                    if (issues == null || issues.isEmpty()) {
+                        break;
+                    }
+
+                    allIssues.addAll(issues);
+
+                    int issueCount = issues.size();
+                    if (issueCount < maxResults) {
+                        break;
+                    }
+                    startAt += maxResults;
+                } else {
+                    break;
+                }
+            }
+
+            saveIssueListToJira(null, extractIssueDetails(allIssues), user, accessToken);
+        } catch (Exception ex) {
+            log.info("getIssueListToJira noEpic : {}", ex.getMessage());
+        }
 
         if (!allEpicIssues.isEmpty()) {
 
             try {
-
+                // epic 존재하는 이슈 
                 for (Map<String, Object> epic : allEpicIssues) {
-                    jiraBaseUrl = jiraBaseUrl.replaceAll("/project/\\d+", "/search");
 
                     HttpHeaders headers = new HttpHeaders();
                     headers.setBearerAuth(accessToken);
@@ -104,7 +183,7 @@ public class IssueService {
 
                         if (responseBody != null) {
                             issues = (List<Map<String, Object>>) responseBody.get("issues");
-                            if(issues == null || issues.isEmpty()) {
+                            if (issues == null || issues.isEmpty()) {
                                 break;
                             }
 
@@ -124,13 +203,21 @@ public class IssueService {
                     // epicName
                     Map<String, Object> epicObject = (Map<String, Object>) epic.get("fields");
                     String epicName = null;
-                    if(epicObject != null) {
+                    if (epicObject != null) {
                         epicName = epicObject.get("summary").toString();
                     }
                     String epicKey = epic.get("key").toString();
                     String epicUrl = epic.get("self").toString();
+                    String epicId = epic.get("id").toString();
+                    Epics newEpic = epicRepository.save(
+                            Epics.builder()
+                                    .key(epicKey)
+                                    .name(epicName)
+                                    .url(epicUrl)
+                                    .jiraId(epicId)
+                                    .build());
 
-                    saveIssueListToJira(epicName,epicKey,epicUrl,extractIssueDetails(issues), user, accessToken);
+                    saveIssueListToJira(newEpic, extractIssueDetails(allIssues), user, accessToken);
                 }
 
             } catch (Exception ex) {
@@ -175,7 +262,7 @@ public class IssueService {
         return null;
     }
 
-    public void saveIssueListToJira(String epic,String epicKey,String epicUrl, List<Map<String, Object>> extractedIssues, ProjectUsers user, String accessToken) {
+    public void saveIssueListToJira(Epics newEpic, List<Map<String, Object>> extractedIssues, ProjectUsers user, String accessToken) {
 
         for (Map<String, Object> extractedIssue : extractedIssues) {
             //subtask먼저 작업하기
@@ -200,19 +287,31 @@ public class IssueService {
                                     String priorityName = (String) subtask.get("priority");
                                     int priority = changePriorityToNumber(priorityName);
 
-                                    Issues issue = Issues.builder()
-                                            .title((String) subtask.get("summary"))
-                                            .content((String) subtask.get("summary"))
-                                            .issueNumber(keyNumber)
-                                            .issuePriority(priority)
-                                            .status(status)
-                                            .jiraId(jiraId)
-                                            .jiraUrl(jiraUrl)
-                                            .epicName(epic)
-                                            .epicKey(epicKey)
-                                            .epicUrl(epicUrl)
-                                            .projectUser(user)
-                                            .build();
+                                    Issues issue = null;
+                                    if (newEpic == null) {
+                                        issue = Issues.builder()
+                                                .title((String) subtask.get("summary"))
+                                                .content((String) subtask.get("summary"))
+                                                .issueNumber(keyNumber)
+                                                .issuePriority(priority)
+                                                .status(status)
+                                                .jiraId(jiraId)
+                                                .jiraUrl(jiraUrl)
+                                                .projectUser(user)
+                                                .build();
+                                    } else {
+                                        issue = Issues.builder()
+                                                .title((String) subtask.get("summary"))
+                                                .content((String) subtask.get("summary"))
+                                                .issueNumber(keyNumber)
+                                                .issuePriority(priority)
+                                                .status(status)
+                                                .jiraId(jiraId)
+                                                .jiraUrl(jiraUrl)
+                                                .epic(newEpic)
+                                                .projectUser(user)
+                                                .build();
+                                    }
 
                                     issueRepository.save(issue);
                                 }
@@ -241,19 +340,31 @@ public class IssueService {
                 String priorityName = (String) extractedIssue.get("priority");
                 int priority = changePriorityToNumber(priorityName);
 
-                Issues issue = Issues.builder()
-                        .title((String) extractedIssue.get("summary"))
-                        .content((String) extractedIssue.get("summary"))
-                        .issueNumber(keyNumber)
-                        .issuePriority(priority)
-                        .status(status)
-                        .jiraId(jiraId)
-                        .jiraUrl(jiraUrl)
-                        .epicName(epic)
-                        .epicKey(epicKey)
-                        .epicUrl(epicUrl)
-                        .projectUser(user)
-                        .build();
+                Issues issue = null;
+                if (newEpic == null) {
+                    issue = Issues.builder()
+                            .title((String) extractedIssue.get("summary"))
+                            .content((String) extractedIssue.get("summary"))
+                            .issueNumber(keyNumber)
+                            .issuePriority(priority)
+                            .status(status)
+                            .jiraId(jiraId)
+                            .jiraUrl(jiraUrl)
+                            .projectUser(user)
+                            .build();
+                } else {
+                    issue = Issues.builder()
+                            .title((String) extractedIssue.get("summary"))
+                            .content((String) extractedIssue.get("summary"))
+                            .issueNumber(keyNumber)
+                            .issuePriority(priority)
+                            .status(status)
+                            .jiraId(jiraId)
+                            .jiraUrl(jiraUrl)
+                            .epic(newEpic)
+                            .projectUser(user)
+                            .build();
+                }
 
                 issueRepository.save(issue);
             }
@@ -261,9 +372,9 @@ public class IssueService {
     }
 
     private int changePriorityToNumber(String priorityName) {
-        if(priorityName == null)
+        if (priorityName == null)
             return 3;
-        return switch (priorityName){
+        return switch (priorityName) {
             case "Highest" -> 1;
             case "High" -> 2;
             case "Low" -> 4;
@@ -419,5 +530,172 @@ public class IssueService {
 
         return null;
     }
+
+    public IssueListDto createIssueToJira(boolean isParent, ProjectUsers projectUsers, Object bodyDto, String deadline) throws IOException {
+
+        JiraOAuthToken oAuthToken = jiraOAuthTokenService.getOAuthToken(projectUsers.getUser().getEmail());
+        String accessToken = oAuthToken.getAccessToken();
+
+        String jiraBaseUrl = projectUsers.getProject().getSelfUrl();
+        jiraBaseUrl = jiraBaseUrl.replaceAll("/project/\\d+", "/issue");
+
+        Issues makeIssue = null;
+
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBearerAuth(accessToken);
+            headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            String requestBody = objectMapper.writeValueAsString(bodyDto);
+
+            HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
+
+            ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
+                    jiraBaseUrl,
+                    HttpMethod.POST,
+                    entity,
+                    new ParameterizedTypeReference<Map<String, Object>>() {
+                    }
+            );
+            LocalDateTime dateTime = LocalDateTime.parse(deadline + "T00:00:00", DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+
+            Map<String, Object> responseBody = response.getBody();
+            if (responseBody != null) {
+
+                if (isParent) {
+                    IssueCreateEpicDto issueCreateEpicDto = (IssueCreateEpicDto) bodyDto;
+                    //TODO: 추후 웹훅 설정시 해당부분 지워줘야함.
+
+                    Epics epic = epicRepository.findByKey(issueCreateEpicDto.getFields().getParent().getKey());
+
+                    makeIssue = issueRepository.save(
+                            Issues.builder()
+                                    .title(issueCreateEpicDto.getFields().getSummary())
+                                    .content(issueCreateEpicDto.getFields().getSummary())
+                                    .issueNumber((String) responseBody.get("key"))
+                                    .issuePriority(changePriorityToNumber(issueCreateEpicDto.getFields().getPriority().getName()))
+                                    .deadLine(dateTime)
+                                    .status(StatusEnum.TODO)
+                                    .jiraId((String) responseBody.get("id"))
+                                    .jiraUrl((String) responseBody.get("self"))
+                                    .epic(epic)
+                                    .projectUser(projectUsers)
+                                    .build());
+
+                } else {
+                    IssueCreateDto issueCreateDto = (IssueCreateDto) bodyDto;
+
+                    makeIssue = issueRepository.save(
+                            Issues.builder()
+                                    .title(issueCreateDto.getFields().getSummary())
+                                    .content(issueCreateDto.getFields().getSummary())
+                                    .issueNumber((String) responseBody.get("key"))
+                                    .issuePriority(changePriorityToNumber(issueCreateDto.getFields().getPriority().getName()))
+                                    .deadLine(dateTime)
+                                    .status(StatusEnum.TODO)
+                                    .jiraId((String) responseBody.get("id"))
+                                    .jiraUrl((String) responseBody.get("self"))
+                                    .projectUser(projectUsers)
+                                    .build());
+                }
+            }
+
+        } catch (HttpClientErrorException.Unauthorized e) {
+
+            log.error("Unauthorized error: {}", e.getMessage());
+
+            accessToken = jiraOAuthTokenService.getNewAccessToken(projectUsers.getUser().getEmail());
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBearerAuth(accessToken);
+            headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            String requestBody = objectMapper.writeValueAsString(bodyDto);
+
+            HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
+
+            ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
+                    jiraBaseUrl,
+                    HttpMethod.POST,
+                    entity,
+                    new ParameterizedTypeReference<Map<String, Object>>() {
+                    }
+            );
+
+            LocalDateTime dateTime = LocalDateTime.parse(deadline + "T00:00:00", DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+
+            Map<String, Object> responseBody = response.getBody();
+            if (responseBody != null) {
+
+                if (isParent) {
+                    IssueCreateEpicDto issueCreateEpicDto = (IssueCreateEpicDto) bodyDto;
+                    //TODO: 추후 웹훅 설정시 해당부분 지워줘야함.
+
+                    Epics epic = epicRepository.findByKey(issueCreateEpicDto.getFields().getParent().getKey());
+
+                    makeIssue = issueRepository.save(
+                            Issues.builder()
+                                    .title(issueCreateEpicDto.getFields().getSummary())
+                                    .content(issueCreateEpicDto.getFields().getSummary())
+                                    .issueNumber((String) responseBody.get("key"))
+                                    .issuePriority(changePriorityToNumber(issueCreateEpicDto.getFields().getPriority().getName()))
+                                    .deadLine(dateTime)
+                                    .status(StatusEnum.TODO)
+                                    .jiraId((String) responseBody.get("id"))
+                                    .jiraUrl((String) responseBody.get("self"))
+                                    .epic(epic)
+                                    .projectUser(projectUsers)
+                                    .build());
+
+                } else {
+                    IssueCreateDto issueCreateDto = (IssueCreateDto) bodyDto;
+
+                    makeIssue = issueRepository.save(
+                            Issues.builder()
+                                    .title(issueCreateDto.getFields().getSummary())
+                                    .content(issueCreateDto.getFields().getSummary())
+                                    .issueNumber((String) responseBody.get("key"))
+                                    .issuePriority(changePriorityToNumber(issueCreateDto.getFields().getPriority().getName()))
+                                    .deadLine(dateTime)
+                                    .status(StatusEnum.TODO)
+                                    .jiraId((String) responseBody.get("id"))
+                                    .jiraUrl((String) responseBody.get("self"))
+                                    .projectUser(projectUsers)
+                                    .build());
+                }
+            }
+        } catch (Exception ex) {
+            // 그 외 다른 예외 처리
+            log.error("Error occurred: {}", ex.getMessage());
+            ex.printStackTrace();
+
+        }
+        if (makeIssue == null)
+            return null;
+
+        return IssueListDto.builder()
+                .issueId(makeIssue.getId())
+                .issueTitle(makeIssue.getTitle())
+                .issueContent(makeIssue.getContent())
+                .issueKey(makeIssue.getIssueNumber())
+                .issuePriority(makeIssue.getIssuePriority())
+                .issueDeadLine(makeIssue.getDeadLine())
+                .issueStatus(makeIssue.getStatus())
+                .managerUserId(projectUsers.getUser().getId())
+                .managerUserImage(projectUsers.getUser().getProfile())
+                .managerUserName(projectUsers.getUser().getName())
+                .epicName(Optional.ofNullable(makeIssue.getEpic())
+                        .map(Epics::getName)
+                        .orElse(""))
+                .epicKey(Optional.ofNullable(makeIssue.getEpic())
+                        .map(Epics::getKey)
+                        .orElse(""))
+                .build();
+    }
+
 
 }

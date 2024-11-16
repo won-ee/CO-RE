@@ -44,17 +44,12 @@ public class Issues extends Base {
     @Column(name = "issue_jira_url")
     private String jiraUrl;
 
-    @Column(name = "issue_epic_name")
-    private String epicName;
-
-    @Column(name = "issue_epic_key")
-    private String epicKey;
-
-    @Column(name = "issue_epic_url")
-    private String epicUrl;
-
     @ManyToOne
     @JoinColumn(name = "project_user_id", nullable = false)
     private ProjectUsers projectUser;
+
+    @ManyToOne
+    @JoinColumn(name = "epic_id")
+    private Epics epic;
 
 }
