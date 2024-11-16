@@ -1,15 +1,21 @@
 package com.core.api.controller;
 
-import com.core.api.data.dto.ChangeDto;
 import com.core.api.data.dto.commit.CommitMessageDto;
+import com.core.api.data.dto.github.PullRequestServerDto;
 import com.core.api.data.dto.pullrequest.*;
 import com.core.api.data.dto.response.MergeResponseDto;
+import com.core.api.enums.EventEnum;
 import com.core.api.service.PullRequestService;
+import com.core.api.service.VersionService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/pull-request")
@@ -17,12 +23,8 @@ import java.util.List;
 public class PullRequestController {
 
     private final PullRequestService pullRequestService;
-
-    @GetMapping("/{owner}/{repo}/files/{baseHead}")
-    public ResponseEntity<List<ChangeDto>> getChangeFiles(@PathVariable String owner, @PathVariable String repo, @PathVariable String baseHead) {
-        List<ChangeDto> changeFiles = pullRequestService.getChangeFiles(owner, repo, baseHead);
-        return ResponseEntity.ok(changeFiles);
-    }
+    private final ObjectMapper objectMapper;
+    private final VersionService versionService;
 
     @PostMapping
     public ResponseEntity<Void> createPullRequest(@RequestBody PullRequestInputDto pullRequestDto) {
@@ -75,5 +77,33 @@ public class PullRequestController {
         MergeResponseDto message = pullRequestService.mergePullRequest(owner, repo, pullId, commitMessage);
         return ResponseEntity.ok(message);
     }
+
+    @PostMapping(value = "/webhook", consumes = "application/x-www-form-urlencoded")
+    public ResponseEntity<String> handlePullRequestWebhook(
+            @RequestHeader("X-GitHub-Event") String event,
+            @RequestHeader("X-GitHub-Delivery") String deliveryId,
+            @RequestHeader("X-GitHub-Hook-ID") String hookId,
+            @RequestParam String payload) throws JsonProcessingException {
+
+        Map<?, ?> data = objectMapper.readValue(payload, Map.class);
+
+        PullRequestServerDto pullRequest = PullRequestServerDto.from(data);
+        String action = (String) data.get("action");
+        EventEnum eventEnum = EventEnum.valueOf(action.toUpperCase());
+
+        return switch (eventEnum) {
+            case EDITED -> new ResponseEntity<>(HttpStatus.OK);
+            case CLOSED -> {
+                if (Boolean.FALSE.equals(pullRequest.getMergeStatus())) {
+                    yield new ResponseEntity<>(HttpStatus.OK);
+                }
+                pullRequestService.closedPullRequest(pullRequest);
+                versionService.createVersion(pullRequest);
+                yield new ResponseEntity<>(HttpStatus.OK);
+            }
+            default -> new ResponseEntity<>(HttpStatus.OK);
+        };
+    }
+
 
 }

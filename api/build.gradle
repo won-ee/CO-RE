@@ -46,6 +46,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     implementation 'io.github.openfeign:feign-jackson:11.9'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
 }
 
 dependencyManagement {
