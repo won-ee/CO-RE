@@ -31,5 +31,11 @@ public class ProjectUsers extends Base {
     @OneToMany(mappedBy = "projectUser")
     private List<Issues> issueList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "projectUserWriter")
+    private List<Carrots> writerCarrots = new ArrayList<>();
+
+    @OneToMany(mappedBy = "projectUserApprover")
+    private List<Carrots> approverCarrots = new ArrayList<>();
+
 
 }

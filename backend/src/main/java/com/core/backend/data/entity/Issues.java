@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -51,5 +53,8 @@ public class Issues extends Base {
     @ManyToOne
     @JoinColumn(name = "epic_id")
     private Epics epic;
+
+    @OneToMany(mappedBy = "issue")
+    private List<Carrots> carrotsList = new ArrayList<>();
 
 }
