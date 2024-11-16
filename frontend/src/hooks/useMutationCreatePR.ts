@@ -1,8 +1,8 @@
 import { useMutation } from "react-query";
 import { postCreatePR,postPRReview } from "../api/pullRequestAPI";
 import { TotalReviewsType } from "../Types/pullRequestType";
-import { ProjectSettingType, patchUserInfoType } from "../Types/userType";
-import { patchProjectSetting, patchUserInfo } from "../api/userAPI";
+import { ProjectSettingType, githubInfoType, patchUserInfoType } from "../Types/userType";
+import { patchProjectSetting, patchUserInfo, postGithubInfo } from "../api/userAPI";
 
 export const useMutationCreatePR=()=>{
     return useMutation(postCreatePR)
@@ -39,3 +39,7 @@ export const useMutationPatchUserInfo = () => {
   });
 };
   
+
+export const useMutationGithubInfo=()=>{
+  return useMutation((params:githubInfoType) => postGithubInfo(params));
+}
