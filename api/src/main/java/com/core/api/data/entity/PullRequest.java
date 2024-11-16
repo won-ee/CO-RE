@@ -37,6 +37,9 @@ public class PullRequest extends Base {
     @Column(name = "pr_writer_id", nullable = false)
     private String writerId;
 
+    @Column(name = "pr_writer_img")
+    private String writerImg;
+
     @Column(name = "pr_summary", length = 2000)
     private String summary;
 
@@ -98,6 +101,9 @@ public class PullRequest extends Base {
         return pullRequest;
     }
 
+    public void updateWriterImg(String writerImg) {
+        this.writerImg = writerImg;
+    }
 
     public void updateMergeStatus(Boolean mergeStatus) {
         this.mergeStatus = mergeStatus;
@@ -105,6 +111,10 @@ public class PullRequest extends Base {
 
     public void updateVersion(Version version) {
         this.version = version;
+    }
+
+    public void updateStatus(String status) {
+        this.status = status;
     }
 
 

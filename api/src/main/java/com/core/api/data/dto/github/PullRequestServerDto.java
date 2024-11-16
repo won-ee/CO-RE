@@ -12,6 +12,7 @@ public class PullRequestServerDto {
     String title;
     Integer pullRequestId;
     String writerId;
+    String writerImg;
     String description;
     String head;
     String base;
@@ -33,6 +34,7 @@ public class PullRequestServerDto {
                 .title((String) pr.get("title"))
                 .pullRequestId((Integer) pr.get("number"))
                 .writerId((String) user.get("login"))
+                .writerImg((String) user.get("avatar_url"))
                 .description((String) pr.get("body"))
                 .head((String) head.get("ref"))
                 .base((String) base.get("ref"))

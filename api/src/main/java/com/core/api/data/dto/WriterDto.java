@@ -12,7 +12,7 @@ public record WriterDto(
     }
 
     public static WriterDto fromReviewers(Reviewer reviewer) {
-        return new WriterDto(reviewer.getReviewerId(), reviewer.getReviewerId());
+        return new WriterDto(reviewer.getReviewerId(), reviewer.getReviewerImg());
     }
 
 

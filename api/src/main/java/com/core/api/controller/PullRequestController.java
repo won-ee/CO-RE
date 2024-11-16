@@ -92,7 +92,10 @@ public class PullRequestController {
         EventEnum eventEnum = EventEnum.valueOf(action.toUpperCase());
 
         return switch (eventEnum) {
-            case EDITED -> new ResponseEntity<>(HttpStatus.OK);
+            case OPENED -> {
+                pullRequestService.openedPullRequest(pullRequest);
+                yield new ResponseEntity<>(HttpStatus.OK);
+            }
             case CLOSED -> {
                 if (Boolean.FALSE.equals(pullRequest.getMergeStatus())) {
                     yield new ResponseEntity<>(HttpStatus.OK);

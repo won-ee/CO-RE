@@ -19,6 +19,9 @@ public class Reviewer extends Base {
     @Column(name = "reviewer_user_id", nullable = false)
     private String reviewerId;
 
+    @Column(name = "reviewer_user_img")
+    private String reviewerImg;
+
     @Column(name = "reviewer_score")
     private Integer score;
 
@@ -36,13 +39,15 @@ public class Reviewer extends Base {
     private PullRequest pullRequest;
 
 
-    public static Reviewer createReviewer(String reviewerId, PullRequest pullRequest) {
+    public static Reviewer createReviewer(String reviewerId, PullRequest pullRequest, String reviewerImg) {
         Reviewer reviewer = new Reviewer();
         reviewer.reviewerId = reviewerId;
         reviewer.pullRequest = pullRequest;
+        reviewer.reviewerImg = reviewerImg;
         reviewer.status = false;
         return reviewer;
     }
+
 
     public void updateReviewer(CommentDto comment) {
         this.score = comment.score();
