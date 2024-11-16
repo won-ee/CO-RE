@@ -36,7 +36,17 @@ public class VersionService {
 
         boolean isHotfix = pullRequest.getHead() != null && pullRequest.getHead()
                 .contains("hotfix");
+
+        List<PullRequest> pullRequestsWithoutVersion = pullRequestRepository
+                .findByOwnerAndRepoAndVersionIsNull(pullRequest.getOwner(), pullRequest.getRepo())
+                .orElseGet(Collections::emptyList);
+
+        String content = pullRequestsWithoutVersion.stream()
+                .map(PullRequest::getTitle)
+                .reduce("", (acc, title) -> acc + "\n" + title);
+
         Version version = Version.createVersion(pullRequest, isHotfix);
+        version.updateContent(content);
         versionRepository.save(version);
 
         Consumer<Version> versionUpdater = isHotfix
