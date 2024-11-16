@@ -115,7 +115,7 @@ export const getPRList = async({owner,repo,state}: PRListParams): Promise<PRList
 
 export const getChangeList = async({owner,repo,base,head}: CommitListParams): Promise<ChangeType[]>=>{
   try{
-    const response = await axios.get<ChangeType[]>(`${BASE_URL}/pull-request/${owner}/${repo}/${base}...${head}/files`,{
+    const response = await axios.get<ChangeType[]>(`${BASE_URL}/branch/${owner}/${repo}/${base}...${head}/files`,{
       headers: {
         Authorization: `Bearer ${TOKEN}`
       }

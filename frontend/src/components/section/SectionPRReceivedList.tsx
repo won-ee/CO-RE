@@ -31,11 +31,11 @@ function SectionPRReceivedList() {
         <GridHeader>
           <GridHeaderCell>TITLE</GridHeaderCell>
           <GridHeaderCell>MERGE PATH</GridHeaderCell>
-          <GridHeaderCell align="center">DEADLINE</GridHeaderCell>
+          <GridHeaderCell $align="center">DEADLINE</GridHeaderCell>
           <GridHeaderCell>SENDER</GridHeaderCell>
-          <GridHeaderCell align="center">COMMENT</GridHeaderCell>
-          <GridHeaderCell align="center">PRIORITY</GridHeaderCell>
-          <GridHeaderCell align="center">STATUS</GridHeaderCell>
+          <GridHeaderCell $align="center">COMMENT</GridHeaderCell>
+          <GridHeaderCell $align="center">PRIORITY</GridHeaderCell>
+          <GridHeaderCell $align="center">STATUS</GridHeaderCell>
         </GridHeader>
 
         {/* Body (Rows) */}        
@@ -51,18 +51,18 @@ function SectionPRReceivedList() {
               <TitleBox>{row.title}</TitleBox>
               </GridCell>
             <GridCell>{row.head} into {row.base}</GridCell>
-            <GridCell align="center">
-              <DeadLineBox status={deadlineText} afterReview={row.afterReview}>{deadlineText}</DeadLineBox>
+            <GridCell $align="center">
+              <DeadLineBox $status={deadlineText} $afterReview={row.afterReview}>{deadlineText}</DeadLineBox>
               </GridCell>
             <GridCell>{row.writer.writerImg} {row.writer.writerId}</GridCell>
-            <GridCell align="center">
-              <CommentBox status={String(row.commentCount)}>{row.commentCount}</CommentBox>
+            <GridCell $align="center">
+              <CommentBox $status={String(row.commentCount)}>{row.commentCount}</CommentBox>
             </GridCell>
-            <GridCell align="center">
-              <PriorityBox status={row.priority}>{row.priority.toUpperCase()}</PriorityBox>
+            <GridCell $align="center">
+              <PriorityBox $status={row.priority}>{row.priority.toUpperCase()}</PriorityBox>
               </GridCell>
-            <GridCell align="center">
-              <StatusBox status={row.status}>{row.status.charAt(0).toUpperCase() + row.status.slice(1)}</StatusBox>
+            <GridCell $align="center">
+              <StatusBox $status={row.status}>{row.status.charAt(0).toUpperCase() + row.status.slice(1)}</StatusBox>
               </GridCell>
           </GridRow>
         )
