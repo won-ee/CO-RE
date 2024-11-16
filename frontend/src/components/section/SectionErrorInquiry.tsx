@@ -9,11 +9,27 @@ import {
   FormRow,
   RightSectionLayout,
   SelectInput,
-  StyledDatePicker,
   SubmitButton,
   TextInput,
 } from "./SectionErrorInquiry.styled";
 import { useMutationEpic, useMutationNoEpic } from "../../hooks/useMutationCreatePR";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import styled from "styled-components";
+
+export const StyledDatePicker = styled(DatePicker)`
+  width: 250px;
+  padding: 10px;
+  font-size: 12px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+
+  &:focus {
+    outline: none;
+    border-color: #007bff;
+  }
+`;
 
 const SectionErrorInquiry: React.FC = () => {
   const { selectedProjectId } = useProjectStore();
@@ -21,9 +37,10 @@ const SectionErrorInquiry: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [selectedPriority, setSelectedPriority] = useState<string>("");
   const [selectedEpic, setSelectedEpic] = useState<string>("");
-  const { mutate: mutateEpic } = useMutationEpic();  
-  const { mutate: mutateNoEpic } = useMutationNoEpic();  
-
+  const { mutate: mutateEpic } = useMutationEpic();
+  const { mutate: mutateNoEpic } = useMutationNoEpic();
+  console.log(selectedDate);
+  
   const handlePriorityChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedPriority(event.target.value);
   };
@@ -33,20 +50,21 @@ const SectionErrorInquiry: React.FC = () => {
   };
 
   const test = () => {
-    const formattedDate = selectedDate.toLocaleDateString("en-CA");
-
-    if (selectedEpic) {
-      mutateEpic({
-        projectUserId: selectedProjectId,
-        deadline: formattedDate,
-        priority: selectedPriority,
-      });
-    } else {
-      mutateNoEpic({
-        projectUserId: selectedProjectId,
-        deadline: formattedDate,
-        priority: selectedPriority,
-      });
+    if (selectedDate) {
+      const formattedDate = selectedDate.toLocaleDateString("en-CA");
+      if (selectedEpic) {
+        mutateEpic({
+          projectUserId: selectedProjectId,
+          deadline: formattedDate,
+          priority: selectedPriority,
+        });
+      } else {
+        mutateNoEpic({
+          projectUserId: selectedProjectId,
+          deadline: formattedDate,
+          priority: selectedPriority,
+        });
+      }
     }
   };
 
@@ -73,7 +91,7 @@ const SectionErrorInquiry: React.FC = () => {
           <FormLabel>[필수] 마감일자를 선택해주세요</FormLabel>
           <StyledDatePicker
             selected={selectedDate}
-            onChange={(date) => setSelectedDate(date)}
+            onChange={(date: Date) => setSelectedDate(date)}
             dateFormat="yyyy-MM-dd"
             placeholderText="날짜를 선택하세요"
           />
