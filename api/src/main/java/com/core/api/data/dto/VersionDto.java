@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 public class VersionDto {
     private String name;
     private String content;
+    private Boolean hotfix;
     private Boolean mixingKneading;
     private Boolean assembly;
     private Boolean modulePack;
@@ -27,6 +28,7 @@ public class VersionDto {
 
     public static VersionDto from(Version version) {
         return VersionDto.builder()
+                .hotfix(version.getHotfix())
                 .name(version.getName())
                 .content(version.getContent())
                 .mixingKneading(version.getMixingKneading())

@@ -57,6 +57,7 @@ public class PullRequestDto extends PullRequestSimpleDto {
 
     private static List<CommentGroupDto> convertComment(List<Reviewer> reviewers) {
         return reviewers.stream()
+                .filter(reviewer -> reviewer.getContent() != null)
                 .map(reviewer -> CommentGroupDto.from(
                         WriterDto.fromReviewers(reviewer),
                         CommentDto.from(reviewer)

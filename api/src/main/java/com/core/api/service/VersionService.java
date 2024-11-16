@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 
 @Service
 @RequiredArgsConstructor
@@ -28,22 +29,32 @@ public class VersionService {
     @Transactional
     public void createVersion(PullRequestServerDto pullRequest) {
 
-        if (!pullRequest.getBase()
-                .equals("master")) {
+
+        if (!"master".equals(pullRequest.getBase())) {
             return;
         }
-        Version version = Version.createVersion(pullRequest);
-        versionRepository.save(version);
-        pullRequestRepository.findAllByOwnerAndRepo(pullRequest.getOwner(), pullRequest.getRepo())
-                .ifPresent(pullRequests -> pullRequests.stream()
-                        .filter(pr -> pr.getOwner()
-                                .equals(pullRequest.getOwner()) &&
-                                pr.getRepo()
-                                        .equals(pullRequest.getRepo()) &&
-                                pr.getVersion() == null)
-                        .forEach(pr -> pr.updateVersion(version))
-                );
 
+        boolean isHotfix = pullRequest.getHead() != null && pullRequest.getHead()
+                .contains("hotfix");
+        Version version = Version.createVersion(pullRequest, isHotfix);
+        versionRepository.save(version);
+
+        Consumer<Version> versionUpdater = isHotfix
+                ? v -> updateSinglePullRequestVersion(pullRequest, v)
+                : v -> updateAllPullRequestsVersion(pullRequest, v);
+
+        versionUpdater.accept(version);
+
+    }
+
+    private void updateSinglePullRequestVersion(PullRequestServerDto pullRequest, Version version) {
+        pullRequestRepository.findByOwnerAndRepoAndPullRequestId(pullRequest.getOwner(), pullRequest.getRepo(), pullRequest.getPullRequestId())
+                .ifPresent(pr -> pr.updateVersion(version));
+    }
+
+    private void updateAllPullRequestsVersion(PullRequestServerDto pullRequest, Version version) {
+        pullRequestRepository.findByOwnerAndRepoAndVersionIsNull(pullRequest.getOwner(), pullRequest.getRepo())
+                .ifPresent(pullRequests -> pullRequests.forEach(pr -> pr.updateVersion(version)));
     }
 
     public List<VersionSimpleDto> getVersions(String owner, String repo) {
