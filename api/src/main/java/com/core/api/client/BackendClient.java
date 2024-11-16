@@ -1,13 +1,12 @@
 package com.core.api.client;
 
 import com.core.api.config.BackendFeignConfig;
+import com.core.api.data.dto.EmailDto;
 import com.core.api.data.dto.ProjectDto;
 import com.core.api.data.dto.ProjectInfoDto;
 import com.core.api.data.dto.TokenDto;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @FeignClient(name = "backend", url = "http://backend:8082", configuration = BackendFeignConfig.class)
 public interface BackendClient {
@@ -20,4 +19,7 @@ public interface BackendClient {
 
     @GetMapping("/project-users/search/email")
     ProjectDto getProject(@RequestParam("owner") String owner, @RequestParam("repo") String repo);
+
+    @PostMapping("/email/release")
+    void sendEmail(@RequestBody EmailDto email);
 }
