@@ -1,4 +1,3 @@
-import React from "react";
 import { StatsDataType } from "../../Types/dashboardType";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -19,7 +18,8 @@ import {
   Card,
 } from "./MainStats.styled";
 
-const MainStats: React.FC<{ data: StatsDataType }> = ({ data }) => {
+export default function MainStats({ data }: { data: StatsDataType }) {
+  // console.log("Received data in MainStats:", data);
   const settings = {
     infinite: true,
     speed: 500,
@@ -84,6 +84,4 @@ const MainStats: React.FC<{ data: StatsDataType }> = ({ data }) => {
       </StyledSlider>
     </CardBox>
   );
-};
-
-export default MainStats;
+}

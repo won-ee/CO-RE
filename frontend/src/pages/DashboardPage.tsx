@@ -20,7 +20,6 @@ const Dashboard: React.FC = () => {
     owner: selectedOwner,
     repo: selectedRepo,
   });
-
   const {
     data: dashPRData,
     isLoading: isDashPRLoading,
@@ -30,7 +29,7 @@ const Dashboard: React.FC = () => {
     repo: selectedRepo,
     state: "receive",
   });
-
+  // console.log(dashboardData?.commitGrowthRate);
   const {
     data: dashIssueData,
     isLoading: isDashIssueLoading,
@@ -41,7 +40,10 @@ const Dashboard: React.FC = () => {
     return <LoadingPage />;
   if (dashboardError || dashPRError || dashIssueError)
     return <NotFoundPage errorNumber={404} />;
-  if (!dashboardData || !dashPRData || !dashIssueData) return null;
+  if (!dashboardData) return null;
+  if (!dashPRData) {
+    console.log("현재 데이터가 없습니다.");
+  }
 
   return (
     <div>
