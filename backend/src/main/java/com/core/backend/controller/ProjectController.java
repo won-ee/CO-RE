@@ -21,11 +21,11 @@ public class ProjectController {
 
     private final ProjectService projectService;
 
-    @PostMapping("/update/set/github/{userId}")
-    public ResponseEntity<Void> updateProjectGitHub(@PathVariable Long userId,
+    @PostMapping("/update/set/github/{projectId}")
+    public ResponseEntity<Void> updateProjectGitHub(@PathVariable Long projectId,
                                                     @RequestBody UpdateGitHubRequestDto gitHubRequestDto) {
 
-        boolean isUpdate = projectService.updateGitHubToProject(userId, gitHubRequestDto);
+        boolean isUpdate = projectService.updateGitHubToProject(projectId, gitHubRequestDto);
         return isUpdate ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 

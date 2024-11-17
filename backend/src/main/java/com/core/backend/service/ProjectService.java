@@ -21,7 +21,10 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -178,25 +181,22 @@ public class ProjectService {
         return projectUserRepository.findProjectsByUserId(userId);
     }
 
-    public boolean updateGitHubToProject(Long userId, UpdateGitHubRequestDto updateGitHubRequestDto) {
+    public boolean updateGitHubToProject(Long projectId, UpdateGitHubRequestDto updateGitHubRequestDto) {
         try {
-            if (projectUserRepository.existsByUserIdAndProjectId(userId, updateGitHubRequestDto.projectId())) {
-                // 업데이트 작업 진행할것
-                Optional<Projects> getProjects = projectRepository.findById(updateGitHubRequestDto.projectId());
+            Projects project = projectRepository.findById(projectId).orElse(null);
 
-                if (getProjects.isPresent()) {
-                    Projects project = getProjects.get().updateGitHub(updateGitHubRequestDto);
-                    projectRepository.save(project);
-
-                    if (project.getGithubOwner() != null && !project.getGithubOwner().isEmpty()
-                            && project.getGithubRepository() != null && !project.getGithubRepository().isEmpty()) {
-                        apiService.addGitHubHookEvents(project.getGithubOwner(), project.getGithubRepository());
-                    }
-
-
-                    return true;
-                }
+            if (project == null) {
+                return false;
             }
+
+            project = project.updateGitHub(updateGitHubRequestDto);
+            project = projectRepository.save(project);
+            if (project.getGithubOwner() != null && !project.getGithubOwner().isEmpty()
+                    && project.getGithubRepository() != null && !project.getGithubRepository().isEmpty()) {
+                apiService.addGitHubHookEvents(project.getGithubOwner(), project.getGithubRepository());
+            }
+            return true;
+            
         } catch (Exception ex) {
             log.info("updateGitHubToProject error: {}", ex.getMessage());
         }
