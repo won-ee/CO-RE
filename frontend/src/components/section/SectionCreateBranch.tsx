@@ -17,16 +17,17 @@ import CardFinalCodeReview from "../card/CardFinalCodeReview";
 import { useProjectStore } from "../../store/userStore";
 import { useQueryChangeList, useQueryCommitList } from "../../hooks/usePullRequestData";
 import { useNavigate } from "react-router-dom";
+import { useMemberList } from "../../hooks/useUser";
 
 // 옵션 예시
-const TempOption: OptionType[] = [
-    { value: 'Alice', label: 'Alice' },
-    { value: 'Bob', label: 'Bob' },
-    { value: 'Elizabeth', label: 'Elizabeth' },
-    { value: 'Claerk', label: 'Claerk' },
-    { value: 'Volibear', label: 'Volibear' },
-    { value: 'JEM1224', label: 'JEM1224' },
-];
+// const TempOption: OptionType[] = [
+//     { value: 'Alice', label: 'Alice' },
+//     { value: 'Bob', label: 'Bob' },
+//     { value: 'Elizabeth', label: 'Elizabeth' },
+//     { value: 'Claerk', label: 'Claerk' },
+//     { value: 'Volibear', label: 'Volibear' },
+//     { value: 'JEM1224', label: 'JEM1224' },
+// ];
 
 const PriorityOption: OptionType[] = [
   { value: 'low', label:'Low'},
@@ -59,6 +60,12 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
   // const userInfo = useUserStore((state) => state.userInfo);
   const projectInfo = useProjectStore((state)=>state)
   const navigate = useNavigate();
+  const memberList = useMemberList(projectInfo.selectedProjectId)
+
+  const parsedProjectMembers: OptionType[] = memberList.data ? memberList.data.map((member)=>({
+    value:member.userName,
+    label:member.userName
+  })):[];
 
   const handlesIsFinalReviewOpen = ()=>{
     setIsFinalReviewOpen((isFinalReviewOpen)=>!isFinalReviewOpen)
@@ -162,7 +169,7 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
 };
 
   const handleRandomSelect = (count: number) => {
-    const shuffled = TempOption.sort(() => 0.5 - Math.random()); // Shuffle the options
+    const shuffled = parsedProjectMembers.sort(() => 0.5 - Math.random()); // Shuffle the options
     const randomSelection = shuffled.slice(0, count); // Select specified count
     setSelectedOptions(randomSelection);
   };
@@ -191,7 +198,7 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
           Reviewers
             <Select<OptionType, true>  // 타입을 명시하여 isMulti가 true임을 지정
                 styles={SelectBox as StylesConfig<OptionType, true>}
-                options={TempOption}
+                options={parsedProjectMembers}
                 value={selectedOptions}
                 onChange={handleChange}
                 isMulti={true}          // 다중 선택 가능
@@ -210,7 +217,7 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
               selected={selectedDate}
               onChange={(date: Date | null) => setSelectedDate(date)}
               customInput={<ExampleCustomInput00/>}
-              dateFormat="yyyy/MM/dd" // 날짜 포맷 설정
+              dateFormat="yyyy-MM-dd" // 날짜 포맷 설정
               popperPlacement="bottom-start" // 창이 날짜 선택 필드 아래에 표시되도록 위치 지정
               popperClassName={StyledDatePickerPopper}
             />
