@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -28,25 +27,22 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain)
             throws ServletException, IOException {
 
-        String accessToken = request.getHeader("gitToken");
-        if (accessToken == null) accessToken = getAuthorizationFromCookie(request);
-
-        if (accessToken == null) {
-            throw new AccessDeniedException("Access token is missing");
-        }
+        String accessToken = getAuthorizationFromCookie(request);
 
         if (SecurityContextHolder.getContext()
                 .getAuthentication() == null) {
+            String githubToken = request.getHeader("gitToken");
+            if (githubToken == null) {
+                githubToken = authService.requestTokenFromServer(accessToken)
+                        .token();
+            } else {
+                accessToken = githubToken;
+            }
 
-            String githubToken = authService.requestTokenFromServer(accessToken)
-                    .token();
 
             System.out.println("githubtoken" + githubToken);
 
-
-            if (githubToken == null) {
-                githubToken = accessToken;
-            }
+            System.out.println("accessToken" + githubToken);
 
             UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(accessToken, null, Collections.emptyList());
             auth.setDetails(githubToken);
