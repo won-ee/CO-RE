@@ -91,18 +91,27 @@ const NoteSection: React.FC<NoteSectionProps> = ({
   // 편집 모드 활성화/비활성화
   const toggleEditing = () => {
     if (isEditing) {
-      editVersion(
-        { content: noteContent },
-        {
-          onSuccess: () => {
-            setIsEditing(false);
-            alert("Version note updated successfully.");
-          },
-          onError: () => {
-            alert("Failed to update version note.");
-          },
+      const updatedData = {
+        content: noteContent,
+        ...Object.fromEntries(
+          Object.entries(fieldMappings).map(([key, label]) => [
+            key,
+            selectedOptionsState.includes(label), // true/false로 변환
+          ]),
+        ),
+      };
+
+      console.log("Sending data to server:", updatedData);
+
+      editVersion(updatedData, {
+        onSuccess: () => {
+          setIsEditing(false);
+          alert("Version note updated successfully.");
         },
-      );
+        onError: () => {
+          alert("Failed to update version note.");
+        },
+      });
     } else {
       setIsEditing(true);
     }
