@@ -119,8 +119,11 @@ public class UserService {
 
     public UserAllInfoDto updateUserInfo(Long id, UserUpdateInfoDto userInfo) {
         Users user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+        log.info("API - 1");
         user.createUserInfo(userInfo);
+        log.info("API - 2");
         user = userRepository.save(user);
+        log.info("API - 3");
 
         // 여기서 깃허브 연결시 깃 아이디반환하는 부분 추가할것.
         if (userInfo.gitToken() != null && !userInfo.gitToken().isEmpty()) {
