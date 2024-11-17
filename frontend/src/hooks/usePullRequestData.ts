@@ -47,7 +47,7 @@ export const useQueryPRList = (params: PRListParams)=>{
     ['PRList',params],()=>getPRList(params),{
       enabled: !!params.owner && !!params.repo && !!params.state,
       refetchOnMount: true,
-      staleTime: 1000* 60*5
+      staleTime: 0
     }
   )
 }
