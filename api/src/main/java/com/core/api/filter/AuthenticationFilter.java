@@ -40,6 +40,8 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             String githubToken = authService.requestTokenFromServer(accessToken)
                     .token();
 
+            System.out.println("githubtoken" + githubToken);
+
 
             if (githubToken == null) {
                 githubToken = accessToken;
