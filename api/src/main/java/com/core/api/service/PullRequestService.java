@@ -41,8 +41,9 @@ public class PullRequestService {
                 pullRequestInputDto.repo(),
                 PullRequestInputServerDto.from(pullRequestInputDto)
         );
+        String writerId = getUser();
         Integer number = (Integer) data.get("number");
-        PullRequest pr = PullRequest.from(pullRequestInputDto, number);
+        PullRequest pr = PullRequest.from(pullRequestInputDto, number, writerId);
         pullRequestRepository.save(pr);
 
         List<Reviewer> reviewers = pullRequestInputDto.reviewers()
