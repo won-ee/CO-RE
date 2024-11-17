@@ -181,18 +181,26 @@ public class ProjectService {
 
     public boolean updateGitHubToProject(Long userId, Long projectId, UpdateGitHubRequestDto updateGitHubRequestDto) {
         try {
+            log.info("1");
             Users user = userRepository.findById(userId).orElse(null);
+            log.info("2");
             Projects project = projectRepository.findById(projectId).orElse(null);
+            log.info("3");
 
             if (project == null || user == null) {
+                log.info("4");
                 return false;
             }
+            log.info("5");
 
             Projects sameProject = projectRepository.findByGithubOwnerAndGithubRepository(project.getGithubOwner(), project.getGithubRepository()).orElse(null);
+            log.info("6");
             if (sameProject != null) {
+                log.info("7 sameProject = {}", sameProject);
                 return false;
             }
 
+            log.info("8");
             project = project.updateGitHub(updateGitHubRequestDto);
             project = projectRepository.save(project);
             if (project.getGithubOwner() != null && !project.getGithubOwner().isEmpty()
@@ -247,6 +255,7 @@ public class ProjectService {
         Projects project = projectRepository.findByGithubOwnerAndGithubRepository(owner, repo).orElse(null);
 
         if (project == null) {
+            log.info("init 3");
             return null;
         }
 
