@@ -97,6 +97,6 @@ export const getAllProject = async (projectUserId:number) => {
 };
 
 export const postLogout = async () => {
-  const { data } = await axios.post(`${BASE_URL}/api/logout`);
+  const { data } = await axios.post(`${BASE_URL}/logout`);
   return data;
 };
