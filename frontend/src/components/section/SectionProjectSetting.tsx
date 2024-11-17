@@ -18,7 +18,7 @@ const SectionProjectSetting:React.FC = () => {
       };
     
     const handleReviewerCountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setReviewerCount(e.target.value);
+        setReviewerCount(Number(e.target.value));
     };
     
     const handleTemplateChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
