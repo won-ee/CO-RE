@@ -31,7 +31,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
         String accessToken = getAuthorizationFromCookie(request);
         log.info("Request received: {} {}", request.getMethod(), request.getRequestURI());
-3        log.info("accessToken: {}", accessToken);
+        log.info("accessToken: {}", accessToken);
         if (SecurityContextHolder.getContext()
                 .getAuthentication() == null) {
             String githubToken = request.getHeader("gitToken");
