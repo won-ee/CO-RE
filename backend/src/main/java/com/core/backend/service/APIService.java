@@ -36,9 +36,9 @@ public class APIService {
         }
     }
 
-    public void addGitHubHookEvents(String owner, String repo) {
+    public void addGitHubHookEvents(String owner, String repo, String gitToken) {
         try {
-            apiFeignClient.addGitHubHookEvent(owner, repo);
+            apiFeignClient.addGitHubHookEvent(owner, repo, gitToken);
             log.info("GitHub Webhook 이벤트 추가 성공");
         } catch (Exception ex) {
             log.error("GitHub Webhook 이벤트 추가 실패: {}", ex.getMessage());

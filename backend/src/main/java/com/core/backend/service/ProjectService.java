@@ -9,10 +9,7 @@ import com.core.backend.data.entity.JiraGroups;
 import com.core.backend.data.entity.ProjectUsers;
 import com.core.backend.data.entity.Projects;
 import com.core.backend.data.entity.Users;
-import com.core.backend.data.repository.EpicRepository;
-import com.core.backend.data.repository.IssueRepository;
-import com.core.backend.data.repository.ProjectRepository;
-import com.core.backend.data.repository.ProjectUserRepository;
+import com.core.backend.data.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +39,7 @@ public class ProjectService {
     private final EpicRepository epicRepository;
     private final IssueRepository issueRepository;
     private final APIService apiService;
+    private final UserRepository userRepository;
 
     public List<Map<String, Object>> getAllProjects(String accessToken, String cloudId) {
         try {
@@ -181,22 +179,25 @@ public class ProjectService {
         return projectUserRepository.findProjectsByUserId(userId);
     }
 
-    public boolean updateGitHubToProject(Long projectId, UpdateGitHubRequestDto updateGitHubRequestDto) {
+    public boolean updateGitHubToProject(Long userId, Long projectId, UpdateGitHubRequestDto updateGitHubRequestDto) {
         try {
+            Users user = userRepository.findById(userId).orElse(null);
             Projects project = projectRepository.findById(projectId).orElse(null);
 
-            if (project == null) {
+            if (project == null || user == null) {
                 return false;
             }
 
             project = project.updateGitHub(updateGitHubRequestDto);
             project = projectRepository.save(project);
             if (project.getGithubOwner() != null && !project.getGithubOwner().isEmpty()
-                    && project.getGithubRepository() != null && !project.getGithubRepository().isEmpty()) {
-                apiService.addGitHubHookEvents(project.getGithubOwner(), project.getGithubRepository());
+                    && project.getGithubRepository() != null && !project.getGithubRepository().isEmpty()
+                    && user.getGitToken() != null && !user.getGitToken().isEmpty()) {
+                log.info("git hook event 전송 시작");
+                apiService.addGitHubHookEvents(user.getGitToken(), project.getGithubOwner(), project.getGithubRepository());
             }
             return true;
-            
+
         } catch (Exception ex) {
             log.info("updateGitHubToProject error: {}", ex.getMessage());
         }

@@ -13,6 +13,7 @@ public interface ApiFeignClient {
     GitHubNameDto getGitHubName(@RequestHeader("gitToken") String gitToken);
 
     @GetMapping("/github/{owner}/{repo}")
-    Void addGitHubHookEvent(@PathVariable("owner") String owner, @PathVariable("repo") String repo);
+    Void addGitHubHookEvent(@PathVariable("owner") String owner, @PathVariable("repo") String repo,
+                            @RequestHeader("gitToken") String gitToken);
 
 }

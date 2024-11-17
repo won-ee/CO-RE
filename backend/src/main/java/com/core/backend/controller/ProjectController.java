@@ -4,11 +4,13 @@ import com.core.backend.data.dto.epics.EpicListDto;
 import com.core.backend.data.dto.projects.ProjectGitSetDto;
 import com.core.backend.data.dto.projects.ProjectSetDto;
 import com.core.backend.data.dto.projects.UpdateGitHubRequestDto;
+import com.core.backend.data.dto.users.AuthenticatedUserDto;
 import com.core.backend.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,7 +27,13 @@ public class ProjectController {
     public ResponseEntity<Void> updateProjectGitHub(@PathVariable Long projectId,
                                                     @RequestBody UpdateGitHubRequestDto gitHubRequestDto) {
 
-        boolean isUpdate = projectService.updateGitHubToProject(projectId, gitHubRequestDto);
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !(authentication.getPrincipal() instanceof AuthenticatedUserDto authenticatedUser)) {
+            throw new IllegalStateException("No authenticated user found");
+        }
+        Long userId = Long.parseLong(authenticatedUser.getId());
+
+        boolean isUpdate = projectService.updateGitHubToProject(userId, projectId, gitHubRequestDto);
         return isUpdate ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
