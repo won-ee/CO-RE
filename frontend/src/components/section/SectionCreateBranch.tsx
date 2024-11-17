@@ -1,20 +1,22 @@
-import { SectionCreateBranchLayout, TitleInput, DescriptionTextArea, SelectBox, MergeDirectionBox, HighLightBox, DateInputContainer, DatePickerImg, DeadLineBox, DatePickerBox, UrgentBox, UrgentButton, PriorityBox, CreateButtonBox, TabBox, RandomButton  } from "./SectionCreateBranch.styled";
+import { SectionCreateBranchLayout, TitleInput, DescriptionTextArea, SelectBox, MergeDirectionBox, HighLightBox, DateInputContainer, DatePickerImg, DeadLineBox, DatePickerBox, UrgentBox, UrgentButton, PriorityBox, CreateButtonBox, TabBox, RandomButton, StyledDatePickerPopper  } from "./SectionCreateBranch.styled";
 import Select, { MultiValue, SingleValue, StylesConfig } from "react-select";
 import { OptionType } from "../../Types/SelectType";
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, forwardRef } from "react";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import CalendarIcon from '../../assets/icon_calender.png'
 import TabChange from "../tab/TabChange";
-import SectionChanges from "./SectionChanges";
+import SectionChangesList from "./SectionChangesList";
 import SectionCommits from "./SectionCommits";
 import ButtonCreateNewPR from "../buttons/ButtonCreateNewPR";
 import { useMutationCreatePR, useMutationpostPRReview } from "../../hooks/useMutationCreatePR";
 import ButtonSimpleSquare from "../buttons/ButtonSimpleSquare";
 import { TotalReviewsType, ReviewType } from "../../Types/pullRequestType";
 import CardFinalCodeReview from "../card/CardFinalCodeReview";
-import {useUserStore, useProjectStore} from "../../store/userStore";
+// import {useUserStore, useProjectStore} from "../../store/userStore";
+import { useProjectStore } from "../../store/userStore";
 import { useQueryChangeList, useQueryCommitList } from "../../hooks/usePullRequestData";
+import { useNavigate } from "react-router-dom";
 
 // 옵션 예시
 const TempOption: OptionType[] = [
@@ -23,6 +25,7 @@ const TempOption: OptionType[] = [
     { value: 'Elizabeth', label: 'Elizabeth' },
     { value: 'Claerk', label: 'Claerk' },
     { value: 'Volibear', label: 'Volibear' },
+    { value: 'JEM1224', label: 'JEM1224' },
 ];
 
 const PriorityOption: OptionType[] = [
@@ -53,8 +56,9 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
   const event = "COMMENT"
   const [reviews,setReviews] = useState<ReviewType[]>([])
   const [isFinalReviewOpen,setIsFinalReviewOpen] = useState(false)
-  const userInfo = useUserStore((state) => state.userInfo);
+  // const userInfo = useUserStore((state) => state.userInfo);
   const projectInfo = useProjectStore((state)=>state)
+  const navigate = useNavigate();
 
   const handlesIsFinalReviewOpen = ()=>{
     setIsFinalReviewOpen((isFinalReviewOpen)=>!isFinalReviewOpen)
@@ -75,47 +79,25 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
     const pullRequestData = {
       title: title,
       body: body,
-      base: sourceBranch?.value || "", // undefined일 경우 빈 문자열로 대체
-      head: targetBranch?.value || "", // undefined일 경우 빈 문자열로 대체
+      base: sourceBranch?.label || "", // undefined일 경우 빈 문자열로 대체
+      head: targetBranch?.label || "", // undefined일 경우 빈 문자열로 대체
       owner: projectInfo.selectedOwner,
       repo : projectInfo.selectedRepo,
       description: content,
       afterReview: false,
-      deadline: selectedDate ? selectedDate.toISOString() : "",
+      deadline: selectedDate ? selectedDate.toISOString().split('T')[0] : "",
       priority: priority || "",
-      writerId: userInfo?.userInfo.id.toString() || "",
+      // writerId: userInfo?.userInfo.id.toString() || "",
+      writerId: "",
       reviewers: selectedOptions.map((idx)=>idx.value)
     };
-    mutationCreatePR.mutate(pullRequestData);
+    
+    mutationCreatePR.mutate(pullRequestData,{
+      onSuccess: () => {
+        navigate('/pullrequest'); // 성공 시 이동
+      },
+    });
   }
-
-  
-  // const changesData = [
-  //   {
-  //     file: {
-  //       filename: "THISISFRONT-1.md",
-  //       status: "modified",
-  //       contents_url: "https://api.github.com/repos/JEM1224/github-api/contents/THISISFRONT-1.md?ref=1aafe0e18d189773f6fbddc5119c4a03eb3b806d",
-  //       additions: 12,
-  //       deletions: 14,
-  //       changes: 26,
-  //       patch: "@@ -1,26 +1,17 @@\n \n 천방지축 얼렁뚱땅 악동짱구\n 저\n-하늘에\n-햇님\n-달님\n-사\n-랑\n-으\n-로\n-비\n-춰\n-주\n-면\n-오\n-늘\n-은\n \n 또\n 무\n 슨\n 장\n 난\n+한\n+고통\n+절망\n+슳픔\n+분노\n 말썽\n 쟁이\n \n@@ -31,6 +22,13 @@\n 산하\n 눈\n 내린\n+사나이로\n+태어나서\n+할 일도 만다만\n+너와나 하나되어\n+\n+\n 벌판을\n 우리는 \n 간다\n+",
-  //     },
-  //     content: "\n천방지축 얼렁뚱땅 악동짱구\n저\n\n또\n무\n슨\n장\n난\n한\n고통\n절망\n슳픔\n분노\n말썽\n쟁이\n\n\n높은산\n깊은골\n적막한\n산하\n눈\n내린\n사나이로\n태어나서\n할 일도 만다만\n너와나 하나되어\n\n\n벌판을\n우리는 \n간다\n\n",
-  //   },
-  //   {
-  //     file: {
-  //       filename: "sds/sssddsdsd.md",
-  //       status: "added",
-  //       contents_url: "https://api.github.com/repos/JEM1224/github-api/contents/sds%2Fsssddsdsd.md?ref=1aafe0e18d189773f6fbddc5119c4a03eb3b806d",
-  //       additions: 1,
-  //       deletions: 0,
-  //       changes: 1,
-  //       patch: "@@ -0,0 +1 @@\n+aaasdsadasdaasd\n\\ No newline at end of file",
-  //     },
-  //     content: "aaasdsadasdaasd",
-  //   }
-  // ];
 
   const changeParams ={
     owner: projectInfo.selectedOwner,
@@ -136,7 +118,7 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
 
   const tabComponents = {
     [TabsEnum.Commit]: <SectionCommits commits={commitData.data || []}/>,
-    [TabsEnum.Change]: <SectionChanges changes={changesData.data || []} onUpdateReviews={handleUpdateComments} />,
+    [TabsEnum.Change]: <SectionChangesList changes={changesData.data || []} onUpdateReviews={handleUpdateComments} />,
   };
 
   // 다중 선택 onChange 핸들러
@@ -185,6 +167,16 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
     setSelectedOptions(randomSelection);
   };
 
+  const ExampleCustomInput00 = forwardRef<HTMLDivElement, { value?: string; onClick?: () => void }>(
+    ({ value, onClick }, ref) => (
+      <DateInputContainer onClick={onClick} ref={ref}>
+        <DatePickerImg src={CalendarIcon} alt="Calendar Icon" />
+        {value || "Select Date"}
+      </DateInputContainer>
+    )
+  );
+  
+
   return (
     <SectionCreateBranchLayout>
         <MergeDirectionBox>
@@ -217,20 +209,15 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
             <DatePicker
               selected={selectedDate}
               onChange={(date: Date | null) => setSelectedDate(date)}
-              customInput={
-              <DateInputContainer >
-                <DatePickerImg src={CalendarIcon}/>
-                {selectedDate ? selectedDate.toLocaleDateString() : "Select Date"}
-              </DateInputContainer>
-              }
+              customInput={<ExampleCustomInput00/>}
               dateFormat="yyyy/MM/dd" // 날짜 포맷 설정
-              portalId="root-portal"  // Portal을 사용하여 날짜 선택 창이 body에 직접 렌더링됨
               popperPlacement="bottom-start" // 창이 날짜 선택 필드 아래에 표시되도록 위치 지정
+              popperClassName={StyledDatePickerPopper}
             />
           </DatePickerBox>
           <UrgentBox>
               Is it Urgent?
-              <UrgentButton onClick={handleIsUrgent} isUrgent={isUrgent}>
+              <UrgentButton onClick={handleIsUrgent} $isUrgent={isUrgent}>
                 {isUrgent ? 'Yes':'No'}
               </UrgentButton>
               *If you check this box, this request will not need approval.
@@ -243,7 +230,6 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
           options={PriorityOption}
           isSearchable={false}
           />
-        {priority}
         <CreateButtonBox>
           <ButtonCreateNewPR text="Create New Request" btnEvent={handlePostPR}/>
         </CreateButtonBox>
@@ -253,7 +239,7 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
             onTabChange={handleTabChange} />
           {reviews.length>0 && 
           <div style={{position:'relative'}}>
-          <ButtonSimpleSquare text="Finish Review" color="white" bgc="#1C8139" btnEvent={handlesIsFinalReviewOpen}/>
+          <ButtonSimpleSquare $text="Finish Review" $color="white" $bgc="#1C8139" btnEvent={handlesIsFinalReviewOpen}/>
           {isFinalReviewOpen && <CardFinalCodeReview onAdd={handleAddReview} commentNums={reviews.length}/>}
           </div>}
         </TabBox>

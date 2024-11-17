@@ -23,7 +23,7 @@ import ModalInputProject from "./components/modal/ModalInputProject";
 
 const AppComponent: React.FC = () => {
   const { isLogin } = useUserStore();
-  
+
   return (
     <>
       {isLogin && <Sidebar />}
@@ -45,7 +45,10 @@ const AppComponent: React.FC = () => {
             element={<PullRequestPageDetail />}
           />
           <Route path="*" element={<NotFoundPage errorNumber={404} />} />
-          <Route path="/403ERROR" element={<NotFoundPage errorNumber={403} />} />
+          <Route
+            path="/403ERROR"
+            element={<NotFoundPage errorNumber={403} />}
+          />
           <Route path="/privacy" element={<PrivacyNotice />} />
           <Route path="/project" element={<ModalInputProject />} />
         </Routes>

@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { SingleSelectType } from "../../Types/SelectType";
 
 interface UrgentProps{
-  isUrgent:boolean
+  $isUrgent:boolean
 }
 
 export const SectionCreateBranchLayout = styled.div`
@@ -132,7 +132,7 @@ export const UrgentBox = styled.div`
 export const UrgentButton = styled.div<UrgentProps>`
   width: 110px;
   height: 30px;
-  background-color: ${(props) => (props.isUrgent ? '#FF6767' : '#7667FF')};
+  background-color: ${(props) => (props.$isUrgent ? '#FF6767' : '#7667FF')};
   border-radius: 10px;
   display: flex;
   justify-content: center;
@@ -196,3 +196,11 @@ export const TabBox = styled.div`
   justify-content: space-between;
   align-items: center;
 `
+
+export const StyledDatePickerPopper = styled.div`
+  z-index: 1050;
+  background-color: white;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+`;

@@ -5,6 +5,9 @@ import {
   DashPRDataType,
   DashPRParamsType,
   DashIssueType,
+  VersionDataType,
+  VersionStatsDataType,
+  DashVersionDataType,
 } from "../Types/dashboardType";
 
 const BASE_URL = "http://54.180.83.239:8080";
@@ -23,6 +26,7 @@ export const getDashStatsData = async ({
       },
     },
   );
+  console.log(response.data);
   return response.data;
 };
 
@@ -63,4 +67,54 @@ export const getDashIssueData = async (
     console.error("Error fetching Issue list:", error);
     throw error;
   }
+};
+
+export const getVersionData = async (id: string): Promise<VersionDataType> => {
+  const { data } = await axios.get(`${BASE_URL}/version/note/${id}`, {
+    headers: {
+      Authorization: `Bearer ${TOKEN}`,
+    },
+  });
+  return data;
+};
+export const getVersionListData = async ({
+  owner,
+  repo,
+}: StatsParamsType): Promise<DashVersionDataType[]> => {
+  const { data } = await axios.get(`${BASE_URL}/version/${owner}/${repo}`, {
+    headers: {
+      Authorization: `Bearer ${TOKEN}`,
+    },
+  });
+  console.log(data);
+  return data;
+};
+
+export const getEditVersion = async (
+  id: string,
+  updatedVersionData: Partial<VersionDataType>,
+): Promise<VersionDataType> => {
+  const response = await axios.patch(
+    `${BASE_URL}/version/note/${id}`,
+    updatedVersionData,
+    {
+      headers: {
+        Authorization: `Bearer ${TOKEN}`,
+        // "Content-Type": "application/json",
+      },
+    },
+  );
+
+  return response.data;
+};
+
+export const getVersionStatsData = async (
+  id: string,
+): Promise<VersionStatsDataType> => {
+  const response = await axios.get(`${BASE_URL}/stats/${id}`, {
+    headers: {
+      Authorization: `Bearer ${TOKEN}`,
+    },
+  });
+  return response.data;
 };

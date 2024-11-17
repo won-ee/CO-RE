@@ -1,20 +1,15 @@
 import { useQueryPRList } from '../../hooks/usePullRequestData';
 import { useProjectStore } from '../../store/userStore';
-import { SectionPRSentListLayout,FilterLayout, GridTable , GridHeader, GridHeaderCell, GridRow, GridCell,CommentBox,StatusBox,PriorityBox, DeadLineBox, TitleBox} from './SectionPRReceivedList.styled'
+import { SectionPRSentListLayout,FilterLayout, GridTable , GridHeader, GridHeaderCell, GridRow, GridCell,CommentBox,StatusBox,PriorityBox, DeadLineBox, TitleBox, ReviewerImg} from './SectionPRReceivedList.styled'
 import { differenceInDays } from 'date-fns'
 
-// const data = [
-//   { col1: 'Frame Adjusement', col2: 'Frame into frontend', col3: 'D-1', col4: 'IMAGES', col5: '5', col6: 'HIGH', col7: 'Approved' },
-//   { col1: 'Sound Add', col2: 'Adjustment into frontend', col3: 'D-2', col4: 'IMAGES', col5: '', col6: 'MIDDLE', col7: 'Processing' },
-//   { col1: 'Schedule Page total Direct & Create', col2: 'Row 3 Col 2', col3: 'After Review', col4: 'IMAGES', col5: '3', col6: 'LOW', col7: 'Rejected' },
-// ];
 
 function SectionPRReceivedList() {
   const projectInfo = useProjectStore((state) => state);
   const params = {
     owner : projectInfo.selectedOwner,
     repo : projectInfo.selectedRepo,
-    state : 'receive'
+    state : 'received'
   }
   const {data,error,isLoading} = useQueryPRList(params)
   if (isLoading) return <p>Loading...</p>;
@@ -31,11 +26,11 @@ function SectionPRReceivedList() {
         <GridHeader>
           <GridHeaderCell>TITLE</GridHeaderCell>
           <GridHeaderCell>MERGE PATH</GridHeaderCell>
-          <GridHeaderCell align="center">DEADLINE</GridHeaderCell>
+          <GridHeaderCell $align="center">DEADLINE</GridHeaderCell>
           <GridHeaderCell>SENDER</GridHeaderCell>
-          <GridHeaderCell align="center">COMMENT</GridHeaderCell>
-          <GridHeaderCell align="center">PRIORITY</GridHeaderCell>
-          <GridHeaderCell align="center">STATUS</GridHeaderCell>
+          <GridHeaderCell $align="center">COMMENT</GridHeaderCell>
+          <GridHeaderCell $align="center">PRIORITY</GridHeaderCell>
+          <GridHeaderCell $align="center">STATUS</GridHeaderCell>
         </GridHeader>
 
         {/* Body (Rows) */}        
@@ -51,18 +46,18 @@ function SectionPRReceivedList() {
               <TitleBox>{row.title}</TitleBox>
               </GridCell>
             <GridCell>{row.head} into {row.base}</GridCell>
-            <GridCell align="center">
-              <DeadLineBox status={deadlineText} afterReview={row.afterReview}>{deadlineText}</DeadLineBox>
+            <GridCell $align="center">
+              <DeadLineBox $status={deadlineText} $afterReview={row.afterReview}>{deadlineText}</DeadLineBox>
               </GridCell>
-            <GridCell>{row.writer.writerImg} {row.writer.writerId}</GridCell>
-            <GridCell align="center">
-              <CommentBox status={String(row.commentCount)}>{row.commentCount}</CommentBox>
+            <GridCell><ReviewerImg src={row.writer.writerImg}/> {row.writer.writerId}</GridCell>
+            <GridCell $align="center">
+              <CommentBox $status={String(row.commentCount)}>{row.commentCount}</CommentBox>
             </GridCell>
-            <GridCell align="center">
-              <PriorityBox status={row.priority}>{row.priority.toUpperCase()}</PriorityBox>
+            <GridCell $align="center">
+              <PriorityBox $status={row.priority}>{row.priority.toUpperCase()}</PriorityBox>
               </GridCell>
-            <GridCell align="center">
-              <StatusBox status={row.status}>{row.status.charAt(0).toUpperCase() + row.status.slice(1)}</StatusBox>
+            <GridCell $align="center">
+              <StatusBox $status={row.status}>{row.status.charAt(0).toUpperCase() + row.status.slice(1)}</StatusBox>
               </GridCell>
           </GridRow>
         )

@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 
 interface GridCellProps {
-    align?: 'left' | 'center'; // 정렬 방식 지정 (left 또는 center)
+    $align?: 'left' | 'center'; // 정렬 방식 지정 (left 또는 center)
   }
 interface StringProps {
-    status:string;
-    afterReview?: boolean;
+    $status:string;
+    $afterReview?: boolean;
 }
 // Section과 Filter 레이아웃
 export const SectionPRSentListLayout = styled.div`
@@ -38,7 +38,7 @@ export const GridHeaderCell = styled.div<GridCellProps>`
   /* border-bottom: 0.6px solid #B9B9B9; //헤더 가로선 */
   display: flex;
   align-items: center;
-  justify-content: ${(props) => (props.align ? props.align : 'left')};
+  justify-content: ${(props) => (props.$align ? props.$align : 'left')};
   box-sizing: border-box;
 `;
 
@@ -51,9 +51,9 @@ export const GridCell = styled.div<GridCellProps>`
   padding: 20px 41px;
   border-top: 0.6px solid #B9B9B9;
   display: flex;
-  justify-content: ${(props) => (props.align === 'center' ? 'center' : 'flex-start')}; /* 수평 정렬 */
+  justify-content: ${(props) => (props.$align === 'center' ? 'center' : 'flex-start')}; /* 수평 정렬 */
   align-items: center; /* 수직 가운데 정렬 */
-  text-align: ${(props) => (props.align ? props.align : 'left')};
+  text-align: ${(props) => (props.$align ? props.$align : 'left')};
 `;
 export const CommentBox = styled.div<StringProps>`
   background-color: #D9D9D9;
@@ -64,7 +64,7 @@ export const CommentBox = styled.div<StringProps>`
   justify-content: center; /* 수평 가운데 정렬 */
   text-align: center;
   border-radius: 100%;
-  opacity: ${(props)=>(props.status !== '' ? 1:0)};
+  opacity: ${(props)=>(props.$status !== '' ? 1:0)};
 `
 export const StatusBox = styled.div<StringProps>`
   width: 93px;
@@ -76,7 +76,7 @@ export const StatusBox = styled.div<StringProps>`
   font-weight: bold;
   border-radius: 4px;
   background-color: ${(props) => {
-  switch (props.status) {
+  switch (props.$status) {
     case 'approved':
       return '#CCF0EB'; 
     case 'processing':
@@ -88,7 +88,7 @@ export const StatusBox = styled.div<StringProps>`
   }
   }};
   color: ${(props) => {
-  switch (props.status) {
+  switch (props.$status) {
     case 'approved':
       return '#00B69B'; 
     case 'processing':
@@ -111,7 +111,7 @@ export const PriorityBox = styled.div<StringProps>`
   border-radius: 4px;
   color: white;
   background-color: ${(props) => {
-  switch (props.status) {
+  switch (props.$status) {
     case 'high':
       return '#FF0000'; 
     case 'middle':
@@ -126,8 +126,14 @@ export const PriorityBox = styled.div<StringProps>`
 export const DeadLineBox = styled.div<StringProps>`
   font-weight: bold;
   white-space: nowrap;
-  color: ${(props)=>(props.afterReview==true ? '#723CF1': parseInt(props.status.replace('D-',''),10) < 2 ? 'red': props.status =='D-day' ? 'red':'black')};
+  color: ${(props)=>(props.$afterReview==true ? '#723CF1': parseInt(props.$status.replace('D-',''),10) < 2 ? 'red': props.$status =='D-day' ? 'red':'black')};
 `
 export const TitleBox = styled.div`
   font-weight: bold;
+`
+export const ReviewerImg = styled.img`
+  width: 24px;
+  height: 24px;
+  border-radius: 100%;
+  margin-right: 8px;
 `
