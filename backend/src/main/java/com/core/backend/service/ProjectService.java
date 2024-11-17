@@ -193,10 +193,8 @@ public class ProjectService {
             }
             log.info("5");
 
-            Projects sameProject = projectRepository.findByGithubOwnerAndGithubRepository(project.getGithubOwner(), project.getGithubRepository()).orElse(null);
             log.info("6");
-            if (sameProject != null) {
-                log.info("7 sameProject = {}", sameProject);
+            if (!projectRepository.existsByGithubOwnerAndGithubRepository(project.getGithubOwner(), project.getGithubRepository())) {
                 return false;
             }
 
@@ -252,12 +250,11 @@ public class ProjectService {
 
     public ProjectGitSetDto findGitSetToProject(String repo, String owner) {
         log.info("init 2");
-        Projects project = projectRepository.findByGithubOwnerAndGithubRepository(owner, repo).orElse(null);
-
-        if (project == null) {
-            log.info("init 3");
+        List<Projects> projectsList = projectRepository.findByGithubOwnerAndGithubRepository(owner, repo);
+        if (projectsList.size() > 1) {
             return null;
         }
+        Projects project = projectsList.get(0);
 
         log.info("findGitSetToProject init get project : {}", project.toString());
 
@@ -268,7 +265,11 @@ public class ProjectService {
     }
 
     public Projects getProjectGit(String repo, String owner) {
-        return projectRepository.findByGithubOwnerAndGithubRepository(owner, repo).orElse(null);
+        List<Projects> projectsList = projectRepository.findByGithubOwnerAndGithubRepository(owner, repo);
+        if (projectsList.size() > 1) {
+            return null;
+        }
+        return projectsList.get(0);
     }
 
     public List<EpicListDto> getAllEpicToProject(Long projectId) {

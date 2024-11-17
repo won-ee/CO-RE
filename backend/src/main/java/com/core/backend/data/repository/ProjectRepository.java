@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<Projects, Long> {
@@ -23,7 +22,9 @@ public interface ProjectRepository extends JpaRepository<Projects, Long> {
     Projects findByGroupUrlAndJiraId(@Param("groupUrl") String groupUrl, @Param("jiraId") String jiraId);
 
 
-    Optional<Projects> findByGithubOwnerAndGithubRepository(String githubOwner, String githubRepository);
+    List<Projects> findByGithubOwnerAndGithubRepository(String githubOwner, String githubRepository);
+
+    boolean existsByGithubOwnerAndGithubRepository(String githubOwner, String githubRepository);
 
     List<Projects> findAllByJiraGroup_Id(Long jiraGroupId);
 
