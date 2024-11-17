@@ -33,7 +33,7 @@ function Sidebar() {
       }else{
         navigate("/403ERROR");
       }
-  }}, [navigate]);
+  }}, [navigate,selectedOwnerId,userInfo,selectedRepo,selectedOwner]);
 
   const handleLogout = () => {
     logout();
