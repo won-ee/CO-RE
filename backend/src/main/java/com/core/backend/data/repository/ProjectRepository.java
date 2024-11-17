@@ -17,6 +17,12 @@ public interface ProjectRepository extends JpaRepository<Projects, Long> {
             "WHERE p.jiraGroup.groupUrl = :groupUrl AND p.jiraId = :jiraId")
     boolean existsByGroupUrlAndJiraId(@Param("groupUrl") String groupUrl, @Param("jiraId") String jiraId);
 
+    @Query("SELECT p " +
+            "FROM Projects p " +
+            "WHERE p.jiraGroup.groupUrl = :groupUrl AND p.jiraId = :jiraId")
+    Projects findByGroupUrlAndJiraId(@Param("groupUrl") String groupUrl, @Param("jiraId") String jiraId);
+
+
     Optional<Projects> findByGithubOwnerAndGithubRepository(String githubOwner, String githubRepository);
 
     List<Projects> findAllByJiraGroup_Id(Long jiraGroupId);

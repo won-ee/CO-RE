@@ -133,6 +133,7 @@ public class ProjectService {
                     String ownerAccountId = projectOwner.get("accountId");
                     String ownerName = projectOwner.get("accountName");
 
+
                     Projects newProject = Projects.builder()
                             .jiraGroup(group)
                             .jiraId(jiraId)
@@ -144,8 +145,11 @@ public class ProjectService {
                             .ownerName(ownerName)
                             .build();
 
-                    if (!projectRepository.existsByGroupUrlAndJiraId(group.getGroupUrl(), jiraId)) {
-                        projectRepository.save(newProject);
+                    Projects getProject = projectRepository.findByGroupUrlAndJiraId(group.getGroupUrl(), jiraId);
+                    if (getProject == null) {
+                        newProject = projectRepository.save(newProject);
+                    } else {
+                        newProject = getProject;
                     }
 
                     ProjectUsers projectUser = projectUserRepository.findByUserAndProjectJiraId(user, newProject.getJiraId());
