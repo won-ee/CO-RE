@@ -28,7 +28,8 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain)
             throws ServletException, IOException {
 
-        String accessToken = getAuthorizationFromCookie(request);
+        String accessToken = request.getHeader("gitToken");
+        if (accessToken == null) accessToken = getAuthorizationFromCookie(request);
 
         if (accessToken == null) {
             throw new AccessDeniedException("Access token is missing");
