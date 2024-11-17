@@ -12,9 +12,7 @@ export const getUserInfo = async () => {
     headers: {
       withCredentials: true,
     },
-  });
-  console.log(response.data);
-  
+  });  
   return response.data;
 };
 
