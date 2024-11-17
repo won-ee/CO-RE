@@ -57,23 +57,10 @@ public class JwtTokenService {
     private final UserRepository userRepository;
 
     public String createAccessToken(Long id, String email) {
-//        Date now = new Date();
-//        long expirationMillis = 72 * 60 * 60 * 1000L;
-//        Date expirationTime = new Date(now.getTime() + expirationMillis);
-//
-//        log.info("createAccessToken 생성시간 : {}", now);
-//        log.info("createAccessToken 만료시간 : {}", expirationTime);
 
         ZonedDateTime nowKST = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
-        log.info("현재 시간 (KST): {}", nowKST);
-
-        // KST 시간을 UTC로 변환
         ZonedDateTime nowUTC = nowKST.withZoneSameInstant(ZoneId.of("UTC"));
-        log.info("현재 시간 (UTC): {}", nowUTC);
-
-        // 만료 시간을 UTC 기준으로 72시간 뒤로 설정
-        ZonedDateTime expirationUTC = nowUTC.plusHours(72);
-        log.info("만료 시간 (UTC): {}", expirationUTC);
+        ZonedDateTime expirationUTC = nowUTC.plusMinutes(accessTokenExpirationPeriod);
 
         return JWT.create()
                 .withSubject(ACCESS_TOKEN_SUBJECT)
@@ -84,23 +71,9 @@ public class JwtTokenService {
     }
 
     public String createRefreshToken() {
-//        Date now = new Date();
-//        long expirationMillis = 72 * 60 * 60 * 1000L;
-//        Date expirationTime = new Date(now.getTime() + expirationMillis);
-//
-//        log.info("createAccessToken 생성시간 : {}", now);
-//        log.info("createAccessToken 만료시간 : {}", expirationTime);
-
         ZonedDateTime nowKST = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
-        log.info("현재 시간 (KST): {}", nowKST);
-
-        // KST 시간을 UTC로 변환
         ZonedDateTime nowUTC = nowKST.withZoneSameInstant(ZoneId.of("UTC"));
-        log.info("현재 시간 (UTC): {}", nowUTC);
-
-        // 만료 시간을 UTC 기준으로 72시간 뒤로 설정
-        ZonedDateTime expirationUTC = nowUTC.plusHours(72);
-        log.info("만료 시간 (UTC): {}", expirationUTC);
+        ZonedDateTime expirationUTC = nowUTC.plusMinutes(refreshTokenExpirationPeriod);
 
         return JWT.create()
                 .withSubject(REFRESH_TOKEN_SUBJECT)
@@ -162,17 +135,14 @@ public class JwtTokenService {
 
     public boolean isJwtTokenValid(String token) {
         try {
-            log.info("0");
+            log.info(token);
             var decodeJWT = JWT.require(Algorithm.HMAC512(secretKey)).build().verify(token);
 
-            log.info("1");
-            // 현재 UTC 시간
             ZonedDateTime nowUTC = ZonedDateTime.now(ZoneId.of("UTC"));
 
-            // 토큰 만료 시간
             Date expiration = decodeJWT.getExpiresAt();
             ZonedDateTime expirationUTC = expiration.toInstant().atZone(ZoneId.of("UTC"));
-            log.info("2");
+
             if (nowUTC.isAfter(expirationUTC)) {
                 log.info("JWT Token has expired. Expiration time (UTC): {}", expirationUTC);
                 return false;
@@ -181,7 +151,7 @@ public class JwtTokenService {
             Long id = decodeJWT.getClaim(ID_CLAIM).asLong();
             String email = decodeJWT.getClaim(EMAIL_CLAIM).asString();
             String subject = decodeJWT.getSubject();
-            log.info("3");
+
             return id != null && email != null && subject != null && subject.equals(ACCESS_TOKEN_SUBJECT);
         } catch (Exception ex) {
             log.error("유효하지 않은 토큰입니다. : {}", ex.getMessage());
