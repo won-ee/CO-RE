@@ -3,6 +3,7 @@ package com.core.backend.config;
 import com.core.backend.filter.JwtAuthenticationFilter;
 import com.core.backend.handler.JiraOAuth2LoginFailureHandler;
 import com.core.backend.service.JwtTokenService;
+import com.core.backend.util.CustomUserDetailsArgumentResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -13,7 +14,10 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -50,4 +54,8 @@ public class SecurityConfig implements WebMvcConfigurer {
         return http.build();
     }
 
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+        resolvers.add(new CustomUserDetailsArgumentResolver());
+    }
 }
