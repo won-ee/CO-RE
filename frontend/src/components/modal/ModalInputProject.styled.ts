@@ -36,7 +36,7 @@ export const Input = styled.input`
   background: transparent;
 `;
 
-export const FormBox = styled.form`
+export const FormBox = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;

@@ -16,4 +16,44 @@ export const getIssueList = async (projectUserId:number) => {
     return response.data;
   };
   
+  export const getEpicList = async (projectId:number) => {    
+    const response = await axios.get(
+      
+      `${BASE_URL}/project/search/epic-list/${projectId}`,{
+        headers: {
+          // withCredentials: true,
+          Authorization: `Bearer ${TOKEN}`
+        }
+      },
+    );          
+    return response.data;
+  };
+
+  export const postEpic = async (projectUserId:number,deadline:string,Priority:string) => {
+   
+    const response = await axios.post(
+      `${BASE_URL} /issue/create/no-epic/${projectUserId}?deadline=${deadline}`,
+      Priority,
+      {
+        headers: {
+          Authorization: `Bearer ${TOKEN}`,
+        },
+      }
+    );  
+    return response.data;
+  };
+
+  export const postNoEpic = async (projectUserId:number,deadline:string,Priority:string) => {
+    
+    const response = await axios.post(
+      `${BASE_URL}/issue/create/epic/${projectUserId}?deadline=${deadline}`,
+      Priority,
+      {
+        headers: {
+          Authorization: `Bearer ${TOKEN}`,
+        },
+      }
+    );  
+    return response.data;
+  };
   

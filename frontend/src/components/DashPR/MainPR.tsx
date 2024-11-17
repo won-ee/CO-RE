@@ -13,10 +13,12 @@ import {
 import { DashPRDataType } from "../../Types/dashboardType";
 
 interface MainPRProps {
-  data: DashPRDataType[];
+  data: DashPRDataType[] | undefined;
 }
 
 const MainPR: React.FC<MainPRProps> = ({ data }) => {
+  const isEmpty = !data || data.length === 0;
+
   return (
     <PullRequestsLayout>
       <SectionTitleText>Pull Requests</SectionTitleText>
@@ -34,29 +36,37 @@ const MainPR: React.FC<MainPRProps> = ({ data }) => {
       <ScrollableTableWrapper>
         <StyledTable>
           <tbody>
-            {data.map((item: DashPRDataType) => (
-              <TableRowItem key={item.pullRequestId}>
-                <TableDataCell>{item.writer.writerId}</TableDataCell>
-                <TableDataCell>{item.title}</TableDataCell>
-                <TableDataCell>{item.deadline}</TableDataCell>
-                <TableDataCell>
-                  <CommentCountLabel>{item.commentCount}</CommentCountLabel>
-                </TableDataCell>
-                <TableDataCell>
-                  <StatusLabel
-                    $status={
-                      item.status === "Approved" ||
-                      item.status === "Processing" ||
-                      item.status === "Rejected"
-                        ? item.status
-                        : "Processing"
-                    }
-                  >
-                    {item.status || "Processing"}
-                  </StatusLabel>
+            {isEmpty ? (
+              <TableRowItem>
+                <TableDataCell colSpan={5} style={{ textAlign: "center" }}>
+                  현재 정보가 없습니다.
                 </TableDataCell>
               </TableRowItem>
-            ))}
+            ) : (
+              data.map((item: DashPRDataType) => (
+                <TableRowItem key={item.pullRequestId}>
+                  <TableDataCell>{item.writer.writerId}</TableDataCell>
+                  <TableDataCell>{item.title}</TableDataCell>
+                  <TableDataCell>{item.deadline}</TableDataCell>
+                  <TableDataCell>
+                    <CommentCountLabel>{item.commentCount}</CommentCountLabel>
+                  </TableDataCell>
+                  <TableDataCell>
+                    <StatusLabel
+                      $status={
+                        item.status === "Approved" ||
+                        item.status === "Processing" ||
+                        item.status === "Rejected"
+                          ? item.status
+                          : "Processing"
+                      }
+                    >
+                      {item.status || "Processing"}
+                    </StatusLabel>
+                  </TableDataCell>
+                </TableRowItem>
+              ))
+            )}
           </tbody>
         </StyledTable>
       </ScrollableTableWrapper>
