@@ -13,7 +13,7 @@ import {
 const BASE_URL = "http://54.180.83.239:8080";
 // const BASE_URL = "https://k11s106.p.ssafy.io/api";
 const TOKEN =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImlkIjoxLCJleHAiOjE3MzE4NTU5ODgsImVtYWlsIjoiaGtrMzYyNkBuYXZlci5jb20ifQ.pkoSBuFD1R9Lg5QdvhKjHhKIwHxO_a74V1N-u0WRKH2Z0OGU0XSulLAJ28O_kwTYQgom0oPO1h_uDaJbB-9_Gw";
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImlkIjoxLCJleHAiOjE3MzE5ODczNDQsImVtYWlsIjoiaGtrMzYyNkBuYXZlci5jb20ifQ.Ud0t67fGyyhUgXMROWJ9rK9iY2MO3Vs8yO1G-2j5TtyRXYjgJPa3gWNV76CTFdzzMyD-mdnx6LboFwpULH2U1Q";
 
 export const getDashStatsData = async ({
   owner,
@@ -95,38 +95,19 @@ export const getEditVersion = async (
   id: string,
   updatedVersionData: Partial<VersionDataType>,
 ): Promise<VersionDataType> => {
-  const defaultData: VersionDataType = {
-    name: "",
-    content: "",
-    mixingKneading: false,
-    assembly: false,
-    chemicalProcessing: false,
-    modulePack: false,
-    ess: false,
-    ulsan: false,
-    hungary1: false,
-    hungary2: false,
-    xian: false,
-    spe: false,
-    cheonan: false,
-  };
-  const requestData: VersionDataType = {
-    ...defaultData,
-    ...updatedVersionData,
-  };
   const { data } = await axios.patch(
     `${BASE_URL}/version/note/${id}`,
-    requestData,
+    updatedVersionData,
     {
       headers: {
         Authorization: `Bearer ${TOKEN}`,
+        // "Content-Type": "application/json",
       },
     },
   );
 
   return data;
 };
-
 export const getVersionStatsData = async (
   id: string,
 ): Promise<VersionStatsDataType> => {

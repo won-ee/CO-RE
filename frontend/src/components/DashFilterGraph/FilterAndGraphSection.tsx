@@ -4,12 +4,11 @@ import {
   FilterBox,
   FilterGroupRow,
   FilterIconWrapper,
-  ResetButtonBox,
   FilterLabel,
   DropdownSelect,
   GraphContainer,
 } from "./FilterAndGraphSection.styled";
-import { FaFilter, FaRedo } from "react-icons/fa";
+import { FaFilter } from "react-icons/fa";
 import {
   AreaChart,
   Area,
@@ -24,12 +23,9 @@ import NoteSection from "./NoteSection";
 import { useProjectStore } from "../../store/userStore";
 import { useVersionList, useVersionStats } from "../../hooks/useDashboard";
 import {
-  VersionStatsDataType,
+  // VersionStatsDataType,
   CategoryDataType,
 } from "../../Types/dashboardType";
-type CategoryData = { day: number; value: number }[];
-type VersionData = { [version: string]: string[] };
-type VersionNotes = { [version: string]: string };
 
 const CustomDot: React.FC<DotProps & { index?: number }> = (props) => {
   const { cx, cy, index } = props;
@@ -48,9 +44,28 @@ const FilterAndGraphSection: React.FC = () => {
   const [selectedCategory, setSelectedCategory] =
     useState<DropdownOption>("commits");
 
-  const [graphData, setGraphData] = useState<CategoryData>([]);
-
+  const [isEditing, setIsEditing] = useState(false);
+  const [showNote, setShowNote] = useState(true);
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+
+  const toggleSection = (section: string) => {
+    setExpandedSections((prev) =>
+      prev.includes(section)
+        ? prev.filter((s) => s !== section)
+        : [...prev, section],
+    );
+  };
+
+  const handleOptionChange = (option: string) => {
+    setSelectedOptions((prev) => {
+      if (prev.includes(option)) {
+        return prev.filter((opt) => opt !== option);
+      } else {
+        return [...prev, option];
+      }
+    });
+  };
 
   //선택된 버젼
 
@@ -99,39 +114,6 @@ const FilterAndGraphSection: React.FC = () => {
     setSelectedCategory(e.target.value as DropdownOption);
   };
 
-  // 노트 토글
-  // const toggleSection = (section: string) => {
-  //   setExpandedSections((prev) =>
-  //     prev.includes(section)
-  //       ? prev.filter((s) => s !== section)
-  //       : [...prev, section],
-  //   );
-  // };
-
-  //노트 옵션
-  // const handleOptionChange = (option: string, subOptions?: string[]) => {
-  //   if (subOptions) {
-  //     if (selectedOptions.includes(option)) {
-  //       setSelectedOptions((prev) =>
-  //         prev.filter((opt) => ![option, ...subOptions].includes(opt)),
-  //       );
-  //     } else {
-  //       setSelectedOptions((prev) => {
-  //         const newOptions = [...prev, option, ...subOptions];
-  //         return Array.from(new Set(newOptions));
-  //       });
-  //     }
-  //   } else {
-  //     if (selectedOptions.includes(option)) {
-  //       setSelectedOptions((prev) => prev.filter((opt) => opt !== option));
-  //     } else {
-  //       setSelectedOptions((prev) => {
-  //         const newOptions = [...prev, option];
-  //         return Array.from(new Set(newOptions));
-  //       });
-  //     }
-  //   }
-  // };
   const processedData = selectedData
     .map((item) => ({
       ...item,
@@ -211,20 +193,21 @@ const FilterAndGraphSection: React.FC = () => {
         </ResponsiveContainer>
       </GraphContainer>
 
-      {/* <NoteSection
+      <NoteSection
         isEditing={isEditing}
         showNote={showNote}
         expandedSections={expandedSections}
         selectedOptions={selectedOptions}
+        selectedVersion={selectedVersion}
+        selectedMonth=""
+        selectedCategory={selectedCategory}
+        defaultVersionNotes={{}}
+        selectedNoteVersion={selectedVersion}
         setShowNote={setShowNote}
         setIsEditing={setIsEditing}
-        selectedVersion={selectedVersion}
-        selectedMonth={selectedMonth}
-        selectedCategory={selectedCategory}
-        defaultVersionNotes={defaultVersionNotes}
         toggleSection={toggleSection}
         handleOptionChange={handleOptionChange}
-      /> */}
+      />
     </FilterAndGraphLayout>
   );
 };
