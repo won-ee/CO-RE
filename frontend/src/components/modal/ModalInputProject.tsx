@@ -8,18 +8,29 @@ import {
   RegisterText,
   FormBox,
 } from "./ModalInputProject.styled";
-import { useProjectStore } from "../../store/userStore";
-import { useMutationGithubInfo } from "../../hooks/useMutationCreatePR";
+import { useProjectStore, useUserStore } from "../../store/userStore";
+import { useMutationGithubInfo, useMutationPatchUserInfo } from "../../hooks/useMutationCreatePR";
 import LoadingPage from "../../pages/LoadingPage";
 import NotFoundPage from "../../pages/NotFoundPage";
+import { patchUserInfoType } from "../../Types/userType";
 
 const ModalInputProject: React.FC = () => {
-  const { mutate, isLoading,error } = useMutationGithubInfo();
+  const { mutate, isLoading, error } = useMutationGithubInfo();
+  const { mutate: tokenMutation } = useMutationPatchUserInfo();
+  const { selectedProjectId } = useProjectStore();
+
   const [owner, setOwner] = useState("");
   const [project, setProject] = useState("");
-  const { selectedProjectId } = useProjectStore()
+  const [token, setToken] = useState("");
+
+  const { userInfo } = useUserStore();
+
   if (isLoading) return <LoadingPage />;
-  if (error) return <NotFoundPage errorNumber={404}/>;
+  if (error) return <NotFoundPage errorNumber={404} />;
+
+  const handleTokenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setToken(e.target.value);
+  };
 
   const handleOwnerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setOwner(e.target.value);
@@ -29,20 +40,32 @@ const ModalInputProject: React.FC = () => {
     setProject(e.target.value);
   };
 
-
-  const handleRegister = () => {
+  const handleRegister = async () => {
     const params = {
-      projectId:selectedProjectId,
-      githubOwner:owner, 
-      githubRepo:project,
+      projectId: selectedProjectId,
+      githubOwner: owner,
+      githubRepo: project,
     };
-
-    mutate(params, {
+  
+    tokenMutation({
+      userInfotData: {
+        nickName: userInfo?.userInfo.name ?? "",
+        gitToken: token,
+      } as patchUserInfoType,
+    }, {
       onSuccess: () => {
-        console.log("성공적으로 GitHub 정보가 전송되었습니다!");
+        console.log("GitHub 정보가 성공적으로 등록되었습니다!");
+        mutate(params, {
+          onSuccess: () => {
+            console.log("성공적으로 GitHub 정보가 전송되었습니다!");
+          },
+          onError: (error) => {
+            console.error("에러 발생:", error);
+          },
+        });
       },
       onError: (error) => {
-        console.error("에러 발생:", error);
+        console.error("토큰 등록 중 에러 발생:", error);
       },
     });
   };
@@ -53,7 +76,16 @@ const ModalInputProject: React.FC = () => {
       <FormBox>
         <UserBox>
           <Input
-            type="text" 
+            type="text"
+            value={token}
+            onChange={handleTokenChange}
+            required
+          />
+          <Label>GITHUB TOKEN</Label>
+        </UserBox>
+        <UserBox>
+          <Input
+            type="text"
             value={owner}
             onChange={handleOwnerChange}
             required
