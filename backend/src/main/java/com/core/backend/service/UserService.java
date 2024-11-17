@@ -1,14 +1,14 @@
 package com.core.backend.service;
 
 import com.core.backend.data.dto.projects.InfoResponseProjectListDto;
-import com.core.backend.data.dto.users.InfoResponseUserDto;
-import com.core.backend.data.dto.users.UserInfoDto;
-import com.core.backend.data.dto.users.UserLoginDto;
+import com.core.backend.data.dto.users.*;
+import com.core.backend.data.entity.ProjectUsers;
 import com.core.backend.data.entity.Projects;
 import com.core.backend.data.entity.Users;
 import com.core.backend.data.repository.ProjectRepository;
 import com.core.backend.data.repository.ProjectUserRepository;
 import com.core.backend.data.repository.UserRepository;
+import com.core.backend.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,30 +34,38 @@ public class UserService {
         return userRepository.findByEmail(email).isPresent();
     }
 
-    public UserLoginDto getUserInfo(Long id) {
+    public UserLoginDto getFirstUserInfo(Long id) {
         Users user = userRepository.findById(id).orElse(null);
         assert user != null;
 
         InfoResponseUserDto getUserDto = InfoResponseUserDto.builder()
                 .id(user.getId())
+                .accountId(user.getAccountId())
                 .email(user.getEmail())
                 .name(user.getName())
                 .nickName(user.getNickname())
                 .image(user.getProfile())
+                .gitToken(user.getGitToken())
                 .build();
 
         List<Projects> projectList = projectService.getProjectsByUserId(id);
         ArrayList<InfoResponseProjectListDto> getProListDto = new ArrayList<>();
         for (Projects project : projectList) {
 
+            ProjectUsers projectUsers = projectUserRepository.findByUserIdAndProjectId(user.getId(), project.getId());
+            assert projectUsers != null;
+
             InfoResponseProjectListDto getProDto = InfoResponseProjectListDto.builder()
                     .id(project.getId())
+                    .projectUserId(projectUsers.getId())
                     .name(project.getName())
                     .image(project.getImage())
                     .ownerId(project.getOwnerId())
                     .ownerName(project.getOwnerName())
                     .groupId(project.getJiraGroup().getId())
                     .groupName(project.getJiraGroup().getGroupName())
+                    .githubOwner(project.getGithubOwner())
+                    .githubRepo(project.getGithubRepository())
                     .build();
 
             getProListDto.add(getProDto);
@@ -65,7 +73,7 @@ public class UserService {
 
         return UserLoginDto.builder()
                 .userInfo(getUserDto)
-                .groupList(getProListDto)
+                .projects(getProListDto)
                 .build();
     }
 
@@ -101,5 +109,25 @@ public class UserService {
 
     public Users getUser(Long userId) {
         return userRepository.findById(userId).orElse(null);
+    }
+
+    public UserAllInfoDto getUserInfo(Long id) {
+        Users user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+        return UserAllInfoDto.toUserAllInfoDto(user);
+    }
+
+    public UserAllInfoDto updateUserInfo(Long id, UserUpdateInfoDto userInfo) {
+        Users user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+        user.createUserInfo(userInfo);
+        userRepository.save(user);
+
+        return UserAllInfoDto.toUserAllInfoDto(user);
+    }
+
+    public UserTokenDto getGitTokenToUser(Long id) {
+        Users user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+        return UserTokenDto.builder()
+                .token(user.getGitToken())
+                .build();
     }
 }

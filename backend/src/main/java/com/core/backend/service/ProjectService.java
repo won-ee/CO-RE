@@ -1,10 +1,16 @@
 package com.core.backend.service;
 
+import com.core.backend.data.dto.epics.EpicListDto;
+import com.core.backend.data.dto.projects.ProjectGitSetDto;
+import com.core.backend.data.dto.projects.ProjectSetDto;
+import com.core.backend.data.dto.projects.UpdateGitHubRequestDto;
 import com.core.backend.data.dto.users.UserGroupsDto;
 import com.core.backend.data.entity.JiraGroups;
 import com.core.backend.data.entity.ProjectUsers;
 import com.core.backend.data.entity.Projects;
 import com.core.backend.data.entity.Users;
+import com.core.backend.data.repository.EpicRepository;
+import com.core.backend.data.repository.IssueRepository;
 import com.core.backend.data.repository.ProjectRepository;
 import com.core.backend.data.repository.ProjectUserRepository;
 import jakarta.transaction.Transactional;
@@ -15,10 +21,8 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +35,9 @@ public class ProjectService {
     private final GroupService groupService;
     private final RoleService roleService;
     private final ProjectUserRepository projectUserRepository;
+    private final IssueService issueService;
+    private final EpicRepository epicRepository;
+    private final IssueRepository issueRepository;
 
     public List<Map<String, Object>> getAllProjects(String accessToken, String cloudId) {
         try {
@@ -122,14 +129,10 @@ public class ProjectService {
                     Map<String, Object> avatarUrlsMap = (Map<String, Object>) projectData.get("avatarUrls");
                     String image = avatarUrlsMap != null ? (String) avatarUrlsMap.get("48x48") : null;
 
-                    Map<String, Object> projectCategoryMap = (Map<String, Object>) projectData.get("projectCategory");
-                    String categoryName = projectCategoryMap != null ? (String) projectCategoryMap.get("name") : null;
-                    String categoryId = projectCategoryMap != null ? (String) projectCategoryMap.get("id") : null;
-
-
                     Map<String, String> projectOwner = getProjectOwner(accessToken, selfUrl);
                     String ownerAccountId = projectOwner.get("accountId");
                     String ownerName = projectOwner.get("accountName");
+
 
                     Projects newProject = Projects.builder()
                             .jiraGroup(group)
@@ -138,26 +141,31 @@ public class ProjectService {
                             .key(key)
                             .selfUrl(selfUrl)
                             .image(image)
-                            .categoryName(categoryName)
-                            .categoryId(categoryId)
                             .ownerId(ownerAccountId)
                             .ownerName(ownerName)
                             .build();
 
-                    if (!projectRepository.existsByGroupUrlAndJiraId(group.getGroupUrl(), jiraId)) {
-                        projectRepository.save(newProject);
+                    Projects getProject = projectRepository.findByGroupUrlAndJiraId(group.getGroupUrl(), jiraId);
+                    if (getProject == null) {
+                        newProject = projectRepository.save(newProject);
+                    } else {
+                        newProject = getProject;
                     }
 
-                    if (!projectUserRepository.existsByUserAndProjectJiraId(user, newProject.getJiraId())) {
-                        ProjectUsers projectUser = ProjectUsers.builder()
+                    ProjectUsers projectUser = projectUserRepository.findByUserAndProjectJiraId(user, newProject.getJiraId());
+                    if (projectUser == null) {
+                        projectUser = ProjectUsers.builder()
                                 .user(user)
                                 .project(newProject)
                                 .build();
 
-                        projectUserRepository.save(projectUser);
+                        projectUser = projectUserRepository.save(projectUser);
                     }
 
                     roleService.saveProjectRolesIfNotExists(accessToken, selfUrl, newProject, user);
+
+                    issueService.getIssueListToJira(accessToken, selfUrl, newProject, projectUser);
+
                 }
             }
         } catch (Exception ex) {
@@ -169,5 +177,77 @@ public class ProjectService {
         return projectUserRepository.findProjectsByUserId(userId);
     }
 
+    public boolean updateGitHubToProject(Long userId, UpdateGitHubRequestDto updateGitHubRequestDto) {
+        try {
+            if (projectUserRepository.existsByUserIdAndProjectId(userId, updateGitHubRequestDto.projectId())) {
+                // 업데이트 작업 진행할것
+                Optional<Projects> getProjects = projectRepository.findById(updateGitHubRequestDto.projectId());
+
+                if (getProjects.isPresent()) {
+                    Projects project = getProjects.get().updateGitHub(updateGitHubRequestDto);
+                    projectRepository.save(project);
+                    return true;
+                }
+            }
+        } catch (Exception ex) {
+            log.info("updateGitHubToProject error: {}", ex.getMessage());
+        }
+        return false;
+    }
+
+    public ProjectSetDto findSetToProject(Long projectId) {
+
+        Projects project = projectRepository.findById(projectId).orElse(null);
+
+        if (project != null) {
+            return ProjectSetDto.builder()
+                    .targetScore(project.getTargetScore())
+                    .reviewerCount(project.getReviewerCount())
+                    .template(project.getReviewTemplate())
+                    .build();
+        }
+        return null;
+    }
+
+    public ProjectSetDto updateSetToProject(Long projectId, ProjectSetDto projectSetDto) {
+        Projects project = projectRepository.findById(projectId).orElse(null);
+
+        if (project != null) {
+            Projects newProject = project.updateSet(projectSetDto);
+            projectRepository.save(newProject);
+
+            return ProjectSetDto.builder()
+                    .targetScore(project.getTargetScore())
+                    .reviewerCount(project.getReviewerCount())
+                    .template(project.getReviewTemplate())
+                    .build();
+        }
+
+        return null;
+    }
+
+    public ProjectGitSetDto findGitSetToProject(String repo, String owner) {
+        Projects project = getProjectGit(repo, owner);
+        assert project != null;
+
+        return ProjectGitSetDto.builder()
+                .template(project.getReviewTemplate())
+                .score(project.getTargetScore())
+                .build();
+    }
+
+    public Projects getProjectGit(String repo, String owner) {
+        return projectRepository.findByGithubOwnerAndGithubRepository(owner, repo).orElse(null);
+    }
+
+    public List<EpicListDto> getAllEpicToProject(Long projectId) {
+        return epicRepository.findByProjectId(projectId).stream()
+                .map(epic -> EpicListDto.builder()
+                        .id(epic.getId())
+                        .key(epic.getKey())
+                        .name(epic.getName())
+                        .build())
+                .collect(Collectors.toList());
+    }
 
 }

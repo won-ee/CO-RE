@@ -3,9 +3,8 @@ package com.core.backend.data.dto.projects;
 import lombok.Builder;
 
 @Builder
-public record InfoResponseProjectListDto(
+public record ProjectInfoDto(
         Long id,
-        Long projectUserId,
         String name,
         String image,
         String ownerId,
@@ -15,5 +14,4 @@ public record InfoResponseProjectListDto(
         String githubOwner,
         String githubRepo
 ) {
-
 }
