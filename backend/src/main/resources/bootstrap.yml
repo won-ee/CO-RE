@@ -6,11 +6,11 @@ spring:
     import: optional:file:.env[.properties]
   application:
     name: backend
-    cloud:
-      config:
-        uri: http://config:8888
-      profiles:
-        active: backend
+  cloud:
+    config:
+      uri: http://config:8888
+  profiles:
+    active: backend
   datasource:
     url: ${MYSQL_URL}
     username: ${MYSQL_USERNAME}
@@ -64,3 +64,4 @@ eureka:
   client:
     service-url:
       defaultZone: http://eureka:8761/eureka/
+
