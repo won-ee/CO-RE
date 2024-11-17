@@ -36,7 +36,8 @@ public class ProjectUserService {
                     projectUsers.getUser().getName(),
                     projectUsers.getUser().getNickname(),
                     projectUsers.getUser().getEmail(),
-                    projectUsers.getUser().getGitToken()
+                    projectUsers.getUser().getGitToken(),
+                    projectUsers.getUser().getGitName()
             );
             projectUserInfoDtoList.add(infoDto);
         }

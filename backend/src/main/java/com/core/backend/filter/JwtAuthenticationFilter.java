@@ -33,22 +33,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String jwtToken = null;
 
-        // Authorization 헤더가 있는 경우 우선 처리
         String authHeader = request.getHeader("Authorization");
         if (authHeader != null) {
             if (authHeader.startsWith("Bearer ")) {
-                jwtToken = authHeader.substring(7); // "Bearer "를 제외한 부분 추출
+                jwtToken = authHeader.substring(7);
             } else {
-                jwtToken = authHeader; // 접두사가 없으면 그대로 사용
+                jwtToken = authHeader;
             }
         }
 
-        // Authorization 헤더가 없는 경우 Cookie에서 추출
         if (jwtToken == null) {
             log.info("Authorization 헤더가 없으므로 쿠키에서 JWT 추출 시도");
             if (request.getCookies() != null) {
                 for (Cookie cookie : request.getCookies()) {
-                    if ("accessToken".equals(cookie.getName())) { // 쿠키 이름이 'accessToken'인 경우
+                    if ("accessToken".equals(cookie.getName())) {
                         jwtToken = cookie.getValue();
                         break;
                     }
@@ -68,15 +66,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (jwtTokenService.isJwtTokenValid(jwtToken)) {
                 Map<String, Optional<String>> claims = jwtTokenService.extractIdAndEmail(jwtToken);
 
-                log.info("13");
                 String id = claims.get("id").orElseThrow(InCorrectAccessTokenException::new);
                 String email = claims.get("email").orElseThrow(InCorrectAccessTokenException::new);
 
-                log.info("14");
-                log.info("id, email : {}, {}", id, email);
                 AuthenticatedUserDto authenticatedUserDto = new AuthenticatedUserDto(id, email);
 
-                log.info("15");
                 if (SecurityContextHolder.getContext().getAuthentication() == null) {
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                             authenticatedUserDto,
@@ -85,7 +79,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
-                log.info("16");
                 filterChain.doFilter(request, response);
             } else {
                 throw new InCorrectAccessTokenException();
@@ -94,60 +87,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             log.error("Authentication failed: {}", e.getMessage());
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
         }
-
-//
-//        log.info("10");
-//        String authHeader = request.getHeader("Authorization");
-//        if (authHeader == null) {
-//            filterChain.doFilter(request, response);
-//            return;
-//        }
-////        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-////            filterChain.doFilter(request, response);
-////            return;
-////        }
-//        log.info("11");
-//
-//        String jwtToken;
-//        if (authHeader.startsWith("Bearer ")) {
-//            jwtToken = authHeader.substring(7); // "Bearer "를 제외한 부분 추출
-//        } else {
-//            jwtToken = authHeader; // 접두사가 없으면 그대로 사용
-//        }
-//
-////        String jwtToken = authHeader.substring(7);
-//
-//        log.info("12");
-//        try {
-//            if (jwtTokenService.isJwtTokenValid(jwtToken)) {
-//                Map<String, Optional<String>> claims = jwtTokenService.extractIdAndEmail(jwtToken);
-//
-//                log.info("13");
-//                String id = claims.get("id").orElseThrow(InCorrectAccessTokenException::new);
-//                String email = claims.get("email").orElseThrow(InCorrectAccessTokenException::new);
-//
-//                log.info("14");
-//                log.info("id, email : {}, {}", id, email);
-//                AuthenticatedUserDto authenticatedUserDto = new AuthenticatedUserDto(id, email);
-//
-//                log.info("15");
-//                if (SecurityContextHolder.getContext().getAuthentication() == null) {
-//                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-//                            authenticatedUserDto,
-//                            null,
-//                            Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
-//                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-//                    SecurityContextHolder.getContext().setAuthentication(authentication);
-//                }
-//                log.info("16");
-//                filterChain.doFilter(request, response);
-//            } else {
-//                throw new InCorrectAccessTokenException();
-//            }
-//        } catch (Exception e) {
-//            log.error("Authentication failed: {}", e.getMessage());
-//            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
-//        }
-
     }
 }
