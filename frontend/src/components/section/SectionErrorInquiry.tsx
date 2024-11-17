@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { forwardRef, useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import { useQueryEpicList } from "../../hooks/useIssueList";
 import { useProjectStore } from "../../store/userStore";
@@ -17,7 +17,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import styled from "styled-components";
 
-export const StyledDatePicker = styled(DatePicker)`
+export const StyledDatePicker = styled.div`
   width: 250px;
   padding: 10px;
   font-size: 12px;
@@ -31,10 +31,18 @@ export const StyledDatePicker = styled(DatePicker)`
   }
 `;
 
+const ExampleCustomInput00 = forwardRef<HTMLDivElement, { value?: string; onClick?: () => void }>(
+  ({ value, onClick }, ref) => (
+    <StyledDatePicker onClick={onClick} ref={ref}>
+      {value || "Select Date"}
+    </StyledDatePicker>
+  )
+);
+
 const SectionErrorInquiry: React.FC = () => {
-  const { selectedProjectId } = useProjectStore();
+  const { selectedProjectId,selectedProjectUserId } = useProjectStore();
   const { data } = useQueryEpicList(selectedProjectId);
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date|null>(new Date());
   const [selectedPriority, setSelectedPriority] = useState<string>("");
   const [selectedEpic, setSelectedEpic] = useState<string>("");
   const { mutate: mutateEpic } = useMutationEpic();
@@ -54,13 +62,13 @@ const SectionErrorInquiry: React.FC = () => {
       const formattedDate = selectedDate.toLocaleDateString("en-CA");
       if (selectedEpic) {
         mutateEpic({
-          projectUserId: selectedProjectId,
+          projectUserId: selectedProjectUserId,
           deadline: formattedDate,
           priority: selectedPriority,
         });
       } else {
         mutateNoEpic({
-          projectUserId: selectedProjectId,
+          projectUserId: selectedProjectUserId,
           deadline: formattedDate,
           priority: selectedPriority,
         });
@@ -89,9 +97,13 @@ const SectionErrorInquiry: React.FC = () => {
         </div>
         <div>
           <FormLabel>[필수] 마감일자를 선택해주세요</FormLabel>
-          <StyledDatePicker
-    
-          />
+          <DatePicker
+              selected={selectedDate}
+              onChange={(date: Date | null) => setSelectedDate(date)}
+              customInput={<ExampleCustomInput00/>}
+              dateFormat="yyyy-MM-dd" 
+              popperPlacement="bottom-start" 
+            />
         </div>
       </FormRow>
 

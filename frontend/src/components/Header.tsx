@@ -85,7 +85,7 @@ const Header: React.FC = () => {
   const location = useLocation();
   const [tempOption, setTempOption] = useState<OptionType[]>([]); 
   const { data: userInfo } = useQueryUserInfo(); 
-  const { setSelectedOwner, setSelectedPRepo,setSelectedProjectId,setSelectedOwnerId } = useProjectStore();
+  const { setSelectedOwner, setSelectedPRepo,setSelectedProjectId,setSelectedOwnerId,setSelectedGroupId,setSelectedProjectUserId } = useProjectStore();
   const [selectedOp, setSelectedOp] = useState<SingleValue<OptionType | null>>(null); 
     
   useEffect(() => {
@@ -95,8 +95,10 @@ const Header: React.FC = () => {
         label: project.name,
         githubOwner: project.githubOwner,
         githubRepo: project.githubRepo,
+        id:project.id,
         projectUserId:project.projectUserId,
-        ownerId:project.ownerID
+        ownerId:project.ownerID,
+        groupId:project.groupID
       }));
       setTempOption(tempOption);
 
@@ -104,8 +106,10 @@ const Header: React.FC = () => {
         setSelectedOp(tempOption[0]);
         setSelectedOwner(tempOption[0].githubOwner);
         setSelectedPRepo(tempOption[0].githubRepo);
-        setSelectedProjectId(tempOption[0].projectUserId)
+        setSelectedProjectId(tempOption[0].id)
+        setSelectedProjectUserId(tempOption[0].projectUserId)
         setSelectedOwnerId(tempOption[0].ownerId)
+        setSelectedGroupId(tempOption[0].groupId)
       }
     }
   }, [userInfo]);
@@ -115,8 +119,10 @@ const Header: React.FC = () => {
     if (option) {      
       setSelectedOwner(option.githubOwner);
       setSelectedPRepo(option.githubRepo);
-      setSelectedProjectId(option.projectUserId)
+      setSelectedProjectId(option.id)
+      setSelectedProjectUserId(option.projectUserId)
       setSelectedOwnerId(option.ownerId)
+      setSelectedGroupId(option.groupId)
     }
   };
 

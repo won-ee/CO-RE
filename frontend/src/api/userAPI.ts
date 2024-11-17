@@ -2,7 +2,7 @@ import axios from 'axios';
 import { ProjectSettingType, githubInfoType, patchUserInfoType } from '../Types/userType';
 
 const BASE_URL ='https://k11s106.p.ssafy.io/api'; 
-const TOKEN ='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImlkIjoxLCJleHAiOjE3MzE3ODAwMTksImVtYWlsIjoiaGtrMzYyNkBuYXZlci5jb20ifQ.ifGnDqIPFQ3F43841OrCAaXdIzjwEgPONNlcu3IV30Enj6FH-1aQzSjF7DqDsyI5F4doXo0kMhLJ_ySqDyvhYg'
+const TOKEN ='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImlkIjoxLCJleHAiOjE3MzE5ODczNDQsImVtYWlsIjoiaGtrMzYyNkBuYXZlci5jb20ifQ.Ud0t67fGyyhUgXMROWJ9rK9iY2MO3Vs8yO1G-2j5TtyRXYjgJPa3gWNV76CTFdzzMyD-mdnx6LboFwpULH2U1Q'
 
 export const getUserInfo = async () => {
   const response = await axios.get(

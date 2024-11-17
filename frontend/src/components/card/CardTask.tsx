@@ -12,35 +12,42 @@ import { ActionButton,
         SenderInfoBox, 
         SenderNameSpan 
         } from './CardTask.styled'
+import { IssueLocationType } from '../../Types/IssueType'
+import { useMutationAcceptIssueLocation } from '../../hooks/useMutationCreatePR'
+import { useProjectStore } from '../../store/userStore'
 
 interface CardTaskProps{
-    task:{
-        id: number;
-        name: string;
-        category: string;
-        deadline: string;
-        sender: string;
-        senderImage: string;
-        projectCode: string;}}
+    task:IssueLocationType
+}
 
 const CardTask:React.FC<CardTaskProps> = ({task}) => {
+    const { selectedProjectUserId } = useProjectStore();
+    const mutation = useMutationAcceptIssueLocation();    
+
+    console.log(task);
+    
+    const handleSubmit =()=>{
+        mutation.mutate({
+            projectUserId: selectedProjectUserId,
+            carrotId: task.id,
+        });
+    }
   return (
     <CardLayout key={task.id}>
         <CardCellBox>
             <CardNameParagraph>{task.name}</CardNameParagraph>
-            <ProjectCodeSpan>{task.projectCode}</ProjectCodeSpan>
-            <CategoryBox category={task.category}>{task.category}</CategoryBox>
+            <ProjectCodeSpan>{task.key}</ProjectCodeSpan>
+            <CategoryBox category={task.epicName}>{task.epicName}</CategoryBox>
         </CardCellBox>
-        <DeadlineCellBox>{task.deadline}</DeadlineCellBox>
+        <DeadlineCellBox>{task?.deadLine?.substring(0,10)}</DeadlineCellBox>
         <SenderCellBox>
         <SenderInfoBox>
-            <SenderAvatar src={task.senderImage} alt={task.sender} />
-            <SenderNameSpan>{task.sender}</SenderNameSpan>
+            <SenderAvatar src={task.senderImage} alt={task.senderName} />
+            <SenderNameSpan>{task.senderName}</SenderNameSpan>
         </SenderInfoBox>
         </SenderCellBox>
         <ActionCellBox>
-            <ActionButton color="accept">ACCEPT</ActionButton>
-            <ActionButton color="reject">REJECT</ActionButton>
+            <ActionButton color="accept" onClick={handleSubmit}>ACCEPT</ActionButton>
         </ActionCellBox>
     </CardLayout>
   )
