@@ -8,18 +8,25 @@ import { Block } from '../styles/GlobalStyled';
 import { useNavigate } from 'react-router-dom';
 import LoadingPage from './LoadingPage';
 import NotFoundPage from './NotFoundPage';
+import { useProjectStore, useUserStore } from '../store/userStore';
 
-const params: CalendarPRParamsType = {
-  owner: 'JEM1224',
-  repo: 'github-api',
-  writer: 'JEM1224',
-  month: 10,
-  year: 2024,
-};
+
+
 
 const CalenderPage:React.FC = () => {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();  
+  const { selectedOwner, selectedRepo } = useProjectStore();
+  const { userInfo } = useUserStore();
+
+  const params: CalendarPRParamsType = {
+    owner: selectedOwner,
+    repo: selectedRepo,
+    writer: userInfo?.userInfo.gitName||'',
+    month: 10,
+    year: 2024,
+  };
   const { data, error, isLoading } = useQueryCalendarPR(params);
+  
   if (isLoading) return <LoadingPage />;
   if (error) return <NotFoundPage errorNumber={404}/>;
 

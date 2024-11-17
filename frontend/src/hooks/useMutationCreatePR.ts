@@ -13,24 +13,30 @@ export const useMutationpostPRReview = () => {
     return useMutation((params: { owner: string; repo: string; pullId: string; reviewData: TotalReviewsType }) => postPRReview(params));
   };
 
-export const useMutationPatchProjectSetting = () => {
-  return useMutation({
-    mutationFn: (variables: { selectedProjectId: number; projectData: ProjectSettingType }) => {
-      return patchProjectSetting(variables.selectedProjectId, variables.projectData);
-    },
-    onSuccess: (data) => {
-      console.log('Success:', data);
-    },
-    onError: (error) => {
-      console.error('Error:', error);
-    },
-  });
-};
+  export const useMutationPatchProjectSetting = (options?: {
+    onSuccess?: (data: any) => void;
+    onError?: (error: any) => void;
+  }) => {
+    return useMutation({
+      mutationFn: (variables: { selectedProjectId: number; projectData: ProjectSettingType }) => {
+        return patchProjectSetting(variables.selectedProjectId, variables.projectData);
+      },
+      onSuccess: (data) => {
+        console.log('Success:', data);
+        options?.onSuccess?.(data); 
+      },
+      onError: (error) => {
+        console.error('Error:', error);
+        options?.onError?.(error); 
+      },
+    });
+  };
+  
 
 export const useMutationPatchUserInfo = () => {
   return useMutation({
-    mutationFn: (variables: { userInfotData: patchUserInfoType }) => {
-      return patchUserInfo(variables.userInfotData);
+    mutationFn: (variables: { userInfotData: patchUserInfoType,userId:number }) => {
+      return patchUserInfo(variables.userInfotData,variables.userId);
     },
     onSuccess: (data) => {
       console.log('Success:', data);
@@ -44,7 +50,8 @@ export const useMutationPatchUserInfo = () => {
 
 export const useMutationGithubInfo = () => {
   return useMutation({
-    mutationFn: (params: githubInfoType) => postGithubInfo(params),
+    mutationFn: ({ params, projectId }: { params: githubInfoType, projectId: number }) =>
+      postGithubInfo(params, projectId),
     onMutate: (variables) => {
       console.log("GitHub 정보 요청 시작:", variables);
     },
@@ -59,6 +66,7 @@ export const useMutationGithubInfo = () => {
     },
   });
 };
+
 
 export const useMutationEpic = () => {
   return useMutation(

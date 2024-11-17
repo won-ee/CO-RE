@@ -33,6 +33,7 @@ const SectionIssueRelocation: React.FC = () => {
           projectUserId: selectedProjectUserId,
           issueId: issueId,
       });
+      setIssueId(0); 
   };
 
     return (
