@@ -3,12 +3,18 @@ import { InitialDataType, HistoryDataType } from "../Types/historyType";
 
 const BASE_URL = "https://k11s106.p.ssafy.io/api";
 
-export const fetchRepos = async (): Promise<InitialDataType[]> => {
-  const { data } = await axios.get(`${BASE_URL}/github/version/JEM1224/github-api`, {
-    headers: {
-      withCredentials: true,
+export const fetchRepos = async (
+  owner: string,
+  repo: string,
+): Promise<InitialDataType[]> => {
+  const { data } = await axios.get(
+    `${BASE_URL}/github/version/${owner}/${repo}`,
+    {
+      headers: {
+        withCredentials: true,
+      },
     },
-  });
+  );
   return data;
 };
 
