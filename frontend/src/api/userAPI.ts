@@ -12,9 +12,7 @@ export const getUserInfo = async () => {
     headers: {
       withCredentials: true,
     },
-  });
-  console.log(response.data);
-  
+  });  
   return response.data;
 };
 
@@ -44,9 +42,9 @@ export const getProjectData = async (selectedProjectId: number) => {
   return response.data;
 };
 
-export const patchUserInfo = async (userInfotData: patchUserInfoType) => {
+export const patchUserInfo = async (userInfotData: patchUserInfoType,userId:number) => {
   const response = await axios.patch(
-    `${BASE_URL}/users/update/my-info`,
+    `${BASE_URL}/users/update/my-info/${userId}`,
     userInfotData,
     {
       headers: {
@@ -73,9 +71,11 @@ export const patchProjectSetting = async (
   return response.data;
 };
 
-export const postGithubInfo = async (githubInfo: githubInfoType) => {
+export const postGithubInfo = async (githubInfo: githubInfoType,projectId:number) => {
+  console.log(githubInfo);
+  
   const response = await axios.post(
-    `${BASE_URL}/project/update/set/github`,
+    `${BASE_URL}/project/update/set/github/${projectId}`,
     githubInfo,
     {
       headers: {
@@ -99,6 +99,6 @@ export const getAllProject = async (projectUserId:number) => {
 };
 
 export const postLogout = async () => {
-  const { data } = await axios.post(`${BASE_URL}/api/logout`);
+  const { data } = await axios.post(`${BASE_URL}/logout`);
   return data;
 };

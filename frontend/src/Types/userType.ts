@@ -101,11 +101,12 @@ export interface ProjectSettingType {
 export interface patchUserInfoType {
   nickName : string;
   gitToken : string;
+  userId : number;
 }
 
 export interface githubInfoType {
   projectId: number;
   githubOwner: string;
-  githubRepo:string;
+  githubRepository:string;
 }
 

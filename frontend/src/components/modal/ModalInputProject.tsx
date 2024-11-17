@@ -13,12 +13,13 @@ import { useMutationGithubInfo, useMutationPatchUserInfo } from "../../hooks/use
 import LoadingPage from "../../pages/LoadingPage";
 import NotFoundPage from "../../pages/NotFoundPage";
 import { patchUserInfoType } from "../../Types/userType";
+import { useNavigate } from "react-router-dom";
 
 const ModalInputProject: React.FC = () => {
   const { mutate, isLoading, error } = useMutationGithubInfo();
   const { mutate: tokenMutation } = useMutationPatchUserInfo();
   const { selectedProjectId } = useProjectStore();
-
+  const navigate = useNavigate();
   const [owner, setOwner] = useState("");
   const [project, setProject] = useState("");
   const [token, setToken] = useState("");
@@ -44,31 +45,48 @@ const ModalInputProject: React.FC = () => {
     const params = {
       projectId: selectedProjectId,
       githubOwner: owner,
-      githubRepo: project,
+      githubRepository: project,
     };
   
-    tokenMutation({
-      userInfotData: {
-        nickName: userInfo?.userInfo.name ?? "",
-        gitToken: token,
-      } as patchUserInfoType,
-    }, {
-      onSuccess: () => {
-        console.log("GitHub 정보가 성공적으로 등록되었습니다!");
-        mutate(params, {
-          onSuccess: () => {
-            console.log("성공적으로 GitHub 정보가 전송되었습니다!");
-          },
-          onError: (error) => {
-            console.error("에러 발생:", error);
-          },
-        });
+    const userInfoParams = {
+      nickName: userInfo?.userInfo.name ?? "",
+      gitToken: token,
+      userId: userInfo?.userInfo.id ?? 0,
+    };
+  
+    tokenMutation(
+      {
+        userInfotData: userInfoParams as patchUserInfoType,
+        userId: userInfoParams.userId,
       },
-      onError: (error) => {
-        console.error("토큰 등록 중 에러 발생:", error);
-      },
-    });
+      {
+        onSuccess: () => {
+          console.log("GitHub 정보가 성공적으로 등록되었습니다!");
+          
+          mutate(
+            {
+              params: params,     
+              projectId: params.projectId,  
+            },
+            {
+              onSuccess: () => {
+                console.log("성공적으로 GitHub 정보가 전송되었습니다!");
+                navigate("/dashboard");
+
+              },
+              onError: (error) => {
+                console.error("에러 발생:", error);
+              },
+            }
+          );
+        },
+        onError: (error) => {
+          console.error("토큰 등록 중 에러 발생:", error);
+        },
+      }
+    );
   };
+  
 
   return (
     <LoginBoxContainer>

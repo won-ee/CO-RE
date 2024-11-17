@@ -26,17 +26,14 @@ function Sidebar() {
   const navigate = useNavigate();
   const location = useLocation();
   
-  useEffect(() => {
-    if (!selectedOwner||!selectedRepo) {
-      console.log(userInfo?.userInfo.accountId);
-      console.log(selectedOwnerId);
-      
+  useEffect(() => {    
+    if (!selectedOwner||!selectedRepo) {      
       if (userInfo?.userInfo.accountId === selectedOwnerId){
         navigate("/project");
       }else{
         navigate("/403ERROR");
       }
-  }}, [navigate]);
+  }}, [navigate,userInfo,selectedOwnerId,selectedOwner,selectedRepo]);
 
   const handleLogout = () => {
     logout();
