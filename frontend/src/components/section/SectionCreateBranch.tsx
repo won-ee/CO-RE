@@ -60,7 +60,7 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
 }, [projectSetting.data]);
 
 
-  const parsedProjectMembers: OptionType[] = memberList.data ? memberList.data.filter((member) => member.userGitName !== (userInfo?.userInfo.gitName ?? "")).map((member)=>({
+  const parsedProjectMembers: OptionType[] = memberList.data ? memberList.data.filter((member) => member.userGitName && member.userGitName !== userInfo?.userInfo.gitName).map((member)=>({
     value:member.userGitName,
     label:member.userGitName
   })):[];
