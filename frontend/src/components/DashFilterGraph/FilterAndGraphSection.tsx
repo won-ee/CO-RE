@@ -45,7 +45,7 @@ const FilterAndGraphSection: React.FC = () => {
     useState<DropdownOption>("commits");
 
   const [isEditing, setIsEditing] = useState(false);
-  const [showNote, setShowNote] = useState(true);
+  const [showNote, setShowNote] = useState(false);
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
 
