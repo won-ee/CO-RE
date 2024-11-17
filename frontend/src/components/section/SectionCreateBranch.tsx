@@ -19,16 +19,6 @@ import { useQueryChangeList, useQueryCommitList } from "../../hooks/usePullReque
 import { useNavigate } from "react-router-dom";
 import { useMemberList } from "../../hooks/useUser";
 
-// 옵션 예시
-// const TempOption: OptionType[] = [
-//     { value: 'Alice', label: 'Alice' },
-//     { value: 'Bob', label: 'Bob' },
-//     { value: 'Elizabeth', label: 'Elizabeth' },
-//     { value: 'Claerk', label: 'Claerk' },
-//     { value: 'Volibear', label: 'Volibear' },
-//     { value: 'JEM1224', label: 'JEM1224' },
-// ];
-
 const PriorityOption: OptionType[] = [
   { value: 'low', label:'Low'},
   { value: 'medium', label:'Medium'},
@@ -170,6 +160,8 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
 
   const handleRandomSelect = (count: number) => {
     const shuffled = parsedProjectMembers.sort(() => 0.5 - Math.random()); // Shuffle the options
+    console.log(parsedProjectMembers);
+    
     const randomSelection = shuffled.slice(0, count); // Select specified count
     setSelectedOptions(randomSelection);
   };
