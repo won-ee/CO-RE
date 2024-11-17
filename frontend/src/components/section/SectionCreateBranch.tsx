@@ -52,7 +52,10 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
   const [reviews,setReviews] = useState<ReviewType[]>([])
   const [isFinalReviewOpen,setIsFinalReviewOpen] = useState(false)
   const userInfo = useUserStore((state) => state.userInfo);
-
+  const [postLoading,setPostLoading] = useState(false);
+  if(postLoading){
+    //EsLint
+    }
   useEffect(() => {
     if (projectSetting.data?.template) {
         setContent(projectSetting.data.template);
@@ -81,6 +84,7 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
   const mutationpostPRReview = useMutationpostPRReview()
 
   const handlePostPR=()=>{
+    setPostLoading(true)
     const pullRequestData = {
       title: title,
       body: body,
@@ -99,8 +103,12 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
     
     mutationCreatePR.mutate(pullRequestData,{
       onSuccess: () => {
+        setPostLoading(false)
         navigate('/pullrequest'); // 성공 시 이동
       },
+      onError: () =>{
+        setPostLoading(false)
+      }
     });
   }
 
@@ -183,6 +191,11 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
   
 
   return (
+    postLoading ? 
+    <p>
+    Loading
+    </p>
+    :
     <SectionCreateBranchLayout>
         <MergeDirectionBox>
             From <HighLightBox>{sourceBranch?.label}</HighLightBox> into <HighLightBox>{targetBranch?.label}</HighLightBox>
