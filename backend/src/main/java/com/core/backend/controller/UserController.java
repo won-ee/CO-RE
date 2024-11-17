@@ -32,7 +32,11 @@ public class UserController {
     @PatchMapping("/update/my-info")
     public ResponseEntity<UserAllInfoDto> updateMyInfo(@AuthenticationPrincipal AuthenticatedUserDto authenticatedUser,
                                                        @RequestBody UserUpdateInfoDto userUpdateInfoDto) {
+
+        log.info("updateMyInfo : {}", userUpdateInfoDto);
+
         Long id = Long.parseLong(authenticatedUser.getId());
+        log.info("updateMyInfo id: {}", id);
         return new ResponseEntity<>(userService.updateUserInfo(id, userUpdateInfoDto), HttpStatus.OK);
     }
 

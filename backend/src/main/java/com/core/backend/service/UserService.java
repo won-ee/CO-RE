@@ -118,6 +118,7 @@ public class UserService {
     }
 
     public UserAllInfoDto updateUserInfo(Long id, UserUpdateInfoDto userInfo) {
+        log.info("API - 0");
         Users user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
         log.info("API - 1");
         user.createUserInfo(userInfo);
