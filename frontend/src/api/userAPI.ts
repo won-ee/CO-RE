@@ -44,9 +44,9 @@ export const getProjectData = async (selectedProjectId: number) => {
   return response.data;
 };
 
-export const patchUserInfo = async (userInfotData: patchUserInfoType) => {
+export const patchUserInfo = async (userInfotData: patchUserInfoType,userId:number) => {
   const response = await axios.patch(
-    `${BASE_URL}/users/update/my-info`,
+    `${BASE_URL}/api/users/update/my-info/${userId}`,
     userInfotData,
     {
       headers: {
@@ -73,9 +73,9 @@ export const patchProjectSetting = async (
   return response.data;
 };
 
-export const postGithubInfo = async (githubInfo: githubInfoType) => {
+export const postGithubInfo = async (githubInfo: githubInfoType,userId:number) => {
   const response = await axios.post(
-    `${BASE_URL}/project/update/set/github`,
+    `${BASE_URL}/api/project/update/set/github/${userId}`,
     githubInfo,
     {
       headers: {
