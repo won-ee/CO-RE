@@ -8,7 +8,8 @@ import com.core.api.data.dto.TokenDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
-@FeignClient(name = "backend", url = "http://backend:8082", configuration = BackendFeignConfig.class)
+
+@FeignClient(name = "backend", url = "BACKEND", configuration = BackendFeignConfig.class)
 public interface BackendClient {
 
     @GetMapping(value = "/users/search/git-token")
