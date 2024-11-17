@@ -67,7 +67,7 @@ export const useVersionNote = (selectedRepoId: string | null) => {
   return useQuery<VersionDataType>(
     ["versionData", selectedRepoId],
     () => getVersionData(selectedRepoId!),
-    { enabled: !!selectedRepoId, staleTime: 1000 * 60 * 5 },
+    { enabled: !!selectedRepoId, staleTime: 0 },
   );
 };
 
