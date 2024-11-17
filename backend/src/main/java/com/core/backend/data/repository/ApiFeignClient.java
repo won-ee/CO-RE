@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 public interface ApiFeignClient {
 
     @GetMapping("/github/user")
-    GitHubNameDto getGitHubName(@RequestHeader("Authorization") String bearerToken);
+    GitHubNameDto getGitHubName(@RequestHeader("gitToken") String gitToken);
 
 }

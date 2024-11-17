@@ -18,9 +18,8 @@ public class APIService {
 
     public void getGitHubName(Users user) {
         try {
-            String bearerToken = "Bearer " + user.getGitToken();
-            GitHubNameDto dto = apiFeignClient.getGitHubName(bearerToken);
-
+            GitHubNameDto dto = apiFeignClient.getGitHubName(user.getGitToken());
+            log.info("init!");
             userRepository.save(
                     Users.builder()
                             .id(user.getId())
