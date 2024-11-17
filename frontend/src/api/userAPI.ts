@@ -44,7 +44,7 @@ export const getProjectData = async (selectedProjectId: number) => {
 
 export const patchUserInfo = async (userInfotData: patchUserInfoType,userId:number) => {
   const response = await axios.patch(
-    `${BASE_URL}/api/users/update/my-info/${userId}`,
+    `${BASE_URL}/users/update/my-info/${userId}`,
     userInfotData,
     {
       headers: {
