@@ -1,13 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './NotFoundPage.css';
 import { Background, ErrorText, NotFoundText, TextBox } from './NotFoundPage.styled';
+import { useProjectStore } from '../store/userStore';
+import { useNavigate } from 'react-router-dom';
 
 interface NotFoundPageProps {
   errorNumber: number;
 }
 
 const NotFoundPage: React.FC<NotFoundPageProps> = ({ errorNumber }) => {
-  
+  const { selectedOwner, selectedRepo } = useProjectStore();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (selectedOwner&&selectedRepo) {      
+      navigate("/dashboard");
+  }}, [selectedOwner,selectedRepo]);
+
   return (
     <Background $errorNumber={errorNumber}>
       <div className="stars">
