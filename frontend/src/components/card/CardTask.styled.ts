@@ -10,14 +10,14 @@ export const CardCellBox = styled.td`
   display: flex;
   width: 500px;
   vertical-align: middle;
-  margin-right: 50px;
+  margin-right: -100px;
 `;
 
 export const CardNameParagraph = styled.p`
   font-weight: bold;
   width: 200px;
   vertical-align: middle;
-
+  margin-left: 5%;
 `;
 
 export const ProjectCodeSpan = styled.p`
@@ -96,8 +96,9 @@ export const ActionButton = styled.button<{ color: 'accept' | 'reject' }>`
   border-radius: 5px;
   font-weight: bold;
   color: ${(props) =>
-    props.color === 'accept' ? '#17519D' : '#EF3826'};
+    props.color === 'accept' ? '#17519D' : 'none'};
   background-color: ${(props) =>
-    props.color === 'accept' ? 'rgba(96, 151, 223, 0.2)' : 'rgba(239, 56, 38, 0.2)'};
-  cursor: pointer;
+    props.color === 'accept' ? 'rgba(96, 151, 223, 0.2)' : 'none'};
+  cursor: ${(props) =>
+    props.color === 'accept' ? 'pointer' : 'none'};
 `;

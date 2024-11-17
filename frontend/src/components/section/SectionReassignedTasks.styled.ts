@@ -28,7 +28,8 @@ export const TableText = styled.span`
   font-size: 16px;
   padding: 10px;
   font-weight: bold;
-  margin-right: 110px;
+  margin-right:20px;
+  margin-left: 60px;
 `;
 
 
