@@ -106,10 +106,10 @@ const NoteSection: React.FC<NoteSectionProps> = ({
       editVersion(updatedData, {
         onSuccess: () => {
           setIsEditing(false);
-          alert("Version note updated successfully.");
+          alert("데이터 업데이트를 성공했습니다.");
         },
         onError: () => {
-          alert("Failed to update version note.");
+          alert("데이터 업데이트를 실패했습니다.");
         },
       });
     } else {

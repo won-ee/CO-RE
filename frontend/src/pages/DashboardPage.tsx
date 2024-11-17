@@ -27,7 +27,7 @@ const Dashboard: React.FC = () => {
   } = useDashPR({
     owner: selectedOwner,
     repo: selectedRepo,
-    state: "receive",
+    state: "received",
   });
   // console.log(dashboardData?.commitGrowthRate);
   const {
