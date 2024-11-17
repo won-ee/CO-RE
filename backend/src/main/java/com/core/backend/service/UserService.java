@@ -29,6 +29,7 @@ public class UserService {
     private final ProjectService projectService;
     private final ProjectRepository projectRepository;
     private final GroupService groupService;
+    private final APIService apiService;
 
     public boolean findUserEmail(String email) {
         return userRepository.findByEmail(email).isPresent();
@@ -119,7 +120,13 @@ public class UserService {
     public UserAllInfoDto updateUserInfo(Long id, UserUpdateInfoDto userInfo) {
         Users user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
         user.createUserInfo(userInfo);
-        userRepository.save(user);
+        user = userRepository.save(user);
+
+        // 여기서 깃허브 연결시 깃 아이디반환하는 부분 추가할것.
+        if (userInfo.gitToken() != null && !userInfo.gitToken().isEmpty()) {
+            log.info("API - Git Name 요청");
+            apiService.getGitHubName(user);
+        }
 
         return UserAllInfoDto.toUserAllInfoDto(user);
     }
