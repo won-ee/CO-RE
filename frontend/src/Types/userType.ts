@@ -85,7 +85,7 @@ export interface ProjectMemberType {
 
 export interface ProjectDataType {
   targetScore: string;
-  reviewerCount: string;
+  reviewerCount: number;
   template: string;
 }
 

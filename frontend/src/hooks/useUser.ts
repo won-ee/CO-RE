@@ -36,7 +36,7 @@ export const useMemberList = (selectedProjectId:number) => {
 };
 
 export const useProjectData = (selectedProjectId:number) => {
-
+  
   const query = useQuery<ProjectDataType, Error>(
     ['ProjectData',selectedProjectId],
     () => getProjectData(selectedProjectId),
