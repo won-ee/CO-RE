@@ -17,8 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -140,15 +138,6 @@ public class JwtTokenService {
     public boolean isJwtTokenValid(String token) {
         try {
             var decodeJWT = JWT.require(Algorithm.HMAC512(secretKey)).build().verify(token);
-
-            Date expiration = decodeJWT.getExpiresAt();
-            ZonedDateTime expirationKST = expiration.toInstant().atZone(ZoneId.of("Asia/Seoul"));
-            ZonedDateTime nowKST = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
-
-            if (nowKST.isAfter(expirationKST)) {
-                log.info("JWT Token has expired. Expiration time (KST): {}", expirationKST);
-                return false;
-            }
 
             Long id = decodeJWT.getClaim(ID_CLAIM).asLong();
             String email = decodeJWT.getClaim(EMAIL_CLAIM).asString();
