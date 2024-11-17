@@ -17,7 +17,7 @@ import CardFinalCodeReview from "../card/CardFinalCodeReview";
 import { useProjectStore } from "../../store/userStore";
 import { useQueryChangeList, useQueryCommitList } from "../../hooks/usePullRequestData";
 import { useNavigate } from "react-router-dom";
-import { useMemberList } from "../../hooks/useUser";
+import { useMemberList, useProjectData } from "../../hooks/useUser";
 
 const PriorityOption: OptionType[] = [
   { value: 'low', label:'Low'},
@@ -51,6 +51,7 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
   const projectInfo = useProjectStore((state)=>state)
   const navigate = useNavigate();
   const memberList = useMemberList(projectInfo.selectedProjectId)
+  const projectSetting = useProjectData(projectInfo.selectedProjectId)
 
   const parsedProjectMembers: OptionType[] = memberList.data ? memberList.data.map((member)=>({
     value:member.userName,
@@ -160,8 +161,6 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
 
   const handleRandomSelect = (count: number) => {
     const shuffled = parsedProjectMembers.sort(() => 0.5 - Math.random()); // Shuffle the options
-    console.log(parsedProjectMembers);
-    
     const randomSelection = shuffled.slice(0, count); // Select specified count
     setSelectedOptions(randomSelection);
   };
@@ -199,7 +198,7 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
           </DatePickerBox>
           <UrgentBox>
             Random Assign
-            <RandomButton onClick={() => handleRandomSelect(2)}>Random</RandomButton>
+            <RandomButton onClick={() => handleRandomSelect(projectSetting.data?.reviewerCount ?? 2)}>Random</RandomButton>
           </UrgentBox>
         </DeadLineBox>
         <DeadLineBox>
