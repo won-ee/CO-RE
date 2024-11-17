@@ -1,7 +1,7 @@
-import { SectionCreateBranchLayout, TitleInput, DescriptionTextArea, SelectBox, MergeDirectionBox, HighLightBox, DateInputContainer, DatePickerImg, DeadLineBox, DatePickerBox, UrgentBox, UrgentButton, PriorityBox, CreateButtonBox, TabBox, RandomButton  } from "./SectionCreateBranch.styled";
+import { SectionCreateBranchLayout, TitleInput, DescriptionTextArea, SelectBox, MergeDirectionBox, HighLightBox, DateInputContainer, DatePickerImg, DeadLineBox, DatePickerBox, UrgentBox, UrgentButton, PriorityBox, CreateButtonBox, TabBox, RandomButton, StyledDatePickerPopper  } from "./SectionCreateBranch.styled";
 import Select, { MultiValue, SingleValue, StylesConfig } from "react-select";
 import { OptionType } from "../../Types/SelectType";
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, forwardRef } from "react";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import CalendarIcon from '../../assets/icon_calender.png'
@@ -13,7 +13,8 @@ import { useMutationCreatePR, useMutationpostPRReview } from "../../hooks/useMut
 import ButtonSimpleSquare from "../buttons/ButtonSimpleSquare";
 import { TotalReviewsType, ReviewType } from "../../Types/pullRequestType";
 import CardFinalCodeReview from "../card/CardFinalCodeReview";
-import {useUserStore, useProjectStore} from "../../store/userStore";
+// import {useUserStore, useProjectStore} from "../../store/userStore";
+import { useProjectStore } from "../../store/userStore";
 import { useQueryChangeList, useQueryCommitList } from "../../hooks/usePullRequestData";
 import { useNavigate } from "react-router-dom";
 
@@ -24,6 +25,7 @@ const TempOption: OptionType[] = [
     { value: 'Elizabeth', label: 'Elizabeth' },
     { value: 'Claerk', label: 'Claerk' },
     { value: 'Volibear', label: 'Volibear' },
+    { value: 'JEM1224', label: 'JEM1224' },
 ];
 
 const PriorityOption: OptionType[] = [
@@ -54,7 +56,7 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
   const event = "COMMENT"
   const [reviews,setReviews] = useState<ReviewType[]>([])
   const [isFinalReviewOpen,setIsFinalReviewOpen] = useState(false)
-  const userInfo = useUserStore((state) => state.userInfo);
+  // const userInfo = useUserStore((state) => state.userInfo);
   const projectInfo = useProjectStore((state)=>state)
   const navigate = useNavigate();
 
@@ -85,7 +87,8 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
       afterReview: false,
       deadline: selectedDate ? selectedDate.toISOString().split('T')[0] : "",
       priority: priority || "",
-      writerId: userInfo?.userInfo.id.toString() || "",
+      // writerId: userInfo?.userInfo.id.toString() || "",
+      writerId: "",
       reviewers: selectedOptions.map((idx)=>idx.value)
     };
     
@@ -164,6 +167,16 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
     setSelectedOptions(randomSelection);
   };
 
+  const ExampleCustomInput00 = forwardRef<HTMLDivElement, { value?: string; onClick?: () => void }>(
+    ({ value, onClick }, ref) => (
+      <DateInputContainer onClick={onClick} ref={ref}>
+        <DatePickerImg src={CalendarIcon} alt="Calendar Icon" />
+        {value || "Select Date"}
+      </DateInputContainer>
+    )
+  );
+  
+
   return (
     <SectionCreateBranchLayout>
         <MergeDirectionBox>
@@ -196,15 +209,10 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
             <DatePicker
               selected={selectedDate}
               onChange={(date: Date | null) => setSelectedDate(date)}
-              customInput={
-              <DateInputContainer >
-                <DatePickerImg src={CalendarIcon}/>
-                {selectedDate ? selectedDate.toLocaleDateString() : "Select Date"}
-              </DateInputContainer>
-              }
+              customInput={<ExampleCustomInput00/>}
               dateFormat="yyyy/MM/dd" // 날짜 포맷 설정
-              portalId="root-portal"  // Portal을 사용하여 날짜 선택 창이 body에 직접 렌더링됨
               popperPlacement="bottom-start" // 창이 날짜 선택 필드 아래에 표시되도록 위치 지정
+              popperClassName={StyledDatePickerPopper}
             />
           </DatePickerBox>
           <UrgentBox>
@@ -222,7 +230,6 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
           options={PriorityOption}
           isSearchable={false}
           />
-        {priority}
         <CreateButtonBox>
           <ButtonCreateNewPR text="Create New Request" btnEvent={handlePostPR}/>
         </CreateButtonBox>
