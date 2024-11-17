@@ -13,10 +13,11 @@ const SectionReassignedTasks:React.FC = () => {
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
-  const filteredData = projectTasks?.filter((task) =>
-    task.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
+  const filteredData = Array.isArray(projectTasks)
+  ? projectTasks.filter((task) =>
+      task.name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  : [];
   return (
     <>
       <ContainerLayout>
