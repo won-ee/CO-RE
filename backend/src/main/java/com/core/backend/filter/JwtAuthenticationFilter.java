@@ -29,22 +29,28 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        log.info("10");
         String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
+        log.info("11");
 
         String jwtToken = authHeader.substring(7);
+        log.info("12");
         try {
             if (jwtTokenService.isJwtTokenValid(jwtToken)) {
                 Map<String, Optional<String>> claims = jwtTokenService.extractIdAndEmail(jwtToken);
 
+                log.info("13");
                 String id = claims.get("id").orElseThrow(InCorrectAccessTokenException::new);
                 String email = claims.get("email").orElseThrow(InCorrectAccessTokenException::new);
 
+                log.info("14");
                 AuthenticatedUserDto authenticatedUserDto = new AuthenticatedUserDto(id, email);
 
+                log.info("15");
                 if (SecurityContextHolder.getContext().getAuthentication() == null) {
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                             authenticatedUserDto,
@@ -53,6 +59,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
+                log.info("16");
                 filterChain.doFilter(request, response);
             } else {
                 throw new InCorrectAccessTokenException();
