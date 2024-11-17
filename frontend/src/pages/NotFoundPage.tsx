@@ -20,7 +20,7 @@ const NotFoundPage: React.FC<NotFoundPageProps> = ({ errorNumber }) => {
       if (userInfo?.userInfo.accountId === selectedOwnerId){
         navigate("/project");
       }
-    }}, [selectedOwner,selectedRepo]);
+    }}, [selectedOwner,selectedRepo,userInfo,selectedOwnerId]);
 
   return (
     <Background $errorNumber={errorNumber}>
