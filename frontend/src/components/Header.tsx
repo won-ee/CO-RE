@@ -98,8 +98,8 @@ const Header: React.FC = () => {
         githubRepo: project.githubRepo,
         id:project.id,
         projectUserId:project.projectUserId,
-        ownerId:project.ownerID,
-        groupId:project.groupID
+        ownerId:project.ownerId,
+        groupId:project.groupId
       }));
       setTempOption(tempOption);
 
