@@ -10,7 +10,7 @@ public record WebhookDto(
     public static WebhookDto createWebhookDto(List<String> event, String url) {
         return new WebhookDto(event, new WebhookConfigDto(
                 url,
-                "json"
+                "form"
         ));
     }
 }
