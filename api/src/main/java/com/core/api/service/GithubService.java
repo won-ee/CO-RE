@@ -21,7 +21,6 @@ public class GithubService {
     private static final List<String> REVIEW_EVENTS = List.of("pull_request_review", "pull_request_review_comment");
 
     public void createWebhooks(String owner, String repo) {
-        System.out.println("createWebhooks" + owner + repo);
         createWebhook(owner, repo, PULL_REQUEST_EVENTS, PULL_REQUEST_WEBHOOK);
         createWebhook(owner, repo, REVIEW_EVENTS, REVIEW_WEBHOOK);
     }

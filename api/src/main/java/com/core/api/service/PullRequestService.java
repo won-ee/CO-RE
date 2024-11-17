@@ -41,15 +41,21 @@ public class PullRequestService {
                 pullRequestInputDto.repo(),
                 PullRequestInputServerDto.from(pullRequestInputDto)
         );
+        String writerId = getUser();
         Integer number = (Integer) data.get("number");
-        PullRequest pr = PullRequest.from(pullRequestInputDto, number);
+        PullRequest pr = PullRequest.from(pullRequestInputDto, number, writerId);
         pullRequestRepository.save(pr);
 
-        pullRequestInputDto.reviewers()
+        List<Reviewer> reviewers = pullRequestInputDto.reviewers()
                 .stream()
-                .map(reviewerName -> Reviewer.createReviewer(reviewerName, pr))
-                .forEach(reviewerRepository::save);
-
+                .map(username -> {
+                    String avatarUrl = gitHubClient.getUserByUsername(username)
+                            .get("avatar_url")
+                            .toString();
+                    return Reviewer.createReviewer(username, pr, avatarUrl);
+                })
+                .toList();
+        reviewerRepository.saveAll(reviewers);
 
         gitHubClient.getCommits(pullRequestInputDto.owner(), pullRequestInputDto.repo(), number)
                 .stream()
@@ -104,6 +110,15 @@ public class PullRequestService {
     public MergeResponseDto mergePullRequest(String owner, String repo, int pullId, CommitMessageDto commitMessage) {
         return gitHubClient.mergePullRequest(owner, repo, pullId, CommitMessageServerDto.of(commitMessage));
 
+    }
+
+    public void openedPullRequest(PullRequestServerDto pullRequest) {
+
+        PullRequest pr = pullRequestRepository.findByOwnerAndRepoAndPullRequestId(pullRequest.getOwner(), pullRequest.getRepo(), pullRequest.getPullRequestId())
+                .orElseThrow(
+                        () -> new RuntimeException("Pull Request not found")
+                );
+        pr.updateWriterImg(pullRequest.getWriterImg());
     }
 
     public void closedPullRequest(PullRequestServerDto pullRequest) {

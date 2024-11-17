@@ -9,8 +9,8 @@ spring:
   cloud:
     config:
       uri: http://config:8888
-  profiles:
-    active: backend
+    profiles:
+      active: backend
   datasource:
     url: ${MYSQL_URL}
     username: ${MYSQL_USERNAME}

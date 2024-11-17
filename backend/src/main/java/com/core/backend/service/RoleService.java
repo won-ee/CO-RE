@@ -42,8 +42,10 @@ public class RoleService {
                     }
             );
 
-            Map<String, Object> roles = response.getBody();
-            assert roles != null;
+            Map<String, Object> roleObject = response.getBody();
+            assert roleObject != null;
+
+            Map<String, Object> roles = (Map<String, Object>) roleObject.get("roles");
 
             for (Map.Entry<String, Object> entry : roles.entrySet()) {
                 String roleName = entry.getKey();

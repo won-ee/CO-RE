@@ -36,7 +36,6 @@ public class StatsService {
 
         int totalPullRequest = pullRequests.size();
 
-        System.out.println(totalPullRequest + "사이즈");
         LocalDateTime startOfThisWeek = getStartOfThisWeek();
         LocalDateTime startOfLastWeek = startOfThisWeek.minusWeeks(1);
 
@@ -124,6 +123,7 @@ public class StatsService {
 
         return new StatsVersionDto(commitCounts, prCounts, reviewCounts);
     }
+
 
     private LocalDateTime getStartOfThisWeek() {
         return LocalDateTime.now()

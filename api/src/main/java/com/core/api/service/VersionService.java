@@ -1,8 +1,8 @@
 package com.core.api.service;
 
-import com.core.api.data.dto.VersionDto;
-import com.core.api.data.dto.VersionHistoryDto;
-import com.core.api.data.dto.VersionSimpleDto;
+import com.core.api.client.BackendClient;
+import com.core.api.client.EmailClient;
+import com.core.api.data.dto.*;
 import com.core.api.data.dto.github.CommitServerDto;
 import com.core.api.data.dto.github.PullRequestServerDto;
 import com.core.api.data.entity.PullRequest;
@@ -25,6 +25,8 @@ public class VersionService {
 
     private final VersionRepository versionRepository;
     private final PullRequestRepository pullRequestRepository;
+    private final EmailClient emailClient;
+    private final BackendClient backendClient;
 
     @Transactional
     public void createVersion(PullRequestServerDto pullRequest) {
@@ -48,13 +50,39 @@ public class VersionService {
         Version version = Version.createVersion(pullRequest, isHotfix);
         version.updateContent(content);
         versionRepository.save(version);
-
+        sendEmail(content, pullRequest.getOwner(), pullRequest.getRepo(), pullRequestsWithoutVersion);
         Consumer<Version> versionUpdater = isHotfix
                 ? v -> updateSinglePullRequestVersion(pullRequest, v)
                 : v -> updateAllPullRequestsVersion(pullRequest, v);
 
         versionUpdater.accept(version);
 
+    }
+
+    private void sendEmail(String content, String owner, String repo, List<PullRequest> pullRequests) {
+        ProjectDto project = backendClient.getProject(owner, repo);
+
+        int totalCommits = pullRequests.stream()
+                .mapToInt(pr -> pr.getCommits()
+                        .size())
+                .sum();
+        int totalPullRequests = pullRequests.size();
+        int totalReviews = pullRequests.stream()
+                .flatMap(pr -> pr.getReviewers()
+                        .stream())
+                .mapToInt(reviewer -> reviewer.getReviews()
+                        .size())
+                .sum();
+
+        EmailDto email = new EmailDto(
+                project.projectUserEmail(),
+                project.projectName(),
+                content,
+                totalCommits,
+                totalPullRequests,
+                totalReviews);
+
+        emailClient.sendEmail(email);
     }
 
     private void updateSinglePullRequestVersion(PullRequestServerDto pullRequest, Version version) {

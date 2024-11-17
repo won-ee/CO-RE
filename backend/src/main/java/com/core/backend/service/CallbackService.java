@@ -22,12 +22,10 @@ public class CallbackService {
 
     private final JiraOAuthTokenService jiraOAuthTokenService;
     private final JiraService jiraService;
-    private final JwtTokenService jwtTokenService;
     private final UserService userService;
     private final GroupService groupService;
     private final UserRepository userRepository;
     private final ProjectService projectService;
-    private final RoleService roleService;
 
     public Map<String, Object> loginAccessCallBack(String authorizationCode) {
         log.info("Authorization code received: {}", authorizationCode);

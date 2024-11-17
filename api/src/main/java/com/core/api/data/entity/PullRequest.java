@@ -37,6 +37,9 @@ public class PullRequest extends Base {
     @Column(name = "pr_writer_id", nullable = false)
     private String writerId;
 
+    @Column(name = "pr_writer_img")
+    private String writerImg;
+
     @Column(name = "pr_summary", length = 2000)
     private String summary;
 
@@ -79,7 +82,7 @@ public class PullRequest extends Base {
     @OneToMany(mappedBy = "pullRequest", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> images = new ArrayList<>();
 
-    public static PullRequest from(PullRequestInputDto pullRequestInputDto, Integer pullRequestId) {
+    public static PullRequest from(PullRequestInputDto pullRequestInputDto, Integer pullRequestId, String writerId) {
         PullRequest pullRequest = new PullRequest();
         pullRequest.title = pullRequestInputDto.title();
         pullRequest.head = pullRequestInputDto.head();
@@ -92,12 +95,15 @@ public class PullRequest extends Base {
                 .atStartOfDay();
         pullRequest.priority = pullRequestInputDto.priority();
         pullRequest.description = pullRequestInputDto.body();
-        pullRequest.writerId = pullRequestInputDto.writerId();
+        pullRequest.writerId = writerId;
         pullRequest.owner = pullRequestInputDto.owner();
         pullRequest.repo = pullRequestInputDto.repo();
         return pullRequest;
     }
 
+    public void updateWriterImg(String writerImg) {
+        this.writerImg = writerImg;
+    }
 
     public void updateMergeStatus(Boolean mergeStatus) {
         this.mergeStatus = mergeStatus;
@@ -105,6 +111,10 @@ public class PullRequest extends Base {
 
     public void updateVersion(Version version) {
         this.version = version;
+    }
+
+    public void updateStatus(String status) {
+        this.status = status;
     }
 
 

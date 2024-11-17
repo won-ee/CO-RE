@@ -144,4 +144,7 @@ public interface GitHubClient {
 
     @GetMapping("/user")
     Map<String, Object> getUser();
+
+    @GetMapping("/users/{username}")
+    Map<String, Object> getUserByUsername(@PathVariable("username") String username);
 }
