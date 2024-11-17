@@ -206,7 +206,11 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
           </DatePickerBox>
           <UrgentBox>
             Random Assign
-            <RandomButton onClick={() => handleRandomSelect(projectSetting.data?.reviewerCount ?? 2)}>Random</RandomButton>
+            <RandomButton onClick={() => {
+              const reviewerCount = projectSetting.data?.reviewerCount ?? 2;
+              const count = Math.min(reviewerCount, memberList.data?.length||0); // reviewerCount와 memberList 길이 중 작은 값 선택
+              handleRandomSelect(count); // handleRandomSelect에 조정된 값 전달
+            }}>Random</RandomButton>
           </UrgentBox>
         </DeadLineBox>
         <DeadLineBox>
