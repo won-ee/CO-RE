@@ -84,8 +84,8 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
     const pullRequestData = {
       title: title,
       body: body,
-      base: sourceBranch?.label || "", // undefined일 경우 빈 문자열로 대체
-      head: targetBranch?.label || "", // undefined일 경우 빈 문자열로 대체
+      base: targetBranch?.label || "", // undefined일 경우 빈 문자열로 대체
+      head: sourceBranch?.label || "", // undefined일 경우 빈 문자열로 대체
       owner: projectInfo.selectedOwner,
       repo : projectInfo.selectedRepo,
       description: content,
@@ -107,15 +107,15 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
   const changeParams ={
     owner: projectInfo.selectedOwner,
     repo : projectInfo.selectedRepo,
-    base: sourceBranch?.label || "", // undefined일 경우 빈 문자열로 대체
-    head: targetBranch?.label || "", // undefined일 경우 빈 문자열로 대체
+    base: targetBranch?.label || "", // undefined일 경우 빈 문자열로 대체
+    head: sourceBranch?.label || "", // undefined일 경우 빈 문자열로 대체
   }
 
   const commitParams = {
     owner: projectInfo.selectedOwner,
     repo : projectInfo.selectedRepo,
-    base: sourceBranch?.label || "", // undefined일 경우 빈 문자열로 대체
-    head: targetBranch?.label || "", // undefined일 경우 빈 문자열로 대체
+    base: targetBranch?.label || "", // undefined일 경우 빈 문자열로 대체
+    head: sourceBranch?.label || "", // undefined일 경우 빈 문자열로 대체
   }
 
   const changesData = useQueryChangeList(changeParams)
