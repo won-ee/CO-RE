@@ -56,8 +56,7 @@ const SectionErrorInquiry: React.FC = () => {
     setSelectedEpic(event.target.value);
   };
 
-  const test = () => {
-    setSelectedDate(new Date())
+  const handleSubmit = () => {
     if (selectedDate) {
       const formattedDate = selectedDate.toLocaleDateString("en-CA");
       if (selectedEpic) {
@@ -74,6 +73,10 @@ const SectionErrorInquiry: React.FC = () => {
         });
       }
     }
+  
+    setSelectedPriority("");
+    setSelectedEpic("");
+    setSelectedDate(new Date());
   };
 
   return (
@@ -126,7 +129,7 @@ const SectionErrorInquiry: React.FC = () => {
       <FormRow>
         <TextInput rows={4} />
         <div style={{ textAlign: "right", marginLeft: "32px" }}>
-          <SubmitButton onClick={test}>SEND</SubmitButton>
+          <SubmitButton onClick={handleSubmit}>SEND</SubmitButton>
         </div>
       </FormRow>
     </RightSectionLayout>

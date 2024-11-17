@@ -87,7 +87,8 @@ const Header: React.FC = () => {
   const { data: userInfo } = useQueryUserInfo(); 
   const { setSelectedOwner, setSelectedPRepo,setSelectedProjectId,setSelectedOwnerId,setSelectedGroupId,setSelectedProjectUserId } = useProjectStore();
   const [selectedOp, setSelectedOp] = useState<SingleValue<OptionType | null>>(null); 
-    
+  console.log(userInfo);
+  
   useEffect(() => {
     if (userInfo && userInfo.projects) {
       const tempOption = userInfo.projects.map((project) => ({
