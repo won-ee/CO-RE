@@ -13,33 +13,28 @@ import taskImg from '../../assets/task.png';
 import lowIcon from '../../assets/low.png'
 import highIcon from '../../assets/high.png'
 import middleIcon from '../../assets/middle.png'
+import { IssueListType } from '../../Types/IssueType';
 
-interface CardIssueProps {
-    task: { 
-        name: string; 
-        id: string; 
-        title: string; 
-        status: string; 
-        priority: string; 
-    }; 
-    index: number;
+interface CardIssueProps{
+    issue:IssueListType;
+    index:number;
 }
 
-const CardIssue: React.FC<CardIssueProps> = ({ task, index }) => {
+const CardIssue: React.FC<CardIssueProps> = ({ issue, index }) => {
   return (
     <>
         <TaskContainerLayout> 
             <TaskItemBox key={index}> 
                 <TaskNameBox>
                     <img src={taskImg} alt="" />
-                    <TaskNameText>{task.name}</TaskNameText> 
+                    <TaskNameText>{issue.issueTitle}</TaskNameText> 
                 </TaskNameBox>
-                <TaskIdText>{task.id}</TaskIdText>
-                <TaskTitleBox status={task.title}>{task.title}</TaskTitleBox>
-                <TaskStatusBox status={task.status}>{task.status}</TaskStatusBox>
+                <TaskIdText>{issue.issueKey}</TaskIdText>
+                <TaskTitleBox status={""}>{issue.epicName}</TaskTitleBox>
+                <TaskStatusBox status={issue.issueStatus}>{issue.issueStatus}</TaskStatusBox>
                 <ArrowIcon src={
-                            task.priority === 'high' ? highIcon 
-                            : task.priority === 'middle' ? middleIcon 
+                            issue.issuePriority === 1 ? highIcon 
+                            : issue.issuePriority === 2 ? middleIcon 
                             : lowIcon
                             } />
             </TaskItemBox>

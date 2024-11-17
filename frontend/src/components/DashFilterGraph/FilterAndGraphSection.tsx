@@ -4,12 +4,11 @@ import {
   FilterBox,
   FilterGroupRow,
   FilterIconWrapper,
-  ResetButtonBox,
   FilterLabel,
   DropdownSelect,
   GraphContainer,
 } from "./FilterAndGraphSection.styled";
-import { FaFilter, FaRedo } from "react-icons/fa";
+import { FaFilter } from "react-icons/fa";
 import {
   AreaChart,
   Area,
@@ -21,11 +20,12 @@ import {
   DotProps,
 } from "recharts";
 import NoteSection from "./NoteSection";
-
-type CategoryData = { day: number; value: number }[];
-type MonthlyData = { [month: string]: { [category: string]: CategoryData } };
-type VersionData = { [version: string]: string[] };
-type VersionNotes = { [version: string]: string };
+import { useProjectStore } from "../../store/userStore";
+import { useVersionList, useVersionStats } from "../../hooks/useDashboard";
+import {
+  // VersionStatsDataType,
+  CategoryDataType,
+} from "../../Types/dashboardType";
 
 const CustomDot: React.FC<DotProps & { index?: number }> = (props) => {
   const { cx, cy, index } = props;
@@ -35,81 +35,19 @@ const CustomDot: React.FC<DotProps & { index?: number }> = (props) => {
   return null;
 };
 
+export type DropdownOption = "commits" | "pullRequests" | "reviews";
+
 const FilterAndGraphSection: React.FC = () => {
-  const [versionData, setVersionData] = useState<VersionData>({});
-  const [monthlyData, setMonthlyData] = useState<MonthlyData>({});
-  const [defaultVersionNotes, setDefaultVersionNotes] = useState<VersionNotes>(
-    {},
-  );
-  const [showNote, setShowNote] = useState(false);
+  const { selectedOwner, selectedRepo } = useProjectStore();
+  const [selectedVersion, setSelectedVersion] = useState<string>("1");
+  const [selectedData, setSelectedData] = useState<CategoryDataType[]>([]);
+  const [selectedCategory, setSelectedCategory] =
+    useState<DropdownOption>("commits");
+
   const [isEditing, setIsEditing] = useState(false);
-
-  const [selectedVersion, setSelectedVersion] = useState(() => {
-    const savedVersion = localStorage.getItem("lastSelectedVersion");
-    return savedVersion ? savedVersion : "1.9.1";
-  });
-
-  const [selectedOptions, setSelectedOptions] = useState<string[]>(() => {
-    const savedOptions = localStorage.getItem(
-      `selectedOptions-${selectedVersion}`,
-    );
-    return savedOptions ? JSON.parse(savedOptions) : [];
-  });
-
-  const [selectedMonth, setSelectedMonth] = useState("Oct");
-  const [selectedCategory, setSelectedCategory] = useState("Commit");
-  const [graphData, setGraphData] = useState<CategoryData>([]);
-
+  const [showNote, setShowNote] = useState(false);
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
-
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const response = await fetch("/version_data.json");
-        const data = await response.json();
-        setVersionData(data.versionData);
-        setMonthlyData(data.monthlyData);
-        setDefaultVersionNotes(data.defaultVersionNotes);
-      } catch (error) {
-        console.error("Error loading data:", error);
-      }
-    };
-    loadData();
-  }, []);
-
-  useEffect(() => {
-    const savedOptions = localStorage.getItem(
-      `selectedOptions-${selectedVersion}`,
-    );
-    setSelectedOptions(savedOptions ? JSON.parse(savedOptions) : []);
-    localStorage.setItem("lastSelectedVersion", selectedVersion);
-  }, [selectedVersion]);
-
-  useEffect(() => {
-    const categoryData = monthlyData[selectedMonth]?.[selectedCategory] || [];
-    setGraphData(categoryData);
-  }, [selectedMonth, selectedCategory, monthlyData]);
-
-  useEffect(() => {
-    localStorage.setItem(
-      `selectedOptions-${selectedVersion}`,
-      JSON.stringify(selectedOptions),
-    );
-  }, [selectedOptions, selectedVersion]);
-
-  const handleVersionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const version = e.target.value;
-    setSelectedVersion(version);
-    setSelectedMonth(versionData[version][0]);
-  };
-
-  const handleMonthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedMonth(e.target.value);
-  };
-
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedCategory(e.target.value);
-  };
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
 
   const toggleSection = (section: string) => {
     setExpandedSections((prev) =>
@@ -119,29 +57,69 @@ const FilterAndGraphSection: React.FC = () => {
     );
   };
 
-  const handleOptionChange = (option: string, subOptions?: string[]) => {
-    if (subOptions) {
-      if (selectedOptions.includes(option)) {
-        setSelectedOptions((prev) =>
-          prev.filter((opt) => ![option, ...subOptions].includes(opt)),
-        );
+  const handleOptionChange = (option: string) => {
+    setSelectedOptions((prev) => {
+      if (prev.includes(option)) {
+        return prev.filter((opt) => opt !== option);
       } else {
-        setSelectedOptions((prev) => {
-          const newOptions = [...prev, option, ...subOptions];
-          return Array.from(new Set(newOptions));
-        });
+        return [...prev, option];
       }
-    } else {
-      if (selectedOptions.includes(option)) {
-        setSelectedOptions((prev) => prev.filter((opt) => opt !== option));
-      } else {
-        setSelectedOptions((prev) => {
-          const newOptions = [...prev, option];
-          return Array.from(new Set(newOptions));
-        });
-      }
-    }
+    });
   };
+
+  //선택된 버젼
+
+  const {
+    data: versionList,
+    error: versionListError,
+    isLoading: versionListLoading,
+  } = useVersionList({
+    owner: selectedOwner,
+    repo: selectedRepo,
+  });
+  if (versionListError) {
+    <p>Loading...</p>;
+  }
+  if (versionListLoading) {
+    <p>Error</p>;
+  }
+
+  const {
+    data: VersionStats,
+    error: VersionStatsError,
+    isLoading: VersionStatsLoading,
+  } = useVersionStats(selectedVersion);
+  if (VersionStatsError) {
+    <p>Version Stats Loading...</p>;
+  }
+  if (VersionStatsLoading) {
+    <p>Version Stats Error</p>;
+  }
+
+  //전달할 데이터 설정
+  useEffect(() => {
+    if (VersionStats && selectedCategory) {
+      const filteredData = VersionStats[selectedCategory];
+      setSelectedData(filteredData || []);
+    }
+  }, [VersionStats, selectedCategory]);
+
+  //버젼
+  const handleVersionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const version = e.target.value;
+    setSelectedVersion(version);
+  };
+
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedCategory(e.target.value as DropdownOption);
+  };
+
+  const processedData = selectedData
+    .map((item) => ({
+      ...item,
+      day: `20${item.day}`,
+    }))
+    .sort((a, b) => new Date(a.day).getTime() - new Date(b.day).getTime());
 
   return (
     <FilterAndGraphLayout>
@@ -155,46 +133,26 @@ const FilterAndGraphSection: React.FC = () => {
             onChange={handleVersionChange}
             value={selectedVersion}
           >
-            {Object.keys(versionData).map((version) => (
-              <option key={version} value={version}>
-                {version}
-              </option>
-            ))}
-          </DropdownSelect>
-          <DropdownSelect onChange={handleMonthChange} value={selectedMonth}>
-            {versionData[selectedVersion]?.map((month) => (
-              <option key={month} value={month}>
-                {month} 2024
-              </option>
+            {versionList?.map((version, index: number) => (
+              <option key={index}>{version.id}</option>
             ))}
           </DropdownSelect>
           <DropdownSelect
             onChange={handleCategoryChange}
             value={selectedCategory}
           >
-            <option value="Commit">Commit</option>
-            <option value="Comment">Comment</option>
-            <option value="Issue">Issue</option>
-            <option value="PR">Pull Requests</option>
-            <option value="HotFix">HotFix</option>
+            <option value="commits">Commit</option>
+            <option value="pullRequests">Pull Requests</option>
+            <option value="reviews">Reviews</option>
           </DropdownSelect>
         </FilterGroupRow>
-        <ResetButtonBox
-          onClick={() => {
-            setSelectedVersion("1.9.1");
-            setSelectedMonth("Sep");
-            setSelectedCategory("Commit");
-          }}
-        >
-          <FaRedo /> Reset Filter
-        </ResetButtonBox>
       </FilterBox>
 
       <GraphContainer>
         <ResponsiveContainer width="100%" height={230}>
           <AreaChart
-            key={`${selectedMonth}-${selectedCategory}-${graphData.length}`}
-            data={graphData}
+            key={`${selectedVersion}-${selectedCategory}`}
+            data={processedData}
             margin={{ left: -10, right: 10, top: 5, bottom: 5 }}
           >
             <defs>
@@ -204,17 +162,24 @@ const FilterAndGraphSection: React.FC = () => {
                 <stop offset="100%" stopColor="#E7EEFD" stopOpacity={0.1} />
               </linearGradient>
             </defs>
-            <XAxis dataKey="day" tickLine={false} interval={4} />
+            <XAxis
+              dataKey="day"
+              tickLine={false}
+              interval="preserveStartEnd"
+              tickFormatter={(tick) => tick}
+              tick={{ fontSize: 10, fill: "#555" }}
+            />
             <YAxis
               domain={["auto", "auto"]}
               tickLine={false}
               axisLine={false}
+              tick={{ fontSize: 12, fill: "#555" }}
             />
             <Tooltip />
             <CartesianGrid vertical={false} stroke="#EAEAEA" />
             <Area
               type="linear"
-              dataKey="value"
+              dataKey="count"
               stroke="#3f51b5"
               strokeWidth={2}
               fill="url(#colorGradient)"
@@ -233,12 +198,13 @@ const FilterAndGraphSection: React.FC = () => {
         showNote={showNote}
         expandedSections={expandedSections}
         selectedOptions={selectedOptions}
+        selectedVersion={selectedVersion}
+        selectedMonth=""
+        selectedCategory={selectedCategory}
+        defaultVersionNotes={{}}
+        selectedNoteVersion={selectedVersion}
         setShowNote={setShowNote}
         setIsEditing={setIsEditing}
-        selectedVersion={selectedVersion}
-        selectedMonth={selectedMonth}
-        selectedCategory={selectedCategory}
-        defaultVersionNotes={defaultVersionNotes}
         toggleSection={toggleSection}
         handleOptionChange={handleOptionChange}
       />

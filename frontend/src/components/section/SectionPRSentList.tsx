@@ -1,3 +1,4 @@
+import React from 'react';
 import { useQueryPRList } from '../../hooks/usePullRequestData';
 import { useProjectStore } from '../../store/userStore';
 import { SectionPRSentListLayout,FilterLayout, GridTable , GridHeader, GridHeaderCell, GridRow, GridCell,CommentBox,StatusBox,PriorityBox, DeadLineBox, TitleBox} from './SectionPRSentList.styled'
@@ -9,7 +10,7 @@ import { differenceInDays } from 'date-fns'
 //   { col1: 'Schedule Page total Direct & Create', col2: 'Row 3 Col 2', col3: 'After Review', col4: 'IMAGES', col5: '3', col6: 'LOW', col7: 'Rejected' },
 // ];
 
-function SectionPRSentList() {
+function SectionPRSentList(): React.ReactElement {
   const projectInfo = useProjectStore((state)=>state);
   const params = {
     // owner: 'JEM1224',
@@ -33,11 +34,11 @@ function SectionPRSentList() {
         <GridHeader>
           <GridHeaderCell>TITLE</GridHeaderCell>
           <GridHeaderCell>MERGE PATH</GridHeaderCell>
-          <GridHeaderCell align="center">DEADLINE</GridHeaderCell>
+          <GridHeaderCell $align="center">DEADLINE</GridHeaderCell>
           <GridHeaderCell>ASSIGNED</GridHeaderCell>
-          <GridHeaderCell align="center">COMMENT</GridHeaderCell>
-          <GridHeaderCell align="center">PRIORITY</GridHeaderCell>
-          <GridHeaderCell align="center">STATUS</GridHeaderCell>
+          <GridHeaderCell $align="center">COMMENT</GridHeaderCell>
+          <GridHeaderCell $align="center">PRIORITY</GridHeaderCell>
+          <GridHeaderCell $align="center">STATUS</GridHeaderCell>
         </GridHeader>
 
         {/* Body (Rows) */}        
@@ -55,20 +56,20 @@ function SectionPRSentList() {
               <TitleBox>{row.title}</TitleBox>
               </GridCell>
             <GridCell>{row.head} into {row.base}</GridCell>
-            <GridCell align="center">
-              <DeadLineBox status={deadlineText} afterReview={row.afterReview}>{deadlineText}</DeadLineBox>
+            <GridCell $align="center">
+              <DeadLineBox $status={deadlineText} $afterReview={row.afterReview}>{deadlineText}</DeadLineBox>
               </GridCell>
             <GridCell>{row.reviewers.map((reviewers,index)=>(
               <img src={reviewers.writerImg} key={index}/>
             ))}</GridCell>
-            <GridCell align="center">
-              <CommentBox status={String(row.commentCount)}>{row.commentCount}</CommentBox>
+            <GridCell $align="center">
+              <CommentBox $status={String(row.commentCount)}>{row.commentCount}</CommentBox>
             </GridCell>
-            <GridCell align="center">
-              <PriorityBox status={row.priority}>{row.priority.toUpperCase()}</PriorityBox>
+            <GridCell $align="center">
+              <PriorityBox $status={row.priority}>{row.priority.toUpperCase()}</PriorityBox>
               </GridCell>
-            <GridCell align="center">
-              <StatusBox status={row.status}>{row.status.charAt(0).toUpperCase() + row.status.slice(1)}</StatusBox>
+            <GridCell $align="center">
+              <StatusBox $status={row.status}>{row.status.charAt(0).toUpperCase() + row.status.slice(1)}</StatusBox>
               </GridCell>
           </GridRow>
         )

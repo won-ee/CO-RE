@@ -27,7 +27,7 @@ function Sidebar() {
   const location = useLocation();
   
   useEffect(() => {
-    if (selectedOwner||selectedRepo) {
+    if (!selectedOwner||!selectedRepo) {
       if (userInfo?.userInfo.accountId === selectedOwnerId){
         navigate("/project");
       }else{

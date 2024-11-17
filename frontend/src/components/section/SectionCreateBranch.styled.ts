@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { SingleSelectType } from "../../Types/SelectType";
 
 interface UrgentProps{
-  isUrgent:boolean
+  $isUrgent:boolean
 }
 
 export const SectionCreateBranchLayout = styled.div`
@@ -132,7 +132,7 @@ export const UrgentBox = styled.div`
 export const UrgentButton = styled.div<UrgentProps>`
   width: 110px;
   height: 30px;
-  background-color: ${(props) => (props.isUrgent ? '#FF6767' : '#7667FF')};
+  background-color: ${(props) => (props.$isUrgent ? '#FF6767' : '#7667FF')};
   border-radius: 10px;
   display: flex;
   justify-content: center;
