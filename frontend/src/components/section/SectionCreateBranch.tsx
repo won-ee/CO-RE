@@ -56,8 +56,8 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
 
 
   const parsedProjectMembers: OptionType[] = memberList.data ? memberList.data.map((member)=>({
-    value:member.userName,
-    label:member.userName
+    value:member.userGitName,
+    label:member.userGitName
   })):[];
 
   const handlesIsFinalReviewOpen = ()=>{

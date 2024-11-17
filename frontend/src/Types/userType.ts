@@ -74,13 +74,15 @@ export interface OptionType {
 }
 
 export interface ProjectMemberType {
-  projectId: number;
-  projectUserId: number;
   userId: number;
-  userName: string;
+  projectUserId: number;
+  projectId: number;
   userUrl: string;
-  userEmail: string;
+  userName: string;
   userNickName: string;
+  userEmail: string;
+  userGitToken: string;
+  userGitName: string;
 }
 
 export interface ProjectDataType {
