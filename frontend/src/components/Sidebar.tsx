@@ -26,7 +26,7 @@ function Sidebar() {
   const navigate = useNavigate();
   const location = useLocation();
   
-  useEffect(() => {
+  useEffect(() => {    
     if (!selectedOwner||!selectedRepo) {      
       if (userInfo?.userInfo.accountId === selectedOwnerId){
         navigate("/project");
