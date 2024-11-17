@@ -17,6 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -55,31 +57,54 @@ public class JwtTokenService {
     private final UserRepository userRepository;
 
     public String createAccessToken(Long id, String email) {
-        Date now = new Date();
-        long expirationMillis = 72 * 60 * 60 * 1000L;
-        Date expirationTime = new Date(now.getTime() + expirationMillis);
+//        Date now = new Date();
+//        long expirationMillis = 72 * 60 * 60 * 1000L;
+//        Date expirationTime = new Date(now.getTime() + expirationMillis);
+//
+//        log.info("createAccessToken 생성시간 : {}", now);
+//        log.info("createAccessToken 만료시간 : {}", expirationTime);
 
-        log.info("createAccessToken 생성시간 : {}", now);
-        log.info("createAccessToken 만료시간 : {}", expirationTime);
+        ZonedDateTime nowKST = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
+        log.info("현재 시간 (KST): {}", nowKST);
+
+        // KST 시간을 UTC로 변환
+        ZonedDateTime nowUTC = nowKST.withZoneSameInstant(ZoneId.of("UTC"));
+        log.info("현재 시간 (UTC): {}", nowUTC);
+
+        // 만료 시간을 UTC 기준으로 72시간 뒤로 설정
+        ZonedDateTime expirationUTC = nowUTC.plusHours(72);
+        log.info("만료 시간 (UTC): {}", expirationUTC);
 
         return JWT.create()
                 .withSubject(ACCESS_TOKEN_SUBJECT)
-                .withExpiresAt(expirationTime)
+                .withExpiresAt(Date.from(expirationUTC.toInstant()))
                 .withClaim(ID_CLAIM, id)
                 .withClaim(EMAIL_CLAIM, email)
                 .sign(Algorithm.HMAC512(secretKey));
     }
 
     public String createRefreshToken() {
-        Date now = new Date();
-        long expirationMillis = 72 * 60 * 60 * 1000L;
-        Date expirationTime = new Date(now.getTime() + expirationMillis);
+//        Date now = new Date();
+//        long expirationMillis = 72 * 60 * 60 * 1000L;
+//        Date expirationTime = new Date(now.getTime() + expirationMillis);
+//
+//        log.info("createAccessToken 생성시간 : {}", now);
+//        log.info("createAccessToken 만료시간 : {}", expirationTime);
 
-        log.info("createAccessToken 생성시간 : {}", now);
-        log.info("createAccessToken 만료시간 : {}", expirationTime);
+        ZonedDateTime nowKST = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
+        log.info("현재 시간 (KST): {}", nowKST);
+
+        // KST 시간을 UTC로 변환
+        ZonedDateTime nowUTC = nowKST.withZoneSameInstant(ZoneId.of("UTC"));
+        log.info("현재 시간 (UTC): {}", nowUTC);
+
+        // 만료 시간을 UTC 기준으로 72시간 뒤로 설정
+        ZonedDateTime expirationUTC = nowUTC.plusHours(72);
+        log.info("만료 시간 (UTC): {}", expirationUTC);
+
         return JWT.create()
                 .withSubject(REFRESH_TOKEN_SUBJECT)
-                .withExpiresAt(expirationTime)
+                .withExpiresAt(Date.from(expirationUTC.toInstant()))
                 .sign(Algorithm.HMAC512(secretKey));
     }
 
