@@ -66,7 +66,7 @@ const ModalInputProject: React.FC = () => {
           mutate(
             {
               params: params,     
-              userId: userInfoParams.userId,  
+              projectId: params.projectId,  
             },
             {
               onSuccess: () => {
