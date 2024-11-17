@@ -71,9 +71,9 @@ export const patchProjectSetting = async (
   return response.data;
 };
 
-export const postGithubInfo = async (githubInfo: githubInfoType,userId:number) => {
+export const postGithubInfo = async (githubInfo: githubInfoType,projectId:number) => {
   const response = await axios.post(
-    `${BASE_URL}/api/project/update/set/github/${userId}`,
+    `${BASE_URL}/project/update/set/github/${projectId}`,
     githubInfo,
     {
       headers: {

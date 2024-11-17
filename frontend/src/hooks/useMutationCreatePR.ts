@@ -44,8 +44,8 @@ export const useMutationPatchUserInfo = () => {
 
 export const useMutationGithubInfo = () => {
   return useMutation({
-    mutationFn: ({ params, userId }: { params: githubInfoType, userId: number }) =>
-      postGithubInfo(params, userId),
+    mutationFn: ({ params, projectId }: { params: githubInfoType, projectId: number }) =>
+      postGithubInfo(params, projectId),
     onMutate: (variables) => {
       console.log("GitHub 정보 요청 시작:", variables);
     },
