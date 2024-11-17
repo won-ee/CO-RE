@@ -57,22 +57,39 @@ public class JwtTokenService {
     private final UserRepository userRepository;
 
     public String createAccessToken(Long id, String email) {
+        ZonedDateTime nowKST = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
+        log.info("createAccessToken 생성시간 (KST): {}", nowKST);
+
+        // 만료 시간 계산 (KST 기준)
+        ZonedDateTime expirationKST = nowKST.plusMinutes(accessTokenExpirationPeriod);
+        log.info("createAccessToken 만료시간 (KST): {}", expirationKST);
+
+        // ZonedDateTime -> Date 변환
+        Date expirationDate = Date.from(expirationKST.toInstant());
+
         Date now = new Date();
         log.info("createAccessToken 생성시간 : {}", now);
         return JWT.create()
                 .withSubject(ACCESS_TOKEN_SUBJECT)
-                .withExpiresAt(new Date(now.getTime() + accessTokenExpirationPeriod))
+                .withExpiresAt(expirationDate)
                 .withClaim(ID_CLAIM, id)
                 .withClaim(EMAIL_CLAIM, email)
                 .sign(Algorithm.HMAC512(secretKey));
     }
 
     public String createRefreshToken() {
-        Date now = new Date();
-        log.info("createRefreshToken 생성시간 : {}", now);
+        ZonedDateTime nowKST = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
+        log.info("createAccessToken 생성시간 (KST): {}", nowKST);
+
+        // 만료 시간 계산 (KST 기준)
+        ZonedDateTime expirationKST = nowKST.plusMinutes(accessTokenExpirationPeriod);
+        log.info("createAccessToken 만료시간 (KST): {}", expirationKST);
+
+        // ZonedDateTime -> Date 변환
+        Date expirationDate = Date.from(expirationKST.toInstant());
         return JWT.create()
                 .withSubject(REFRESH_TOKEN_SUBJECT)
-                .withExpiresAt(new Date(now.getTime() + refreshTokenExpirationPeriod))
+                .withExpiresAt(expirationDate)
                 .sign(Algorithm.HMAC512(secretKey));
     }
 
