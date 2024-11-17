@@ -162,12 +162,26 @@ public class JwtTokenService {
 
     public boolean isJwtTokenValid(String token) {
         try {
+            log.info("0");
             var decodeJWT = JWT.require(Algorithm.HMAC512(secretKey)).build().verify(token);
+
+            log.info("1");
+            // 현재 UTC 시간
+            ZonedDateTime nowUTC = ZonedDateTime.now(ZoneId.of("UTC"));
+
+            // 토큰 만료 시간
+            Date expiration = decodeJWT.getExpiresAt();
+            ZonedDateTime expirationUTC = expiration.toInstant().atZone(ZoneId.of("UTC"));
+            log.info("2");
+            if (nowUTC.isAfter(expirationUTC)) {
+                log.info("JWT Token has expired. Expiration time (UTC): {}", expirationUTC);
+                return false;
+            }
 
             Long id = decodeJWT.getClaim(ID_CLAIM).asLong();
             String email = decodeJWT.getClaim(EMAIL_CLAIM).asString();
             String subject = decodeJWT.getSubject();
-
+            log.info("3");
             return id != null && email != null && subject != null && subject.equals(ACCESS_TOKEN_SUBJECT);
         } catch (Exception ex) {
             log.error("유효하지 않은 토큰입니다. : {}", ex.getMessage());
