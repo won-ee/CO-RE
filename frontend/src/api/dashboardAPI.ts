@@ -93,9 +93,9 @@ export const getVersionListData = async ({
 
 export const getEditVersion = async (
   id: string,
-  updatedVersionData: Partial<VersionDataType>,
-): Promise<VersionDataType> => {
-  const { data } = await axios.patch(
+  updatedVersionData: VersionDataType,
+) => {
+  const response = await axios.patch(
     `${BASE_URL}/version/note/${id}`,
     updatedVersionData,
     {
@@ -105,9 +105,9 @@ export const getEditVersion = async (
       },
     },
   );
-
-  return data;
+  return response.data;
 };
+
 export const getVersionStatsData = async (
   id: string,
 ): Promise<VersionStatsDataType> => {
