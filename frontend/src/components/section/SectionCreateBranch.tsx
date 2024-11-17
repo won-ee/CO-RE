@@ -1,7 +1,7 @@
 import { SectionCreateBranchLayout, TitleInput, DescriptionTextArea, SelectBox, MergeDirectionBox, HighLightBox, DateInputContainer, DatePickerImg, DeadLineBox, DatePickerBox, UrgentBox, UrgentButton, PriorityBox, CreateButtonBox, TabBox, RandomButton, StyledDatePickerPopper  } from "./SectionCreateBranch.styled";
 import Select, { MultiValue, SingleValue, StylesConfig } from "react-select";
 import { OptionType } from "../../Types/SelectType";
-import { useState, ChangeEvent, forwardRef } from "react";
+import { useState, ChangeEvent, forwardRef, useEffect } from "react";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import CalendarIcon from '../../assets/icon_calender.png'
@@ -53,6 +53,12 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
   const [reviews,setReviews] = useState<ReviewType[]>([])
   const [isFinalReviewOpen,setIsFinalReviewOpen] = useState(false)
   // const userInfo = useUserStore((state) => state.userInfo);
+
+  useEffect(() => {
+    if (projectSetting.data?.template) {
+        setContent(projectSetting.data.template);
+    }
+}, [projectSetting.data]);
 
 
   const parsedProjectMembers: OptionType[] = memberList.data ? memberList.data.map((member)=>({
