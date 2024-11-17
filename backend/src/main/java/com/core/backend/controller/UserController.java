@@ -43,7 +43,7 @@ public class UserController {
         // 인증된 사용자 정보 추출
         AuthenticatedUserDto authenticatedUser = (AuthenticatedUserDto) authentication.getPrincipal();
 
-        log.info("updateMyInfo : {}", userUpdateInfoDto);
+        log.info("인증된 사용자 정보: id={}, email={}", authenticatedUser.getId(), authenticatedUser.getEmail());
 
         Long id = Long.parseLong(authenticatedUser.getId());
         log.info("updateMyInfo id: {}", id);
