@@ -13,9 +13,9 @@ export interface ProjectType {
   id: number;
   name: string;
   image: string;
-  ownerId: string;
+  ownerID: string;
   ownerName: string;
-  groupId: number;
+  groupID: number;
   projectUserId: number;
   groupName: string;
   githubOwner: string;
@@ -98,6 +98,7 @@ export interface ProjectSettingType {
 export interface patchUserInfoType {
   nickName : string;
   gitToken : string;
+  userId : number;
 }
 
 export interface githubInfoType {

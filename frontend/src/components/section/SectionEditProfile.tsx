@@ -19,14 +19,17 @@ const SectionEditProfile:React.FC = () => {
         setGitToken(e.target.value);
     };
 
-    const saveUserInfo =()=>{
+    const saveUserInfo = () => {
+        const userId = userInfo?.userInfo.id ?? 0;
+      
         mutation.mutate({
-            userInfotData: {
-                nickName,
-                gitToken,
-            } as patchUserInfoType,
-          });
-    };
+          userInfotData: {
+            nickName: nickName,
+            gitToken: gitToken,
+          } as patchUserInfoType,
+          userId: userId, 
+        });
+      };
 
     return (
         <>

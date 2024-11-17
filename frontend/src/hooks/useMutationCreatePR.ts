@@ -29,8 +29,8 @@ export const useMutationPatchProjectSetting = () => {
 
 export const useMutationPatchUserInfo = () => {
   return useMutation({
-    mutationFn: (variables: { userInfotData: patchUserInfoType }) => {
-      return patchUserInfo(variables.userInfotData);
+    mutationFn: (variables: { userInfotData: patchUserInfoType,userId:number }) => {
+      return patchUserInfo(variables.userInfotData,variables.userId);
     },
     onSuccess: (data) => {
       console.log('Success:', data);
@@ -44,7 +44,8 @@ export const useMutationPatchUserInfo = () => {
 
 export const useMutationGithubInfo = () => {
   return useMutation({
-    mutationFn: (params: githubInfoType) => postGithubInfo(params),
+    mutationFn: ({ params, userId }: { params: githubInfoType, userId: number }) =>
+      postGithubInfo(params, userId),
     onMutate: (variables) => {
       console.log("GitHub 정보 요청 시작:", variables);
     },
@@ -59,6 +60,7 @@ export const useMutationGithubInfo = () => {
     },
   });
 };
+
 
 export const useMutationEpic = () => {
   return useMutation(
