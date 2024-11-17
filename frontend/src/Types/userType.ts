@@ -30,6 +30,7 @@ export interface UserInfoType {
   image: string;
   accountId: string;
   gitToken: string;
+  gitName:string;
 }
 
 export interface UserInfoDataType {

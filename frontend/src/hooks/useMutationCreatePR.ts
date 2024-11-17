@@ -13,19 +13,25 @@ export const useMutationpostPRReview = () => {
     return useMutation((params: { owner: string; repo: string; pullId: string; reviewData: TotalReviewsType }) => postPRReview(params));
   };
 
-export const useMutationPatchProjectSetting = () => {
-  return useMutation({
-    mutationFn: (variables: { selectedProjectId: number; projectData: ProjectSettingType }) => {
-      return patchProjectSetting(variables.selectedProjectId, variables.projectData);
-    },
-    onSuccess: (data) => {
-      console.log('Success:', data);
-    },
-    onError: (error) => {
-      console.error('Error:', error);
-    },
-  });
-};
+  export const useMutationPatchProjectSetting = (options?: {
+    onSuccess?: (data: any) => void;
+    onError?: (error: any) => void;
+  }) => {
+    return useMutation({
+      mutationFn: (variables: { selectedProjectId: number; projectData: ProjectSettingType }) => {
+        return patchProjectSetting(variables.selectedProjectId, variables.projectData);
+      },
+      onSuccess: (data) => {
+        console.log('Success:', data);
+        options?.onSuccess?.(data); 
+      },
+      onError: (error) => {
+        console.error('Error:', error);
+        options?.onError?.(error); 
+      },
+    });
+  };
+  
 
 export const useMutationPatchUserInfo = () => {
   return useMutation({

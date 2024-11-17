@@ -13,12 +13,13 @@ import { useMutationGithubInfo, useMutationPatchUserInfo } from "../../hooks/use
 import LoadingPage from "../../pages/LoadingPage";
 import NotFoundPage from "../../pages/NotFoundPage";
 import { patchUserInfoType } from "../../Types/userType";
+import { useNavigate } from "react-router-dom";
 
 const ModalInputProject: React.FC = () => {
   const { mutate, isLoading, error } = useMutationGithubInfo();
   const { mutate: tokenMutation } = useMutationPatchUserInfo();
   const { selectedProjectId } = useProjectStore();
-
+  const navigate = useNavigate();
   const [owner, setOwner] = useState("");
   const [project, setProject] = useState("");
   const [token, setToken] = useState("");
@@ -62,7 +63,7 @@ const ModalInputProject: React.FC = () => {
       {
         onSuccess: () => {
           console.log("GitHub 정보가 성공적으로 등록되었습니다!");
-  
+          
           mutate(
             {
               params: params,     
@@ -71,6 +72,8 @@ const ModalInputProject: React.FC = () => {
             {
               onSuccess: () => {
                 console.log("성공적으로 GitHub 정보가 전송되었습니다!");
+                navigate("/dashboard");
+
               },
               onError: (error) => {
                 console.error("에러 발생:", error);
