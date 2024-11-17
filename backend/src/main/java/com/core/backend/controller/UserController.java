@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,7 +39,11 @@ public class UserController {
     }
 
     @GetMapping("/search/git-token")
-    public ResponseEntity<UserTokenDto> getGitToken(@AuthenticationPrincipal AuthenticatedUserDto authenticatedUser) {
+    public ResponseEntity<UserTokenDto> getGitToken() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !(authentication.getPrincipal() instanceof AuthenticatedUserDto authenticatedUser)) {
+            throw new IllegalStateException("No authenticated user found");
+        }
         Long id = Long.parseLong(authenticatedUser.getId());
         return new ResponseEntity<>(userService.getGitTokenToUser(id), HttpStatus.OK);
     }
