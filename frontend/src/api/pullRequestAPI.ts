@@ -14,8 +14,7 @@ import {
   ChangeType,
 } from "../Types/pullRequestType";
 
-const BASE_URL ='http://54.180.83.239:8080'; 
-const TOKEN ='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImlkIjoxLCJleHAiOjE3MzE5ODczNDQsImVtYWlsIjoiaGtrMzYyNkBuYXZlci5jb20ifQ.Ud0t67fGyyhUgXMROWJ9rK9iY2MO3Vs8yO1G-2j5TtyRXYjgJPa3gWNV76CTFdzzMyD-mdnx6LboFwpULH2U1Q'
+const BASE_URL ='https://k11s106.p.ssafy.io/api'; 
 
 export const getCalendarPR = async ({
   owner,
@@ -33,7 +32,7 @@ export const getCalendarPR = async ({
         year,
       },
       headers: {
-        Authorization: `Bearer ${TOKEN}`,
+        withCredentials: true,
       },
     },
   );
@@ -44,7 +43,7 @@ export const postCreatePR = async (PRData: CreatePRType) => {
   const { data } = await axios.post(`${BASE_URL}/github/pull-request`, PRData, {
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${TOKEN}`,
+      withCredentials: true,
     },
   });
   return data;
@@ -59,7 +58,7 @@ export const getPRDetail = async ({
     `${BASE_URL}/github/pull-request/${owner}/${repo}/${pullId}`,
     {
       headers: {
-        Authorization: `Bearer ${TOKEN}`,
+        withCredentials: true,
       },
     },
   );
@@ -83,7 +82,7 @@ export const postPRReview = async ({
     {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${TOKEN}`,
+        withCredentials: true,
       },
     },
   );
@@ -99,7 +98,7 @@ export const getBranchList = async ({
       `${BASE_URL}/github/branch/${owner}/${repo}`,
       {
         headers: {
-          Authorization: `Bearer ${TOKEN}`,
+          withCredentials: true,
         },
       },
     );
@@ -121,7 +120,7 @@ export const getCommitList = async ({
       `${BASE_URL}/github/branch/${owner}/${repo}/${base}...${head}`,
       {
         headers: {
-          Authorization: `Bearer ${TOKEN}`,
+          withCredentials: true,
         },
       },
     );
@@ -142,7 +141,7 @@ export const getPRList = async ({
       `${BASE_URL}/github/pull-request/${owner}/${repo}?state=${state}`,
       {
         headers: {
-          Authorization: `Bearer ${TOKEN}`,
+          withCredentials: true,
         },
       },
     );
@@ -164,7 +163,7 @@ export const getChangeList = async ({
       `${BASE_URL}/github/branch/${owner}/${repo}/${base}...${head}/files`,
       {
         headers: {
-          Authorization: `Bearer ${TOKEN}`,
+          withCredentials: true,
         },
       },
     );
