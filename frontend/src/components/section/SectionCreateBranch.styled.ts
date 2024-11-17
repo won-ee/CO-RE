@@ -196,3 +196,11 @@ export const TabBox = styled.div`
   justify-content: space-between;
   align-items: center;
 `
+
+export const StyledDatePickerPopper = styled.div`
+  z-index: 1050;
+  background-color: white;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+`;

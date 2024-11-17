@@ -131,3 +131,9 @@ export const DeadLineBox = styled.div<StringProps>`
 export const TitleBox = styled.div`
   font-weight: bold;
 `
+export const ReviewerImg = styled.img`
+  width: 24px;
+  height: 24px;
+  border-radius: 100%;
+  margin-right: 8px;
+`
