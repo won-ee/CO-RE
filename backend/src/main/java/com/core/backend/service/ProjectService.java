@@ -194,7 +194,7 @@ public class ProjectService {
                     && project.getGithubRepository() != null && !project.getGithubRepository().isEmpty()
                     && user.getGitToken() != null && !user.getGitToken().isEmpty()) {
                 log.info("git hook event 전송 시작");
-                apiService.addGitHubHookEvents(user.getGitToken(), project.getGithubOwner(), project.getGithubRepository());
+                apiService.addGitHubHookEvents(project.getGithubOwner(), project.getGithubRepository(), user.getGitToken());
             }
             return true;
 
