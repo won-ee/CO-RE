@@ -20,8 +20,12 @@ import NotFoundPage from "./pages/NotFoundPage";
 import HistoryPage from "./pages/HistoryPage";
 import PrivacyNotice from "./pages/PrivacyNotice";
 import ModalInputProject from "./components/modal/ModalInputProject";
+import { useQueryUserInfo } from "./hooks/useUser";
 
 const AppComponent: React.FC = () => {
+  const { data: userInfo } = useQueryUserInfo(); 
+  console.log(userInfo);
+  
   const { isLogin } = useUserStore();
 
   return (
