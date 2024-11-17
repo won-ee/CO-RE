@@ -49,6 +49,7 @@ public class ProjectController {
 
     @GetMapping("/search/git-set")
     public ResponseEntity<ProjectGitSetDto> findProjectSetGit(@RequestParam("repo") String repo, @RequestParam("owner") String owner) {
+        log.info("findProjectSetGit init!");
         ProjectGitSetDto projectGitSetDto = projectService.findGitSetToProject(repo, owner);
         if (projectGitSetDto == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

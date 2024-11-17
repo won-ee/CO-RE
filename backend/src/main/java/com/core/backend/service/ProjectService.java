@@ -243,6 +243,7 @@ public class ProjectService {
     }
 
     public ProjectGitSetDto findGitSetToProject(String repo, String owner) {
+        log.info("init 2");
         Projects project = projectRepository.findByGithubOwnerAndGithubRepository(owner, repo).orElse(null);
 
         if (project == null) {
