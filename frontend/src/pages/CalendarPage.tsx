@@ -20,6 +20,8 @@ const params: CalendarPRParamsType = {
 const CalenderPage:React.FC = () => {
   const navigate = useNavigate(); 
   const { data, error, isLoading } = useQueryCalendarPR(params);
+  console.log(data);
+  
   if (isLoading) return <LoadingPage />;
   if (error) return <NotFoundPage errorNumber={404}/>;
 
