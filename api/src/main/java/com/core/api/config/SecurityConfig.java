@@ -33,6 +33,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
+
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
                     config.setAllowedOrigins(List.of("http://localhost:5173", "https://k11s106.p.ssafy.io"));
@@ -44,9 +45,11 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
                 )
-                .authorizeHttpRequests(authorize ->
-                        authorize.anyRequest()
-                                .authenticated()
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/github/**", "/review/webhook/**", "/pull-request/webhook/**")
+                        .permitAll()
+                        .anyRequest()
+                        .authenticated()
                 )
                 .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
 

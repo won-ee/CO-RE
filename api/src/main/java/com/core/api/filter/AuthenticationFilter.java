@@ -39,7 +39,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
 
             if (githubToken == null) {
-                throw new AccessDeniedException("Github access token is missing");
+                githubToken = accessToken;
             }
 
             UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(accessToken, null, Collections.emptyList());
