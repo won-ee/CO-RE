@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -30,8 +31,17 @@ public class UserController {
     }
 
     @PatchMapping("/update/my-info")
-    public ResponseEntity<UserAllInfoDto> updateMyInfo(@AuthenticationPrincipal AuthenticatedUserDto authenticatedUser,
-                                                       @RequestBody UserUpdateInfoDto userUpdateInfoDto) {
+    public ResponseEntity<UserAllInfoDto> updateMyInfo(
+            @RequestBody UserUpdateInfoDto userUpdateInfoDto) {
+
+        // SecurityContextHolder에서 인증 정보 가져오기
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !(authentication.getPrincipal() instanceof AuthenticatedUserDto)) {
+            throw new IllegalStateException("No authenticated user found");
+        }
+
+        // 인증된 사용자 정보 추출
+        AuthenticatedUserDto authenticatedUser = (AuthenticatedUserDto) authentication.getPrincipal();
 
         log.info("updateMyInfo : {}", userUpdateInfoDto);
 

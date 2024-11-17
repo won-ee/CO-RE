@@ -31,13 +31,25 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         log.info("10");
         String authHeader = request.getHeader("Authorization");
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        if (authHeader == null) {
             filterChain.doFilter(request, response);
             return;
         }
+//        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+//            filterChain.doFilter(request, response);
+//            return;
+//        }
         log.info("11");
 
-        String jwtToken = authHeader.substring(7);
+        String jwtToken;
+        if (authHeader.startsWith("Bearer ")) {
+            jwtToken = authHeader.substring(7); // "Bearer "를 제외한 부분 추출
+        } else {
+            jwtToken = authHeader; // 접두사가 없으면 그대로 사용
+        }
+
+//        String jwtToken = authHeader.substring(7);
+
         log.info("12");
         try {
             if (jwtTokenService.isJwtTokenValid(jwtToken)) {
@@ -48,6 +60,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 String email = claims.get("email").orElseThrow(InCorrectAccessTokenException::new);
 
                 log.info("14");
+                log.info("id, email : {}, {}", id, email);
                 AuthenticatedUserDto authenticatedUserDto = new AuthenticatedUserDto(id, email);
 
                 log.info("15");
