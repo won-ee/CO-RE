@@ -188,6 +188,11 @@ public class ProjectService {
                 return false;
             }
 
+            Projects sameProject = projectRepository.findByGithubOwnerAndGithubRepository(project.getGithubOwner(), project.getGithubRepository()).orElse(null);
+            if (sameProject != null) {
+                return false;
+            }
+
             project = project.updateGitHub(updateGitHubRequestDto);
             project = projectRepository.save(project);
             if (project.getGithubOwner() != null && !project.getGithubOwner().isEmpty()
@@ -238,8 +243,13 @@ public class ProjectService {
     }
 
     public ProjectGitSetDto findGitSetToProject(String repo, String owner) {
-        Projects project = getProjectGit(repo, owner);
-        assert project != null;
+        Projects project = projectRepository.findByGithubOwnerAndGithubRepository(owner, repo).orElse(null);
+
+        if (project == null) {
+            return null;
+        }
+
+        log.info("findGitSetToProject init get project : {}", project.toString());
 
         return ProjectGitSetDto.builder()
                 .template(project.getReviewTemplate())

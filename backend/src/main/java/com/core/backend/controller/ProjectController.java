@@ -49,7 +49,11 @@ public class ProjectController {
 
     @GetMapping("/search/git-set")
     public ResponseEntity<ProjectGitSetDto> findProjectSetGit(@RequestParam("repo") String repo, @RequestParam("owner") String owner) {
-        return new ResponseEntity<>(projectService.findGitSetToProject(repo, owner), HttpStatus.OK);
+        ProjectGitSetDto projectGitSetDto = projectService.findGitSetToProject(repo, owner);
+        if (projectGitSetDto == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(projectGitSetDto, HttpStatus.OK);
     }
 
     @GetMapping("/search/epic-list/{projectId}")
