@@ -107,6 +107,6 @@ export interface patchUserInfoType {
 export interface githubInfoType {
   projectId: number;
   githubOwner: string;
-  githubRepo:string;
+  githubRepository:string;
 }
 

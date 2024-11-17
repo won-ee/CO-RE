@@ -45,7 +45,7 @@ const ModalInputProject: React.FC = () => {
     const params = {
       projectId: selectedProjectId,
       githubOwner: owner,
-      githubRepo: project,
+      githubRepository: project,
     };
   
     const userInfoParams = {
