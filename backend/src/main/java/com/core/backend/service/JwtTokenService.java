@@ -56,6 +56,7 @@ public class JwtTokenService {
 
     public String createAccessToken(Long id, String email) {
         Date now = new Date();
+        log.info("createAccessToken 생성시간 : {}", now);
         return JWT.create()
                 .withSubject(ACCESS_TOKEN_SUBJECT)
                 .withExpiresAt(new Date(now.getTime() + accessTokenExpirationPeriod))
@@ -66,6 +67,7 @@ public class JwtTokenService {
 
     public String createRefreshToken() {
         Date now = new Date();
+        log.info("createRefreshToken 생성시간 : {}", now);
         return JWT.create()
                 .withSubject(REFRESH_TOKEN_SUBJECT)
                 .withExpiresAt(new Date(now.getTime() + refreshTokenExpirationPeriod))
