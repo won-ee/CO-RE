@@ -18,10 +18,20 @@ import SectionIssueRelocation from "../components/section/SectionIssueRelocation
 import SectionIssueList from "../components/section/SectionIssueList";
 import SectionReassignedTasks from "../components/section/SectionReassignedTasks";
 import { Block } from "../styles/GlobalStyled";
+import { useProjectStore, useUserStore } from "../store/userStore";
+import { useQueryAllProject } from "../hooks/useIssueList";
 
 const IssuePage:React.FC=()=>{
+  const { selectedProjectId } = useProjectStore();
   const [isErrorInquirySelected, setIsErrorInquirySelected] = useState(true);
   const [isIssueSelected, setIsIssueSelected] = useState(true);
+  const { userInfo} = useUserStore();
+  const { data: allProject } = useQueryAllProject(selectedProjectId);   
+
+  const differentProjects = allProject?.filter(
+    (project) =>
+      userInfo && !userInfo.projects.some((userProject) => userProject.id === project.id)
+  );
 
   return (
     <>
@@ -31,6 +41,11 @@ const IssuePage:React.FC=()=>{
             <LeftSectionBox>
               <SelectInput>
                 <option>팀 선택</option>
+                {differentProjects?.map((project) => (
+                  <option key={project.id} value={project.id}>
+                    {project.name}
+                  </option>
+                ))}
               </SelectInput>
               <ErrorInquiryButton
                 onClick={() => setIsErrorInquirySelected(true)}

@@ -40,11 +40,13 @@ export interface ProjectStoreType {
   selectedProjectId: number;
   selectedProjectUserId: number;
   selectedOwnerId: string;
+  selectedGroupId:number;
   setSelectedOwner: (Owner: string) => void;
   setSelectedPRepo: (Repo: string) => void;
   setSelectedProjectId: (ProjectId: number) => void;
   setSelectedProjectUserId: (ProjectUserId: number) => void;
   setSelectedOwnerId: (OwnerId: string) => void;
+  setSelectedGroupId: (GroupId: number) => void;
 }
 
 export interface OptionType {
@@ -52,8 +54,10 @@ export interface OptionType {
   label: string;
   githubOwner: string;
   githubRepo: string;
+  id:number;
   projectUserId: number;
   ownerId: string;
+  groupId:number;
 }
 
 export interface ProjectMemberType {
@@ -82,8 +86,10 @@ export interface patchUserInfoType {
   nickName : string;
   gitToken : string;
 }
+
 export interface githubInfoType {
   projectId: number;
   githubOwner: string;
   githubRepo:string;
 }
+

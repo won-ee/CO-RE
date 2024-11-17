@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   ChangeCard,
   Header,
@@ -13,13 +13,9 @@ import {
   VectorImg,
   LineNumberBox,
   LineSymbol,
-  CardCodeReviewReadBox,
-} from './SectionChanges.styled';
+} from './SectionChangesList.styled';
 import Vector from '../../assets/low.png'
-import ButtonReview from '../buttons/ButtonReview';
-import CardCodeReview from '../card/CardCodeReview';
 import { ReviewType } from '../../Types/pullRequestType';
-import CardCodeReviewRead from '../card/CardCodeReviewRead';
 
 interface SectionChangesProps {
   changes: {
@@ -105,26 +101,11 @@ const parsePatchWithCollapsedContent = (patch: string, content: string): Line[] 
   return result;
 };
 
-const SectionChanges: React.FC<SectionChangesProps> = ({ changes, onUpdateReviews }) => {
+const SectionChangesList: React.FC<SectionChangesProps> = ({ changes }) => {
   const [expandedCards, setExpandedCards] = useState<{ [key: number]: boolean }>(
     () => changes.reduce((acc, _, index) => ({ ...acc, [index]: true }), {})
   );
   const [expandedGroups, setExpandedGroups] = useState<{ [key: number]: boolean }>({});
-  const [hoveredLineId, setHoveredLineId] = useState<number | null>(null); // 현재 호버된 줄의 ID 상태
-  const [reviewLineIndex, setReviewLineIndex] = useState<number | null>(null); // 리뷰가 표시될 줄의 인덱스
-  const [reviews,setReviews] = useState<ReviewType[]>([])
-  const [path, setPath] = useState<string>('');
-  const [startLine, setStartLine] = useState<number>(0);
-  const [body, setBody] = useState(""); 
-  if (body) {
-    //EsLint예외처리
-    }
-
-  // 리뷰가 업데이트될 때마다 onUpdateReviews 호출
-useEffect(() => {
-  onUpdateReviews(reviews);
-}, [reviews, onUpdateReviews]);
-
   const toggleCard = (index: number) => {
     setExpandedCards((prev) => ({ ...prev, [index]: !prev[index] }));
   };
@@ -132,27 +113,6 @@ useEffect(() => {
   const toggleCollapse = (id: number) => {
     setExpandedGroups((prev) => ({ ...prev, [id]: !prev[id] }));
   };
-
-  const handleReviewIndex = (index:number, filename:string)=>{
-    setReviewLineIndex((prevIndex) => (prevIndex === index ? null : index)); // 동일 줄 클릭 시 닫힘
-    setStartLine(index);
-    setPath(filename)
-  }
-
-  const handleCancel = () => {
-    setReviewLineIndex(null); // 리뷰 창 닫기
-  };
-  
- const handleAddReview = (content: string) => {
-  const newReview: ReviewType = {
-    path,
-    line: startLine,
-    body:content,
-  };
-  
-  setReviews((prevReviews) => prevReviews ? [...prevReviews, newReview] : [newReview]);
-  setBody(""); // body 초기화
-};
 
   return (
     <div>
@@ -206,26 +166,13 @@ useEffect(() => {
                       </LineContainer>
                     ) : (
                       <div key={index}>
-                      <LineContainer className={line.type}
-                        onMouseEnter={() => setHoveredLineId(idx)}
-                        onMouseLeave={() => setHoveredLineId(null)}>        
+                      <LineContainer className={line.type}>        
                         <LineNumberBox className={line.type}>
                           <LineNumber>{line.originalLineNumber !== null ? line.originalLineNumber + 1 : ''}</LineNumber>
                           <LineNumber>{line.modifiedLineNumber !== null ? line.modifiedLineNumber + 1 : ''}</LineNumber>
                         </LineNumberBox>
-                        <LineSymbol className={line.type}>
-                          {hoveredLineId === idx ? (<ButtonReview btnEvent={() => handleReviewIndex(idx, change.file.filename)} />):
-                          line.type === 'add' ? '+' : line.type === 'remove' ? '-' : ''}
-                        </LineSymbol>
                         <LineContent className={line.type}>{line.content}</LineContent>
                       </LineContainer>
-                      {reviews.length > 0 ? (reviews.filter((review) => review.line === idx).map((review, index) => (
-                              <CardCodeReviewReadBox>
-                                <CardCodeReviewRead key={index} review={review}/>
-                              </CardCodeReviewReadBox>
-                            ))
-                        ) : null}
-                      {reviewLineIndex === idx && <CardCodeReview onCancel={handleCancel} onAdd={handleAddReview}/>}
                       </div>
                     )}
                   </React.Fragment>
@@ -239,4 +186,4 @@ useEffect(() => {
   );
 };
 
-export default SectionChanges;
+export default SectionChangesList;

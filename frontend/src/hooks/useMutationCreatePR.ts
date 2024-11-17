@@ -3,7 +3,7 @@ import { postCreatePR,postPRReview } from "../api/pullRequestAPI";
 import { TotalReviewsType } from "../Types/pullRequestType";
 import { ProjectSettingType, githubInfoType, patchUserInfoType } from "../Types/userType";
 import { patchProjectSetting, patchUserInfo, postGithubInfo } from "../api/userAPI";
-import { postEpic, postNoEpic } from "../api/IssueAPI";
+import { postAcceptIssueLocation, postEpic, postIssueLocation, postNoEpic } from "../api/IssueAPI";
 
 export const useMutationCreatePR=()=>{
     return useMutation(postCreatePR)
@@ -56,5 +56,18 @@ export const useMutationNoEpic = () => {
   return useMutation(
     ({ projectUserId, deadline, priority }: { projectUserId: number; deadline: string; priority: string }) => 
       postNoEpic(projectUserId, deadline, priority)
+  );
+};
+
+export const useMutationIssueLocation = () => {
+  return useMutation(
+    ({ projectUserId, issueId }: { projectUserId: number; issueId: number; }) => 
+      postIssueLocation(projectUserId,issueId )
+  );
+};
+export const useMutationAcceptIssueLocation = () => {
+  return useMutation(
+    ({ projectUserId, carrotId }: { projectUserId: number; carrotId: number; }) => 
+      postAcceptIssueLocation(projectUserId,carrotId )
   );
 };

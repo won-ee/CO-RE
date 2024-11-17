@@ -23,8 +23,8 @@ interface CardCodeReviewProps {
         <CardCodeReviewLayout>
             <ReviewTextArea placeholder="Type your Review..." onChange={handleContentChange} value={content}/>
             <ButtonBox>
-                {onCancel && <ButtonSimpleSquare text='Cancle' color='black' bgc='#EFF2F5' btnEvent={onCancel}/>}
-                <ButtonSimpleSquare text='Add Review' color='white' bgc='#1F883D' btnEvent={handleAddReview}/>
+                {onCancel && <ButtonSimpleSquare $text='Cancle' $color='black' $bgc='#EFF2F5' btnEvent={onCancel}/>}
+                <ButtonSimpleSquare $text='Add Review' $color='white' $bgc='#1F883D' btnEvent={handleAddReview}/>
             </ButtonBox>
         </CardCodeReviewLayout>
     )

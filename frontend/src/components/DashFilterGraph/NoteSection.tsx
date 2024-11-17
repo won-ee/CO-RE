@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import EditIcon from "../../assets/DashboardEditButton.png";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   VersionNoteWrapper,
   NoteToggleButton,
@@ -91,18 +93,27 @@ const NoteSection: React.FC<NoteSectionProps> = ({
   // 편집 모드 활성화/비활성화
   const toggleEditing = () => {
     if (isEditing) {
-      editVersion(
-        { content: noteContent },
-        {
-          onSuccess: () => {
-            setIsEditing(false);
-            alert("Version note updated successfully.");
-          },
-          onError: () => {
-            alert("Failed to update version note.");
-          },
+      const updatedData = {
+        content: noteContent,
+        ...Object.fromEntries(
+          Object.entries(fieldMappings).map(([key, label]) => [
+            key,
+            selectedOptionsState.includes(label),
+          ]),
+        ),
+      };
+
+      console.log("Sending data to server:", updatedData);
+
+      editVersion(updatedData, {
+        onSuccess: () => {
+          setIsEditing(false);
+          toast.success("데이터 업데이트를 성공했습니다."); // 성공 알림
         },
-      );
+        onError: () => {
+          toast.error("데이터 업데이트를 실패했습니다."); // 실패 알림
+        },
+      });
     } else {
       setIsEditing(true);
     }

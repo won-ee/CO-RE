@@ -12,8 +12,8 @@ import { useQueryIssueList } from "../../hooks/useIssueList";
 import { useProjectStore } from "../../store/userStore";
 
 const SectionIssueList: React.FC = () => {
-  const { selectedProjectId } = useProjectStore();
-  const { data } = useQueryIssueList(selectedProjectId);
+  const { selectedProjectUserId } = useProjectStore();
+  const { data } = useQueryIssueList(selectedProjectUserId);
   const [searchTerm, setSearchTerm] = useState("");
   
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {

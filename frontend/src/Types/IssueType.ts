@@ -18,3 +18,15 @@ export interface EpicType {
     key: string;
     name: string; 
   };
+
+export interface IssueLocationType {
+  id: number;
+  issueId: number; 
+  name: string; 
+  key: string; 
+  epicName: string; 
+  deadLine: string | null; 
+  senderId: number; 
+  senderName: string;
+  senderImage: string;
+}

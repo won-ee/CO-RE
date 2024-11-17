@@ -25,8 +25,8 @@ const SectionCommits: React.FC<SectionCommitsProps> = ({ commits }) => {
 
   return (
     <Container>
-      {result.map((commitGroup, index) => (
-        <div key={index}>
+      {result.map((commitGroup) => (
+        <div key={commitGroup.date}>
           <DateBox>
             <Date>
               {new window.Date(commitGroup.date).toLocaleDateString('en-US', {
@@ -37,7 +37,7 @@ const SectionCommits: React.FC<SectionCommitsProps> = ({ commits }) => {
             </Date>
           </DateBox>
           {commitGroup.commits.map((commit) => (
-            <CommitMessageBox>
+            <CommitMessageBox key={commit.date}>
               <CommitMessageTitle>{commit.message}</CommitMessageTitle>
               <CommitMessageContent>
                 {new window.Date(commit.date).toLocaleTimeString('en-US', {

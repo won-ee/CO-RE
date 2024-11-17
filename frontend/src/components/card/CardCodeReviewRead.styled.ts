@@ -30,3 +30,8 @@ export const HourSpan = styled.span`
 export const BodyBox = styled.div`
     font-size: 14px;
 `
+export const UserImg = styled.img`
+    border-radius: 100%;
+    width: 24px;
+    height: 24px;
+`
