@@ -13,9 +13,9 @@ export interface ProjectType {
   id: number;
   name: string;
   image: string;
-  ownerID: string;
+  ownerId: string;
   ownerName: string;
-  groupID: number;
+  groupId: number;
   projectUserId: number;
   groupName: string;
   githubOwner: string;
