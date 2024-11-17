@@ -41,9 +41,23 @@ export const useMutationPatchUserInfo = () => {
 };
   
 
-export const useMutationGithubInfo=()=>{
-  return useMutation((params:githubInfoType) => postGithubInfo(params));
-}
+export const useMutationGithubInfo = () => {
+  return useMutation({
+    mutationFn: (params: githubInfoType) => postGithubInfo(params),
+    onMutate: (variables) => {
+      console.log("GitHub 정보 요청 시작:", variables);
+    },
+    onSuccess: (data) => {
+      console.log("GitHub 정보 요청 성공:", data);
+    },
+    onError: (error) => {
+      console.error("GitHub 정보 요청 실패:", error);
+    },
+    onSettled: () => {
+      console.log("GitHub 정보 요청 완료");
+    },
+  });
+};
 
 export const useMutationEpic = () => {
   return useMutation(
