@@ -17,6 +17,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -24,6 +25,17 @@ import java.util.Collections;
 public class AuthenticationFilter extends OncePerRequestFilter {
 
     private final AuthService authService;
+
+    private static final List<String> EXCLUDED_PATHS = Arrays.asList(
+            "/pull-request/webhook",
+            "/review/webhook"
+    );
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getRequestURI();
+        return EXCLUDED_PATHS.contains(path);
+    }
 
     @Override
     protected void doFilterInternal(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain)
