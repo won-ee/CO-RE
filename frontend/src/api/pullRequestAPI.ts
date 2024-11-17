@@ -25,7 +25,7 @@ export const getCalendarPR = async ({
   year,
 }: CalendarPRParamsType): Promise<PRDataType[]> => {
   const response = await axios.get<PRDataType[]>(
-    `${BASE_URL}/pull-request/${owner}/${repo}/user`,
+    `${BASE_URL}/github/pull-request/${owner}/${repo}/user`,
     {
       params: {
         writer,
@@ -41,7 +41,7 @@ export const getCalendarPR = async ({
 };
 
 export const postCreatePR = async (PRData: CreatePRType) => {
-  const { data } = await axios.post(`${BASE_URL}/pull-request`, PRData, {
+  const { data } = await axios.post(`${BASE_URL}/github/pull-request`, PRData, {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${TOKEN}`,
@@ -56,7 +56,7 @@ export const getPRDetail = async ({
   pullId,
 }: PRDetailParamsType): Promise<PRDataType> => {
   const response = await axios.get<PRDataType>(
-    `${BASE_URL}/pull-request/${owner}/${repo}/${pullId}`,
+    `${BASE_URL}/github/pull-request/${owner}/${repo}/${pullId}`,
     {
       headers: {
         Authorization: `Bearer ${TOKEN}`,
@@ -78,7 +78,7 @@ export const postPRReview = async ({
   reviewData: TotalReviewsType;
 }) => {
   const { data } = await axios.post(
-    `${BASE_URL}/pull-request${owner}/${repo}/${pullId}`,
+    `${BASE_URL}/github/pull-request${owner}/${repo}/${pullId}`,
     reviewData,
     {
       headers: {
@@ -96,7 +96,7 @@ export const getBranchList = async ({
 }: BranchListParams): Promise<BranchListType[]> => {
   try {
     const response = await axios.get<BranchListType[]>(
-      `${BASE_URL}/branch/${owner}/${repo}`,
+      `${BASE_URL}/github/branch/${owner}/${repo}`,
       {
         headers: {
           Authorization: `Bearer ${TOKEN}`,
@@ -118,7 +118,7 @@ export const getCommitList = async ({
 }: CommitListParams): Promise<CommitListType[]> => {
   try {
     const response = await axios.get<CommitListType[]>(
-      `${BASE_URL}/branch/${owner}/${repo}/${base}...${head}`,
+      `${BASE_URL}/github/branch/${owner}/${repo}/${base}...${head}`,
       {
         headers: {
           Authorization: `Bearer ${TOKEN}`,
@@ -139,7 +139,7 @@ export const getPRList = async ({
 }: PRListParams): Promise<PRListType[]> => {
   try {
     const response = await axios.get<PRListType[]>(
-      `${BASE_URL}/pull-request/${owner}/${repo}?state=${state}`,
+      `${BASE_URL}/github/pull-request/${owner}/${repo}?state=${state}`,
       {
         headers: {
           Authorization: `Bearer ${TOKEN}`,
@@ -161,7 +161,7 @@ export const getChangeList = async ({
 }: CommitListParams): Promise<ChangeType[]> => {
   try {
     const response = await axios.get<ChangeType[]>(
-      `${BASE_URL}/branch/${owner}/${repo}/${base}...${head}/files`,
+      `${BASE_URL}/github/branch/${owner}/${repo}/${base}...${head}/files`,
       {
         headers: {
           Authorization: `Bearer ${TOKEN}`,

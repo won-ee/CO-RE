@@ -10,19 +10,17 @@ import {
   DashVersionDataType,
 } from "../Types/dashboardType";
 
-const BASE_URL = "http://54.180.83.239:8080";
-// const BASE_URL = "https://k11s106.p.ssafy.io/api";
-const TOKEN ='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImlkIjoxLCJleHAiOjE3MzE5ODczNDQsImVtYWlsIjoiaGtrMzYyNkBuYXZlci5jb20ifQ.Ud0t67fGyyhUgXMROWJ9rK9iY2MO3Vs8yO1G-2j5TtyRXYjgJPa3gWNV76CTFdzzMyD-mdnx6LboFwpULH2U1Q'
+const BASE_URL = "https://k11s106.p.ssafy.io/api";
 
 export const getDashStatsData = async ({
   owner,
   repo,
 }: StatsParamsType): Promise<StatsDataType> => {
   const response = await axios.get<StatsDataType>(
-    `${BASE_URL}/stats/${owner}/${repo}`,
+    `${BASE_URL}/github/stats/${owner}/${repo}`,
     {
       headers: {
-        Authorization: `Bearer ${TOKEN}`,
+        withCredentials: true,
       },
     },
   );
@@ -37,10 +35,10 @@ export const getDashPRData = async ({
 }: DashPRParamsType): Promise<DashPRDataType[]> => {
   try {
     const response = await axios.get<DashPRDataType[]>(
-      `${BASE_URL}/pull-request/${owner}/${repo}?state=${state}`,
+      `${BASE_URL}/github/pull-request/${owner}/${repo}?state=${state}`,
       {
         headers: {
-          Authorization: `Bearer ${TOKEN}`,
+          withCredentials: true,
         },
       },
     );
@@ -58,7 +56,7 @@ export const getDashIssueData = async (
       `${BASE_URL}/issue/search/list/${projectUserId}`,
       {
         headers: {
-          Authorization: `Bearer ${TOKEN}`,
+          withCredentials: true,
         },
       },
     );
@@ -70,9 +68,9 @@ export const getDashIssueData = async (
 };
 
 export const getVersionData = async (id: string): Promise<VersionDataType> => {
-  const { data } = await axios.get(`${BASE_URL}/version/note/${id}`, {
+  const { data } = await axios.get(`${BASE_URL}/github/version/note/${id}`, {
     headers: {
-      Authorization: `Bearer ${TOKEN}`,
+      withCredentials: true,
     },
   });
   return data;
@@ -81,9 +79,9 @@ export const getVersionListData = async ({
   owner,
   repo,
 }: StatsParamsType): Promise<DashVersionDataType[]> => {
-  const { data } = await axios.get(`${BASE_URL}/version/${owner}/${repo}`, {
+  const { data } = await axios.get(`${BASE_URL}/github/version/${owner}/${repo}`, {
     headers: {
-      Authorization: `Bearer ${TOKEN}`,
+      withCredentials: true,
     },
   });
   console.log(data);
@@ -95,12 +93,11 @@ export const getEditVersion = async (
   updatedVersionData: Partial<VersionDataType>,
 ): Promise<VersionDataType> => {
   const response = await axios.patch(
-    `${BASE_URL}/version/note/${id}`,
+    `${BASE_URL}/github/version/note/${id}`,
     updatedVersionData,
     {
       headers: {
-        Authorization: `Bearer ${TOKEN}`,
-        // "Content-Type": "application/json",
+        withCredentials: true,
       },
     },
   );
@@ -111,9 +108,9 @@ export const getEditVersion = async (
 export const getVersionStatsData = async (
   id: string,
 ): Promise<VersionStatsDataType> => {
-  const response = await axios.get(`${BASE_URL}/stats/${id}`, {
+  const response = await axios.get(`${BASE_URL}/github/stats/${id}`, {
     headers: {
-      Authorization: `Bearer ${TOKEN}`,
+      withCredentials: true,
     },
   });
   return response.data;
