@@ -7,6 +7,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +20,7 @@ import java.util.Collections;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class AuthenticationFilter extends OncePerRequestFilter {
 
     private final AuthService authService;
@@ -28,11 +30,12 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String accessToken = getAuthorizationFromCookie(request);
-
+        log.info("Request received: {} {}", request.getMethod(), request.getRequestURI());
         if (SecurityContextHolder.getContext()
                 .getAuthentication() == null) {
             String githubToken = request.getHeader("gitToken");
             if (githubToken == null) {
+                log.info("Request received without gitToken header");
                 githubToken = authService.requestTokenFromServer(accessToken)
                         .token();
             } else {
@@ -40,10 +43,8 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             }
 
 
-            System.out.println("githubtoken" + githubToken);
-
-            System.out.println("accessToken" + githubToken);
-
+            log.info("Access token: {}", accessToken);
+            log.info("Github token: {}", githubToken);
             UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(accessToken, null, Collections.emptyList());
             auth.setDetails(githubToken);
             SecurityContextHolder.getContext()
