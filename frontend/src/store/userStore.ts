@@ -1,26 +1,36 @@
 import { create } from "zustand";
-import { ProjectStoreType, UserStoreType } from "../Types/userType";
+import { ProjectStateType, ProjectStoreType, UserStateType, UserStoreType } from "../Types/userType";
 
-export const useUserStore = create<UserStoreType>((set) => ({
+const initialUserState: UserStateType = {
   userInfo: null,
   isLogin: false,
-  setUserInfo: (userInfo) => set({ userInfo }),
-  login: () => set({ isLogin: true }),
-  logout: () => set({ isLogin: false }),
-}));
+};
 
-export const useProjectStore = create<ProjectStoreType>((set) => ({
+const initialProjectState: ProjectStateType = {
   selectedOwner: "",
   selectedRepo: "",
   selectedProjectId: 0,
   selectedProjectUserId: 0,
   selectedOwnerId: "",
-  selectedGroupId:0,
+  selectedGroupId: 0,
+};
+
+export const useUserStore = create<UserStoreType>((set) => ({
+  ...initialUserState,
+  setUserInfo: (userInfo) => set({ userInfo }),
+  login: () => set({ isLogin: true }),
+  logout: () => set(initialUserState),
+}));
+
+export const useProjectStore = create<ProjectStoreType>((set) => ({
+  ...initialProjectState,
   setSelectedOwner: (Owner) => set({ selectedOwner: Owner }),
   setSelectedPRepo: (Repo) => set({ selectedRepo: Repo }),
   setSelectedProjectId: (ProjectId) => set({ selectedProjectId: ProjectId }),
   setSelectedProjectUserId: (ProjectUserId) =>
     set({ selectedProjectUserId: ProjectUserId }),
   setSelectedOwnerId: (OwnerId) => set({ selectedOwnerId: OwnerId }),
-  setSelectedGroupId: (GroupId) => set({ selectedGroupId: GroupId })
+  setSelectedGroupId: (GroupId) => set({ selectedGroupId: GroupId }),
+  resetProjectState: () => set(initialProjectState),
 }));
+
