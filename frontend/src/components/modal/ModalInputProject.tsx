@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Input,
   LoginBoxContainer,
@@ -23,8 +23,17 @@ const ModalInputProject: React.FC = () => {
   const [owner, setOwner] = useState("");
   const [project, setProject] = useState("");
   const [token, setToken] = useState("");
-
+  const { selectedOwner, selectedRepo, selectedOwnerId } = useProjectStore();
   const { userInfo } = useUserStore();
+
+  useEffect(() => {
+    if (selectedOwner&&selectedRepo) {      
+      navigate("/dashboard");
+    }else{
+      if (userInfo?.userInfo.accountId === selectedOwnerId){
+        navigate("/project");
+      }
+    }}, [selectedOwner,selectedRepo,userInfo,selectedOwnerId]);
 
   if (isLoading) return <LoadingPage />;
   if (error) return <NotFoundPage errorNumber={404} />;
