@@ -5,10 +5,12 @@ import { useHistoryData } from "../hooks/useHistory";
 import LoadingPage from "./LoadingPage";
 import NotFoundPage from "./NotFoundPage";
 import { DropdownContainer, StyledSelect } from "./HistoryPage.styled";
+import { useProjectStore } from "../store/userStore";
 
 const HistoryPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { selectedOwner, selectedRepo } = useProjectStore();
 
   const {
     repos,
@@ -18,7 +20,7 @@ const HistoryPage: React.FC = () => {
     graphData,
     isLoadingGraph,
     graphError,
-  } = useHistoryData();
+  } = useHistoryData(selectedOwner, selectedRepo);
 
   // useEffect(() => {
   //   if (graphError) {
@@ -36,7 +38,7 @@ const HistoryPage: React.FC = () => {
   };
 
   if (isLoadingRepos) return <LoadingPage />;
-  if (graphError) return <NotFoundPage errorNumber={404}/>;
+  if (graphError) return <NotFoundPage errorNumber={404} />;
 
   return (
     <div>
