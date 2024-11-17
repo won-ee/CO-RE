@@ -38,6 +38,7 @@ public class ProjectService {
     private final IssueService issueService;
     private final EpicRepository epicRepository;
     private final IssueRepository issueRepository;
+    private final APIService apiService;
 
     public List<Map<String, Object>> getAllProjects(String accessToken, String cloudId) {
         try {
@@ -186,6 +187,13 @@ public class ProjectService {
                 if (getProjects.isPresent()) {
                     Projects project = getProjects.get().updateGitHub(updateGitHubRequestDto);
                     projectRepository.save(project);
+
+                    if (project.getGithubOwner() != null && !project.getGithubOwner().isEmpty()
+                            && project.getGithubRepository() != null && !project.getGithubRepository().isEmpty()) {
+                        apiService.addGitHubHookEvents(project.getGithubOwner(), project.getGithubRepository());
+                    }
+
+
                     return true;
                 }
             }

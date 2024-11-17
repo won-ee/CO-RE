@@ -682,8 +682,8 @@ public class IssueService {
 
                 if (isParent) {
                     IssueCreateEpicDto issueCreateEpicDto = (IssueCreateEpicDto) bodyDto;
-                    //TODO: 추후 웹훅 설정시 해당부분 지워줘야함.
-
+                    
+                    //웹훅 설정시 해당부분 지워줘야함.
                     Epics epic = epicRepository.findByKey(issueCreateEpicDto.getFields().getParent().getKey());
 
                     makeIssue = issueRepository.save(
@@ -718,10 +718,7 @@ public class IssueService {
                 }
             }
         } catch (Exception ex) {
-            // 그 외 다른 예외 처리
             log.error("Error occurred: {}", ex.getMessage());
-            ex.printStackTrace();
-
         }
         if (makeIssue == null)
             return null;

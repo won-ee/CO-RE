@@ -34,7 +34,14 @@ public class APIService {
         } catch (Exception ex) {
             log.error("getGitHubName Error : {}", ex.getMessage());
         }
+    }
 
-
+    public void addGitHubHookEvents(String owner, String repo) {
+        try {
+            apiFeignClient.addGitHubHookEvent(owner, repo);
+            log.info("GitHub Webhook 이벤트 추가 성공");
+        } catch (Exception ex) {
+            log.error("GitHub Webhook 이벤트 추가 실패: {}", ex.getMessage());
+        }
     }
 }

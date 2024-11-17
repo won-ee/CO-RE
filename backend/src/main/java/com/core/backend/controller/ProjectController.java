@@ -21,7 +21,7 @@ public class ProjectController {
 
     private final ProjectService projectService;
 
-    @PostMapping("/set/github/{userId}")
+    @PostMapping("/update/set/github/{userId}")
     public ResponseEntity<Void> updateProjectGitHub(@PathVariable Long userId,
                                                     @RequestBody UpdateGitHubRequestDto gitHubRequestDto) {
 
