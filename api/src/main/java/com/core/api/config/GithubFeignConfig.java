@@ -20,7 +20,9 @@ public class GithubFeignConfig {
     @Bean
     public RequestInterceptor requestInterceptor() {
         return requestTemplate -> {
+            System.out.println("testsetset");
             String token = getGitHubToken();
+            System.out.println(token);
             requestTemplate.header("Authorization", "Bearer " + token);
             requestTemplate.header("X-GitHub-Api-Version", "2022-11-28");
             requestTemplate.header("Accept", "application/vnd.github+json; charset=UTF-8");
@@ -53,6 +55,7 @@ public class GithubFeignConfig {
             return authentication.getDetails()
                     .toString();
         }
+        System.out.println("필터설정" + authentication + "  " + authentication.getDetails());
         throw new AccessDeniedException("GitHub token is missing");
     }
 
