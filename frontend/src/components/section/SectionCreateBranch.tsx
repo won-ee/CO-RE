@@ -13,8 +13,7 @@ import { useMutationCreatePR, useMutationpostPRReview } from "../../hooks/useMut
 import ButtonSimpleSquare from "../buttons/ButtonSimpleSquare";
 import { TotalReviewsType, ReviewType } from "../../Types/pullRequestType";
 import CardFinalCodeReview from "../card/CardFinalCodeReview";
-// import {useUserStore, useProjectStore} from "../../store/userStore";
-import { useProjectStore } from "../../store/userStore";
+import {useUserStore, useProjectStore} from "../../store/userStore";
 import { useQueryChangeList, useQueryCommitList } from "../../hooks/usePullRequestData";
 import { useNavigate } from "react-router-dom";
 import { useMemberList, useProjectData } from "../../hooks/useUser";
@@ -52,7 +51,7 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
   const event = "COMMENT"
   const [reviews,setReviews] = useState<ReviewType[]>([])
   const [isFinalReviewOpen,setIsFinalReviewOpen] = useState(false)
-  // const userInfo = useUserStore((state) => state.userInfo);
+  const userInfo = useUserStore((state) => state.userInfo);
 
   useEffect(() => {
     if (projectSetting.data?.template) {
@@ -61,7 +60,7 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
 }, [projectSetting.data]);
 
 
-  const parsedProjectMembers: OptionType[] = memberList.data ? memberList.data.map((member)=>({
+  const parsedProjectMembers: OptionType[] = memberList.data ? memberList.data.filter((member) => member.userGitName !== (userInfo?.userInfo.gitName ?? "")).map((member)=>({
     value:member.userGitName,
     label:member.userGitName
   })):[];
