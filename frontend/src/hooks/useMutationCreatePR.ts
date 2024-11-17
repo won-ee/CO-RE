@@ -2,8 +2,9 @@ import { useMutation } from "react-query";
 import { postCreatePR,postPRReview } from "../api/pullRequestAPI";
 import { TotalReviewsType } from "../Types/pullRequestType";
 import { ProjectSettingType, githubInfoType, patchUserInfoType } from "../Types/userType";
-import { patchProjectSetting, patchUserInfo, postGithubInfo } from "../api/userAPI";
+import { patchProjectSetting, patchUserInfo, postGithubInfo, postLogout } from "../api/userAPI";
 import { postAcceptIssueLocation, postEpic, postIssueLocation, postNoEpic } from "../api/IssueAPI";
+import { useProjectStore, useUserStore } from "../store/userStore";
 
 export const useMutationCreatePR=()=>{
     return useMutation(postCreatePR)
@@ -84,4 +85,20 @@ export const useMutationAcceptIssueLocation = () => {
     ({ projectUserId, carrotId }: { projectUserId: number; carrotId: number; }) => 
       postAcceptIssueLocation(projectUserId,carrotId )
   );
+};
+
+export const useMutationLogout = () => {
+  const logoutUserStore = useUserStore((state) => state.logout);
+  const resetProjectState = useProjectStore((state) => state.resetProjectState);
+
+  return useMutation(postLogout, {
+    onSuccess: () => {
+      logoutUserStore();
+      resetProjectState();
+      console.log("성공적으로 로그아웃되었습니다!");
+    },
+    onError: (error) => {
+      console.error("로그아웃 중 에러 발생:", error);
+    },
+  });
 };

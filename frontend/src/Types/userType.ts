@@ -5,7 +5,10 @@ export interface UserStoreType {
   login: () => void;
   logout: () => void;
 }
-
+export interface UserStateType {
+  userInfo: UserInfoDataType | null;
+  isLogin: boolean;
+}
 export interface ProjectType {
   id: number;
   name: string;
@@ -34,6 +37,15 @@ export interface UserInfoDataType {
   userInfo: UserInfoType;
 }
 
+export interface ProjectStateType {
+  selectedOwner: string;
+  selectedRepo: string;
+  selectedProjectId: number;
+  selectedProjectUserId: number;
+  selectedOwnerId: string;
+  selectedGroupId: number;
+}
+
 export interface ProjectStoreType {
   selectedOwner: string;
   selectedRepo: string;
@@ -47,6 +59,7 @@ export interface ProjectStoreType {
   setSelectedProjectUserId: (ProjectUserId: number) => void;
   setSelectedOwnerId: (OwnerId: string) => void;
   setSelectedGroupId: (GroupId: number) => void;
+  resetProjectState: () => void;
 }
 
 export interface OptionType {
