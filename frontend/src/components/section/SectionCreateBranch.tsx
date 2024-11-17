@@ -47,7 +47,7 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
   const [priority,setPriority] = useState<string | null>(null)
   const [selectedTab, setSelectedTab] = useState<TabsEnum>(TabsEnum.Commit);
   const [title, setTitle] = useState<string>('')
-  const [content, setContent] = useState<string>(projectSetting.data?.template ?? "")
+  const [content, setContent] = useState<string>(projectSetting.data?.template ?? "값이 없다.")
   const [body,setBody] = useState<string>('')
   const event = "COMMENT"
   const [reviews,setReviews] = useState<ReviewType[]>([])
