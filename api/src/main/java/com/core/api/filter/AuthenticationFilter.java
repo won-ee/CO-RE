@@ -60,7 +60,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         }
 
         return Arrays.stream(cookies)
-                .filter(cookie -> "Authorization".equals(cookie.getName()))
+                .filter(cookie -> "accessToken".equals(cookie.getName()))
                 .map(Cookie::getValue)
                 .findFirst()
                 .orElse(null);
