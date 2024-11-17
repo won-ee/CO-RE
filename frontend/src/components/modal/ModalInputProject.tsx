@@ -58,7 +58,6 @@ const ModalInputProject: React.FC = () => {
       {
         userInfotData: userInfoParams as patchUserInfoType,
         userId: userInfoParams.userId,
-
       },
       {
         onSuccess: () => {
