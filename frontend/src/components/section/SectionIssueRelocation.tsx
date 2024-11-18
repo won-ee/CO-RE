@@ -15,29 +15,28 @@ const SectionIssueRelocation: React.FC = () => {
     const { selectedProjectUserId } = useProjectStore();
     const { data } = useQueryIssueLocationList(selectedProjectUserId);
     const [issueId, setIssueId] = useState(0);
-    const mutation = useMutationIssueLocation();    
-    
+    const mutation = useMutationIssueLocation();
+
     const issueList = Array.isArray(data)
-    ? data.map((issue) => ({
-        issueId: issue.issueId,
-        issueTitle: issue.issueTitle,
-      }))
-    : [];
+        ? data.map((issue) => ({
+            issueId: issue.issueId,
+            issueTitle: issue.issueTitle,
+        }))
+        : [];
 
     const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         setIssueId(Number(event.target.value)); 
     };
 
     const handleSubmit = () => {    
-        if(selectedProjectUserId){
-
+        if (selectedProjectUserId && issueId !== 0) {
             mutation.mutate({
                 projectUserId: selectedProjectUserId,
                 issueId: issueId,
             });
             setIssueId(0); 
         }
-  };
+    };
 
     return (
         <RightSectionLayout>
@@ -45,6 +44,7 @@ const SectionIssueRelocation: React.FC = () => {
                 <ErrorIcon>❗</ErrorIcon>
                 이슈 재배치
             </ErrorMessageBox>
+
             <div>
                 <FormLabel>[필수] 재배치 할 이슈를 선택해주세요.</FormLabel>
                 <SelectInput value={issueId} onChange={handleChange}>
@@ -56,6 +56,18 @@ const SectionIssueRelocation: React.FC = () => {
                     ))}
                 </SelectInput>
             </div>
+            {mutation.isLoading && <div>로딩 중...</div>}
+            {mutation.isError && (
+                <div style={{ color: 'red' }}>
+                    오류 발생
+                </div>
+            )}
+            {mutation.isSuccess && (
+                <div style={{ color: 'green' }}>
+                    이슈 재배치 성공!
+                </div>
+            )}
+
             <div style={{ textAlign: 'right', marginRight: '32px' }}>
                 <SubmitButton onClick={handleSubmit}>SEND</SubmitButton>
             </div>
