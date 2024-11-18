@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent } from 'react'
+import React, { useState, ChangeEvent, useEffect } from 'react'
 import { Button, Container, ContainerLayout, DeadLineBox, OverviewApproveBox, OverviewApproveButton, OverviewApproveContent, OverviewApproveHeader, OverviewContent, OverviewContentBox, OverviewCoreBox, OverviewCoreContentBox, OverviewCoreHeader, OverviewCoreImg, OverviewCoreText, OverviewDayText, OverviewHeaderBox, OverviewHeaderText, OverviewInfoBox, OverviewInput, OverviewName, OverviewProfileImg, OverviewSourceText, OverviewTargetText, OverviewText, RadioButton, RadioCol, RadioGroup, RadioText, Text } from './SectionOverview.styled'
 import core from '../../assets/Core.png'
 import { PRDataType } from '../../Types/pullRequestType';
@@ -68,8 +68,11 @@ const SectionOverview:React.FC<SectionOverviewProps> = ({data,refetch}) => {
   const handleStatus = (e:boolean)=>{
     setStatus(e);
     console.log('상태값',status);
-    handlePostComment()
   }
+  
+  useEffect(() => {
+    handlePostComment();
+  }, [status]);
   return (
     postLoading ? 
     <LoadingPage/>
