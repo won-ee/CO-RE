@@ -153,3 +153,7 @@ export interface ChangeListParams{
   owner: string;
   repo: string;
 }
+
+export interface TemplateType{
+  template:string;
+}

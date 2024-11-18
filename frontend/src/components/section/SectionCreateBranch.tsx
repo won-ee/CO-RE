@@ -14,7 +14,7 @@ import ButtonSimpleSquare from "../buttons/ButtonSimpleSquare";
 import { TotalReviewsType, ReviewType } from "../../Types/pullRequestType";
 import CardFinalCodeReview from "../card/CardFinalCodeReview";
 import {useUserStore, useProjectStore} from "../../store/userStore";
-import { useQueryChangeList, useQueryCommitList } from "../../hooks/usePullRequestData";
+import { useQueryChangeList, useQueryCommitList, useQueryTemplate } from "../../hooks/usePullRequestData";
 import { useNavigate } from "react-router-dom";
 import { useMemberList, useProjectData } from "../../hooks/useUser";
 
@@ -40,13 +40,22 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
   const memberList = useMemberList(projectInfo.selectedProjectId)
   const projectSetting = useProjectData(projectInfo.selectedProjectId)
 
+  const commitParams = {
+    owner: projectInfo.selectedOwner,
+    repo : projectInfo.selectedRepo,
+    base: targetBranch?.label || "", // undefined일 경우 빈 문자열로 대체
+    head: sourceBranch?.label || "", // undefined일 경우 빈 문자열로 대체
+  }
+
+  const parsedTemplate = useQueryTemplate(commitParams)
+
   const [selectedOptions, setSelectedOptions] = useState<OptionType[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
   const [isUrgent,setIsUrgent] = useState(false);
   const [priority,setPriority] = useState<string | null>(null)
   const [selectedTab, setSelectedTab] = useState<TabsEnum>(TabsEnum.Commit);
   const [title, setTitle] = useState<string>('')
-  const [content, setContent] = useState<string>(projectSetting.data?.template ?? "값이 없다.")
+  const [content, setContent] = useState<string>(parsedTemplate.data?.template ?? "")
   const [body,setBody] = useState<string>('')
   const event = "COMMENT"
   const [reviews,setReviews] = useState<ReviewType[]>([])
@@ -57,10 +66,10 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
     //EsLint
     }
   useEffect(() => {
-    if (projectSetting.data?.template) {
-        setContent(projectSetting.data.template);
+    if (parsedTemplate.data?.template) {
+        setContent(parsedTemplate.data.template);
     }
-}, [projectSetting.data]);
+}, [parsedTemplate.data]);
 
 
   const parsedProjectMembers: OptionType[] = memberList.data ? memberList.data.filter((member) => member.userGitName && member.userGitName !== userInfo?.userInfo.gitName).map((member)=>({
@@ -112,21 +121,10 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
     });
   }
 
-  const changeParams ={
-    owner: projectInfo.selectedOwner,
-    repo : projectInfo.selectedRepo,
-    base: targetBranch?.label || "", // undefined일 경우 빈 문자열로 대체
-    head: sourceBranch?.label || "", // undefined일 경우 빈 문자열로 대체
-  }
 
-  const commitParams = {
-    owner: projectInfo.selectedOwner,
-    repo : projectInfo.selectedRepo,
-    base: targetBranch?.label || "", // undefined일 경우 빈 문자열로 대체
-    head: sourceBranch?.label || "", // undefined일 경우 빈 문자열로 대체
-  }
 
-  const changesData = useQueryChangeList(changeParams)
+
+  const changesData = useQueryChangeList(commitParams)
   const commitData = useQueryCommitList(commitParams)
 
   const tabComponents = {
