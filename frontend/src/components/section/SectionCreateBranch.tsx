@@ -17,6 +17,7 @@ import {useUserStore, useProjectStore} from "../../store/userStore";
 import { useQueryChangeList, useQueryCommitList, useQueryTemplate } from "../../hooks/usePullRequestData";
 import { useNavigate } from "react-router-dom";
 import { useMemberList, useProjectData } from "../../hooks/useUser";
+import LoadingPage from "../../pages/LoadingPage";
 
 const PriorityOption: OptionType[] = [
   { value: 'low', label:'Low'},
@@ -190,9 +191,7 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
 
   return (
     postLoading ? 
-    <p>
-    Loading
-    </p>
+    <LoadingPage/>
     :
     <SectionCreateBranchLayout>
         <MergeDirectionBox>
