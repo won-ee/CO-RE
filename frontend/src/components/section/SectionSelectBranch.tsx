@@ -6,6 +6,7 @@ import { SingleValue } from 'react-select'
 import { OptionType } from '../../Types/SelectType'
 import { useQueryBranchList } from '../../hooks/usePullRequestData'
 import { useProjectStore } from '../../store/userStore'
+import { useEffect, useMemo } from 'react'
 
 interface Prop{
     BtnAction:()=>void
@@ -18,13 +19,18 @@ interface Prop{
 
 function SectionSelectBranch({BtnAction, sourceBranch, targetBranch, setSourceBranch, setTargetBranch}:Prop) {
   const projectInfo = useProjectStore((state)=>state)
-  const trueOption = {
-    owner : projectInfo.selectedOwner,
-    repo : projectInfo.selectedRepo,
-  };
-  const {data,error,isLoading} = useQueryBranchList(trueOption)
+  const trueOption = useMemo(() => ({
+    owner: projectInfo.selectedOwner,
+    repo: projectInfo.selectedRepo,
+  }), [projectInfo.selectedOwner, projectInfo.selectedRepo]);
+  const {data,error,isLoading, refetch} = useQueryBranchList(trueOption)
+  useEffect(()=>{
+    refetch()
+  },[trueOption,refetch])
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
+
+
   
   
 
