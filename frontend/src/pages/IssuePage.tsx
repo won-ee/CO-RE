@@ -35,9 +35,7 @@ const IssuePage: React.FC = () => {
   );
 
   const handleTeamChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedTeamId(event.target.value);
-    console.log(selectedTeamId);
-    
+    setSelectedTeamId(event.target.value);    
   };
   
   return (

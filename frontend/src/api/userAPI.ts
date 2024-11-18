@@ -72,7 +72,6 @@ export const patchProjectSetting = async (
 };
 
 export const postGithubInfo = async (githubInfo: githubInfoType,projectId:number) => {
-  console.log(githubInfo);
   
   const response = await axios.post(
     `${BASE_URL}/project/update/set/github/${projectId}`,

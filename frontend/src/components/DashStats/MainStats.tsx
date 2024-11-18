@@ -19,7 +19,6 @@ import {
 } from "./MainStats.styled";
 
 export default function MainStats({ data }: { data: StatsDataType }) {
-  // console.log("Received data in MainStats:", data);
   const settings = {
     infinite: true,
     speed: 500,
