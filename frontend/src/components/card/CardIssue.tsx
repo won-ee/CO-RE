@@ -18,29 +18,33 @@ import { IssueListType } from '../../Types/IssueType';
 interface CardIssueProps{
     issue:IssueListType;
     index:number;
+    status: string;
 }
 
-const CardIssue: React.FC<CardIssueProps> = ({ issue, index }) => {
-  return (
-    <>
-        <TaskContainerLayout> 
-            <TaskItemBox key={index}> 
-                <TaskNameBox>
-                    <img src={taskImg} alt="" />
-                    <TaskNameText>{issue.issueTitle}</TaskNameText> 
-                </TaskNameBox>
-                <TaskIdText>{issue.issueKey}</TaskIdText>
-                <TaskTitleBox status={""}>{issue.epicName}</TaskTitleBox>
-                <TaskStatusBox status={issue.issueStatus}>{issue.issueStatus}</TaskStatusBox>
-                <ArrowIcon src={
-                            issue.issuePriority === 1 ? highIcon 
-                            : issue.issuePriority === 2 ? middleIcon 
-                            : lowIcon
-                            } />
-            </TaskItemBox>
-        </TaskContainerLayout>
-    </>
-  );
-}
-
-export default CardIssue;
+const CardIssue: React.FC<CardIssueProps> = ({ issue, index, status }) => {
+    return (
+      <TaskContainerLayout> 
+        <TaskItemBox key={index}> 
+          <TaskNameBox>
+            <img src={taskImg} alt="" />
+            <TaskNameText>{issue.issueTitle}</TaskNameText> 
+          </TaskNameBox>
+          <TaskIdText>{issue.issueKey}</TaskIdText>
+          <TaskTitleBox status={status}>
+            {issue.epicName}
+          </TaskTitleBox>
+          <TaskStatusBox status={issue.issueStatus}>
+            {issue.issueStatus}
+          </TaskStatusBox>
+          <ArrowIcon src={
+            issue.issuePriority === 1 ? highIcon
+            : issue.issuePriority === 2 ? middleIcon 
+            : lowIcon
+          } />
+        </TaskItemBox>
+      </TaskContainerLayout>
+    );
+  };
+  
+  export default CardIssue;
+  
