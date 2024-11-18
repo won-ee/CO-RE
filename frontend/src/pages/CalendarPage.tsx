@@ -40,7 +40,7 @@ const CalendarPage: React.FC = () => {
 
   const handleEventClick = (info: any) => {
     const pullRequestId = info.event.id;
-    navigate(`/pullrequestdetail/${pullRequestId}`); 
+    navigate(`/pullrequest/${pullRequestId}`); 
   };
 
   const getRandomColor = () => {
