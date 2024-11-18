@@ -60,9 +60,9 @@ const PullRequestPageDetail:React.FC = () => {
         reviews,
     }
     mutationpostPRReview.mutate({
-        owner:'JEM1224',
-        repo:'github-api',
-        pullId:'',
+        owner:selectedOwner,
+        repo: selectedRepo,
+        pullId: Number(pullRequestId),
         reviewData:TotalReview
     },
     {

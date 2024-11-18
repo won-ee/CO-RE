@@ -9,10 +9,7 @@ import TabChange from "../tab/TabChange";
 import SectionChangesList from "./SectionChangesList";
 import SectionCommits from "./SectionCommits";
 import ButtonCreateNewPR from "../buttons/ButtonCreateNewPR";
-import { useMutationCreatePR, useMutationpostPRReview } from "../../hooks/useMutationCreatePR";
-import ButtonSimpleSquare from "../buttons/ButtonSimpleSquare";
-import { TotalReviewsType, ReviewType } from "../../Types/pullRequestType";
-import CardFinalCodeReview from "../card/CardFinalCodeReview";
+import { useMutationCreatePR } from "../../hooks/useMutationCreatePR";
 import {useUserStore, useProjectStore} from "../../store/userStore";
 import { useQueryChangeList, useQueryCommitList, useQueryTemplate } from "../../hooks/usePullRequestData";
 import { useNavigate } from "react-router-dom";
@@ -54,18 +51,13 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
   const [priority,setPriority] = useState<string | null>(null)
   const [selectedTab, setSelectedTab] = useState<TabsEnum>(TabsEnum.Commit);
   const [title, setTitle] = useState<string>('')
-
-  const [body,setBody] = useState<string>('')
-  const event = "COMMENT"
-  const [reviews,setReviews] = useState<ReviewType[]>([])
-  const [isFinalReviewOpen,setIsFinalReviewOpen] = useState(false)
   const userInfo = useUserStore((state) => state.userInfo);
   const [postLoading,setPostLoading] = useState(false);
   if(postLoading){
     //EsLint
     }
   const mutationCreatePR = useMutationCreatePR()
-  const mutationpostPRReview = useMutationpostPRReview()
+
   
   const changesData = useQueryChangeList(commitParams)
   const commitData = useQueryCommitList(commitParams)
@@ -85,13 +77,9 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
     label:member.userGitName
   })):[];
 
-  const handlesIsFinalReviewOpen = ()=>{
-    setIsFinalReviewOpen((isFinalReviewOpen)=>!isFinalReviewOpen)
-  }
 
-  const handleUpdateComments = (updatedReviews: ReviewType[]) => {
-    setReviews(updatedReviews);
-  };
+
+
 
   const handleTabChange = (tab: TabsEnum) => {
     setSelectedTab(tab);
@@ -103,7 +91,7 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
     setPostLoading(true)
     const pullRequestData = {
       title: title,
-      body: body,
+      body: "",
       base: targetBranch?.label || "", // undefined일 경우 빈 문자열로 대체
       head: sourceBranch?.label || "", // undefined일 경우 빈 문자열로 대체
       owner: projectInfo.selectedOwner,
@@ -130,7 +118,7 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
 
   const tabComponents = {
     [TabsEnum.Commit]: <SectionCommits commits={commitData.data || []}/>,
-    [TabsEnum.Change]: <SectionChangesList changes={changesData.data || []} onUpdateReviews={handleUpdateComments} />,
+    [TabsEnum.Change]: <SectionChangesList changes={changesData.data || []}/>,
   };
 
   // 다중 선택 onChange 핸들러
@@ -153,25 +141,6 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
   const handleContent = (e:ChangeEvent<HTMLTextAreaElement>)=>{
     setContent(e.target.value)
   }
-
-  const handleFinishReview = ()=>{
-    const TotalReview : TotalReviewsType ={
-      body,
-      event,
-      reviews,
-    }
-    mutationpostPRReview.mutate({
-      owner:'JEM1224',
-      repo:'github-api',
-      pullId:'',
-      reviewData:TotalReview
-    })
-  }
-
-  const handleAddReview = (content: string) => {
-    setBody(content); // content를 body로 설정
-    handleFinishReview(); // API 호출
-};
 
   const handleRandomSelect = (count: number) => {
     const shuffled = parsedProjectMembers.sort(() => 0.5 - Math.random()); // Shuffle the options
@@ -256,11 +225,7 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
           <TabChange values={Object.values(TabsEnum)} 
             selectedTab={selectedTab} 
             onTabChange={handleTabChange} />
-          {reviews.length>0 && 
-          <div style={{position:'relative'}}>
-          <ButtonSimpleSquare $text="Finish Review" $color="white" $bgc="#1C8139" btnEvent={handlesIsFinalReviewOpen}/>
-          {isFinalReviewOpen && <CardFinalCodeReview onAdd={handleAddReview} commentNums={reviews.length}/>}
-          </div>}
+
         </TabBox>
           {tabComponents[selectedTab]}
     </SectionCreateBranchLayout>  
