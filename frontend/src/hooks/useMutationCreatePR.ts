@@ -138,7 +138,6 @@ export const useMutationAcceptIssueLocation = () => {
       },
       onError: (error) => {
         console.error('Failed to accept issue location:', error);
-        alert('이슈 위치 수락에 실패했습니다. 다시 시도해주세요.');
       },
     }
   );
