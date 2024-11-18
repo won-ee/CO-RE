@@ -30,7 +30,7 @@ public class APIService {
                             .accountId(user.getAccountId())
                             .email(user.getEmail())
                             .gitToken(user.getGitToken())
-                            .gitName(dto.getGithubName())
+                            .gitName(dto.getGithubId())
                             .build());
         } catch (Exception ex) {
             log.error("getGitHubName Error : {}", ex.getMessage());
