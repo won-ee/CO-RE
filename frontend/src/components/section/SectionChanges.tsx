@@ -207,14 +207,14 @@ useEffect(() => {
                     ) : (
                       <div key={index}>
                       <LineContainer className={line.type}
-                        onMouseEnter={() => setHoveredLineId(idx)}
+                        onMouseEnter={() => setHoveredLineId(line.modifiedLineNumber)}
                         onMouseLeave={() => setHoveredLineId(null)}>        
                         <LineNumberBox className={line.type}>
                           <LineNumber>{line.originalLineNumber !== null ? line.originalLineNumber + 1 : ''}</LineNumber>
                           <LineNumber>{line.modifiedLineNumber !== null ? line.modifiedLineNumber + 1 : ''}</LineNumber>
                         </LineNumberBox>
                         <LineSymbol className={line.type}>
-                          {hoveredLineId === idx ? (<ButtonReview btnEvent={() => handleReviewIndex(idx, change.file.filename)} />):
+                          {line.originalLineNumber == null && hoveredLineId === line.modifiedLineNumber ? (<ButtonReview btnEvent={() => handleReviewIndex(line.modifiedLineNumber ?? 0, change.file.filename)} />):
                           line.type === 'add' ? '+' : line.type === 'remove' ? '-' : ''}
                         </LineSymbol>
                         <LineContent className={line.type}>{line.content}</LineContent>
