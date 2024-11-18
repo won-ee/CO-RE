@@ -11,7 +11,7 @@ export const useMutationCreatePR=()=>{
     return useMutation(postCreatePR)
 }
 export const useMutationpostPRReview = () => {
-    return useMutation((params: { owner: string; repo: string; pullId: string; reviewData: TotalReviewsType }) => postPRReview(params));
+    return useMutation((params: { owner: string; repo: string; pullId: number; reviewData: TotalReviewsType }) => postPRReview(params));
   };
 
   export const useMutationPatchProjectSetting = (options?: {

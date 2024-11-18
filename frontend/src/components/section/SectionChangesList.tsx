@@ -28,7 +28,7 @@ interface SectionChangesProps {
     };
     content: string;
   }[];
-  onUpdateReviews: (reviews: ReviewType[]) => void;
+  onUpdateReviews?: (reviews: ReviewType[]) => void;
 }
 
 type LineType = 'add' | 'remove' | 'context' | 'collapsed'|'hunkHeader';

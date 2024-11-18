@@ -77,7 +77,7 @@ export const postPRReview = async ({
 }: {
   owner: string;
   repo: string;
-  pullId: string;
+  pullId: number;
   reviewData: TotalReviewsType;
 }) => {
   const { data } = await axios.post(
