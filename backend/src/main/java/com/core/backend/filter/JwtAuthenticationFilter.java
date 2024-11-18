@@ -24,6 +24,19 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        // 필터를 적용하지 않을 경로 정의
+        String path = request.getRequestURI();
+        return path.startsWith("/") ||
+                path.startsWith("/login/jira") ||
+                path.startsWith("/oauth2/") ||
+                path.startsWith("/callback/oauth2/") ||
+                path.startsWith("/jira/") ||
+                path.startsWith("/ssafy/atlassian/") ||
+                path.startsWith("/callback/code/") ||
+                path.startsWith("/project-users/search/email/");
+    }
 
     private final JwtTokenService jwtTokenService;
 
