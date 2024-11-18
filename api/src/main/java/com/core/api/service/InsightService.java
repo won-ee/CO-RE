@@ -23,7 +23,6 @@ public class InsightService {
     public TemplateDto generatePullRequestTemplate(String owner, String repo, String baseHead) {
         return extractTemplateContent(
                 chatGptClient.makePullRequestTemplate(
-                        "application/json",
                         ChatGptDto.from(
                                 backendClient.getProjectInfo(owner, repo)
                                         .template(),
