@@ -22,6 +22,8 @@ interface CardIssueProps{
 }
 
 const CardIssue: React.FC<CardIssueProps> = ({ issue, index, status }) => {
+    const epicName = issue.epicName || "NO EPIC";
+
     return (
       <TaskContainerLayout> 
         <TaskItemBox key={index}> 
@@ -31,7 +33,7 @@ const CardIssue: React.FC<CardIssueProps> = ({ issue, index, status }) => {
           </TaskNameBox>
           <TaskIdText>{issue.issueKey}</TaskIdText>
           <TaskTitleBox status={status}>
-            {issue.epicName}
+          {epicName}
           </TaskTitleBox>
           <TaskStatusBox status={issue.issueStatus}>
             {issue.issueStatus}
