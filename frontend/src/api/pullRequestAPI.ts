@@ -23,6 +23,12 @@ export const getCalendarPR = async ({
   month,
   year,
 }: CalendarPRParamsType): Promise<PRDataType[]> => {
+  console.log( owner,
+    repo,
+    writer,
+    month,
+    year,);
+  
   const response = await axios.get<PRDataType[]>(
     `${BASE_URL}/github/pull-request/${owner}/${repo}/user`,
     {
@@ -36,6 +42,8 @@ export const getCalendarPR = async ({
       },
     },
   );
+  console.log(response.data);
+  
   return response.data;
 };
 
