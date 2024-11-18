@@ -19,15 +19,6 @@ export interface EpicType {
     name: string; 
   };
 
-export  interface EpicFieldsType {
-    project: { key: string };
-    summary: string;
-    issuetype: { name: string };
-    priority: { name: string };
-    assignee?: { accountId: string };
-    parent?: {key: string},
-  }
-
 export interface IssueLocationType {
   id: number;
   issueId: number; 
@@ -38,4 +29,37 @@ export interface IssueLocationType {
   senderId: number; 
   senderName: string;
   senderImage: string;
+}
+
+interface IssueType {
+  name: string;
+}
+
+interface PriorityType {
+  name: string;
+}
+
+interface Assignee {
+  accountId: string;
+}
+
+interface Parent {
+  key: string;
+}
+
+interface Project {
+  key: string;
+}
+
+interface Fields {
+  project: Project;
+  summary: string;
+  issuetype: IssueType;
+  parent?: Parent;
+  priority: PriorityType;
+  assignee: Assignee;
+}
+
+export interface EpicFieldsType {
+  fields: Fields;
 }

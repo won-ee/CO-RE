@@ -16,6 +16,7 @@ import { useMutationEpic, useMutationNoEpic } from "../../hooks/useMutationCreat
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import styled from "styled-components";
+import { EpicFieldsType } from "../../Types/IssueType";
 
 export const StyledDatePicker = styled.div`
   width: 250px;
@@ -65,40 +66,45 @@ const SectionErrorInquiry: React.FC<SectionErrorInquiryProps> = ({selectedTeamId
   };
 
   const handleSubmit = () => {
-    const epicFields = {
-      project: {
-        key: selectedTeamId, 
-      },
-      summary: title, 
-      issuetype: {
-        name: "Task",
-      },
-      priority: {
-        name: selectedPriority, 
-      },
-      assignee: {
-        accountId: "", 
+    const epicFields: EpicFieldsType = {
+      fields: {
+        project: {
+          key: selectedTeamId,
+        },
+        summary: title,
+        issuetype: {
+          name: "Task",
+        },
+        priority: {
+          name: selectedPriority,
+        },
+        assignee: {
+          accountId: "",
+        },
       },
     };
     
-    const noEpicFields = {
+    // noEpicFields에 맞는 타입
+    const noEpicFields: EpicFieldsType = {
+      fields: {
         project: {
-          key: selectedTeamId // 프로젝트 키
+          key: selectedTeamId,
         },
-        summary: title, // 프로젝트 제목 or 내용
+        summary: title,
         issuetype: {
-          name: "Task"  // 고정
+          name: "Task",
         },
         parent: {
-          key: selectedEpic // 선택한 epic Key
+          key: selectedEpic,
         },
         priority: {
-          name: selectedPriority // 중요도
+          name: selectedPriority,
         },
-         assignee: {
-          accountId: ""  // 작성하지 말것.
-        }
-    }
+        assignee: {
+          accountId: "",
+        },
+      },
+    };
     if (selectedDate) {
       const formattedDate = selectedDate.toLocaleDateString("en-CA"); 
       if (selectedEpic) {
