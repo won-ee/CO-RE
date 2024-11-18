@@ -1,6 +1,6 @@
-import { useMutation } from "react-query";
-import { patchReviewComment, postCreatePR,postPRReview, postReviewComment } from "../api/pullRequestAPI";
-import { TotalReviewsType, CommentType, ReviewCommentTypeForPatch } from "../Types/pullRequestType";
+import { useMutation, useQueryClient } from "react-query";
+import { postCreatePR,postPRReview, postReviewComment } from "../api/pullRequestAPI";
+import { TotalReviewsType, CommentType } from "../Types/pullRequestType";
 import { ProjectSettingType, githubInfoType, patchUserInfoType } from "../Types/userType";
 import { patchProjectSetting, patchUserInfo, postGithubInfo, postLogout } from "../api/userAPI";
 import { postAcceptIssueLocation, postEpic, postIssueLocation, postNoEpic } from "../api/IssueAPI";
@@ -101,15 +101,42 @@ export const useMutationNoEpic = () => {
 
 
 export const useMutationIssueLocation = () => {
+  const queryClient = useQueryClient();
+
   return useMutation(
-    ({ projectUserId, issueId }: { projectUserId: number; issueId: number; }) => 
-      postIssueLocation(projectUserId,issueId )
+    ({ projectUserId, issueId }: { projectUserId: number; issueId: number }) => 
+      postIssueLocation(projectUserId, issueId),
+    {
+      onSuccess: (data, variables) => {
+        console.log('Issue location updated successfully.');
+        console.log(data);
+        queryClient.invalidateQueries(['IssueLocationList', variables.projectUserId]);
+      },
+      onError: (error) => {
+        console.error('Failed to update issue location:', error);
+      },
+    }
   );
 };
+
 export const useMutationAcceptIssueLocation = () => {
+  const queryClient = useQueryClient();
+
   return useMutation(
-    ({ projectUserId, carrotId }: { projectUserId: number; carrotId: number; }) => 
-      postAcceptIssueLocation(projectUserId,carrotId )
+    ({ projectUserId, carrotId }: { projectUserId: number; carrotId: number }) => 
+      postAcceptIssueLocation(projectUserId, carrotId),
+    {
+      onSuccess: (data, variables) => {
+        console.log('Issue location accepted successfully.');
+        console.log(data);
+        
+        queryClient.invalidateQueries(['IssueLocationList', variables.projectUserId]);
+      },
+      onError: (error) => {
+        console.error('Failed to accept issue location:', error);
+        alert('이슈 위치 수락에 실패했습니다. 다시 시도해주세요.');
+      },
+    }
   );
 };
 

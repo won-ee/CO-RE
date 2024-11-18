@@ -28,12 +28,15 @@ const SectionIssueRelocation: React.FC = () => {
         setIssueId(Number(event.target.value)); 
     };
 
-    const handleSubmit = () => {      
-      mutation.mutate({
-          projectUserId: selectedProjectUserId,
-          issueId: issueId,
-      });
-      setIssueId(0); 
+    const handleSubmit = () => {    
+        if(selectedProjectUserId){
+
+            mutation.mutate({
+                projectUserId: selectedProjectUserId,
+                issueId: issueId,
+            });
+            setIssueId(0); 
+        }
   };
 
     return (
