@@ -5,7 +5,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name = "email", url = "http://email:8082")
+@FeignClient(name = "email", url = "http://email:8083")
 public interface EmailClient {
 
     @PostMapping("/email/release")
