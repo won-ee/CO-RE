@@ -90,6 +90,8 @@ export const IssueContainerBox = styled.div`
 
 export const TabBox  = styled.div`
  display: flex;
+ justify-content: center;
+ align-items: center;
  gap: 13px;
  margin-top: 20px;
 `
