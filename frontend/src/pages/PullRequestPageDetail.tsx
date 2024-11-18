@@ -69,6 +69,14 @@ const PullRequestPageDetail:React.FC = () => {
         onSuccess: () => {
             refetch(); // 성공 시 최신 데이터 다시 가져오기
         },
+        onError: () => {
+            console.log('에러 메세지 :',error?.message);
+            console.log('오너 :',selectedOwner);
+            console.log('레포 :',selectedRepo);
+            console.log('아이디 :',Number(pullRequestId));
+            console.log('리뷰데이터 :',TotalReview);
+            
+        },
     })
     }
 
