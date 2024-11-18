@@ -22,11 +22,17 @@ const HistoryPage: React.FC = () => {
     graphError,
   } = useHistoryData(selectedOwner, selectedRepo);
 
+  // useEffect(() => {
+  //   if (id) {
+  //     setSelectedRepoId(id);
+  //   }
+  // }, [id, setSelectedRepoId]);
+
   useEffect(() => {
-    if (id) {
-      setSelectedRepoId(id);
+    if (id && id !== selectedRepoId) {
+      setSelectedRepoId(id); // Update selectedRepoId
     }
-  }, [id, setSelectedRepoId]);
+  }, [id, selectedRepoId, setSelectedRepoId]);
 
   const handleSelectChange = (selectedId: string) => {
     setSelectedRepoId(selectedId);
