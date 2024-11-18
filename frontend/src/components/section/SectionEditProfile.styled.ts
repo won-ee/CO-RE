@@ -109,4 +109,8 @@ export const SaveButton = styled.div`
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
 `;
