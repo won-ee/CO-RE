@@ -20,7 +20,7 @@ interface CardTaskProps {
 }
 
 const CardTask: React.FC<CardTaskProps> = ({ task, handleSubmit }) => {
-
+    
   return (
     <CardLayout key={task.id}>
         <CardCellBox>

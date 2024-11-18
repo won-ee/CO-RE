@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { TableLayout, TableRow, TableText, TaskText } from './SectionReassignedTasks.styled'
+import { TableLayout } from './SectionReassignedTasks.styled'
 import CardTask from '../card/CardTask';
 import { ContainerLayout, HeaderBox, Icon, SearchContainer, SearchInput } from './SectionIssueList.styled';
 import lens from '../../assets/Lens.png'
@@ -13,7 +13,8 @@ const SectionReassignedTasks: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [tasks, setTasks] = useState(projectTasks || []);
   const mutation = useMutationAcceptIssueLocation();    
-
+  console.log(tasks);
+  
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
@@ -53,11 +54,6 @@ const SectionReassignedTasks: React.FC = () => {
         </SearchContainer>
       </HeaderBox>
       <TableLayout>
-        <TableRow>
-          <TaskText>TASK</TaskText>
-          <TableText>DEADLINE</TableText>
-          <TableText>SENDER</TableText>
-        </TableRow>
         {filteredData?.map((projectTask) => (
           <CardTask key={projectTask.id} task={projectTask} handleSubmit={handleSubmit} />
         ))}

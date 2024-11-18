@@ -67,7 +67,7 @@ const SectionErrorInquiry: React.FC<SectionErrorInquiryProps> = ({selectedTeamId
   };
 
   const handleSubmit = () => {
-    const epicFields: EpicFieldsType = {
+    const noEpicFields: EpicFieldsType = {
       fields: {
         project: {
           key: selectedTeamId,
@@ -85,8 +85,8 @@ const SectionErrorInquiry: React.FC<SectionErrorInquiryProps> = ({selectedTeamId
       },
     };
     
-    // noEpicFields에 맞는 타입
-    const noEpicFields: EpicFieldsType = {
+    // noEpicFields에 맞는 타입epicFields
+    const epicFields: EpicFieldsType = {
       fields: {
         project: {
           key: selectedTeamId,
