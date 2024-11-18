@@ -156,3 +156,9 @@ export interface ChangeListParams{
 export interface TemplateType{
   template:string;
 }
+
+export interface ReviewCommentTypeForPatch{
+  body:string;
+  score:number;
+  status:string;
+}
