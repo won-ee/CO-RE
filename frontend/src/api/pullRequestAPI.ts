@@ -193,12 +193,12 @@ export const getTemplateInsight = async({owner,repo,base,head}: CommitListParams
   }
 }
 
-export const postReviewComment = async({owner,repo,pullId,CommentData}: {
+export const postReviewComment = async({owner,repo,pullId,commentData}: {
   owner: string;
   repo: string;
-  pullId: string;
-  CommentData: CommentType;})=>{
-  const { data } = await axios.post(`${BASE_URL}/github/pull-request${owner}/${repo}/${pullId}`,CommentData,{
+  pullId: number;
+  commentData: CommentType;})=>{
+  const { data } = await axios.post(`${BASE_URL}/github/pull-request${owner}/${repo}/${pullId}`,commentData,{
     headers: {
       "Content-Type": "application/json",
       withCredentials: true,
