@@ -96,6 +96,12 @@ const FilterAndGraphSection: React.FC = () => {
     <p>Version Stats Error</p>;
   }
 
+  useEffect(() => {
+    if (versionList && versionList?.length > 0 && !selectedVersion) {
+      setSelectedVersion(versionList[0].id); // 첫 번째 버전 설정
+    }
+  }, [versionList, selectedVersion]);
+
   //전달할 데이터 설정
   useEffect(() => {
     if (VersionStats && selectedCategory) {
@@ -131,10 +137,12 @@ const FilterAndGraphSection: React.FC = () => {
           <FilterLabel>Filter By</FilterLabel>
           <DropdownSelect
             onChange={handleVersionChange}
-            value={selectedVersion}
+            value={selectedVersion || (versionList?.[0]?.id ?? "")}
           >
             {versionList?.map((version, index: number) => (
-              <option key={index}>{version.id}</option>
+              <option key={index} value={version.id}>
+                {version.name}
+              </option>
             ))}
           </DropdownSelect>
           <DropdownSelect

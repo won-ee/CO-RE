@@ -178,7 +178,7 @@ export const getChangeList = async ({
 
 export const getTemplateInsight = async({owner,repo,base,head}: CommitListParams) : Promise<TemplateType>=>{
   try{
-    const response = await axios.get<TemplateType>(`${BASE_URL}/insight/${owner}/${repo}/${base}...${head}`,
+    const response = await axios.get<TemplateType>(`${BASE_URL}/github/insight/${owner}/${repo}/${base}...${head}`,
       {
         headers: {
           withCredentials: true,

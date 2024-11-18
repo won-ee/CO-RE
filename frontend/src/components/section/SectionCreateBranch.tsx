@@ -47,15 +47,13 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
     head: sourceBranch?.label || "", // undefined일 경우 빈 문자열로 대체
   }
 
-  const parsedTemplate = useQueryTemplate(commitParams)
-
   const [selectedOptions, setSelectedOptions] = useState<OptionType[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
   const [isUrgent,setIsUrgent] = useState(false);
   const [priority,setPriority] = useState<string | null>(null)
   const [selectedTab, setSelectedTab] = useState<TabsEnum>(TabsEnum.Commit);
   const [title, setTitle] = useState<string>('')
-  const [content, setContent] = useState<string>(parsedTemplate.data?.template ?? "")
+
   const [body,setBody] = useState<string>('')
   const event = "COMMENT"
   const [reviews,setReviews] = useState<ReviewType[]>([])
@@ -65,12 +63,21 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
   if(postLoading){
     //EsLint
     }
-  useEffect(() => {
-    if (parsedTemplate.data?.template) {
-        setContent(parsedTemplate.data.template);
-    }
-}, [parsedTemplate.data]);
+  const mutationCreatePR = useMutationCreatePR()
+  const mutationpostPRReview = useMutationpostPRReview()
+  
+  const changesData = useQueryChangeList(commitParams)
+  const commitData = useQueryCommitList(commitParams)
 
+  const templateData = useQueryTemplate(commitParams)
+  const [content, setContent] = useState<string>("")
+    useEffect(() => {
+      if (templateData?.data?.template) {
+          setContent(templateData?.data?.template);
+          console.log('템플릿 데이터',templateData?.data?.template);
+          
+      }
+  }, [templateData]);
 
   const parsedProjectMembers: OptionType[] = memberList.data ? memberList.data.filter((member) => member.userGitName && member.userGitName !== userInfo?.userInfo.gitName).map((member)=>({
     value:member.userGitName,
@@ -89,8 +96,7 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
     setSelectedTab(tab);
   };
 
-  const mutationCreatePR = useMutationCreatePR()
-  const mutationpostPRReview = useMutationpostPRReview()
+
 
   const handlePostPR=()=>{
     setPostLoading(true)
@@ -120,12 +126,6 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
       }
     });
   }
-
-
-
-
-  const changesData = useQueryChangeList(commitParams)
-  const commitData = useQueryCommitList(commitParams)
 
   const tabComponents = {
     [TabsEnum.Commit]: <SectionCommits commits={commitData.data || []}/>,

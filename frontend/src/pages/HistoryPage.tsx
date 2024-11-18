@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import GitGraphComponent from "../components/History/HIstoryGraph";
 import { useHistoryData } from "../hooks/useHistory";
@@ -23,17 +23,24 @@ const HistoryPage: React.FC = () => {
   } = useHistoryData(selectedOwner, selectedRepo);
 
   // useEffect(() => {
-  //   if (graphError) {
-  //     navigate("/404");
+  //   if (id) {
+  //     setSelectedRepoId(id);
   //   }
-  // }, [graphError, navigate]);
+  // }, [id, setSelectedRepoId]);
+
+  useEffect(() => {
+    if (id && id !== selectedRepoId) {
+      setSelectedRepoId(id);
+    }
+  }, [id, selectedRepoId, setSelectedRepoId]);
 
   const handleSelectChange = (selectedId: string) => {
     setSelectedRepoId(selectedId);
     if (!selectedId) {
       navigate("/history");
     } else {
-      navigate(`/history/${selectedId}`);
+      setSelectedRepoId(selectedId);
+      setTimeout(() => navigate(`/history/${selectedId}`), 100);
     }
   };
 
@@ -50,7 +57,7 @@ const HistoryPage: React.FC = () => {
           <option value="">Version</option>
           {repos?.map((repo) => (
             <option key={repo.id} value={repo.id}>
-              {repo.id}
+              {repo.name}
             </option>
           ))}
         </StyledSelect>

@@ -16,7 +16,7 @@ function CardSelectBranch({ name, selectedOp, handleChange, option }: Props) {
   };
 
   const commitInfo = isSingleOption(selectedOp) ? JSON.parse(selectedOp.value) : null;
-  const dateDiff = useDateDiff(commitInfo?.date || null);
+  const dateDiff = useDateDiff(commitInfo?.date || null, 'Authored');
   
   return (
     <CardSelectBranchLayout>
