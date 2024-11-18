@@ -1,7 +1,7 @@
 import { SectionCreateBranchLayout, TitleInput, DescriptionTextArea, SelectBox, MergeDirectionBox, HighLightBox, DateInputContainer, DatePickerImg, DeadLineBox, DatePickerBox, UrgentBox, UrgentButton, PriorityBox, CreateButtonBox, TabBox, RandomButton, StyledDatePickerPopper  } from "./SectionCreateBranch.styled";
 import Select, { MultiValue, SingleValue, StylesConfig } from "react-select";
 import { OptionType } from "../../Types/SelectType";
-import { useState, ChangeEvent, forwardRef, useEffect } from "react";
+import { useState, ChangeEvent, forwardRef } from "react";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import CalendarIcon from '../../assets/icon_calender.png'
@@ -14,7 +14,7 @@ import ButtonSimpleSquare from "../buttons/ButtonSimpleSquare";
 import { TotalReviewsType, ReviewType } from "../../Types/pullRequestType";
 import CardFinalCodeReview from "../card/CardFinalCodeReview";
 import {useUserStore, useProjectStore} from "../../store/userStore";
-import { useQueryChangeList, useQueryCommitList, useQueryTemplate } from "../../hooks/usePullRequestData";
+import { useQueryChangeList, useQueryCommitList } from "../../hooks/usePullRequestData";
 import { useNavigate } from "react-router-dom";
 import { useMemberList, useProjectData } from "../../hooks/useUser";
 
@@ -69,18 +69,18 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
   const changesData = useQueryChangeList(commitParams)
   const commitData = useQueryCommitList(commitParams)
 
-  const {data,isLoading,error} = useQueryTemplate(commitParams)
-  const [content, setContent] = useState<string>(data?.template ?? "")
-    useEffect(() => {
-      if (data?.template) {
-          setContent(data.template);
-          console.log(data.template);
+  // const {data,isLoading,error} = useQueryTemplate(commitParams)
+  const [content, setContent] = useState<string>("")
+  //   useEffect(() => {
+  //     if (data?.template) {
+  //         setContent(data.template);
+  //         console.log(data.template);
           
-      }
-  }, [data]);
+  //     }
+  // }, [data]);
 
-  if (isLoading) return <p>Loading...</p>
-  if (error) return <p>Error: {error.message}</p>;
+  // if (isLoading) return <p>Loading...</p>
+  // if (error) return <p>Error: {error.message}</p>;
 
   const parsedProjectMembers: OptionType[] = memberList.data ? memberList.data.filter((member) => member.userGitName && member.userGitName !== userInfo?.userInfo.gitName).map((member)=>({
     value:member.userGitName,
