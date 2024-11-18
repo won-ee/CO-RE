@@ -20,6 +20,7 @@ export interface ProjectType {
   groupName: string;
   githubOwner: string;
   githubRepo: string;
+  key:string
 }
 
 export interface UserInfoType {

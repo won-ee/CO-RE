@@ -36,8 +36,10 @@ const IssuePage: React.FC = () => {
 
   const handleTeamChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedTeamId(event.target.value);
+    console.log(selectedTeamId);
+    
   };
-
+  
   return (
     <>
       <IssueLayout>
@@ -47,7 +49,7 @@ const IssuePage: React.FC = () => {
               <SelectInput value={selectedTeamId} onChange={handleTeamChange}>
                 <option value="">팀 선택</option>
                 {differentProjects?.map((project) => (
-                  <option key={project.id} value={project.id}>
+                  <option key={project.id} value={project.key}>
                     {project.name}
                   </option>
                 ))}
