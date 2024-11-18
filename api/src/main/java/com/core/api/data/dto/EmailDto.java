@@ -5,7 +5,7 @@ import java.util.List;
 public record EmailDto(
         List<String> to,
         String projectName,
-        String contents,
+        List<String> contents,
         Integer totalCommit,
         Integer totalPullRequest,
         Integer totalReview

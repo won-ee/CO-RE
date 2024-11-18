@@ -14,11 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -45,12 +43,15 @@ public class VersionService {
                 .findByOwnerAndRepoAndVersionIsNull(pullRequest.getOwner(), pullRequest.getRepo())
                 .orElseGet(Collections::emptyList);
 
-        String content = pullRequestsWithoutVersion.stream()
+        List<String> content = pullRequestsWithoutVersion.stream()
                 .map(PullRequest::getTitle)
-                .reduce("", (acc, title) -> acc + "\n" + title);
+                .filter(Objects::nonNull)
+                .toList();
+        String formattedContent = content.stream()
+                .collect(Collectors.joining(System.lineSeparator()));
 
         Version version = Version.createVersion(pullRequest, isHotfix);
-        version.updateContent(content);
+        version.updateContent(formattedContent);
         versionRepository.save(version);
         sendEmail(content, pullRequest.getOwner(), pullRequest.getRepo(), pullRequestsWithoutVersion);
         Consumer<Version> versionUpdater = isHotfix
@@ -61,7 +62,7 @@ public class VersionService {
 
     }
 
-    private void sendEmail(String content, String owner, String repo, List<PullRequest> pullRequests) {
+    private void sendEmail(List<String> content, String owner, String repo, List<PullRequest> pullRequests) {
         log.info("content owner repo {} {} {}", content, owner, repo);
         ProjectDto project = backendClient.getProject(owner, repo);
         log.info("Sending email to {}", project.projectUserEmail());
