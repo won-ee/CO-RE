@@ -198,7 +198,7 @@ export const postReviewComment = async({owner,repo,pullId,commentData}: {
   repo: string;
   pullId: number;
   commentData: CommentType;})=>{
-  const { data } = await axios.post(`${BASE_URL}/github/pull-request${owner}/${repo}/${pullId}`,commentData,{
+  const { data } = await axios.post(`${BASE_URL}/github/pull-request/${owner}/${repo}/${pullId}`,commentData,{
     headers: {
       "Content-Type": "application/json",
       withCredentials: true,
