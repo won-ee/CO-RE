@@ -7,6 +7,7 @@ import { useQueryIssueLocation } from '../../hooks/useIssueList';
 import { useProjectStore } from '../../store/userStore';
 import { useMutationAcceptIssueLocation } from '../../hooks/useMutationCreatePR';
 import { IssueLocationType } from '../../Types/IssueType';
+import LoadingPage from '../../pages/LoadingPage';
 
 const SectionReassignedTasks: React.FC = () => {
   const { selectedProjectUserId } = useProjectStore();
@@ -49,7 +50,7 @@ const SectionReassignedTasks: React.FC = () => {
   ];
   
 
-  const groupedData = Array.isArray(tasks) ? tasks.reduce<Record<string, IssueLocationType[]>>((acc, item) => {
+  const groupedData = Array.isArray(projectTasks) ? projectTasks.reduce<Record<string, IssueLocationType[]>>((acc, item) => {
     if (!acc[item.epicKey]) {
       acc[item.epicKey] = [];
     }
@@ -83,7 +84,7 @@ const SectionReassignedTasks: React.FC = () => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <LoadingPage/>;
   }
 
   return (
