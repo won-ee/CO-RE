@@ -19,7 +19,8 @@ public class APIService {
     public void getGitHubName(Users user) {
         try {
             GitHubNameDto dto = apiFeignClient.getGitHubName(user.getGitToken());
-            log.info("init!");
+            log.info("getGitHubName init!");
+            log.info(dto.toString());
             userRepository.save(
                     Users.builder()
                             .id(user.getId())
