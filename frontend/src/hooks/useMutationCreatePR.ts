@@ -166,3 +166,14 @@ export const useMutationReviewComment = () =>{
     }
   })
 }
+
+export const useMutationPatchReviewComment = ()=>{
+  return useMutation((params: {owner: string, repo:string, id:number,commentData: ReviewCommentTypeForPatch}) => patchReviewComment(params),{
+    onSuccess:(data)=>{
+      console.log("SUCCESS : ReviewComment Patch Matation , ", data); 
+    },
+    onError: (data)=>{
+      console.error("Error : ReviewComment Patch Matation , ", data);
+    }
+  })
+}
