@@ -50,7 +50,7 @@ const HistoryPage: React.FC = () => {
           <option value="">Version</option>
           {repos?.map((repo) => (
             <option key={repo.id} value={repo.id}>
-              {repo.id}
+              {repo.name}
             </option>
           ))}
         </StyledSelect>
