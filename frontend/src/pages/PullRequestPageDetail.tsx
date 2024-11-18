@@ -25,7 +25,10 @@ const PullRequestPageDetail:React.FC = () => {
     };
     
 
+    console.log(params);
     const { data, error, isLoading } = useQueryPRDetail(params);
+    console.log(data);
+    
     if (isLoading) return <LoadingPage/>;
     if (error) return <NotFoundPage errorNumber={404}/>;
 
