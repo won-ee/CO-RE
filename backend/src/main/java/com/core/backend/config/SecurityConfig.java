@@ -44,6 +44,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                         .requestMatchers("/ssafy/atlassian/**").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/callback/code/**").permitAll()
+                        .requestMatchers("/project-users/search/email/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2Login -> oauth2Login
