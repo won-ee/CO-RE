@@ -53,7 +53,6 @@ export const TaskTitleBox = styled.div<TaskStatusProps>`
     const rgbaColor = props.status;
     return rgbaColor.replace(/, 1\)$/g, ", 0.2)");
   }};
-
 `;
 
 export const TaskStatusBox = styled.div<TaskStatusProps>`

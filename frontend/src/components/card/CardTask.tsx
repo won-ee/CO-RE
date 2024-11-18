@@ -17,16 +17,17 @@ import { IssueLocationType } from '../../Types/IssueType';
 interface CardTaskProps {
     task: IssueLocationType;
     handleSubmit: (taskId: number) => void;
+    status:string;
 }
 
-const CardTask: React.FC<CardTaskProps> = ({ task, handleSubmit }) => {
+const CardTask: React.FC<CardTaskProps> = ({ task, handleSubmit,status }) => {
     
   return (
     <CardLayout key={task.id}>
         <CardCellBox>
             <CardNameParagraph>{task.name}</CardNameParagraph>
             <ProjectCodeSpan>{task.key}</ProjectCodeSpan>
-            <CategoryBox category={task.epicName}>{task.epicName}</CategoryBox>
+            <CategoryBox status={status}>{task.epicName}</CategoryBox>
         </CardCellBox>
         <DeadlineCellBox>{task?.deadLine?.substring(0, 10)}</DeadlineCellBox>
         <SenderCellBox>

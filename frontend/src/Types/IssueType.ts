@@ -29,6 +29,7 @@ export interface IssueLocationType {
   senderId: number; 
   senderName: string;
   senderImage: string;
+  epicKey:string;
 }
 
 interface IssueType {
@@ -63,3 +64,14 @@ interface Fields {
 export interface EpicFieldsType {
   fields: Fields;
 }
+
+export interface IssueListEpicType {
+  epicKey: string;
+  issueContent: string;
+  issueTitle: string;
+  issueKey: string;
+  epicName: string;
+  issueStatus: string;
+  issuePriority: number;
+}
+

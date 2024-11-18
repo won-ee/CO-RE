@@ -28,7 +28,7 @@ export const ProjectCodeSpan = styled.p`
 
 `;
 
-export const CategoryBox = styled.div<{ category: string }>`
+export const CategoryBox = styled.div<{ status: string }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -38,18 +38,13 @@ export const CategoryBox = styled.div<{ category: string }>`
   width: 150px;
   height: 30px;
   font-weight: bold;
-  color: ${(props) =>
-    props.category === '프로젝트 기획/설계'
-      ? '#17519D'
-      : props.category === '와이어 프레임 제작'
-      ? '#9D1730'
-      : ''};
-  background-color: ${(props) =>
-    props.category === '프로젝트 기획/설계'
-      ? 'rgba(96, 151, 223, 0.2)'
-      : props.category === '와이어 프레임 제작'
-      ? 'rgba(223, 96, 100, 0.2)'
-      : ''};
+  color: ${(props) => {
+    return props.status;
+  }};
+  background-color: ${(props) => {
+    const rgbaColor = props.status;
+    return rgbaColor.replace(/, 1\)$/g, ", 0.2)");
+  }};
 `;
 
 export const DeadlineCellBox = styled.td`
