@@ -16,15 +16,15 @@ import middleIcon from '../../assets/middle.png'
 import { IssueListType } from '../../Types/IssueType';
 
 interface CardIssueProps{
-    issue:IssueListType;
-    index:number;
+    issue: IssueListType;
+    index: number;
     status: string;
 }
 
 const CardIssue: React.FC<CardIssueProps> = ({ issue, index, status }) => {
     const epicName = issue.epicName || "NO EPIC";
-    const taskStatusColor = status || "rgba(169, 169, 169, 1)";
-
+    
+    const issueStatusColor = epicName === "NO EPIC" ? "rgba(169, 169, 169, 1)" : status || "rgba(169, 169, 169, 1)";
 
     return (
       <TaskContainerLayout> 
@@ -34,13 +34,13 @@ const CardIssue: React.FC<CardIssueProps> = ({ issue, index, status }) => {
             <TaskNameText>{issue.issueTitle}</TaskNameText> 
           </TaskNameBox>
           <TaskIdText>{issue.issueKey}</TaskIdText>
-          <TaskTitleBox status={taskStatusColor}>
-          {epicName}
+          <TaskTitleBox status={issueStatusColor}>
+            {epicName}
           </TaskTitleBox>
           <TaskStatusBox status={issue.issueStatus}>
             {issue.issueStatus}
           </TaskStatusBox>
-          <ArrowIcon src={
+          <ArrowIcon src={ 
             issue.issuePriority === 1 ? highIcon
             : issue.issuePriority === 2 ? middleIcon 
             : lowIcon
@@ -48,7 +48,6 @@ const CardIssue: React.FC<CardIssueProps> = ({ issue, index, status }) => {
         </TaskItemBox>
       </TaskContainerLayout>
     );
-  };
-  
-  export default CardIssue;
-  
+};
+
+export default CardIssue;
