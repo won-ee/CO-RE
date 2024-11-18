@@ -23,7 +23,7 @@ import ModalInputProject from "./components/modal/ModalInputProject";
 import { useQueryUserInfo } from "./hooks/useUser";
 
 const AppComponent: React.FC = () => {
-  const { data: userInfo } = useQueryUserInfo(); 
+  const { data: userInfo } = useQueryUserInfo();
   console.log(userInfo);
   const { isLogin } = useUserStore();
 

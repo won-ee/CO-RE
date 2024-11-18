@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "react-query";
 import { fetchRepos, fetchGraphDataById } from "../api/historyAPI";
 import { InitialDataType, HistoryDataType } from "../Types/historyType";
@@ -14,11 +14,18 @@ export const useHistoryData = (owner: string, repo: string) => {
     data: graphData,
     isLoading: isLoadingGraph,
     error: graphError,
+    refetch: refetchGraphData,
   } = useQuery<HistoryDataType>(
     ["graphData", selectedRepoId],
     () => fetchGraphDataById(selectedRepoId!),
     { enabled: !!selectedRepoId },
   );
+
+  useEffect(() => {
+    if (selectedRepoId) {
+      refetchGraphData();
+    }
+  }, [selectedRepoId, refetchGraphData]);
 
   return {
     repos,
