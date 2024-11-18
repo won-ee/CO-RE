@@ -49,13 +49,14 @@ const SectionIssueList: React.FC = () => {
   ];
   
 
-  const groupedData = (data as Issue[]).reduce<Record<string, Issue[]>>((acc, item) => {
+  const groupedData = Array.isArray(data) ? data.reduce<Record<string, Issue[]>>((acc, item) => {
     if (!acc[item.epicKey]) {
       acc[item.epicKey] = [];
     }
     acc[item.epicKey].push(item);
     return acc;
-  }, {});
+  }, {}) : {}; 
+  
 
   const result = Object.keys(groupedData).map((epicKey, index) => ({
     epicKey,
