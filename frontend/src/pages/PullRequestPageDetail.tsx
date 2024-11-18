@@ -50,7 +50,6 @@ const PullRequestPageDetail:React.FC = () => {
 
     const handleUpdateComments = (updatedReviews: ReviewType[]) => {
         setReviews(updatedReviews);
-        refetch();
       };
 
 
@@ -87,7 +86,7 @@ const PullRequestPageDetail:React.FC = () => {
     <>
         <ContainerLayout>
             <TabPullRequest isSeleted={isSeleted} setIsSeleted={setIsSeleted}/>
-            {isSeleted === 'Overview' && <SectionOverview data={data} />}
+            {isSeleted === 'Overview' && <SectionOverview data={data} refetch={refetch}/>}
             {isSeleted === 'Commits' && <SectionCommits commits={commitData.data || [] } />}
             {isSeleted === 'Changes' && <SectionChanges changes={changesData.data || []} onUpdateReviews={handleUpdateComments}/>}
             {reviews.length>0 && 
