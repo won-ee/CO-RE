@@ -7,7 +7,7 @@ import SectionCommits from '../components/section/SectionCommits'
 import { useQueryPRDetail } from '../hooks/usePullRequestData'
 import { PRDetailParamsType } from '../Types/pullRequestType'
 import LoadingPage from './LoadingPage'
-import NotFoundPage from './NotFoundPage'
+// import NotFoundPage from './NotFoundPage'
 import { useProjectStore } from '../store/userStore'
 import { useParams } from 'react-router-dom'
 
