@@ -140,7 +140,7 @@ const FilterAndGraphSection: React.FC = () => {
             value={selectedVersion || (versionList?.[0]?.id ?? "")}
           >
             {versionList?.map((version, index: number) => (
-              <option key={index}>{version.id}</option>
+              <option key={index}>{version.name}</option>
             ))}
           </DropdownSelect>
           <DropdownSelect
