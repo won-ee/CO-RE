@@ -38,9 +38,11 @@ export const CategoryBox = styled.div<{ status: string }>`
   width: 150px;
   height: 30px;
   font-weight: bold;
+
   color: ${(props) => {
     return props.status;
   }};
+  
   background-color: ${(props) => {
     const rgbaColor = props.status;
     return rgbaColor.replace(/, 1\)$/g, ", 0.2)");

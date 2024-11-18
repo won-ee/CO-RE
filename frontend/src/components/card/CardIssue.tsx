@@ -23,6 +23,8 @@ interface CardIssueProps{
 
 const CardIssue: React.FC<CardIssueProps> = ({ issue, index, status }) => {
     const epicName = issue.epicName || "NO EPIC";
+    const taskStatusColor = status || "rgba(169, 169, 169, 1)";
+
 
     return (
       <TaskContainerLayout> 
@@ -32,7 +34,7 @@ const CardIssue: React.FC<CardIssueProps> = ({ issue, index, status }) => {
             <TaskNameText>{issue.issueTitle}</TaskNameText> 
           </TaskNameBox>
           <TaskIdText>{issue.issueKey}</TaskIdText>
-          <TaskTitleBox status={status}>
+          <TaskTitleBox status={taskStatusColor}>
           {epicName}
           </TaskTitleBox>
           <TaskStatusBox status={issue.issueStatus}>
