@@ -122,10 +122,17 @@ public class PullRequestService {
     }
 
     public void closedPullRequest(PullRequestServerDto pullRequest) {
-        pullRequestRepository.findByOwnerAndRepoAndBaseAndHeadAndVersionIsNull(pullRequest.getOwner(), pullRequest.getRepo(), pullRequest.getBase(), pullRequest.getHead())
-                .ifPresent(pr -> {
-                    pr.updateMergeStatus(pullRequest.getMergeStatus());
-                    pullRequestRepository.save(pr);
+        pullRequestRepository.findByOwnerAndRepoAndBaseAndHeadAndVersionIsNull(
+                        pullRequest.getOwner(),
+                        pullRequest.getRepo(),
+                        pullRequest.getBase(),
+                        pullRequest.getHead()
+                )
+                .ifPresent(pullRequests -> {
+                    pullRequests.forEach(pr -> {
+                        pr.updateMergeStatus(pullRequest.getMergeStatus());
+                        pullRequestRepository.save(pr);
+                    });
                 });
     }
 

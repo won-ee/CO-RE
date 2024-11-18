@@ -21,7 +21,7 @@ public interface PullRequestRepository extends JpaRepository<PullRequest, Long> 
 
     Optional<List<PullRequest>> findByOwnerAndRepoAndVersionIsNull(String owner, String repo);
 
-    Optional<PullRequest> findByOwnerAndRepoAndBaseAndHeadAndVersionIsNull(String owner, String repo, String base, String head);
+    Optional<List<PullRequest>> findByOwnerAndRepoAndBaseAndHeadAndVersionIsNull(String owner, String repo, String base, String head);
 
     Optional<PullRequest> findByOwnerAndRepoAndPullRequestId(String owner, String repo, Integer pullRequestId);
 
