@@ -34,8 +34,8 @@ const PullRequestPageDetail:React.FC = () => {
     const commitParams = {
         owner: selectedOwner,
         repo : selectedRepo,
-        base: data?.head || "", // undefined일 경우 빈 문자열로 대체
-        head: data?.base || "", // undefined일 경우 빈 문자열로 대체
+        base: data?.base || "", // undefined일 경우 빈 문자열로 대체
+        head: data?.head || "", // undefined일 경우 빈 문자열로 대체
       }
 
     const changesData = useQueryChangeList(commitParams)
