@@ -15,7 +15,7 @@ export const CardCellBox = styled.td`
 
 export const CardNameParagraph = styled.p`
   font-weight: bold;
-  width: 200px;
+  width: 500px;
   vertical-align: middle;
   margin-left: 5%;
 `;
@@ -42,7 +42,7 @@ export const CategoryBox = styled.div<{ status: string }>`
   color: ${(props) => {
     return props.status;
   }};
-  
+
   background-color: ${(props) => {
     const rgbaColor = props.status;
     return rgbaColor.replace(/, 1\)$/g, ", 0.2)");
