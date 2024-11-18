@@ -26,7 +26,6 @@ import java.util.Optional;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        // 필터를 적용하지 않을 경로 정의
         String path = request.getRequestURI();
         return path.startsWith("/") ||
                 path.startsWith("/login/jira") ||
