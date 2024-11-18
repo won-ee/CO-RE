@@ -30,7 +30,7 @@ const PullRequestPageDetail:React.FC = () => {
         pullId: Number(pullRequestId),
     };
     
-    const { data, error, isLoading } = useQueryPRDetail(params);
+    const { data, error, isLoading, refetch } = useQueryPRDetail(params);
     const commitParams = {
         owner: selectedOwner,
         repo : selectedRepo,
@@ -50,6 +50,7 @@ const PullRequestPageDetail:React.FC = () => {
 
     const handleUpdateComments = (updatedReviews: ReviewType[]) => {
         setReviews(updatedReviews);
+        refetch();
       };
 
 
@@ -65,6 +66,11 @@ const PullRequestPageDetail:React.FC = () => {
         repo:'github-api',
         pullId:'',
         reviewData:TotalReview
+    },
+    {
+        onSuccess: () => {
+            refetch(); // 성공 시 최신 데이터 다시 가져오기
+        },
     })
     }
 
