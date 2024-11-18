@@ -84,6 +84,7 @@ public class Version {
     public static Version createVersion(PullRequestServerDto pullRequest, Boolean hotfix) {
         Version version = new Version();
         version.owner = pullRequest.getOwner();
+        version.name = pullRequest.getTitle();
         version.repo = pullRequest.getRepo();
         version.content = pullRequest.getDescription();
         version.hotfix = hotfix;

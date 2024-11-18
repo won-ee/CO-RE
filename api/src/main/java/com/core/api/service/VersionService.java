@@ -47,6 +47,7 @@ public class VersionService {
                 .map(PullRequest::getTitle)
                 .filter(Objects::nonNull)
                 .toList();
+
         String formattedContent = content.stream()
                 .collect(Collectors.joining(System.lineSeparator()));
 
@@ -54,6 +55,7 @@ public class VersionService {
         version.updateContent(formattedContent);
         versionRepository.save(version);
         sendEmail(content, pullRequest.getOwner(), pullRequest.getRepo(), pullRequestsWithoutVersion);
+
         Consumer<Version> versionUpdater = isHotfix
                 ? v -> updateSinglePullRequestVersion(pullRequest, v)
                 : v -> updateAllPullRequestsVersion(pullRequest, v);
@@ -65,7 +67,7 @@ public class VersionService {
     private void sendEmail(List<String> content, String owner, String repo, List<PullRequest> pullRequests) {
         log.info("content owner repo {} {} {}", content, owner, repo);
         ProjectDto project = backendClient.getProject(owner, repo);
-        log.info("Sending email to {}", project.projectUserEmail());
+        log.info("Sending email to {} {}", project.projectUserEmail(), project.projectName());
         int totalCommits = pullRequests.stream()
                 .mapToInt(pr -> pr.getCommits()
                         .size())
@@ -78,6 +80,8 @@ public class VersionService {
                         .size())
                 .sum();
 
+        log.info("totalCommits totalPullRequests totalReviews {} {} {}", totalCommits, totalPullRequests, totalReviews);
+
         EmailDto email = new EmailDto(
                 project.projectUserEmail(),
                 project.projectName(),
@@ -86,15 +90,18 @@ public class VersionService {
                 totalPullRequests,
                 totalReviews);
 
-        emailClient.sendEmail("application/json", email);
+        log.info("Sending email {}", email);
+        //  emailClient.sendEmail("application/json", email);
     }
 
     private void updateSinglePullRequestVersion(PullRequestServerDto pullRequest, Version version) {
+        log.info("Updating single pull request version {}", pullRequest.getPullRequestId());
         pullRequestRepository.findByOwnerAndRepoAndPullRequestId(pullRequest.getOwner(), pullRequest.getRepo(), pullRequest.getPullRequestId())
                 .ifPresent(pr -> pr.updateVersion(version));
     }
 
     private void updateAllPullRequestsVersion(PullRequestServerDto pullRequest, Version version) {
+        log.info("Updating ALL pull request version {}", pullRequest.getPullRequestId());
         pullRequestRepository.findByOwnerAndRepoAndVersionIsNull(pullRequest.getOwner(), pullRequest.getRepo())
                 .ifPresent(pullRequests -> pullRequests.forEach(pr -> pr.updateVersion(version)));
     }
