@@ -54,7 +54,7 @@ public class Projects {
     @Column(name = "project_reviewer_count", nullable = false)
     private int reviewerCount = 1;
 
-    @Column(name = "project_review_template")
+    @Column(name = "project_review_template", length = 10000)
     private String reviewTemplate;
 
     @OneToMany(mappedBy = "project")
