@@ -44,6 +44,7 @@ export const TaskNameText = styled.div`
 export const TaskIdText = styled.div`
   color: #555;
   font-weight: bold;
+  width: 200px;
 `;
 
 export const TaskTitleBox = styled.div<TaskStatusProps>`
