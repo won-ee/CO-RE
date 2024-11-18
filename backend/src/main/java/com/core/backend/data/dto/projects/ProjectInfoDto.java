@@ -6,6 +6,7 @@ import lombok.Builder;
 public record ProjectInfoDto(
         Long id,
         String name,
+        String key,
         String image,
         String ownerId,
         String ownerName,

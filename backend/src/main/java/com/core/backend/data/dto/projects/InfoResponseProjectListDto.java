@@ -7,6 +7,7 @@ public record InfoResponseProjectListDto(
         Long id,
         Long projectUserId,
         String name,
+        String key,
         String image,
         String ownerId,
         String ownerName,

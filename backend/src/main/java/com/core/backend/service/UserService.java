@@ -61,6 +61,7 @@ public class UserService {
                     .id(project.getId())
                     .projectUserId(projectUsers.getId())
                     .name(project.getName())
+                    .key(project.getKey())
                     .image(project.getImage())
                     .ownerId(project.getOwnerId())
                     .ownerName(project.getOwnerName())
