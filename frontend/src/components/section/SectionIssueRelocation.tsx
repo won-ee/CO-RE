@@ -15,6 +15,8 @@ const SectionIssueRelocation: React.FC = () => {
     const { selectedProjectUserId } = useProjectStore();
     const { data } = useQueryIssueLocationList(selectedProjectUserId);
     const [issueId, setIssueId] = useState(0);
+    const [issueName, setIssueName] = useState('');
+
     const mutation = useMutationIssueLocation();
 
     const issueList = Array.isArray(data)
@@ -25,7 +27,14 @@ const SectionIssueRelocation: React.FC = () => {
         : [];
 
     const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setIssueId(Number(event.target.value)); 
+        const selectedIssueId = Number(event.target.value);
+        setIssueId(selectedIssueId);
+        
+        // 선택된 issueTitle을 상태로 저장
+        const selectedIssue = issueList.find(issue => issue.issueId === selectedIssueId);
+        if (selectedIssue) {
+            setIssueName(selectedIssue.issueTitle);
+        }
     };
 
     const handleSubmit = () => {    
@@ -34,7 +43,8 @@ const SectionIssueRelocation: React.FC = () => {
                 projectUserId: selectedProjectUserId,
                 issueId: issueId,
             });
-            setIssueId(0); 
+            setIssueId(0);
+            setIssueName(''); // 요청 후 issueTitle을 초기화
         }
     };
 
@@ -56,15 +66,16 @@ const SectionIssueRelocation: React.FC = () => {
                     ))}
                 </SelectInput>
             </div>
+
             {mutation.isLoading && <div>로딩 중...</div>}
             {mutation.isError && (
                 <div style={{ color: 'red' }}>
                     오류 발생
                 </div>
             )}
-            {mutation.isSuccess && (
-                <div style={{ color: 'green' }}>
-                    이슈 재배치 성공!
+            {mutation.isSuccess && issueName && (
+                <div style={{ color: 'gray' }}>
+                    "{issueName}" 재배치 완료.
                 </div>
             )}
 
