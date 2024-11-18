@@ -1,12 +1,7 @@
 import styled from "styled-components";
 
 export const TableLayout = styled.div`
-  width: 1150px;
-  margin-top: 20px;
-  background-color: white;
-  margin-left: 50px;
-  border-radius: 20px;
-  border: solid 1px  #D5D5D5;
+    width: 100%;
 `;
 export const TableRow = styled.div`
   width: 1150px;

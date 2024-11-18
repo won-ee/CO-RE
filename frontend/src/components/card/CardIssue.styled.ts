@@ -9,6 +9,12 @@ export const TaskContainerLayout = styled.div`
   justify-content: center;
   align-items: center;
 `;
+export const TaskImage = styled.img`
+  width: 24px;
+  height: 24px; 
+  object-fit: contain; 
+  flex-shrink: 0; 
+`;
 
 export const TaskItemBox = styled.div`
   display: flex;
@@ -16,7 +22,6 @@ export const TaskItemBox = styled.div`
   align-items: center;
   width: 1150px;
   padding: 12px;
-  background-color: #fff;
   border: 1px solid #eaeaea;
   margin-bottom: 8px;
   border-radius: 20px;
@@ -25,15 +30,19 @@ export const TaskItemBox = styled.div`
 export const TaskNameBox = styled.div`
   display: flex;
   flex-direction: row;
+  align-items: center;
 `;
 
 export const TaskNameText = styled.div`
+  width: 300px;
   font-weight: bold;
   margin-left: 15px;
+
 `;
 
 export const TaskIdText = styled.div`
   color: #555;
+  font-weight: bold;
 `;
 
 export const TaskTitleBox = styled.div<TaskStatusProps>`
@@ -62,34 +71,7 @@ export const TaskStatusBox = styled.div<TaskStatusProps>`
   border-radius: 4px;
   height: 33px;
   width: 150px;
-  font-size: 12px;
   font-weight: bold;
-
-  color: ${(props) => {
-    switch (props.status) {
-      case 'IN_PROGRESS':
-        return '#6226EF';
-      case 'TODO':
-        return '#202A30';
-      case 'DONE':
-        return '#00B69B';
-      default:
-        return '';
-    }
-  }};
-  
-  background-color: ${(props) => {
-    switch (props.status) {
-      case 'IN_PROGRESS':
-        return 'rgba(98, 38, 239, 0.2)';
-      case 'TODO':
-        return 'rgba(32, 42, 48, 0.2)';
-      case 'DONE':
-        return 'rgba(0, 192, 155, 0.2)';
-      default:
-        return '';
-    }
-  }};
 `;
 
 export const ArrowIcon = styled.img`

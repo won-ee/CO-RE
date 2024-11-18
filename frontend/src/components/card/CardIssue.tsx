@@ -3,6 +3,7 @@ import {
     ArrowIcon, 
     TaskContainerLayout,
     TaskIdText,
+    TaskImage,
     TaskItemBox,      
     TaskNameBox,      
     TaskNameText,    
@@ -23,14 +24,13 @@ interface CardIssueProps{
 
 const CardIssue: React.FC<CardIssueProps> = ({ issue, index, status }) => {
     const epicName = issue.epicName || "NO EPIC";
-    
     const issueStatusColor = epicName === "NO EPIC" ? "rgba(169, 169, 169, 1)" : status || "rgba(169, 169, 169, 1)";
 
     return (
       <TaskContainerLayout> 
         <TaskItemBox key={index}> 
           <TaskNameBox>
-            <img src={taskImg} alt="" />
+            <TaskImage src={taskImg} alt="" />
             <TaskNameText>{issue.issueTitle}</TaskNameText> 
           </TaskNameBox>
           <TaskIdText>{issue.issueKey}</TaskIdText>

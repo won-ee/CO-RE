@@ -1,62 +1,81 @@
 import styled from "styled-components";
 
-export const CardLayout = styled.table`
-  width: 100%;
-  border-bottom: solid 1px #D5D5D5;
-`;
+interface TaskStatusProps {
+  status: string;
+}
 
-export const CardCellBox = styled.td`
-  padding: 15px;
+export const TaskContainerLayout = styled.div`
   display: flex;
-  width: 500px;
-  vertical-align: middle;
-  margin-right: -100px;
-`;
-
-export const CardNameParagraph = styled.p`
-  font-weight: bold;
-  width: 200px;
-  vertical-align: middle;
-  margin-left: 5%;
-`;
-
-export const ProjectCodeSpan = styled.p`
-  font-size: 0.9em;
-  color: #6b7280;
-  width: 200px;
-  vertical-align: middle;
-
-`;
-
-export const CategoryBox = styled.div<{ status: string }>`
-  display: flex;
-  align-items: center;
   justify-content: center;
-  padding: 5px 10px;
+  align-items: center;
+`;
+export const TaskImage = styled.img`
+  width: 24px;
+  height: 24px; 
+  object-fit: contain; 
+  flex-shrink: 0; 
+`;
+
+export const TaskItemBox = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 1150px;
+  padding: 12px;
+  background-color: #fff;
+  border: 1px solid #eaeaea;
+  margin-bottom: 8px;
+  border-radius: 20px;
+`;
+
+export const TaskNameBox = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+
+export const TaskNameText = styled.div`
+  width: 300px;
+  font-weight: bold;
+  margin-left: 15px;
+
+`;
+
+export const TaskIdText = styled.div`
+  color: #555;
+  font-weight: bold;
+`;
+
+export const TaskTitleBox = styled.div<TaskStatusProps>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border-radius: 4px;
-  font-size: 12px;
+  height: 33px;
   width: 150px;
-  height: 30px;
+  font-size: 12px;
   font-weight: bold;
 
   color: ${(props) => {
     return props.status;
   }};
-  
   background-color: ${(props) => {
     const rgbaColor = props.status;
     return rgbaColor.replace(/, 1\)$/g, ", 0.2)");
   }};
 `;
 
-export const DeadlineCellBox = styled.td`
-  text-align: left;
+export const TaskStatusBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+  height: 33px;
   width: 150px;
-
+  font-weight: bold;
 `;
 
 export const SenderCellBox = styled.td`
-  padding: 15px;
   text-align: left;
   width: 120px;
   vertical-align: middle;
@@ -81,21 +100,20 @@ export const SenderNameSpan = styled.span`
 `;
 
 export const ActionCellBox = styled.td`
-  padding: 15px;
   text-align: left;
   vertical-align: middle;
 `;
 
-export const ActionButton = styled.button<{ color: 'accept' | 'reject' }>`
+export const ActionButton = styled.button`
   padding: 8px 16px;
   margin: 0 5px;
   border: none;
   border-radius: 5px;
   font-weight: bold;
-  color: ${(props) =>
-    props.color === 'accept' ? '#17519D' : 'none'};
-  background-color: ${(props) =>
-    props.color === 'accept' ? 'rgba(96, 151, 223, 0.2)' : 'none'};
-  cursor: ${(props) =>
-    props.color === 'accept' ? 'pointer' : 'none'};
+  color:#17519D;
+  background-color:rgba(96, 151, 223, 0.2);
+  cursor:pointer;
+  &:hover {
+    background-color: rgba(96, 151, 223, 0.4); 
+  }
 `;

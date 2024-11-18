@@ -1,0 +1,86 @@
+[
+  {
+    "id": 1,
+    "issueId": 101,
+    "name": "Fix login bug",
+    "key": "BUG-001",
+    "epicName": "User Authentication",
+    "deadLine": "2024-12-01T23:59:59",
+    "senderId": 11,
+    "senderName": "Alice Johnson",
+    "senderImage": "https://via.placeholder.com/50",
+    "epicKey": "AUTH"
+  },
+  {
+    "id": 2,
+    "issueId": 102,
+    "name": "Update dashboard UI",
+    "key": "TASK-002",
+    "epicName": "UI Revamp",
+    "deadLine": "2024-11-30T23:59:59",
+    "senderId": 12,
+    "senderName": "Bob Smith",
+    "senderImage": "https://via.placeholder.com/50",
+    "epicKey": "UI"
+  },
+  {
+    "id": 3,
+    "issueId": 103,
+    "name": "Implement user roles",
+    "key": "TASK-003",
+    "epicName": "Access Control",
+    "deadLine": null,
+    "senderId": 13,
+    "senderName": "Charlie Brown",
+    "senderImage": "https://via.placeholder.com/50",
+    "epicKey": "ACCESS"
+  },
+  {
+    "id": 4,
+    "issueId": 104,
+    "name": "Optimize database queries",
+    "key": "TASK-004",
+    "epicName": "Performance Tuning",
+    "deadLine": "2024-12-15T23:59:59",
+    "senderId": 14,
+    "senderName": "Diana Prince",
+    "senderImage": "https://via.placeholder.com/50",
+    "epicKey": "PERF"
+  },
+  {
+    "id": 5,
+    "issueId": 105,
+    "name": "Add payment gateway",
+    "key": "TASK-005",
+    "epicName": "E-Commerce Integration",
+    "deadLine": "2024-11-25T23:59:59",
+    "senderId": 15,
+    "senderName": "Ethan Hunt",
+    "senderImage": "https://via.placeholder.com/50",
+    "epicKey": "ECOM"
+  },
+  {
+    "id": 6,
+    "issueId": 106,
+    "name": "Test API endpoints",
+    "key": "TASK-006",
+    "epicName": "Backend Development",
+    "deadLine": "2024-12-05T23:59:59",
+    "senderId": 16,
+    "senderName": "Fiona Gallagher",
+    "senderImage": "https://via.placeholder.com/50",
+    "epicKey": "BACKEND"
+  },
+  {
+    "id": 7,
+    "issueId": 107,
+    "name": "Refactor legacy code",
+    "key": "TASK-007",
+    "epicName": "Codebase Maintenance",
+    "deadLine": null,
+    "senderId": 17,
+    "senderName": "George Clooney",
+    "senderImage": "https://via.placeholder.com/50",
+    "epicKey": "CODEBASE"
+  }
+]
