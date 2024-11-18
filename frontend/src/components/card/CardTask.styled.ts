@@ -43,13 +43,13 @@ export const CategoryBox = styled.div<{ category: string }>`
       ? '#17519D'
       : props.category === '와이어 프레임 제작'
       ? '#9D1730'
-      : '#4A9D17'};
+      : ''};
   background-color: ${(props) =>
     props.category === '프로젝트 기획/설계'
       ? 'rgba(96, 151, 223, 0.2)'
       : props.category === '와이어 프레임 제작'
       ? 'rgba(223, 96, 100, 0.2)'
-      : 'rgba(99, 186, 60, 0.2)'};
+      : ''};
 `;
 
 export const DeadlineCellBox = styled.td`
