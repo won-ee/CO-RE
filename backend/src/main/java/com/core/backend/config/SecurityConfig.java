@@ -43,6 +43,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                         .requestMatchers("/jira/**").permitAll()
                         .requestMatchers("/ssafy/atlassian/**").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers("/callback/code/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2Login -> oauth2Login

@@ -190,14 +190,19 @@ public class IssueService {
                     String epicKey = epic.get("key").toString();
                     String epicUrl = epic.get("self").toString();
                     String epicId = epic.get("id").toString();
-                    Epics newEpic = epicRepository.save(
-                            Epics.builder()
-                                    .key(epicKey)
-                                    .name(epicName)
-                                    .url(epicUrl)
-                                    .jiraId(epicId)
-                                    .project(project)
-                                    .build());
+
+                    Epics newEpic = epicRepository.findByKey(epicKey);
+
+                    if (newEpic == null) {
+                        newEpic = epicRepository.save(
+                                Epics.builder()
+                                        .key(epicKey)
+                                        .name(epicName)
+                                        .url(epicUrl)
+                                        .jiraId(epicId)
+                                        .project(project)
+                                        .build());
+                    }
 
                     saveIssueListToJira(newEpic, extractIssueDetails(allIssues), user, accessToken);
                 }
@@ -589,7 +594,7 @@ public class IssueService {
         }
 
 
-        JiraOAuthToken oAuthToken = jiraOAuthTokenService.getOAuthToken(projectUsers.getUser().getEmail());
+        JiraOAuthToken oAuthToken = jiraOAuthTokenService.getOAuthToken(smallIssueUser.getUser().getEmail());
         String accessToken = oAuthToken.getAccessToken();
 
         String jiraBaseUrl = projectUsers.getProject().getSelfUrl();

@@ -79,23 +79,18 @@ public class CallbackService {
     }
 
     public void updateJiraMySql(Long userId) {
-//        Users getUser = (Users) userRepository.findById(userId);
-//
-//        String accessToken = jiraOAuthTokenService.getNewAccessToken();
-//        List<UserGroupsDto> groupList = jiraService.getGroups(accessToken);
-//        log.info("Groups: {}", groupList);
-//        userId = userService.saveUser(userInfo);
-//
-//        Users newUser = userService.getUser(userId);
-//        userId = newUser.getId();
-//        userEmail = newUser.getEmail();
-//        log.info("New user created with ID: {}", userId);
-//
-//        groupService.saveGroups(groupList);
-//        log.info("Groups saved.");
-//
-//        projectService.saveProjects(groupList, newUser, accessToken);
-//        log.info("Projects saved for the new user.");
+        Users newUser = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: "));
+
+
+        String accessToken = jiraOAuthTokenService.getNewAccessToken(newUser.getEmail());
+        List<UserGroupsDto> groupList = jiraService.getGroups(accessToken);
+
+        groupService.saveGroups(groupList);
+        log.info("Groups saved.");
+
+        projectService.saveProjects(groupList, newUser, accessToken);
+        log.info("Projects saved for the new user.");
     }
 
 

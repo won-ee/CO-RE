@@ -12,4 +12,6 @@ public interface EpicRepository extends JpaRepository<Epics, Long> {
     Epics findByKey(String key);
 
     List<Epics> findByProjectId(Long projectId);
+
+    boolean existsByKey(String key);
 }

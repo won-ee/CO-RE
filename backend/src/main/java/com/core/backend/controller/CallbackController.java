@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -44,10 +45,10 @@ public class CallbackController {
         }
     }
 
-    @GetMapping("/code/update")
-    public ResponseEntity<Void> updateJira() {
+    @GetMapping("/code/update/{userId}")
+    public ResponseEntity<Void> updateJira(@PathVariable Long userId) {
         try {
-//            callbackService.
+            callbackService.updateJiraMySql(userId);
 
         } catch (Exception e) {
             log.error("Error updateJira: {}", e.getMessage());
