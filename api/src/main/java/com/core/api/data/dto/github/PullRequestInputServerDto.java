@@ -11,7 +11,7 @@ public record PullRequestInputServerDto(
     public static PullRequestInputServerDto from(PullRequestInputDto pullRequestInputDto) {
         return new PullRequestInputServerDto(
                 pullRequestInputDto.title(),
-                pullRequestInputDto.body(),
+                pullRequestInputDto.description(),
                 pullRequestInputDto.head(),
                 pullRequestInputDto.base()
         );
