@@ -8,7 +8,7 @@ export const CardLayout = styled.table`
 export const CardCellBox = styled.td`
   padding: 15px;
   display: flex;
-  width: 300px;
+  width: 500px;
   vertical-align: middle;
   margin-right: -100px;
 `;
