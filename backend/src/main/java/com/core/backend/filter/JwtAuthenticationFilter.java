@@ -27,8 +27,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String path = request.getRequestURI();
-        return path.startsWith("/callback/code/") ||
-                path.startsWith("/project-users/search/email/");
+        return path.startsWith("/callback/code") ||
+                path.startsWith("/project-users/search/email");
     }
 
     private final JwtTokenService jwtTokenService;
