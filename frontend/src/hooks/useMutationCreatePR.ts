@@ -72,16 +72,33 @@ export const useMutationGithubInfo = () => {
 export const useMutationEpic = () => {
   return useMutation(
     ({ projectUserId, deadline, fields }: { projectUserId: number; deadline: string; fields: EpicFieldsType }) => 
-      postEpic(projectUserId, deadline, fields)
+      postEpic(projectUserId, deadline, fields),
+    {
+      onSuccess: (data) => {
+        console.log('Epic 요청 성공:', data); 
+      },
+      onError: (error) => {
+        console.error('Epic 요청 실패:', error); 
+      }
+    }
   );
 };
 
 export const useMutationNoEpic = () => {
   return useMutation(
     ({ projectUserId, deadline, fields }: { projectUserId: number; deadline: string; fields: EpicFieldsType }) => 
-      postNoEpic(projectUserId, deadline, fields)
+      postNoEpic(projectUserId, deadline, fields),
+    {
+      onSuccess: (data) => {
+        console.log('NoEpic 요청 성공:', data); 
+      },
+      onError: (error) => {
+        console.error('NoEpic 요청 실패:', error);
+      }
+    }
   );
 };
+
 
 export const useMutationIssueLocation = () => {
   return useMutation(

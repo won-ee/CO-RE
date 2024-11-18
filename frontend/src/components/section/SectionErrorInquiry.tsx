@@ -42,9 +42,10 @@ const ExampleCustomInput00 = forwardRef<HTMLDivElement, { value?: string; onClic
 interface SectionErrorInquiryProps{
   selectedTeamId:string;
   setSelectedTeamId:React.Dispatch<React.SetStateAction<string>>;
+  selectedProjectId:number;
 }
-const SectionErrorInquiry: React.FC<SectionErrorInquiryProps> = ({selectedTeamId,setSelectedTeamId}) => {
-  const { selectedProjectId, selectedProjectUserId } = useProjectStore();
+const SectionErrorInquiry: React.FC<SectionErrorInquiryProps> = ({selectedTeamId,setSelectedTeamId,selectedProjectId}) => {
+  const {  selectedProjectUserId } = useProjectStore();
   const { data } = useQueryEpicList(selectedProjectId);
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
   const [selectedPriority, setSelectedPriority] = useState<string>("");
