@@ -531,7 +531,7 @@ public class IssueService {
             IssueCreateDto issueCreateDto = (IssueCreateDto) bodyDto;
             projectKey = issueCreateDto.getFields().getProject().getKey();
         }
-        log.info("projectKey : {}", projectKey);
+        log.info("bodyDto : {}", bodyDto);
 
         Projects getProject = projectRepository.findByKey(projectKey);
         List<ProjectUsers> projectUsersList = projectUserRepository.findAllByProjectId(getProject.getId());
@@ -610,6 +610,7 @@ public class IssueService {
 
             ObjectMapper objectMapper = new ObjectMapper();
             String requestBody = objectMapper.writeValueAsString(bodyDto);
+            log.info("objectMapper bodyDto : {}", requestBody);
 
             HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
@@ -676,6 +677,7 @@ public class IssueService {
 
             ObjectMapper objectMapper = new ObjectMapper();
             String requestBody = objectMapper.writeValueAsString(bodyDto);
+            log.info("objectMapper bodyDto : {}", requestBody);
 
             HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
