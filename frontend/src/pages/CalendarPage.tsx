@@ -32,11 +32,8 @@ const CalendarPage: React.FC = () => {
   // 로딩 중 또는 에러 상태 처리
   if (isLoading) return <LoadingPage />;
   if (error) {
-    console.error('Error fetching data:', error);
     return <NotFoundPage errorNumber={404} />;
   }
-
-  console.log('Fetched Data:', data); // 데이터 확인
 
   const handleEventClick = (info: any) => {
     const pullRequestId = info.event.id;
