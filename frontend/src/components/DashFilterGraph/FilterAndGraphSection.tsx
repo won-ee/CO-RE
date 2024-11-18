@@ -39,7 +39,7 @@ export type DropdownOption = "commits" | "pullRequests" | "reviews";
 
 const FilterAndGraphSection: React.FC = () => {
   const { selectedOwner, selectedRepo } = useProjectStore();
-  const [selectedVersion, setSelectedVersion] = useState<string>("");
+  const [selectedVersion, setSelectedVersion] = useState<string>("3");
   const [selectedData, setSelectedData] = useState<CategoryDataType[]>([]);
   const [selectedCategory, setSelectedCategory] =
     useState<DropdownOption>("commits");
