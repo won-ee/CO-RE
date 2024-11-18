@@ -194,8 +194,13 @@ public class ProjectService {
             log.info("5");
 
             log.info("6");
-            if (!projectRepository.existsByGithubOwnerAndGithubRepository(project.getGithubOwner(), project.getGithubRepository())) {
-                return false;
+
+            if (!updateGitHubRequestDto.githubOwner().isEmpty() && !updateGitHubRequestDto.githubRepository().isEmpty()) {
+                log.info("6.5");
+                if (!projectRepository.existsByGithubOwnerAndGithubRepository(updateGitHubRequestDto.githubOwner(), updateGitHubRequestDto.githubRepository())) {
+                    log.info("7");
+                    return false;
+                }
             }
 
             log.info("8");
