@@ -62,6 +62,7 @@ public class VersionService {
     }
 
     private void sendEmail(String content, String owner, String repo, List<PullRequest> pullRequests) {
+        log.info("content owner repo {} {} {}", content, owner, repo);
         ProjectDto project = backendClient.getProject(owner, repo);
         log.info("Sending email to {}", project.projectUserEmail());
         int totalCommits = pullRequests.stream()
