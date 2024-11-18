@@ -14,10 +14,11 @@ public class BackendFeignConfig {
     public RequestInterceptor requestInterceptor() {
         return requestTemplate -> {
             if (!requestTemplate.url()
-                    .equals("/users/search/git-token")) {
+                    .equals("/users/search/git-token") && !requestTemplate.url()
+                    .equals("/project-users/search/email")) {
                 String token = getAccessToken();
-                log.info("백엔드 요청 Access token: {}", token);
-                requestTemplate.header("Authorization", "Bearer" + token);
+                log.info("백엔드 서버 요청 (깃 아이디 반환 제외 ) Access token: {}", token);
+                requestTemplate.header("Authorization", "Bearer " + token);
             }
         };
     }
