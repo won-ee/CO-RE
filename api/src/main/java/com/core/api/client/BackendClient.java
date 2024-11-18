@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 public interface BackendClient {
 
     @GetMapping(value = "/users/search/git-token")
-    TokenDto getGithubToken(@RequestHeader("Authorization") String token);
+    TokenDto getGithubToken(@RequestHeader("accessToken") String token);
 
     @GetMapping("/project/search/git-set")
     ProjectInfoDto getProjectInfo(@RequestParam("owner") String owner, @RequestParam("repo") String repo);
