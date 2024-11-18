@@ -51,7 +51,11 @@ public class ProjectUserService {
                 .toList();
 
         log.info("5 userEmailList: {}", userEmailList);
-        return new ProjectNameAndUserEmailDto(project.getName(), userEmailList);
+
+        ProjectNameAndUserEmailDto dto = new ProjectNameAndUserEmailDto(project.getName(), userEmailList);
+        log.info(dto.toString());
+
+        return dto;
     }
 
     public ProjectUsers getProjectUser(Long projectUserId) {
