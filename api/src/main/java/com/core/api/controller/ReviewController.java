@@ -41,9 +41,9 @@ public class ReviewController {
             @PathVariable String owner,
             @PathVariable String repo,
             @RequestParam Long id,
-            @RequestBody CommentSimpleDto commentSimpleDto
+            @RequestBody CommentDto commentDto
     ) {
-        reviewService.updateCommentToServer(owner, repo, id, commentSimpleDto);
+        reviewService.updateComment(id, commentDto);
         return ResponseEntity.ok()
                 .build();
     }
@@ -54,7 +54,7 @@ public class ReviewController {
             @PathVariable String repo,
             @RequestParam Long id
     ) {
-        reviewService.deleteCommentToServer(owner, repo, id);
+        reviewService.deleteComment(id);
         return ResponseEntity.ok()
                 .build();
     }

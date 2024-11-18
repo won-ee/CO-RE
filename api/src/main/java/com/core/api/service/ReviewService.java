@@ -13,6 +13,7 @@ import com.core.api.data.entity.Review;
 import com.core.api.data.entity.Reviewer;
 import com.core.api.data.repository.PullRequestRepository;
 import com.core.api.data.repository.ReviewRepository;
+import com.core.api.data.repository.ReviewerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +29,7 @@ public class ReviewService {
     private final BackendClient backendClient;
     private final ReviewRepository reviewRepository;
     private final PullRequestRepository pullRequestRepository;
+    private final ReviewerRepository reviewerRepository;
 
     @Transactional
     public void createComment(String owner, String repo, int pullId, CommentDto comment) {
@@ -80,6 +82,16 @@ public class ReviewService {
         return (reviewerCount == totalReviewers)
                 ? statusMap.get(true)
                 : "processing";
+    }
+
+    public void updateComment(Long commentId, CommentDto commentDto) {
+        Reviewer reviewer = reviewerRepository.findById(commentId)
+                .orElseThrow(() -> new RuntimeException("Reviewer not found with comment id: " + commentId));
+        reviewer.updateReviewer(commentDto);
+    }
+
+    public void deleteComment(Long commentId) {
+        reviewerRepository.deleteById(commentId);
     }
 
     public void updateCommentToServer(String owner, String repo, Long commentId, CommentSimpleDto commentSimpleDto) {
