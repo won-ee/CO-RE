@@ -26,7 +26,7 @@ public class MailController {
     @PostMapping("/release")
     public ResponseEntity<?> sendEmail(@RequestBody EmailRequestDto emailRequest) {
         String subject = "";
-
+        System.out.println("Email request: " + emailRequest);
         List<String> contents = emailRequest.contents();
 
         Map<String, String> failedEmail = new HashMap<>();
