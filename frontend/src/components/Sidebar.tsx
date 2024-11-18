@@ -33,6 +33,9 @@ function Sidebar() {
       }else{
         navigate("/403ERROR");
       }
+    if(!userInfo?.userInfo.gitToken){
+      navigate("/setting");
+    }
   }}, [navigate,userInfo,selectedOwnerId,selectedOwner,selectedRepo]);
 
   const handleLogout = () => {
