@@ -33,7 +33,8 @@ const HistoryPage: React.FC = () => {
     if (!selectedId) {
       navigate("/history");
     } else {
-      navigate(`/history/${selectedId}`);
+      setSelectedRepoId(selectedId);
+      setTimeout(() => navigate(`/history/${selectedId}`), 100);
     }
   };
 
