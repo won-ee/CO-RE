@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "react-query";
-import { postCreatePR,postPRReview, postReviewComment } from "../api/pullRequestAPI";
-import { TotalReviewsType, CommentType } from "../Types/pullRequestType";
+import { patchReviewComment, postCreatePR,postPRReview, postReviewComment } from "../api/pullRequestAPI";
+import { TotalReviewsType, CommentType, ReviewCommentTypeForPatch } from "../Types/pullRequestType";
 import { ProjectSettingType, githubInfoType, patchUserInfoType } from "../Types/userType";
 import { patchProjectSetting, patchUserInfo, postGithubInfo, postLogout } from "../api/userAPI";
 import { postAcceptIssueLocation, postEpic, postIssueLocation, postNoEpic } from "../api/IssueAPI";
