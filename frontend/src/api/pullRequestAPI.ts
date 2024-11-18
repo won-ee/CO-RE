@@ -13,7 +13,8 @@ import {
   PRListType,
   ChangeType,
   TemplateType,
-  CommentType
+  CommentType,
+  ReviewCommentTypeForPatch
 } from "../Types/pullRequestType";
 
 const BASE_URL ='https://k11s106.p.ssafy.io/api'; 
@@ -206,3 +207,19 @@ export const postReviewComment = async({owner,repo,pullId,commentData}: {
   })
   return data;
 }
+
+export const patchReviewComment = async ({owner,repo,id,commentData}:{
+  owner:string;
+  repo:string;
+  id:number;
+  commentData: ReviewCommentTypeForPatch;
+}) => {
+  const response = await axios.patch(`${BASE_URL}/github/review/${owner}/${repo}/comment?id=${id}`,commentData,
+    {
+      headers: {
+        withCredentials: true,
+      },
+    },
+  );
+  return response.data;
+};

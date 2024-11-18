@@ -1,6 +1,6 @@
 import { useMutation } from "react-query";
-import { postCreatePR,postPRReview, postReviewComment } from "../api/pullRequestAPI";
-import { TotalReviewsType, CommentType } from "../Types/pullRequestType";
+import { patchReviewComment, postCreatePR,postPRReview, postReviewComment } from "../api/pullRequestAPI";
+import { TotalReviewsType, CommentType, ReviewCommentTypeForPatch } from "../Types/pullRequestType";
 import { ProjectSettingType, githubInfoType, patchUserInfoType } from "../Types/userType";
 import { patchProjectSetting, patchUserInfo, postGithubInfo, postLogout } from "../api/userAPI";
 import { postAcceptIssueLocation, postEpic, postIssueLocation, postNoEpic } from "../api/IssueAPI";
@@ -136,6 +136,17 @@ export const useMutationReviewComment = () =>{
     },
     onError: (data)=>{
       console.error("Error : ReviewComment Matation , ", data);
+    }
+  })
+}
+
+export const useMutationPatchReviewComment = ()=>{
+  return useMutation((params: {owner: string, repo:string, id:number,commentData: ReviewCommentTypeForPatch}) => patchReviewComment(params),{
+    onSuccess:(data)=>{
+      console.log("SUCCESS : ReviewComment Patch Matation , ", data); 
+    },
+    onError: (data)=>{
+      console.error("Error : ReviewComment Patch Matation , ", data);
     }
   })
 }

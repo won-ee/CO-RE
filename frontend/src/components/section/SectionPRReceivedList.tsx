@@ -2,10 +2,12 @@ import { useQueryPRList } from '../../hooks/usePullRequestData';
 import { useProjectStore } from '../../store/userStore';
 import { SectionPRSentListLayout,FilterLayout, GridTable , GridHeader, GridHeaderCell, GridRow, GridCell,CommentBox,StatusBox,PriorityBox, DeadLineBox, TitleBox, ReviewerImg} from './SectionPRReceivedList.styled'
 import { differenceInDays } from 'date-fns'
+import { useNavigate } from 'react-router-dom';
 
 
 function SectionPRReceivedList() {
   const projectInfo = useProjectStore((state) => state);
+  const navigate = useNavigate();
   const params = {
     owner : projectInfo.selectedOwner,
     repo : projectInfo.selectedRepo,
@@ -41,7 +43,7 @@ function SectionPRReceivedList() {
           const deadlineText = dayDifference > 0 ? `D-${dayDifference}` : `D-day`;
  
         return(
-          <GridRow key={index}>
+          <GridRow key={index} onClick={()=>navigate(`/pullrequest/${row.pullRequestId}`)} style={{cursor:'pointer'}}>
             <GridCell>
               <TitleBox>{row.title}</TitleBox>
               </GridCell>
