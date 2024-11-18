@@ -4,9 +4,11 @@ import { useProjectStore } from '../../store/userStore';
 import { SectionPRSentListLayout,FilterLayout, GridTable , GridHeader, GridHeaderCell, GridRow, GridCell,CommentBox,StatusBox,PriorityBox, DeadLineBox, TitleBox, ReviewerImg, ImgBox} from './SectionPRSentList.styled'
 import { differenceInDays } from 'date-fns'
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
+import { useNavigate } from 'react-router-dom';
 
 function SectionPRSentList(): React.ReactElement {
   const projectInfo = useProjectStore((state)=>state);
+  const navigate = useNavigate();
   const params = {
     owner : projectInfo.selectedOwner,
     repo : projectInfo.selectedRepo,
@@ -44,7 +46,7 @@ function SectionPRSentList(): React.ReactElement {
 
         return(
 
-          <GridRow key={index}>
+          <GridRow key={index} onClick={()=>navigate(`pullrequest/${row.pullRequestId}`)} style={{cursor:'pointer'}}>
             <GridCell>
               <TitleBox>{row.title}</TitleBox>
               </GridCell>
