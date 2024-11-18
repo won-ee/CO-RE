@@ -4,6 +4,7 @@ package com.core.api.service;
 import com.core.api.client.BackendClient;
 import com.core.api.client.GitHubClient;
 import com.core.api.data.dto.ProjectInfoDto;
+import com.core.api.data.dto.github.ReviewGithubDto;
 import com.core.api.data.dto.review.CommentDto;
 import com.core.api.data.dto.review.CommentSimpleDto;
 import com.core.api.data.dto.review.ReviewBaseDto;
@@ -103,7 +104,8 @@ public class ReviewService {
     }
 
     public void createReviewToServer(String owner, String repo, int pullId, ReviewBaseDto reviewBaseDto) {
-        gitHubClient.createReview(owner, repo, pullId, reviewBaseDto);
+        ReviewGithubDto reviewGithubDto = new ReviewGithubDto(reviewBaseDto.body(), reviewBaseDto.event(), reviewBaseDto.reviews());
+        gitHubClient.createReview(owner, repo, pullId, reviewGithubDto);
     }
 
     public void updateReviewToServer(String owner, String repo, Long reviewId, CommentSimpleDto commentSimpleDto) {

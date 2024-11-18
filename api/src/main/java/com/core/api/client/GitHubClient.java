@@ -4,10 +4,10 @@ import com.core.api.config.GithubFeignConfig;
 import com.core.api.data.dto.FileDto;
 import com.core.api.data.dto.github.CommitMessageServerDto;
 import com.core.api.data.dto.github.PullRequestInputServerDto;
+import com.core.api.data.dto.github.ReviewGithubDto;
 import com.core.api.data.dto.github.WebhookDto;
 import com.core.api.data.dto.response.MergeResponseDto;
 import com.core.api.data.dto.review.CommentSimpleDto;
-import com.core.api.data.dto.review.ReviewBaseDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
@@ -96,7 +96,7 @@ public interface GitHubClient {
             @PathVariable("owner") String owner,
             @PathVariable("repo") String repo,
             @PathVariable("pullId") int pullId,
-            @RequestBody ReviewBaseDto reviewBaseDto
+            @RequestBody ReviewGithubDto reviewBaseDto
     );
 
     @PatchMapping("/repos/{owner}/{repo}/pulls/comments/{commentId}")
