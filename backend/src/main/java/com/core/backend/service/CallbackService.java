@@ -2,8 +2,12 @@ package com.core.backend.service;
 
 import com.core.backend.data.dto.users.UserGroupsDto;
 import com.core.backend.data.dto.users.UserInfoDto;
+import com.core.backend.data.entity.Epics;
 import com.core.backend.data.entity.JiraOAuthToken;
+import com.core.backend.data.entity.Projects;
 import com.core.backend.data.entity.Users;
+import com.core.backend.data.repository.EpicRepository;
+import com.core.backend.data.repository.ProjectRepository;
 import com.core.backend.data.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +30,8 @@ public class CallbackService {
     private final GroupService groupService;
     private final UserRepository userRepository;
     private final ProjectService projectService;
+    private final ProjectRepository projectRepository;
+    private final EpicRepository epicRepository;
 
     public Map<String, Object> loginAccessCallBack(String authorizationCode) {
         log.info("Authorization code received: {}", authorizationCode);
@@ -79,18 +85,32 @@ public class CallbackService {
     }
 
     public void updateJiraMySql(Long userId) {
-        Users newUser = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with id: "));
+
+        Projects newProject = projectRepository.findById(userId).orElse(null);
+
+        Epics newEpic = Epics.builder()
+                .key("COREBE-3")
+                .name("외부 API 개발")
+                .url("https://api.atlassian.com/ex/jira/89310ad6-58d0-4c8d-939c-0b53d61c0223/rest/api/3/issue/10046")
+                .jiraId("10046")
+                .project(newProject)
+                .build();
+
+        epicRepository.save(newEpic);
 
 
-        String accessToken = jiraOAuthTokenService.getNewAccessToken(newUser.getEmail());
-        List<UserGroupsDto> groupList = jiraService.getGroups(accessToken);
-
-        groupService.saveGroups(groupList);
-        log.info("Groups saved.");
-
-        projectService.saveProjects(groupList, newUser, accessToken);
-        log.info("Projects saved for the new user.");
+//        Users newUser = userRepository.findById(userId)
+//                .orElseThrow(() -> new RuntimeException("User not found with id: "));
+//
+//
+//        String accessToken = jiraOAuthTokenService.getNewAccessToken(newUser.getEmail());
+//        List<UserGroupsDto> groupList = jiraService.getGroups(accessToken);
+//
+//        groupService.saveGroups(groupList);
+//        log.info("Groups saved.");
+//
+//        projectService.saveProjects(groupList, newUser, accessToken);
+//        log.info("Projects saved for the new user.");
     }
 
 
