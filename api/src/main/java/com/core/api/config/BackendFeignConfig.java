@@ -15,7 +15,7 @@ public class BackendFeignConfig {
             if (!requestTemplate.url()
                     .equals("/users/search/git-token")) {
                 String token = getAccessToken();
-                requestTemplate.header("accessToken", token);
+                requestTemplate.header("Authorization", token);
             }
         };
     }
