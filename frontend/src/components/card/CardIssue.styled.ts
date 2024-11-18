@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 interface TaskStatusProps {
-    status: string;
+  status: string;
 }
 
 export const TaskContainerLayout = styled.div`
@@ -10,7 +10,7 @@ export const TaskContainerLayout = styled.div`
   align-items: center;
 `;
 
-export const TaskItemBox = styled.div` 
+export const TaskItemBox = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -22,92 +22,78 @@ export const TaskItemBox = styled.div`
   border-radius: 20px;
 `;
 
-export const TaskNameBox = styled.div` 
+export const TaskNameBox = styled.div`
   display: flex;
   flex-direction: row;
 `;
 
-export const TaskNameText = styled.div` 
+export const TaskNameText = styled.div`
   font-weight: bold;
   margin-left: 15px;
 `;
 
-export const TaskIdText = styled.div` 
+export const TaskIdText = styled.div`
   color: #555;
 `;
 
-export const TaskTitleBox = styled.div<TaskStatusProps>` 
+export const TaskTitleBox = styled.div<TaskStatusProps>`
   display: flex;
-  justify-content: center; 
-  align-items: center; 
+  justify-content: center;
+  align-items: center;
   border-radius: 4px;
   height: 33px;
   width: 150px;
   font-size: 12px;
   font-weight: bold;
+
   color: ${(props) => {
-    switch (props.status) {
-      case '프로젝트 기획/설계':
-        return '#17519D';
-      case '와이어프레임 제작':
-        return '#9D1730'; 
-      case '아이디어 회의':
-        return '#4A9D17'; 
-      default:
-        return '#ccc';
-    }
+    return props.status;
   }};
   background-color: ${(props) => {
-    switch (props.status) {
-      case '프로젝트 기획/설계':
-        return 'rgba(96, 151, 223, 0.2)';
-      case '와이어프레임 제작':
-        return 'rgba(223, 96, 100, 0.2)'; 
-      case '아이디어 회의':
-        return 'rgba(99, 186, 60, 0.2)'; 
-      default:
-        return 'rgba(204, 204, 204, 0.2)'; 
-    }
+    const rgbaColor = props.status;
+    return rgbaColor.replace(/, 1\)$/g, ", 0.2)");
   }};
+
 `;
 
-export const TaskStatusBox = styled.div<TaskStatusProps>` 
+export const TaskStatusBox = styled.div<TaskStatusProps>`
   display: flex;
-  justify-content: center; 
-  align-items: center; 
+  justify-content: center;
+  align-items: center;
   border-radius: 4px;
   height: 33px;
   width: 150px;
   font-size: 12px;
   font-weight: bold;
+
   color: ${(props) => {
     switch (props.status) {
       case 'IN_PROGRESS':
         return '#6226EF';
       case 'TODO':
-        return '#202A30'; 
+        return '#202A30';
       case 'DONE':
-        return '#00B69B'; 
+        return '#00B69B';
       default:
-        return ''; 
+        return '';
     }
   }};
+  
   background-color: ${(props) => {
     switch (props.status) {
       case 'IN_PROGRESS':
         return 'rgba(98, 38, 239, 0.2)';
       case 'TODO':
-        return 'rgba(32, 42, 48, 0.2)'; 
+        return 'rgba(32, 42, 48, 0.2)';
       case 'DONE':
-        return 'rgba(0, 192, 155, 0.2)'; 
+        return 'rgba(0, 192, 155, 0.2)';
       default:
         return '';
     }
   }};
 `;
 
-
-export const ArrowIcon = styled.img`  
+export const ArrowIcon = styled.img`
   cursor: pointer;
   margin-right: 30px;
 `;
