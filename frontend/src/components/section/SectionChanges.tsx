@@ -219,7 +219,7 @@ useEffect(() => {
                         </LineSymbol>
                         <LineContent className={line.type}>{line.content}</LineContent>
                       </LineContainer>
-                      {reviews.length > 0 ? (reviews.filter((review) => review.line === idx).map((review, index) => (
+                      {reviews.length > 0 ? (reviews.filter((review) => review.line === line.modifiedLineNumber).map((review, index) => (
                               <CardCodeReviewReadBox>
                                 <CardCodeReviewRead key={index} review={review}/>
                               </CardCodeReviewReadBox>
