@@ -20,7 +20,7 @@ export const SearchContainer = styled.div`
 
 export const SearchInput = styled.input`
   padding: 8px 40px 8px 40px;
-  width: 50%;
+  width: 80%;
   border: 1px solid #ccc;
   border-radius: 19px;
   font-size: 14px;
