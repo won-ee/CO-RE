@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-function useDateDiff(date: string | null | undefined) {
+function useDateDiff(date: string | null | undefined, text?:string) {
   return useMemo(() => {
     if (!date) {
       return "Invalid date"; // date가 null 또는 undefined일 때 반환할 메시지
@@ -18,25 +18,25 @@ function useDateDiff(date: string | null | undefined) {
     const years = Math.floor(days / 365);
 
     if (years >= 1) {
-      return `authored ${years} years ago`;
+      return `${text} ${years} years ago`;
     }
     if (months >= 1) {
-      return `authored ${months} months ago`;
+      return `${text} ${months} months ago`;
     }
     if (weeks >= 1) {
-      return `authored ${weeks} weeks ago`;
+      return `${text} ${weeks} weeks ago`;
     }
     if (days >= 1) {
-      return `authored ${days} days ago`;
+      return `${text} ${days} days ago`;
     }
     if (hours >= 1) {
-      return `authored ${hours} hours ago`;
+      return `${text} ${hours} hours ago`;
     }
     if (minutes >= 1) {
-      return `authored ${minutes} minutes ago`;
+      return `${text} ${minutes} minutes ago`;
     }
     return "Just now";
-  }, [date]);
+  }, [date, text]);
 }
 
 export default useDateDiff;
