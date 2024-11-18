@@ -66,7 +66,8 @@ public class IssueService {
 
             // JQL 쿼리 작성
             String jqlQuery = String.format(
-                    "\"Epic Link\" is empty AND issuetype in (Story, Task)"
+                    "project=%s AND \"Epic Link\" is empty AND issuetype in (Story, Task)",
+                    project.getJiraId()
             );
 
             int maxResults = 50;
@@ -275,6 +276,24 @@ public class IssueService {
 
                                     Issues issue = null;
                                     if (newEpic == null) {
+
+                                        if(extractedIssue.get("parent")!=null)  {
+                                            Map<String, Object> parent = (Map<String, Object>) extractedIssue.get("parent");
+                                            newEpic = epicRepository.findByKeyAndJiraIdAndUrl(parent.get("key").toString(),parent.get("id").toString(),parent.get("self").toString());
+                                            if (newEpic == null) {
+                                                newEpic = Epics.builder()
+                                                        .key(parent.get("key").toString())
+                                                        .name(parent.get("summary").toString())
+                                                        .url(parent.get("self").toString())
+                                                        .jiraId(parent.get("id").toString())
+                                                        .project(user.getProject())
+                                                        .build();
+
+                                                newEpic = epicRepository.save(newEpic);
+                                            }
+
+                                        }
+
                                         issue = Issues.builder()
                                                 .title((String) subtask.get("summary"))
                                                 .content((String) subtask.get("summary"))
@@ -310,7 +329,7 @@ public class IssueService {
 
             if ((extractedIssue.get("assigneeAccountId") == null) ||
                     (!extractedIssue.get("assigneeAccountId").equals(user.getUser().getAccountId())) ||
-                    (!extractedIssue.get("issuetypeName").equals("작업"))) {
+                    (!extractedIssue.get("issuetypeName").equals("Task"))) {
                 continue;
             }
 
@@ -328,6 +347,23 @@ public class IssueService {
 
                 Issues issue = null;
                 if (newEpic == null) {
+
+                    if(extractedIssue.get("parent")!=null)  {
+                        Map<String, Object> parent = (Map<String, Object>) extractedIssue.get("parent");
+                        newEpic = epicRepository.findByKeyAndJiraIdAndUrl(parent.get("key").toString(),parent.get("id").toString(),parent.get("self").toString());
+                        if (newEpic == null) {
+                            newEpic = Epics.builder()
+                                    .key(parent.get("key").toString())
+                                    .name(parent.get("summary").toString())
+                                    .url(parent.get("self").toString())
+                                    .jiraId(parent.get("id").toString())
+                                    .project(user.getProject())
+                                    .build();
+
+                            newEpic = epicRepository.save(newEpic);
+                        }
+
+                    }
                     issue = Issues.builder()
                             .title((String) extractedIssue.get("summary"))
                             .content((String) extractedIssue.get("summary"))
@@ -406,6 +442,22 @@ public class IssueService {
                     //priority
                     Map<String, Object> priority = (Map<String, Object>) fields.get("priority");
                     extractedIssue.put("priority", priority.get("name"));
+
+                    //parent
+                    Map<String, Object> parent = (Map<String, Object>) fields.get("parent");
+                    if(parent != null) {
+                        Map<String, Object> extractedParent = new HashMap<>();
+                        extractedParent.put("id", parent.get("id"));
+                        extractedParent.put("key", parent.get("key"));
+                        extractedParent.put("self", parent.get("self"));
+                        Map<String, Object> fieldparent = (Map<String, Object>) parent.get("fields");
+                        extractedParent.put("summary", fieldparent.get("summary"));
+                        Map<String, Object> issueTypeParent = (Map<String, Object>) fieldparent.get("issuetype");
+                        if(issueTypeParent.get("name").equals("에픽") || issueTypeParent.get("name").equals("Epic")){
+                            extractedParent.put("issueType", issueTypeParent.get("name"));
+                            extractedIssue.put("parent", extractedParent);
+                        }
+                    }
 
                     // subtasks
                     List<Map<String, Object>> subtasks = (List<Map<String, Object>>) fields.get("subtasks");
