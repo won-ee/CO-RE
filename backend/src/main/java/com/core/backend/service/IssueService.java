@@ -516,6 +516,8 @@ public class IssueService {
     public IssueListDto createIssueToJira(boolean isParent, ProjectUsers projectUsers, Object bodyDto, String deadline) throws IOException {
 
         String projectKey = null;
+        log.info("createIssueToJira - bodyDto: {}", bodyDto.toString());
+
         if (isParent) {
             IssueCreateEpicDto issueCreateEpicDto = (IssueCreateEpicDto) bodyDto;
             projectKey = issueCreateEpicDto.getFields().getProject().getKey();
@@ -524,6 +526,8 @@ public class IssueService {
             IssueCreateDto issueCreateDto = (IssueCreateDto) bodyDto;
             projectKey = issueCreateDto.getFields().getProject().getKey();
         }
+        log.info("projectKey : {}", projectKey);
+
         Projects getProject = projectRepository.findByKey(projectKey);
         List<ProjectUsers> projectUsersList = projectUserRepository.findAllByProjectId(getProject.getId());
         ProjectUsers smallIssueUser = null;
