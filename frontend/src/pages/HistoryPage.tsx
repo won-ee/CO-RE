@@ -16,10 +16,9 @@ const HistoryPage: React.FC = () => {
     repos,
     isLoadingRepos,
     selectedRepoId,
-    // setSelectedRepoId,
+    setSelectedRepoId,
     graphData,
     isLoadingGraph,
-    refetchGraphData,
     graphError,
   } = useHistoryData(selectedOwner, selectedRepo);
 
@@ -29,27 +28,20 @@ const HistoryPage: React.FC = () => {
   //   }
   // }, [id, setSelectedRepoId]);
 
-  // useEffect(() => {
-  //   if (id && id !== selectedRepoId) {
-  //     setSelectedRepoId(id);
-  //   }
-  // }, [id, selectedRepoId, setSelectedRepoId]);
-
   useEffect(() => {
-    if (selectedRepoId) {
-      refetchGraphData();
+    if (id && id !== selectedRepoId) {
+      setSelectedRepoId(id);
     }
-  }, [selectedRepoId, refetchGraphData]);
+  }, [id, selectedRepoId, setSelectedRepoId]);
 
   const handleSelectChange = (selectedId: string) => {
-    // setSelectedRepoId(selectedId);
-    // if (!selectedId) {
-    //   navigate("/history");
-    // } else {
-    //   setSelectedRepoId(selectedId);
-    //   setTimeout(() => navigate(`/history/${selectedId}`), 100);
-    // }
-    navigate(`history/${selectedId}`);
+    setSelectedRepoId(selectedId);
+    if (!selectedId) {
+      navigate("/history");
+    } else {
+      setSelectedRepoId(selectedId);
+      setTimeout(() => navigate(`/history/${selectedId}`), 100);
+    }
   };
 
   if (isLoadingRepos) return <LoadingPage />;
