@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "react-query";
-import { patchReviewComment, postCreatePR,postPRReview, postReviewComment } from "../api/pullRequestAPI";
-import { TotalReviewsType, CommentType, ReviewCommentTypeForPatch } from "../Types/pullRequestType";
+import { patchReviewComment, postCreatePR,postPRReview, postReviewComment, putMergeRequest } from "../api/pullRequestAPI";
+import { TotalReviewsType, CommentType, ReviewCommentTypeForPatch, MergeRequestType } from "../Types/pullRequestType";
 import { ProjectSettingType, githubInfoType, patchUserInfoType } from "../Types/userType";
 import { patchProjectSetting, patchUserInfo, postGithubInfo, postLogout } from "../api/userAPI";
 import { postAcceptIssueLocation, postEpic, postIssueLocation, postNoEpic } from "../api/IssueAPI";
@@ -174,6 +174,17 @@ export const useMutationPatchReviewComment = ()=>{
     },
     onError: (data)=>{
       console.error("Error : ReviewComment Patch Matation , ", data);
+    }
+  })
+}
+
+export const useMutationPutMergeRequest = ()=>{
+  return useMutation((params:{owner: string, repo:string, pullId: number, mergeData: MergeRequestType}) => putMergeRequest(params),{
+    onSuccess:(data)=>{
+      console.log("SUCCESS : Merge Request Matation , ", data); 
+    },
+    onError: (data)=>{
+      console.error("Error : Merge Request Matation , ", data);
     }
   })
 }
