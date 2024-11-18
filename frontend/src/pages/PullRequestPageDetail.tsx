@@ -44,12 +44,6 @@ const PullRequestPageDetail:React.FC = () => {
     const [isFinalReviewOpen,setIsFinalReviewOpen] = useState(false)
 
 
-      useEffect(()=>{
-        handleFinishReview(); // API 호출
-      },[body])
-
-    if (isLoading) return <LoadingPage/>;
-    if (error) return <NotFoundPage errorNumber={404}/>;
 
 
 
@@ -78,6 +72,10 @@ const PullRequestPageDetail:React.FC = () => {
     })
     }
 
+    useEffect(()=>{
+        handleFinishReview(); // API 호출
+      },[body])
+
     const handleAddReview = (content: string) => {
         setBody(content); // content를 body로 설정     
     };
@@ -85,7 +83,8 @@ const PullRequestPageDetail:React.FC = () => {
     const handlesIsFinalReviewOpen = ()=>{
         setIsFinalReviewOpen((isFinalReviewOpen)=>!isFinalReviewOpen)
       }
-
+    if (isLoading) return <LoadingPage/>;
+    if (error) return <NotFoundPage errorNumber={404}/>;
   return (
     <>
         <ContainerLayout>
