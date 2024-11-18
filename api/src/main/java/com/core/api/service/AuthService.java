@@ -16,7 +16,7 @@ public class AuthService {
 
     public TokenDto requestTokenFromServer(String token) {
         log.info("Requesting token from server" + token);
-        return backendClient.getGithubToken(token);
+        return backendClient.getGithubToken("Bearer " + token);
     }
 
 }
