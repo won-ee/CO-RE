@@ -10,16 +10,8 @@ import {
 import lens from "../../assets/Lens.png";
 import { useQueryIssueList } from "../../hooks/useIssueList";
 import { useProjectStore } from "../../store/userStore";
+import { IssueListEpicType } from "../../Types/IssueType";
 
-interface Issue {
-  epicKey: string;
-  issueContent: string;
-  issueTitle: string;
-  issueKey: string;
-  epicName: string;
-  issueStatus: string;
-  issuePriority: number;
-}
 
 const SectionIssueList: React.FC = () => {
   const { selectedProjectUserId } = useProjectStore();
@@ -49,7 +41,7 @@ const SectionIssueList: React.FC = () => {
   ];
   
 
-  const groupedData = Array.isArray(data) ? data.reduce<Record<string, Issue[]>>((acc, item) => {
+  const groupedData = Array.isArray(data) ? data.reduce<Record<string, IssueListEpicType[]>>((acc, item) => {
     if (!acc[item.epicKey]) {
       acc[item.epicKey] = [];
     }

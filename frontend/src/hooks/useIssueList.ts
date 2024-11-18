@@ -29,7 +29,7 @@ export const useQueryIssueLocation = (projectUserId:number) => {
         () => getIssueLocation(projectUserId),
       {
         staleTime: 1000 * 60 * 5, 
-        enabled: !!projectUserId, 
+        enabled: !!projectUserId,  
 
       }
     );
