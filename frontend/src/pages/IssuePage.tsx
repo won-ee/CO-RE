@@ -48,6 +48,16 @@ const IssuePage: React.FC = () => {
         <FormContainerBox>
           <FormWrapperBox>
             <LeftSectionBox>
+              {isErrorInquirySelected && (
+                <SelectInput value={selectedTeamId} onChange={handleTeamChange}>
+                  <option value="">팀 선택</option>
+                  {differentProjects?.map((project) => (
+                    <option key={project.id} value={project.key}>
+                      {project.name}
+                    </option>
+                  ))}
+                </SelectInput>
+              )}
               <ErrorInquiryButton
                 onClick={() => setIsErrorInquirySelected(true)}
                 $isErrorInquirySelected={isErrorInquirySelected}
@@ -61,16 +71,6 @@ const IssuePage: React.FC = () => {
               >
                 SUPPORT - 이슈재배치
               </RelocationButton>
-              {isErrorInquirySelected && (
-                <SelectInput value={selectedTeamId} onChange={handleTeamChange}>
-                  <option value="">팀 선택</option>
-                  {differentProjects?.map((project) => (
-                    <option key={project.id} value={project.key}>
-                      {project.name}
-                    </option>
-                  ))}
-                </SelectInput>
-              )}
             </LeftSectionBox>
             <DividerLine />
             {isErrorInquirySelected ? (
