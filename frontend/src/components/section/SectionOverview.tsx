@@ -8,12 +8,19 @@ import { differenceInDays } from 'date-fns'
 import { useMutationReviewComment } from '../../hooks/useMutationCreatePR';
 import { useProjectStore } from '../../store/userStore';
 import LoadingPage from '../../pages/LoadingPage';
+import { QueryObserverResult } from 'react-query';
+
+interface ErrorType{
+  message: string; // 에러 메시지
+  statusCode?: number; // HTTP 상태 코드 (선택 사항)
+}
 
 interface SectionOverviewProps{
   data:PRDataType|undefined
+  refetch: () => Promise<QueryObserverResult<PRDataType, ErrorType>>;
 }
 
-const SectionOverview:React.FC<SectionOverviewProps> = ({data}) => {
+const SectionOverview:React.FC<SectionOverviewProps> = ({data,refetch}) => {
   const [postLoading, setPostLoading] = useState(false)
   const [body, setBody] = useState<string>("")
   const [rating,setRating] = useState<number>(0);
@@ -42,6 +49,7 @@ const SectionOverview:React.FC<SectionOverviewProps> = ({data}) => {
     mutationComment.mutate(mutationData,{
       onSuccess:()=>{
         setPostLoading(false)
+        refetch()
       },
       onError: ()=>{
         setPostLoading(false)
@@ -59,6 +67,7 @@ const SectionOverview:React.FC<SectionOverviewProps> = ({data}) => {
 
   const handleStatus = (e:boolean)=>{
     setStatus(e);
+    console.log('상태값',status);
     handlePostComment()
   }
   return (
