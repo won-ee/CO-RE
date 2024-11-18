@@ -141,11 +141,11 @@ const SectionErrorInquiry: React.FC<SectionErrorInquiryProps> = ({selectedTeamId
           <FormLabel>[필수] 우선도를 알려주세요</FormLabel>
           <SelectInput value={selectedPriority} onChange={handlePriorityChange}>
             <option>옵션선택</option>
-            <option value="HIGHEST">HIGHEST</option>
-            <option value="HIGH">HIGH</option>
-            <option value="MEDIUM">MEDIUM</option>
-            <option value="LOW">LOW</option>
-            <option value="LOWEST">LOWEST</option>
+            <option value="Highest">HIGHEST</option>
+            <option value="High">HIGH</option>
+            <option value="Medium">MEDIUM</option>
+            <option value="Low">LOW</option>
+            <option value="Lowest">LOWEST</option>
           </SelectInput>
         </div>
         <div>
