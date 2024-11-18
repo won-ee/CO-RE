@@ -67,9 +67,8 @@ const SectionOverview:React.FC<SectionOverviewProps> = ({data,refetch}) => {
 
   const handleStatus = (e:boolean)=>{
     setStatus(e);
-    console.log('상태값',status);
   }
-  
+
   useEffect(() => {
     handlePostComment();
   }, [status]);
