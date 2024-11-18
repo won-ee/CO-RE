@@ -5,6 +5,7 @@ import { ProjectSettingType, githubInfoType, patchUserInfoType } from "../Types/
 import { patchProjectSetting, patchUserInfo, postGithubInfo, postLogout } from "../api/userAPI";
 import { postAcceptIssueLocation, postEpic, postIssueLocation, postNoEpic } from "../api/IssueAPI";
 import { useProjectStore, useUserStore } from "../store/userStore";
+import { EpicFieldsType } from "../Types/IssueType";
 
 export const useMutationCreatePR=()=>{
     return useMutation(postCreatePR)
@@ -70,15 +71,15 @@ export const useMutationGithubInfo = () => {
 
 export const useMutationEpic = () => {
   return useMutation(
-    ({ projectUserId, deadline, priority }: { projectUserId: number; deadline: string; priority: string }) => 
-      postEpic(projectUserId, deadline, priority)
+    ({ projectUserId, deadline, fields }: { projectUserId: number; deadline: string; fields: EpicFieldsType }) => 
+      postEpic(projectUserId, deadline, fields)
   );
 };
 
 export const useMutationNoEpic = () => {
   return useMutation(
-    ({ projectUserId, deadline, priority }: { projectUserId: number; deadline: string; priority: string }) => 
-      postNoEpic(projectUserId, deadline, priority)
+    ({ projectUserId, deadline, fields }: { projectUserId: number; deadline: string; fields: EpicFieldsType }) => 
+      postNoEpic(projectUserId, deadline, fields)
   );
 };
 

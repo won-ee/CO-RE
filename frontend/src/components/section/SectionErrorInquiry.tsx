@@ -38,16 +38,20 @@ const ExampleCustomInput00 = forwardRef<HTMLDivElement, { value?: string; onClic
     </StyledDatePicker>
   )
 );
-
-const SectionErrorInquiry: React.FC = () => {
-  const { selectedProjectId,selectedProjectUserId } = useProjectStore();
+interface SectionErrorInquiryProps{
+  selectedTeamId:string;
+  setSelectedTeamId:React.Dispatch<React.SetStateAction<string>>;
+}
+const SectionErrorInquiry: React.FC<SectionErrorInquiryProps> = ({selectedTeamId,setSelectedTeamId}) => {
+  const { selectedProjectId, selectedProjectUserId } = useProjectStore();
   const { data } = useQueryEpicList(selectedProjectId);
-  const [selectedDate, setSelectedDate] = useState<Date|null>(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
   const [selectedPriority, setSelectedPriority] = useState<string>("");
   const [selectedEpic, setSelectedEpic] = useState<string>("");
+  const [title, setTitle] = useState<string>("");
   const { mutate: mutateEpic } = useMutationEpic();
   const { mutate: mutateNoEpic } = useMutationNoEpic();
-  
+
   const handlePriorityChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedPriority(event.target.value);
   };
@@ -56,29 +60,68 @@ const SectionErrorInquiry: React.FC = () => {
     setSelectedEpic(event.target.value);
   };
 
+  const handleTitleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setTitle(event.target.value); 
+  };
+
   const handleSubmit = () => {
+    const epicFields = {
+      project: {
+        key: selectedTeamId, 
+      },
+      summary: title, 
+      issuetype: {
+        name: "Task",
+      },
+      priority: {
+        name: selectedPriority, 
+      },
+      assignee: {
+        accountId: "", 
+      },
+    };
+    
+    const noEpicFields = {
+        project: {
+          key: selectedTeamId // 프로젝트 키
+        },
+        summary: title, // 프로젝트 제목 or 내용
+        issuetype: {
+          name: "Task"  // 고정
+        },
+        parent: {
+          key: selectedEpic // 선택한 epic Key
+        },
+        priority: {
+          name: selectedPriority // 중요도
+        },
+         assignee: {
+          accountId: ""  // 작성하지 말것.
+        }
+    }
     if (selectedDate) {
-      const formattedDate = selectedDate.toLocaleDateString("en-CA");
+      const formattedDate = selectedDate.toLocaleDateString("en-CA"); 
       if (selectedEpic) {
         mutateEpic({
           projectUserId: selectedProjectUserId,
           deadline: formattedDate,
-          priority: selectedPriority,
+          fields: epicFields,
         });
       } else {
         mutateNoEpic({
           projectUserId: selectedProjectUserId,
           deadline: formattedDate,
-          priority: selectedPriority,
+          fields: noEpicFields,
         });
       }
     }
-  
     setSelectedPriority("");
     setSelectedEpic("");
     setSelectedDate(new Date());
+    setTitle(""); 
+    setSelectedTeamId("");
   };
-
+  
   return (
     <RightSectionLayout>
       <ErrorMessageBox>
@@ -101,12 +144,12 @@ const SectionErrorInquiry: React.FC = () => {
         <div>
           <FormLabel>[필수] 마감일자를 선택해주세요</FormLabel>
           <DatePicker
-              selected={selectedDate}
-              onChange={(date: Date | null) => setSelectedDate(date)}
-              customInput={<ExampleCustomInput00/>}
-              dateFormat="yyyy-MM-dd" 
-              popperPlacement="bottom-start" 
-            />
+            selected={selectedDate}
+            onChange={(date: Date | null) => setSelectedDate(date)}
+            customInput={<ExampleCustomInput00 />}
+            dateFormat="yyyy-MM-dd"
+            popperPlacement="bottom-start"
+          />
         </div>
       </FormRow>
 
@@ -117,7 +160,7 @@ const SectionErrorInquiry: React.FC = () => {
             <option>옵션선택</option>
             {data &&
               data.map((epic) => (
-                <option key={epic.id} value={epic.id}>
+                <option key={epic.id} value={epic.key}>
                   {epic.name}
                 </option>
               ))}
@@ -125,9 +168,13 @@ const SectionErrorInquiry: React.FC = () => {
         </div>
       </FormRow>
 
-      <FormLabel>[선택] 제목을 입력해 주세요</FormLabel>
+      <FormLabel>[필수] 제목을 입력해 주세요</FormLabel>
       <FormRow>
-        <TextInput rows={4} />
+        <TextInput
+          rows={4}
+          value={title}
+          onChange={handleTitleChange} 
+        />
         <div style={{ textAlign: "right", marginLeft: "32px" }}>
           <SubmitButton onClick={handleSubmit}>SEND</SubmitButton>
         </div>

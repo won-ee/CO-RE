@@ -21,17 +21,22 @@ import { Block } from "../styles/GlobalStyled";
 import { useProjectStore, useUserStore } from "../store/userStore";
 import { useQueryAllProject } from "../hooks/useIssueList";
 
-const IssuePage:React.FC=()=>{
+const IssuePage: React.FC = () => {
   const { selectedProjectId } = useProjectStore();
   const [isErrorInquirySelected, setIsErrorInquirySelected] = useState(true);
   const [isIssueSelected, setIsIssueSelected] = useState(true);
-  const { userInfo} = useUserStore();
-  const { data: allProject } = useQueryAllProject(selectedProjectId);   
+  const [selectedTeamId, setSelectedTeamId] = useState<string>(""); 
+  const { userInfo } = useUserStore();
+  const { data: allProject } = useQueryAllProject(selectedProjectId);
 
   const differentProjects = allProject?.filter(
     (project) =>
       userInfo && !userInfo.projects.some((userProject) => userProject.id === project.id)
   );
+
+  const handleTeamChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedTeamId(event.target.value);
+  };
 
   return (
     <>
@@ -39,8 +44,8 @@ const IssuePage:React.FC=()=>{
         <FormContainerBox>
           <FormWrapperBox>
             <LeftSectionBox>
-              <SelectInput>
-                <option>팀 선택</option>
+              <SelectInput value={selectedTeamId} onChange={handleTeamChange}>
+                <option value="">팀 선택</option>
                 {differentProjects?.map((project) => (
                   <option key={project.id} value={project.id}>
                     {project.name}
@@ -63,7 +68,7 @@ const IssuePage:React.FC=()=>{
             </LeftSectionBox>
             <DividerLine />
             {isErrorInquirySelected ? (
-              <SectionErrorInquiry />
+              <SectionErrorInquiry selectedTeamId={selectedTeamId} setSelectedTeamId={setSelectedTeamId} />
             ) : (
               <SectionIssueRelocation />
             )}
@@ -90,6 +95,6 @@ const IssuePage:React.FC=()=>{
       <Block />
     </>
   );
-}
+};
 
 export default IssuePage;

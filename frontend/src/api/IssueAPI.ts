@@ -1,4 +1,5 @@
 import axios from "axios";
+import { EpicFieldsType } from "../Types/IssueType";
 
 const BASE_URL ='https://k11s106.p.ssafy.io/api'; 
 
@@ -69,11 +70,11 @@ export const getEpicList = async (projectId:number) => {
   return response.data;
 };
 
-export const postEpic = async (projectUserId:number,deadline:string,Priority:string) => {
+export const postEpic = async (projectUserId:number,deadline:string,fields:EpicFieldsType) => {
   
   const response = await axios.post(
-    `${BASE_URL}/issue/create/no-epic/${projectUserId}?deadline=${deadline}`,
-    Priority,
+    `${BASE_URL}/issue/create/epic/${projectUserId}?deadline=${deadline}`,
+    fields,
     {
       headers: {
         withCredentials: true,
@@ -83,11 +84,11 @@ export const postEpic = async (projectUserId:number,deadline:string,Priority:str
   return response.data;
 };
 
-export const postNoEpic = async (projectUserId:number,deadline:string,Priority:string) => {
+export const postNoEpic = async (projectUserId:number,deadline:string,fields:EpicFieldsType) => {
   
   const response = await axios.post(
-    `${BASE_URL}/issue/create/epic/${projectUserId}?deadline=${deadline}`,
-    Priority,
+    `${BASE_URL}/issue/create/no-epic/${projectUserId}?deadline=${deadline}`,
+    fields,
     {
       headers: {
         withCredentials: true,
