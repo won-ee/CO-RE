@@ -120,7 +120,9 @@ const SectionChanges: React.FC<SectionChangesProps> = ({ changes, onUpdateReview
   if (body) {
     //EsLint예외처리
     }
-
+  const test = console.log('리뷰스 : ',reviews);
+  const test2  = console.log('리뷰 데이터 : ', reviewData);
+  console.log(test,test2);
   // 리뷰가 업데이트될 때마다 onUpdateReviews 호출
 useEffect(() => {
   onUpdateReviews(reviews);
