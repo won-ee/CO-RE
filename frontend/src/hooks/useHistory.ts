@@ -35,6 +35,5 @@ export const useHistoryData = (owner: string, repo: string) => {
     graphData,
     isLoadingGraph,
     graphError,
-    refetchGraphData,
   };
 };
