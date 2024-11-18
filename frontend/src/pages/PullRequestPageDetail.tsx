@@ -106,7 +106,7 @@ const PullRequestPageDetail:React.FC = () => {
             </TabBox>
             {isSeleted === 'Overview' && <SectionOverview data={data} refetch={refetch}/>}
             {isSeleted === 'Commits' && <SectionCommits commits={commitData.data || [] } />}
-            {isSeleted === 'Changes' && <SectionChanges changes={changesData.data || []} onUpdateReviews={handleUpdateComments}/>}
+            {isSeleted === 'Changes' && <SectionChanges changes={changesData.data || []} onUpdateReviews={handleUpdateComments} reviewData={data?.reviews ?? []}/>}
         </ContainerLayout>   
     </>
     )

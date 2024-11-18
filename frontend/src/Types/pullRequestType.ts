@@ -16,6 +16,12 @@ export type ReviewType = {
   body: string;
 };
 
+export interface PRDataReviewType{
+    writer: ReviewerType;
+    content: string;
+    reviews: ReviewType[]
+}
+
 export interface ChangeType {
   file: {
     filename: string;
@@ -78,7 +84,7 @@ export interface PRDataType {
   description: string;
   mergeStatus: boolean;
   commits: CommitType[];
-  reviews: TotalReviewsType[];
+  reviews: PRDataReviewType[];
   comments: CommentsType[];
 }
 

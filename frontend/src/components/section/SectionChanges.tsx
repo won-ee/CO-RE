@@ -18,7 +18,7 @@ import {
 import Vector from '../../assets/low.png'
 import ButtonReview from '../buttons/ButtonReview';
 import CardCodeReview from '../card/CardCodeReview';
-import { ReviewType } from '../../Types/pullRequestType';
+import { PRDataReviewType, ReviewType } from '../../Types/pullRequestType';
 import CardCodeReviewRead from '../card/CardCodeReviewRead';
 
 interface SectionChangesProps {
@@ -33,6 +33,7 @@ interface SectionChangesProps {
     content: string;
   }[];
   onUpdateReviews: (reviews: ReviewType[]) => void;
+  reviewData : PRDataReviewType[]
 }
 
 type LineType = 'add' | 'remove' | 'context' | 'collapsed'|'hunkHeader';
@@ -105,14 +106,14 @@ const parsePatchWithCollapsedContent = (patch: string, content: string): Line[] 
   return result;
 };
 
-const SectionChanges: React.FC<SectionChangesProps> = ({ changes, onUpdateReviews }) => {
+const SectionChanges: React.FC<SectionChangesProps> = ({ changes, onUpdateReviews, reviewData }) => {
   const [expandedCards, setExpandedCards] = useState<{ [key: number]: boolean }>(
     () => changes.reduce((acc, _, index) => ({ ...acc, [index]: true }), {})
   );
   const [expandedGroups, setExpandedGroups] = useState<{ [key: number]: boolean }>({});
   const [hoveredLineId, setHoveredLineId] = useState<number | null>(null); // 현재 호버된 줄의 ID 상태
   const [reviewLineIndex, setReviewLineIndex] = useState<number | null>(null); // 리뷰가 표시될 줄의 인덱스
-  const [reviews,setReviews] = useState<ReviewType[]>([])
+  const [reviews,setReviews] = useState<ReviewType[]>(reviewData.flatMap((item)=>item.reviews))
   const [path, setPath] = useState<string>('');
   const [startLine, setStartLine] = useState<number>(0);
   const [body, setBody] = useState(""); 
