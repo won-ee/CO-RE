@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class GitHubNameDto {
-    private String githubName;
+    private String githubId;
 }
