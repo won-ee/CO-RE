@@ -21,13 +21,14 @@ interface CardTaskProps {
 }
 
 const CardTask: React.FC<CardTaskProps> = ({ task, handleSubmit,status }) => {
-    
+const epicName = task.epicName || "NO EPIC";
+
   return (
     <CardLayout key={task.id}>
         <CardCellBox>
             <CardNameParagraph>{task.name}</CardNameParagraph>
             <ProjectCodeSpan>{task.key}</ProjectCodeSpan>
-            <CategoryBox status={status}>{task.epicName}</CategoryBox>
+            <CategoryBox status={status}>{epicName}</CategoryBox>
         </CardCellBox>
         <DeadlineCellBox>{task?.deadLine?.substring(0, 10)}</DeadlineCellBox>
         <SenderCellBox>
