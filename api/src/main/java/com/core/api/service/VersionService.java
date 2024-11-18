@@ -91,7 +91,7 @@ public class VersionService {
                 totalReviews);
 
         log.info("Sending email {}", email);
-        //  emailClient.sendEmail("application/json", email);
+        emailClient.sendEmail("application/json", email);
     }
 
     private void updateSinglePullRequestVersion(PullRequestServerDto pullRequest, Version version) {
