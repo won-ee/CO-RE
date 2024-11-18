@@ -1,6 +1,6 @@
 import { useMutation } from "react-query";
-import { postCreatePR,postPRReview } from "../api/pullRequestAPI";
-import { TotalReviewsType } from "../Types/pullRequestType";
+import { postCreatePR,postPRReview, postReviewComment } from "../api/pullRequestAPI";
+import { TotalReviewsType, CommentType } from "../Types/pullRequestType";
 import { ProjectSettingType, githubInfoType, patchUserInfoType } from "../Types/userType";
 import { patchProjectSetting, patchUserInfo, postGithubInfo, postLogout } from "../api/userAPI";
 import { postAcceptIssueLocation, postEpic, postIssueLocation, postNoEpic } from "../api/IssueAPI";
@@ -128,3 +128,8 @@ export const useMutationLogout = () => {
     },
   });
 };
+
+export const useMutationReviewComment = () =>{
+  return useMutation((params: { owner: string; repo: string; pullId: string; CommentData: CommentType }) => postReviewComment(params))
+
+}

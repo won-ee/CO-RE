@@ -11,23 +11,12 @@ interface SectionOverviewProps{
 }
 
 const SectionOverview:React.FC<SectionOverviewProps> = ({data}) => {
-  const dafeDiff = useDateDiff(data?.createdDate)
+  const dafeDiff = useDateDiff(data?.createdDate,"")
 
   const deadlineDate = data?.deadline ? new Date(data.deadline) : new Date();
   const today = new Date();
   const dayDifference = differenceInDays(deadlineDate, today);
   const deadlineText = dayDifference > 0 ? `D-${dayDifference}` : `D-day`;
-
-  const formatRelativeDate = (dateString: string): string => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const differenceInTime = now.getTime() - date.getTime();
-    const differenceInDays = Math.floor(differenceInTime / (1000 * 60 * 60 * 24));
-    
-    if (differenceInDays === 0) return 'today';
-    if (differenceInDays === 1) return 'yesterday';
-    return `${differenceInDays} days ago`;
-  };
 
   return (
     <>
@@ -66,7 +55,6 @@ const SectionOverview:React.FC<SectionOverviewProps> = ({data}) => {
             <OverviewApproveHeader>
               <OverviewProfileImg src={comment.writer.writerImg} />
               <OverviewName>{comment.writer.writerId}</OverviewName>
-                <OverviewDayText>{formatRelativeDate(comment.comment.date)}</OverviewDayText>
               <OverviewApproveButton $status={comment.comment.status}>
                {comment.comment.status === true ? "approve" : `reject`}
               </OverviewApproveButton>

@@ -191,7 +191,7 @@ function SectionCreateBranch({ sourceBranch, targetBranch }: SectionCreateBranch
   return (
     postLoading ? 
     <p>
-    Loading
+    Loading...
     </p>
     :
     <SectionCreateBranchLayout>
