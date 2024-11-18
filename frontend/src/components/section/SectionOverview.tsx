@@ -5,7 +5,7 @@ import { PRDataType } from '../../Types/pullRequestType';
 import ReactMarkdown from 'react-markdown';
 import useDateDiff from '../../hooks/useDateDiff';
 import { differenceInDays } from 'date-fns'
-import { useMutationReviewComment } from '../../hooks/useMutationCreatePR';
+import { useMutationPutMergeRequest, useMutationReviewComment } from '../../hooks/useMutationCreatePR';
 import { useProjectStore } from '../../store/userStore';
 import LoadingPage from '../../pages/LoadingPage';
 import { QueryObserverResult } from 'react-query';
@@ -32,6 +32,31 @@ const SectionOverview:React.FC<SectionOverviewProps> = ({data,refetch}) => {
   const today = new Date();
   const dayDifference = differenceInDays(deadlineDate, today);
   const deadlineText = dayDifference > 0 ? `D-${dayDifference}` : `D-day`;
+  const mutationMerge = useMutationPutMergeRequest()
+
+  const handleMergeRequest = ()=>{
+    setPostLoading(true);
+    const mergeData = {
+      commitTitle:"",
+      commitMessage:"",
+      mergeMethod:"merge",
+    }
+    const mustationData = {
+      owner: projectInfo.selectedOwner,
+      repo: projectInfo.selectedRepo,
+      pullId: data?.pullRequestId || 0,
+      mergeData :mergeData
+    }
+    mutationMerge.mutate(mustationData,{
+      onSuccess:()=>{
+        setPostLoading(false)
+        refetch()
+      },
+      onError: ()=>{
+        setPostLoading(false)
+      }
+    })
+  }
 
   const handlePostComment = ()=>{
     setPostLoading(true);
@@ -124,6 +149,7 @@ const SectionOverview:React.FC<SectionOverviewProps> = ({data,refetch}) => {
         </OverviewApproveBox>
         <OverviewInput placeholder="Write a comment" onChange={handleCommentbody}/>
         <Container>
+          <button onClick={() => handleMergeRequest}>머지 버튼</button>
           <Text>Code-Review</Text>
           <RadioGroup>
             <RadioCol>
