@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import GitGraphComponent from "../components/History/HIstoryGraph";
 import { useHistoryData } from "../hooks/useHistory";
@@ -22,11 +22,11 @@ const HistoryPage: React.FC = () => {
     graphError,
   } = useHistoryData(selectedOwner, selectedRepo);
 
-  // useEffect(() => {
-  //   if (graphError) {
-  //     navigate("/404");
-  //   }
-  // }, [graphError, navigate]);
+  useEffect(() => {
+    if (id) {
+      setSelectedRepoId(id);
+    }
+  }, [id, setSelectedRepoId]);
 
   const handleSelectChange = (selectedId: string) => {
     setSelectedRepoId(selectedId);
