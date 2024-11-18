@@ -13,6 +13,7 @@ import {
   PRListType,
   ChangeType,
   TemplateType,
+  CommentType
 } from "../Types/pullRequestType";
 
 const BASE_URL ='https://k11s106.p.ssafy.io/api'; 
@@ -190,4 +191,18 @@ export const getTemplateInsight = async({owner,repo,base,head}: CommitListParams
     console.log("Error fetching Template:", error);
     throw error
   }
+}
+
+export const postReviewComment = async({owner,repo,pullId,CommentData}: {
+  owner: string;
+  repo: string;
+  pullId: string;
+  CommentData: CommentType;})=>{
+  const { data } = await axios.post(`${BASE_URL}/github/pull-request${owner}/${repo}/${pullId}`,CommentData,{
+    headers: {
+      "Content-Type": "application/json",
+      withCredentials: true,
+    },
+  })
+  return data;
 }
