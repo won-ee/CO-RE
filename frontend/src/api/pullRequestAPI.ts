@@ -12,6 +12,7 @@ import {
   PRListParams,
   PRListType,
   ChangeType,
+  TemplateType,
 } from "../Types/pullRequestType";
 
 const BASE_URL ='https://k11s106.p.ssafy.io/api'; 
@@ -173,3 +174,19 @@ export const getChangeList = async ({
     throw error;
   }
 };
+
+export const getTemplateInsight = async({owner,repo,base,head}: CommitListParams) : Promise<TemplateType>=>{
+  try{
+    const response = await axios.get<TemplateType>(`${BASE_URL}/insight/${owner}/${repo}/${base}...${head}`,
+      {
+        headers: {
+          withCredentials: true,
+        }
+      }
+    )
+    return response.data
+  } catch (error) {
+    console.log("Error fetching Template:", error);
+    throw error
+  }
+}
