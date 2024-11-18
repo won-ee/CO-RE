@@ -10,6 +10,7 @@ import com.core.api.data.entity.Version;
 import com.core.api.data.repository.PullRequestRepository;
 import com.core.api.data.repository.VersionRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,7 @@ import java.util.function.Consumer;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class VersionService {
 
     private final VersionRepository versionRepository;
@@ -61,7 +63,7 @@ public class VersionService {
 
     private void sendEmail(String content, String owner, String repo, List<PullRequest> pullRequests) {
         ProjectDto project = backendClient.getProject(owner, repo);
-
+        log.info("Sending email to {}", project.projectUserEmail());
         int totalCommits = pullRequests.stream()
                 .mapToInt(pr -> pr.getCommits()
                         .size())
