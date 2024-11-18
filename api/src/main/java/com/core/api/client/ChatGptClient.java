@@ -6,6 +6,7 @@ import com.core.api.data.dto.chatgpt.ChatGptDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.util.Map;
 
@@ -13,5 +14,5 @@ import java.util.Map;
 public interface ChatGptClient {
 
     @PostMapping
-    Map<String, Object> makePullRequestTemplate(@RequestBody ChatGptDto prompt);
+    Map<String, Object> makePullRequestTemplate(@RequestHeader("Content-Type") String contentType, @RequestBody ChatGptDto prompt);
 }
