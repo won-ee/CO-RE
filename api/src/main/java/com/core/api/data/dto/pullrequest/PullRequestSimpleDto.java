@@ -28,7 +28,7 @@ public class PullRequestSimpleDto {
     List<WriterDto> reviewers;
 
     public static PullRequestSimpleDto from(PullRequest pullRequest, List<Reviewer> reviewers) {
-        WriterDto writer = WriterDto.from(pullRequest.getWriterId(), "");
+        WriterDto writer = WriterDto.from(pullRequest.getWriterId(), pullRequest.getWriterImg());
         List<WriterDto> reviewerInfo = mapToReviewerInfo(reviewers);
         Integer commentCount = calculateCommentCount(reviewers);
 

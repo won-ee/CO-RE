@@ -154,13 +154,5 @@ public class PullRequestService {
                 .toString());
     }
 
-    private WriterDto getUserByUsername(String username) {
-        Map<?, ?> user = gitHubClient.getUserByUsername(username);
-
-        return WriterDto.from(user.get("login")
-                .toString(), user.get("avatar_url")
-                .toString());
-    }
-
 
 }
