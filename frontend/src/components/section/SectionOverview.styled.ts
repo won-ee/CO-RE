@@ -25,14 +25,12 @@ export const DeadLineBox = styled.div<StringProps>`
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 43px;
-    height: 20px;
-    background-color: #FCD7D4;
-    color: #EF3826;
+    padding: 20px;
     border-radius: 3px;
     font-weight: bold;
     white-space: nowrap;
-    color: ${(props)=>(props.$afterReview==true ? '#723CF1': parseInt(props.$status.replace('D-',''),10) < 2 ? 'red': props.$status =='D-day' ? 'red':'black')};
+    background-color: ${(props)=>(props.$afterReview==true ? '#E0D4FC': parseInt(props.$status.replace('D-',''),10) < 2 ? '#FCD7D4': props.$status =='D-day' ? '#FCD7D4':'#CCF0EB')};
+    color: ${(props)=>(props.$afterReview==true ? '#6226EF': parseInt(props.$status.replace('D-',''),10) < 2 ? '#EF3826': props.$status =='D-day' ? '#EF3826':'#00B69B')};
 `
 
 export const OverviewHeaderText = styled.div`
