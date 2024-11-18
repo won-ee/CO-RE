@@ -29,12 +29,7 @@ const SectionIssueRelocation: React.FC = () => {
     const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedIssueId = Number(event.target.value);
         setIssueId(selectedIssueId);
-        
-        // 선택된 issueTitle을 상태로 저장
-        const selectedIssue = issueList.find(issue => issue.issueId === selectedIssueId);
-        if (selectedIssue) {
-            setIssueName(selectedIssue.issueTitle);
-        }
+
     };
 
     const handleSubmit = () => {    
@@ -74,8 +69,7 @@ const SectionIssueRelocation: React.FC = () => {
                 </div>
             )}
             {mutation.isSuccess && issueName && (
-                <div style={{ color: 'gray' }}>
-                    "{issueName}" 재배치 완료.
+                <div>
                 </div>
             )}
 
