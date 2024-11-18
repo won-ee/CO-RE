@@ -1,5 +1,6 @@
 package com.core.api.data.entity;
 
+import com.core.api.data.dto.WriterDto;
 import com.core.api.data.dto.pullrequest.PullRequestInputDto;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -82,7 +83,7 @@ public class PullRequest extends Base {
     @OneToMany(mappedBy = "pullRequest", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> images = new ArrayList<>();
 
-    public static PullRequest from(PullRequestInputDto pullRequestInputDto, Integer pullRequestId, String writerId) {
+    public static PullRequest from(PullRequestInputDto pullRequestInputDto, Integer pullRequestId, WriterDto writerDto) {
         PullRequest pullRequest = new PullRequest();
         pullRequest.title = pullRequestInputDto.title();
         pullRequest.head = pullRequestInputDto.head();
@@ -95,7 +96,8 @@ public class PullRequest extends Base {
                 .atStartOfDay();
         pullRequest.priority = pullRequestInputDto.priority();
         pullRequest.description = pullRequestInputDto.description();
-        pullRequest.writerId = writerId;
+        pullRequest.writerId = writerDto.writerId();
+        pullRequest.writerImg = writerDto.writerImg();
         pullRequest.owner = pullRequestInputDto.owner();
         pullRequest.repo = pullRequestInputDto.repo();
         return pullRequest;

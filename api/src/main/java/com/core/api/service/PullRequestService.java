@@ -1,6 +1,7 @@
 package com.core.api.service;
 
 import com.core.api.client.GitHubClient;
+import com.core.api.data.dto.WriterDto;
 import com.core.api.data.dto.commit.CommitDto;
 import com.core.api.data.dto.commit.CommitMessageDto;
 import com.core.api.data.dto.github.CommitMessageServerDto;
@@ -41,9 +42,9 @@ public class PullRequestService {
                 pullRequestInputDto.repo(),
                 PullRequestInputServerDto.from(pullRequestInputDto)
         );
-        String writerId = getUser();
+        WriterDto writerDto = getUser();
         Integer number = (Integer) data.get("number");
-        PullRequest pr = PullRequest.from(pullRequestInputDto, number, writerId);
+        PullRequest pr = PullRequest.from(pullRequestInputDto, number, writerDto);
         pullRequestRepository.save(pr);
 
         List<Reviewer> reviewers = pullRequestInputDto.reviewers()
@@ -68,7 +69,7 @@ public class PullRequestService {
 
     public List<PullRequestSimpleDto> getPullRequestListByReviewer(String owner, String repo) {
 
-        String userId = getUser();
+        String userId = getUser().writerId();
         List<PullRequest> prList = pullRequestRepository.findAllByOwnerAndRepoWhereReviewerIs(owner, repo, userId)
                 .orElse(List.of());
 
@@ -80,7 +81,7 @@ public class PullRequestService {
 
     public List<PullRequestSimpleDto> getPullRequestListByWriter(String owner, String repo) {
 
-        String userId = getUser();
+        String userId = getUser().writerId();
         List<PullRequest> prList = pullRequestRepository.findAllByOwnerAndRepoWhereWriterIs(owner, repo, userId)
                 .orElse(List.of());
 
@@ -145,10 +146,20 @@ public class PullRequestService {
         return PullRequestDto.from(pr, commits, pr.getReviewers());
     }
 
-    private String getUser() {
+    private WriterDto getUser() {
         Map<?, ?> user = gitHubClient.getUser();
-        return user.get("login")
-                .toString();
+
+        return WriterDto.from(user.get("login")
+                .toString(), user.get("avatar_url")
+                .toString());
+    }
+
+    private WriterDto getUserByUsername(String username) {
+        Map<?, ?> user = gitHubClient.getUserByUsername(username);
+
+        return WriterDto.from(user.get("login")
+                .toString(), user.get("avatar_url")
+                .toString());
     }
 
 
