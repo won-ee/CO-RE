@@ -81,7 +81,7 @@ export const postPRReview = async ({
   reviewData: TotalReviewsType;
 }) => {
   const { data } = await axios.post(
-    `${BASE_URL}/github/pull-request${owner}/${repo}/${pullId}`,
+    `${BASE_URL}/github/review/${owner}/${repo}/${pullId}`,
     reviewData,
     {
       headers: {
