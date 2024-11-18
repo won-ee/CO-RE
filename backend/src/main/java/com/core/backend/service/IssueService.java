@@ -667,7 +667,7 @@ public class IssueService {
 
             log.error("Unauthorized error: {}", e.getMessage());
 
-            accessToken = jiraOAuthTokenService.getNewAccessToken(projectUsers.getUser().getEmail());
+            accessToken = jiraOAuthTokenService.getNewAccessToken(smallIssueUser.getUser().getEmail());
 
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(accessToken);
