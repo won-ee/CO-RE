@@ -94,6 +94,7 @@ const NoteSection: React.FC<NoteSectionProps> = ({
   const toggleEditing = () => {
     if (isEditing) {
       const updatedData = {
+        name: data?.name || "",
         content: noteContent,
         ...Object.fromEntries(
           Object.entries(fieldMappings).map(([key, label]) => [
