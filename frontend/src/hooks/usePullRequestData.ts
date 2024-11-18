@@ -3,7 +3,6 @@ import { getCalendarPR, getPRDetail, getBranchList, getCommitList, getPRList, ge
 import { PRDataType, CalendarPRParamsType, PRDetailParamsType, BranchListType, BranchListParams, CommitListParams, CommitListType, PRListParams, PRListType, ChangeType, TemplateType } from '../Types/pullRequestType';
 
 export const useQueryCalendarPR = (params: CalendarPRParamsType) => {
-  console.log(params);
   
   return useQuery<PRDataType[], Error>(
     ['calendarPR', params],

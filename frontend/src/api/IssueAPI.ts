@@ -71,7 +71,6 @@ export const getEpicList = async (projectId:number) => {
 };
 
 export const postEpic = async (projectUserId:number,deadline:string,fields:EpicFieldsType) => {
-  console.log(fields);
   
   const response = await axios.post(
     `${BASE_URL}/issue/create/epic/${projectUserId}?deadline=${deadline}`,

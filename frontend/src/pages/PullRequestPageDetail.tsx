@@ -17,7 +17,6 @@ const PullRequestPageDetail:React.FC = () => {
     const [isSeleted, setIsSeleted] = useState('Overview')
     const { selectedOwner, selectedRepo} = useProjectStore()
     const { pullRequestId } = useParams<{ pullRequestId: string }>();
-    console.log(pullRequestId);
     
     const params: PRDetailParamsType = {
         owner: selectedOwner,
@@ -25,12 +24,8 @@ const PullRequestPageDetail:React.FC = () => {
         pullId: Number(pullRequestId),
     };
     
-
-    console.log(params);
     const { data, error, isLoading } = useQueryPRDetail(params);
-    
-    console.log(data);
-    
+        
     if (isLoading) return <LoadingPage/>;
     if (error) return <NotFoundPage errorNumber={404}/>;
 
