@@ -40,7 +40,7 @@ public class VersionService {
                 .contains("hotfix");
 
         List<PullRequest> pullRequestsWithoutVersion = pullRequestRepository
-                .findByOwnerAndRepoAndVersionIsNull(pullRequest.getOwner(), pullRequest.getRepo())
+                .findByOwnerAndRepoAndVersionIsNullAndMergeStatusIsTrue(pullRequest.getOwner(), pullRequest.getRepo())
                 .orElseGet(Collections::emptyList);
 
         List<String> content = pullRequestsWithoutVersion.stream()
@@ -102,7 +102,7 @@ public class VersionService {
 
     private void updateAllPullRequestsVersion(PullRequestServerDto pullRequest, Version version) {
         log.info("Updating ALL pull request version {}", pullRequest.getPullRequestId());
-        pullRequestRepository.findByOwnerAndRepoAndVersionIsNull(pullRequest.getOwner(), pullRequest.getRepo())
+        pullRequestRepository.findByOwnerAndRepoAndVersionIsNullAndMergeStatusIsTrue(pullRequest.getOwner(), pullRequest.getRepo())
                 .ifPresent(pullRequests -> pullRequests.forEach(pr -> pr.updateVersion(version)));
     }
 
