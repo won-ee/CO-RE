@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import TabPullRequest from '../components/tab/TabPullRequest'
-import { ContainerLayout } from './PullRequestPageDetail.styled'
+import { ContainerLayout, TabBox } from './PullRequestPageDetail.styled'
 import SectionOverview from '../components/section/SectionOverview'
 import SectionCommits from '../components/section/SectionCommits'
 import SectionChanges from '../components/section/SectionChanges'
@@ -43,6 +43,11 @@ const PullRequestPageDetail:React.FC = () => {
     const mutationpostPRReview = useMutationpostPRReview()
     const [isFinalReviewOpen,setIsFinalReviewOpen] = useState(false)
 
+
+      useEffect(()=>{
+        handleFinishReview(); // API 호출
+      },[body])
+
     if (isLoading) return <LoadingPage/>;
     if (error) return <NotFoundPage errorNumber={404}/>;
 
@@ -74,8 +79,7 @@ const PullRequestPageDetail:React.FC = () => {
     }
 
     const handleAddReview = (content: string) => {
-        setBody(content); // content를 body로 설정
-        handleFinishReview(); // API 호출
+        setBody(content); // content를 body로 설정     
     };
 
     const handlesIsFinalReviewOpen = ()=>{
@@ -85,15 +89,17 @@ const PullRequestPageDetail:React.FC = () => {
   return (
     <>
         <ContainerLayout>
+            <TabBox>
             <TabPullRequest isSeleted={isSeleted} setIsSeleted={setIsSeleted}/>
+            {reviews.length>0 && 
+            <div style={{position:'relative'}}>
+            <ButtonSimpleSquare $text="Finish Review" $color="white" $bgc="#1C8139" btnEvent={handlesIsFinalReviewOpen}/>
+            {isFinalReviewOpen && <CardFinalCodeReview onAdd={handleAddReview} commentNums={reviews.length}/>}
+            </div>}
+            </TabBox>
             {isSeleted === 'Overview' && <SectionOverview data={data} refetch={refetch}/>}
             {isSeleted === 'Commits' && <SectionCommits commits={commitData.data || [] } />}
             {isSeleted === 'Changes' && <SectionChanges changes={changesData.data || []} onUpdateReviews={handleUpdateComments}/>}
-            {reviews.length>0 && 
-          <div style={{position:'relative'}}>
-          <ButtonSimpleSquare $text="Finish Review" $color="white" $bgc="#1C8139" btnEvent={handlesIsFinalReviewOpen}/>
-          {isFinalReviewOpen && <CardFinalCodeReview onAdd={handleAddReview} commentNums={reviews.length}/>}
-          </div>}
         </ContainerLayout>   
     </>
     )

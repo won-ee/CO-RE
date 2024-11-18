@@ -4,7 +4,6 @@ export const ChangeCard = styled.div`
   border: 1px solid #e1e4e8;
   border-radius: 6px;
   background-color: #fafbfc;
-  margin: 16px 0;
   font-size: 14px;
 `;
 
