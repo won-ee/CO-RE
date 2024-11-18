@@ -1,6 +1,8 @@
 package com.core.backend.service;
 
-import com.core.backend.data.dto.isssue.*;
+import com.core.backend.data.dto.isssue.IssueCreateDto;
+import com.core.backend.data.dto.isssue.IssueCreateEpicDto;
+import com.core.backend.data.dto.isssue.IssueListDto;
 import com.core.backend.data.entity.*;
 import com.core.backend.data.enums.StatusEnum;
 import com.core.backend.data.repository.*;
@@ -533,52 +535,53 @@ public class IssueService {
             }
         }
 
-        if (smallIssueUser == null) {
-            if (isParent) {
-                bodyDto = IssueCreateEpicNoAssigneeDto.builder()
-                        .fields(IssueCreateEpicNoAssigneeDto.Fields.builder()
-                                .project(IssueCreateEpicNoAssigneeDto.Project.builder()
-                                        .key(((IssueCreateEpicDto) bodyDto).getFields().getProject().getKey())
-                                        .build())
+//        if (smallIssueUser == null || smallIssueUser.getIssueList().isEmpty()) {
+//            if (isParent) {
+//                bodyDto = IssueCreateEpicNoAssigneeDto.builder()
+//                        .fields(IssueCreateEpicNoAssigneeDto.Fields.builder()
+//                                .project(IssueCreateEpicNoAssigneeDto.Project.builder()
+//                                        .key(((IssueCreateEpicDto) bodyDto).getFields().getProject().getKey())
+//                                        .build())
+//                                .summary(((IssueCreateEpicDto) bodyDto).getFields().getSummary())
+//                                .issuetype(IssueCreateEpicNoAssigneeDto.IssueType.builder()
+//                                        .name(((IssueCreateEpicDto) bodyDto).getFields().getIssuetype().getName())
+//                                        .build())
+//                                .parent(IssueCreateEpicNoAssigneeDto.Parent.builder()
+//                                        .key(((IssueCreateEpicDto) bodyDto).getFields().getParent().getKey())
+//                                        .build())
+//                                .priority(IssueCreateEpicNoAssigneeDto.Priority.builder()
+//                                        .name(((IssueCreateEpicDto) bodyDto).getFields().getPriority().getName())
+//                                        .build())
+//                                .build())
+//                        .build();
+//            } else {
+//                bodyDto = IssueCreateDtoNoAssignee.builder()
+//                        .fields(IssueCreateDtoNoAssignee.Fields.builder()
+//                                .project(IssueCreateDtoNoAssignee.Project.builder()
+//                                        .key(((IssueCreateDto) bodyDto).getFields().getProject().getKey())
+//                                        .build())
+//                                .summary(((IssueCreateDto) bodyDto).getFields().getSummary())
+//                                .issuetype(IssueCreateDtoNoAssignee.IssueType.builder()
+//                                        .name(((IssueCreateDto) bodyDto).getFields().getIssuetype().getName())
+//                                        .build())
+//                                .priority(IssueCreateDtoNoAssignee.Priority.builder()
+//                                        .name(((IssueCreateDto) bodyDto).getFields().getPriority().getName())
+//                                        .build())
+//                                .build())
+//                        .build();
+//            }
+//        } else {
+//            if (isParent) {
+//                ((IssueCreateEpicDto) bodyDto).getFields().getAssignee().setAccountId(smallIssueUser.getUser().getAccountId());
+//            } else {
+//                ((IssueCreateDto) bodyDto).getFields().getAssignee().setAccountId(smallIssueUser.getUser().getAccountId());
+//            }
+//        }
 
-                                .summary(((IssueCreateEpicDto) bodyDto).getFields().getSummary())
-
-                                .issuetype(IssueCreateEpicNoAssigneeDto.IssueType.builder()
-                                        .name(((IssueCreateEpicDto) bodyDto).getFields().getIssuetype().getName())
-                                        .build())
-
-                                .parent(IssueCreateEpicNoAssigneeDto.Parent.builder()
-                                        .key(((IssueCreateEpicDto) bodyDto).getFields().getParent().getKey())
-                                        .build())
-
-                                .priority(IssueCreateEpicNoAssigneeDto.Priority.builder()
-                                        .name(((IssueCreateEpicDto) bodyDto).getFields().getPriority().getName())
-                                        .build())
-                                .build());
-            } else {
-                bodyDto = IssueCreateDtoNoAssignee.builder()
-                        .fields(IssueCreateDtoNoAssignee.Fields.builder()
-                                .project(IssueCreateDtoNoAssignee.Project.builder()
-                                        .key(((IssueCreateDto) bodyDto).getFields().getProject().getKey())
-                                        .build())
-
-                                .summary(((IssueCreateDto) bodyDto).getFields().getSummary())
-
-                                .issuetype(IssueCreateDtoNoAssignee.IssueType.builder()
-                                        .name(((IssueCreateDto) bodyDto).getFields().getIssuetype().getName())
-                                        .build())
-
-                                .priority(IssueCreateDtoNoAssignee.Priority.builder()
-                                        .name(((IssueCreateDto) bodyDto).getFields().getPriority().getName())
-                                        .build())
-                                .build());
-            }
+        if (isParent) {
+            ((IssueCreateEpicDto) bodyDto).getFields().getAssignee().setAccountId(smallIssueUser.getUser().getAccountId());
         } else {
-            if (isParent) {
-                ((IssueCreateEpicDto) bodyDto).getFields().getAssignee().setAccountId(smallIssueUser.getUser().getAccountId());
-            } else {
-                ((IssueCreateDto) bodyDto).getFields().getAssignee().setAccountId(smallIssueUser.getUser().getAccountId());
-            }
+            ((IssueCreateDto) bodyDto).getFields().getAssignee().setAccountId(smallIssueUser.getUser().getAccountId());
         }
 
 
@@ -682,7 +685,7 @@ public class IssueService {
 
                 if (isParent) {
                     IssueCreateEpicDto issueCreateEpicDto = (IssueCreateEpicDto) bodyDto;
-                    
+
                     //웹훅 설정시 해당부분 지워줘야함.
                     Epics epic = epicRepository.findByKey(issueCreateEpicDto.getFields().getParent().getKey());
 
