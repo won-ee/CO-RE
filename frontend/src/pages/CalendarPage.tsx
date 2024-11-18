@@ -1,38 +1,43 @@
-import React from 'react';
+import React, { useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import "./CalendarPage.css"
 import { useQueryCalendarPR } from '../hooks/usePullRequestData';
 import { CalendarPRParamsType } from '../Types/pullRequestType';
-import { Block } from '../styles/GlobalStyled';
-import { useNavigate } from 'react-router-dom';
+import { useProjectStore, useUserStore } from '../store/userStore';
 import LoadingPage from './LoadingPage';
 import NotFoundPage from './NotFoundPage';
-import { useProjectStore, useUserStore } from '../store/userStore';
+import { useNavigate } from 'react-router-dom';
+import { Block } from '../styles/GlobalStyled';
 
-
-
-
-const CalenderPage:React.FC = () => {
+const CalendarPage: React.FC = () => {
   const navigate = useNavigate();  
   const { selectedOwner, selectedRepo } = useProjectStore();
   const { userInfo } = useUserStore();
+    const currentDate = new Date();
+  const [currentMonth, setCurrentMonth] = useState(currentDate.getMonth() + 1);
+  const [currentYear, setCurrentYear] = useState(currentDate.getFullYear());
 
   const params: CalendarPRParamsType = {
     owner: selectedOwner,
     repo: selectedRepo,
-    writer: userInfo?.userInfo.gitName||'',
-    month: 10,
-    year: 2024,
+    writer: userInfo?.userInfo.gitName || '',
+    month: currentMonth,
+    year: currentYear,
   };
-  const { data, error, isLoading } = useQueryCalendarPR(params);
-  
-  if (isLoading) return <LoadingPage />;
-  if (error) return <NotFoundPage errorNumber={404}/>;
 
-  const handleEventClick = (info:any) => {
+  // API 호출
+  const { data, error, isLoading } = useQueryCalendarPR(params);
+
+  // 로딩 중 또는 에러 상태 처리
+  if (isLoading) return <LoadingPage />;
+  if (error) {
+    return <NotFoundPage errorNumber={404} />;
+  }
+
+  const handleEventClick = (info: any) => {
     const pullRequestId = info.event.id;
-    navigate(`/pullrequestdetail/${pullRequestId}`); 
+    navigate(`/pullrequest/${pullRequestId}`); 
   };
 
   const getRandomColor = () => {
@@ -55,21 +60,31 @@ const CalenderPage:React.FC = () => {
       borderColor: randomColor, 
     };
   }) : [];
+
+  const handleDatesSet = (info: any) => {
+    const newMonth = info.view.currentStart.getMonth() + 1;
+    const newYear = info.view.currentStart.getFullYear();
+
+    setCurrentMonth(newMonth);
+    setCurrentYear(newYear);
+  };
+
   return (
-    <div id='layout'>
+    <div id="layout">
       <div id="calendar-container">
-          <FullCalendar
-            plugins={[ dayGridPlugin ]}
-            initialView="dayGridMonth"
-            height="auto"
-            events={events}
-            dayMaxEvents={3}
-            eventClick={handleEventClick}
-          />
+        <FullCalendar
+          plugins={[dayGridPlugin]}
+          initialView="dayGridMonth"
+          height="auto"
+          events={events}
+          dayMaxEvents={3}
+          eventClick={handleEventClick}
+          datesSet={handleDatesSet} 
+        />
       </div>
-      <Block/>
+      <Block />
     </div>
   );
-}
+};
 
-export default CalenderPage;
+export default CalendarPage;

@@ -24,7 +24,6 @@ export const getDashStatsData = async ({
       },
     },
   );
-  console.log(response.data);
   return response.data;
 };
 
@@ -84,7 +83,6 @@ export const getVersionListData = async ({
       withCredentials: true,
     },
   });
-  console.log(data);
   return data;
 };
 

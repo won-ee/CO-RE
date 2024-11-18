@@ -33,7 +33,7 @@ const ModalInputProject: React.FC = () => {
       if (userInfo?.userInfo.accountId === selectedOwnerId){
         navigate("/project");
       }
-    }}, [selectedOwner,selectedRepo,userInfo,selectedOwnerId]);
+    }}, [navigate,selectedOwner,selectedRepo,userInfo,selectedOwnerId]);
 
   if (isLoading) return <LoadingPage />;
   if (error) return <NotFoundPage errorNumber={404} />;

@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import { ActionButton, 
         ActionCellBox, 
         CardCellBox, 
@@ -11,27 +11,16 @@ import { ActionButton,
         SenderCellBox, 
         SenderInfoBox, 
         SenderNameSpan 
-        } from './CardTask.styled'
-import { IssueLocationType } from '../../Types/IssueType'
-import { useMutationAcceptIssueLocation } from '../../hooks/useMutationCreatePR'
-import { useProjectStore } from '../../store/userStore'
+        } from './CardTask.styled';
+import { IssueLocationType } from '../../Types/IssueType';
 
-interface CardTaskProps{
-    task:IssueLocationType
+interface CardTaskProps {
+    task: IssueLocationType;
+    handleSubmit: (taskId: number) => void;
 }
 
-const CardTask:React.FC<CardTaskProps> = ({task}) => {
-    const { selectedProjectUserId } = useProjectStore();
-    const mutation = useMutationAcceptIssueLocation();    
-
-    console.log(task);
+const CardTask: React.FC<CardTaskProps> = ({ task, handleSubmit }) => {
     
-    const handleSubmit =()=>{
-        mutation.mutate({
-            projectUserId: selectedProjectUserId,
-            carrotId: task.id,
-        });
-    }
   return (
     <CardLayout key={task.id}>
         <CardCellBox>
@@ -39,18 +28,18 @@ const CardTask:React.FC<CardTaskProps> = ({task}) => {
             <ProjectCodeSpan>{task.key}</ProjectCodeSpan>
             <CategoryBox category={task.epicName}>{task.epicName}</CategoryBox>
         </CardCellBox>
-        <DeadlineCellBox>{task?.deadLine?.substring(0,10)}</DeadlineCellBox>
+        <DeadlineCellBox>{task?.deadLine?.substring(0, 10)}</DeadlineCellBox>
         <SenderCellBox>
-        <SenderInfoBox>
-            <SenderAvatar src={task.senderImage} alt={task.senderName} />
-            <SenderNameSpan>{task.senderName}</SenderNameSpan>
-        </SenderInfoBox>
+            <SenderInfoBox>
+                <SenderAvatar src={task.senderImage} alt={task.senderName} />
+                <SenderNameSpan>{task.senderName}</SenderNameSpan>
+            </SenderInfoBox>
         </SenderCellBox>
         <ActionCellBox>
-            <ActionButton color="accept" onClick={handleSubmit}>ACCEPT</ActionButton>
+            <ActionButton color="accept" onClick={() => handleSubmit(task.id)}>ACCEPT</ActionButton>
         </ActionCellBox>
     </CardLayout>
-  )
+  );
 }
 
-export default CardTask
+export default CardTask;
