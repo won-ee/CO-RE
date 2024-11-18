@@ -150,7 +150,7 @@ const SectionOverview:React.FC<SectionOverviewProps> = ({data,refetch}) => {
         </OverviewApproveBox>
         <OverviewInput placeholder="Write a comment" onChange={handleCommentbody}/>
         <Container>
-          <button onClick={() => handleMergeRequest}>머지 버튼</button>
+          <button onClick={() => handleMergeRequest()}>머지 버튼</button>
           <Text>Code-Review</Text>
           <RadioGroup>
             <RadioCol>
