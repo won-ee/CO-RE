@@ -22,12 +22,12 @@ import { useProjectStore, useUserStore } from "../store/userStore";
 import { useQueryAllProject } from "../hooks/useIssueList";
 
 const IssuePage: React.FC = () => {
-  const { selectedProjectId } = useProjectStore();
+  const { selectedGroupId } = useProjectStore();
   const [isErrorInquirySelected, setIsErrorInquirySelected] = useState(true);
   const [isIssueSelected, setIsIssueSelected] = useState(true);
   const [selectedTeamId, setSelectedTeamId] = useState<string>(""); 
   const { userInfo } = useUserStore();
-  const { data: allProject } = useQueryAllProject(selectedProjectId);
+  const { data: allProject } = useQueryAllProject(selectedGroupId);
 
   const differentProjects = allProject?.filter(
     (project) =>
