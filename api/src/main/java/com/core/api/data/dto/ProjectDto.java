@@ -1,9 +1,11 @@
 package com.core.api.data.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
 public record ProjectDto(
-        String projectName,
-        List<String> projectUserEmail
+        @JsonProperty("projectName") String projectName,
+        @JsonProperty("projectUserEmail") List<String> projectUserEmail
 ) {
 }
