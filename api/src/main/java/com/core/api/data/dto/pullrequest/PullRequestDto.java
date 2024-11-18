@@ -36,7 +36,7 @@ public class PullRequestDto extends PullRequestSimpleDto {
                 .id(pullRequest.getId())
                 .title(pullRequest.getTitle())
                 .pullRequestId(pullRequest.getPullRequestId())
-                .writer(WriterDto.from(pullRequest.getWriterId(), ""))
+                .writer(WriterDto.from(pullRequest.getWriterId(), pullRequest.getWriterImg()))
                 .head(pullRequest.getHead())
                 .base(pullRequest.getBase())
                 .status(pullRequest.getStatus())
