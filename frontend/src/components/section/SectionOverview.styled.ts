@@ -25,7 +25,7 @@ export const DeadLineBox = styled.div<StringProps>`
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: 5px;
     border-radius: 3px;
     font-weight: bold;
     white-space: nowrap;
