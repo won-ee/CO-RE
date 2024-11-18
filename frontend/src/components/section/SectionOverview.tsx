@@ -35,6 +35,7 @@ const SectionOverview:React.FC<SectionOverviewProps> = ({data,refetch}) => {
   const mutationMerge = useMutationPutMergeRequest()
 
   const handleMergeRequest = ()=>{
+    console.log('눌림');
     setPostLoading(true);
     const mergeData = {
       commitTitle:"",
