@@ -5,6 +5,7 @@ import { ProjectSettingType, githubInfoType, patchUserInfoType } from "../Types/
 import { patchProjectSetting, patchUserInfo, postGithubInfo, postLogout } from "../api/userAPI";
 import { postAcceptIssueLocation, postEpic, postIssueLocation, postNoEpic } from "../api/IssueAPI";
 import { useProjectStore, useUserStore } from "../store/userStore";
+import { EpicFieldsType } from "../Types/IssueType";
 
 export const useMutationCreatePR=()=>{
     return useMutation(postCreatePR)
@@ -70,17 +71,34 @@ export const useMutationGithubInfo = () => {
 
 export const useMutationEpic = () => {
   return useMutation(
-    ({ projectUserId, deadline, priority }: { projectUserId: number; deadline: string; priority: string }) => 
-      postEpic(projectUserId, deadline, priority)
+    ({ projectUserId, deadline, fields }: { projectUserId: number; deadline: string; fields: EpicFieldsType }) => 
+      postEpic(projectUserId, deadline, fields),
+    {
+      onSuccess: (data) => {
+        console.log('Epic 요청 성공:', data); 
+      },
+      onError: (error) => {
+        console.error('Epic 요청 실패:', error); 
+      }
+    }
   );
 };
 
 export const useMutationNoEpic = () => {
   return useMutation(
-    ({ projectUserId, deadline, priority }: { projectUserId: number; deadline: string; priority: string }) => 
-      postNoEpic(projectUserId, deadline, priority)
+    ({ projectUserId, deadline, fields }: { projectUserId: number; deadline: string; fields: EpicFieldsType }) => 
+      postNoEpic(projectUserId, deadline, fields),
+    {
+      onSuccess: (data) => {
+        console.log('NoEpic 요청 성공:', data); 
+      },
+      onError: (error) => {
+        console.error('NoEpic 요청 실패:', error);
+      }
+    }
   );
 };
+
 
 export const useMutationIssueLocation = () => {
   return useMutation(

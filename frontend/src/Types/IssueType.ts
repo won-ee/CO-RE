@@ -30,3 +30,36 @@ export interface IssueLocationType {
   senderName: string;
   senderImage: string;
 }
+
+interface IssueType {
+  name: string;
+}
+
+interface PriorityType {
+  name: string;
+}
+
+interface Assignee {
+  accountId: string;
+}
+
+interface Parent {
+  key: string;
+}
+
+interface Project {
+  key: string;
+}
+
+interface Fields {
+  project: Project;
+  summary: string;
+  issuetype: IssueType;
+  parent?: Parent;
+  priority: PriorityType;
+  assignee: Assignee;
+}
+
+export interface EpicFieldsType {
+  fields: Fields;
+}

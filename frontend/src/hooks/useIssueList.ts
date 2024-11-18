@@ -52,14 +52,14 @@ export const useQueryIssueLocation = (projectUserId:number) => {
     return query;
   };
 
-export const useQueryEpicList = (selectedProjectId:number) => {
+export const useQueryEpicList = (selectedTeamId:number) => {
 
   const query = useQuery<EpicType[], Error>(
-      ['EpicListData', selectedProjectId],
-      () => getEpicList(selectedProjectId),
+      ['EpicListData', selectedTeamId],
+      () => getEpicList(selectedTeamId),
     {
       staleTime: 1000 * 60 * 5, 
-      enabled: !!selectedProjectId, 
+      enabled: !!selectedTeamId, 
     }
   );
 

@@ -89,7 +89,7 @@ export const TaskStatusBox = styled.div<TaskStatusProps>`
       case 'DONE':
         return '#00B69B'; 
       default:
-        return '#ccc'; 
+        return ''; 
     }
   }};
   background-color: ${(props) => {
@@ -101,7 +101,7 @@ export const TaskStatusBox = styled.div<TaskStatusProps>`
       case 'DONE':
         return 'rgba(0, 192, 155, 0.2)'; 
       default:
-        return '#ccc';
+        return '';
     }
   }};
 `;

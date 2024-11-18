@@ -18,20 +18,29 @@ import SectionIssueRelocation from "../components/section/SectionIssueRelocation
 import SectionIssueList from "../components/section/SectionIssueList";
 import SectionReassignedTasks from "../components/section/SectionReassignedTasks";
 import { Block } from "../styles/GlobalStyled";
-import { useProjectStore, useUserStore } from "../store/userStore";
+import { useProjectStore } from "../store/userStore";
 import { useQueryAllProject } from "../hooks/useIssueList";
 
-const IssuePage:React.FC=()=>{
-  const { selectedProjectId } = useProjectStore();
+const IssuePage: React.FC = () => {
+  const { selectedGroupId, selectedProjectId } = useProjectStore();
   const [isErrorInquirySelected, setIsErrorInquirySelected] = useState(true);
   const [isIssueSelected, setIsIssueSelected] = useState(true);
-  const { userInfo} = useUserStore();
-  const { data: allProject } = useQueryAllProject(selectedProjectId);   
+  const [selectedPrId, setSelectedPrId] = useState<number>(0);
+  const [selectedTeamId, setSelectedTeamId] = useState<string>("");
+  const { data: allProject } = useQueryAllProject(selectedGroupId);
 
   const differentProjects = allProject?.filter(
-    (project) =>
-      userInfo && !userInfo.projects.some((userProject) => userProject.id === project.id)
+    (project) => project.id !== selectedProjectId
   );
+
+  const handleTeamChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedValue = event.target.value;
+    const selectedProjectData = differentProjects?.find(project => project.key === selectedValue);
+    if (selectedProjectData) {
+      setSelectedPrId(selectedProjectData.id);
+      setSelectedTeamId(selectedProjectData.key);
+    }
+  };
 
   return (
     <>
@@ -39,14 +48,16 @@ const IssuePage:React.FC=()=>{
         <FormContainerBox>
           <FormWrapperBox>
             <LeftSectionBox>
-              <SelectInput>
-                <option>팀 선택</option>
-                {differentProjects?.map((project) => (
-                  <option key={project.id} value={project.id}>
-                    {project.name}
-                  </option>
-                ))}
-              </SelectInput>
+              {isErrorInquirySelected && (
+                <SelectInput value={selectedTeamId} onChange={handleTeamChange}>
+                  <option value="">팀 선택</option>
+                  {differentProjects?.map((project) => (
+                    <option key={project.id} value={project.key}>
+                      {project.name}
+                    </option>
+                  ))}
+                </SelectInput>
+              )}
               <ErrorInquiryButton
                 onClick={() => setIsErrorInquirySelected(true)}
                 $isErrorInquirySelected={isErrorInquirySelected}
@@ -63,7 +74,7 @@ const IssuePage:React.FC=()=>{
             </LeftSectionBox>
             <DividerLine />
             {isErrorInquirySelected ? (
-              <SectionErrorInquiry />
+              <SectionErrorInquiry selectedTeamId={selectedTeamId} setSelectedTeamId={setSelectedTeamId} selectedProjectId={selectedPrId} />
             ) : (
               <SectionIssueRelocation />
             )}
@@ -90,6 +101,6 @@ const IssuePage:React.FC=()=>{
       <Block />
     </>
   );
-}
+};
 
 export default IssuePage;

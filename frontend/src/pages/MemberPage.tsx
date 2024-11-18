@@ -7,7 +7,6 @@ import { useProjectStore } from '../store/userStore';
 const MemberPage:React.FC = () => {
     const {selectedProjectId} = useProjectStore();
     const {data} = useMemberList(selectedProjectId)
-    console.log(data);
   return (
     <>
         <ContainerLayout>
