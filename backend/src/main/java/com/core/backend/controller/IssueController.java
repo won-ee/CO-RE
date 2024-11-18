@@ -32,16 +32,14 @@ public class IssueController {
     public ResponseEntity<IssueListDto> createProjectIssue(@PathVariable Long projectUserId,
                                                            @RequestBody IssueCreateDto issueCreateDto,
                                                            @RequestParam("deadline") String deadline) throws IOException {
-        ProjectUsers projectUsers = projectUserService.getProjectUser(projectUserId);
-        return new ResponseEntity<>(issueService.createIssueToJira(false, projectUsers, issueCreateDto, deadline), HttpStatus.OK);
+        return new ResponseEntity<>(issueService.createIssueToJira(false, issueCreateDto, deadline), HttpStatus.OK);
     }
 
     @PostMapping("/create/epic/{projectUserId}")
     public ResponseEntity<IssueListDto> createProjectIssueWithEpic(@PathVariable Long projectUserId,
                                                                    @RequestBody IssueCreateEpicDto issueCreateEpicDto,
                                                                    @RequestParam("deadline") String deadline) throws IOException {
-        ProjectUsers projectUsers = projectUserService.getProjectUser(projectUserId);
-        return new ResponseEntity<>(issueService.createIssueToJira(true, projectUsers, issueCreateEpicDto, deadline), HttpStatus.OK);
+        return new ResponseEntity<>(issueService.createIssueToJira(true, issueCreateEpicDto, deadline), HttpStatus.OK);
     }
 
 }

@@ -31,7 +31,6 @@ public class IssueService {
 
     private final IssueRepository issueRepository;
     private final RestTemplate restTemplate;
-    private final JiraOAuthTokenRepository jiraOAuthTokenRepository;
     private final JiraOAuthTokenService jiraOAuthTokenService;
     private final EpicRepository epicRepository;
     private final ProjectUserRepository projectUserRepository;
@@ -518,7 +517,7 @@ public class IssueService {
         return null;
     }
 
-    public IssueListDto createIssueToJira(boolean isParent, ProjectUsers projectUsers, Object bodyDto, String deadline) throws IOException {
+    public IssueListDto createIssueToJira(boolean isParent, Object bodyDto, String deadline) throws IOException {
 
         String projectKey = null;
         log.info("createIssueToJira - bodyDto: {}", bodyDto.toString());
@@ -597,7 +596,7 @@ public class IssueService {
         JiraOAuthToken oAuthToken = jiraOAuthTokenService.getOAuthToken(smallIssueUser.getUser().getEmail());
         String accessToken = oAuthToken.getAccessToken();
 
-        String jiraBaseUrl = projectUsers.getProject().getSelfUrl();
+        String jiraBaseUrl = smallIssueUser.getProject().getSelfUrl();
         jiraBaseUrl = jiraBaseUrl.replaceAll("/project/\\d+", "/issue");
 
         Issues makeIssue = null;
@@ -643,7 +642,7 @@ public class IssueService {
                                     .jiraId((String) responseBody.get("id"))
                                     .jiraUrl((String) responseBody.get("self"))
                                     .epic(epic)
-                                    .projectUser(projectUsers)
+                                    .projectUser(smallIssueUser)
                                     .build());
 
                 } else {
@@ -659,7 +658,7 @@ public class IssueService {
                                     .status(StatusEnum.TODO)
                                     .jiraId((String) responseBody.get("id"))
                                     .jiraUrl((String) responseBody.get("self"))
-                                    .projectUser(projectUsers)
+                                    .projectUser(smallIssueUser)
                                     .build());
                 }
             }
@@ -711,7 +710,7 @@ public class IssueService {
                                     .jiraId((String) responseBody.get("id"))
                                     .jiraUrl((String) responseBody.get("self"))
                                     .epic(epic)
-                                    .projectUser(projectUsers)
+                                    .projectUser(smallIssueUser)
                                     .build());
 
                 } else {
@@ -727,7 +726,7 @@ public class IssueService {
                                     .status(StatusEnum.TODO)
                                     .jiraId((String) responseBody.get("id"))
                                     .jiraUrl((String) responseBody.get("self"))
-                                    .projectUser(projectUsers)
+                                    .projectUser(smallIssueUser)
                                     .build());
                 }
             }
@@ -745,9 +744,9 @@ public class IssueService {
                 .issuePriority(makeIssue.getIssuePriority())
                 .issueDeadLine(makeIssue.getDeadLine())
                 .issueStatus(makeIssue.getStatus())
-                .managerUserId(projectUsers.getUser().getId())
-                .managerUserImage(projectUsers.getUser().getProfile())
-                .managerUserName(projectUsers.getUser().getName())
+                .managerUserId(smallIssueUser.getUser().getId())
+                .managerUserImage(smallIssueUser.getUser().getProfile())
+                .managerUserName(smallIssueUser.getUser().getName())
                 .epicName(Optional.ofNullable(makeIssue.getEpic())
                         .map(Epics::getName)
                         .orElse(""))
