@@ -19,6 +19,7 @@ export const TaskImage = styled.img`
 export const TaskItemBox = styled.div`
   display: flex;
   justify-content: space-between;
+  background-color: white;
   align-items: center;
   width: 1150px;
   padding: 12px;
