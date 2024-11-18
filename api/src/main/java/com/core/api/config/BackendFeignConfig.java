@@ -1,6 +1,10 @@
 package com.core.api.config;
 
 import feign.RequestInterceptor;
+import feign.codec.Decoder;
+import feign.codec.Encoder;
+import feign.jackson.JacksonDecoder;
+import feign.jackson.JacksonEncoder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.access.AccessDeniedException;
@@ -31,6 +35,16 @@ public class BackendFeignConfig {
                     .toString();
         }
         throw new AccessDeniedException("Access token is missing from SecurityContext");
+    }
+
+    @Bean
+    public Encoder feignEncoder() {
+        return new JacksonEncoder();
+    }
+
+    @Bean
+    public Decoder feignDecoder() {
+        return new JacksonDecoder();
     }
 
 
