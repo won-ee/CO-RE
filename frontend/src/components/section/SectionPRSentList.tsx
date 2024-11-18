@@ -46,7 +46,7 @@ function SectionPRSentList(): React.ReactElement {
 
         return(
 
-          <GridRow key={index} onClick={()=>navigate(`pullrequest/${row.pullRequestId}`)} style={{cursor:'pointer'}}>
+          <GridRow key={index} onClick={()=>navigate(`/pullrequest/${row.pullRequestId}`)} style={{cursor:'pointer'}}>
             <GridCell>
               <TitleBox>{row.title}</TitleBox>
               <TitleBox>{row.pullRequestId}</TitleBox>

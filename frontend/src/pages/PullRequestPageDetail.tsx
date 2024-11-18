@@ -17,7 +17,8 @@ const PullRequestPageDetail:React.FC = () => {
     const [isSeleted, setIsSeleted] = useState('Overview')
     const { selectedOwner, selectedRepo} = useProjectStore()
     const { pullRequestId } = useParams<{ pullRequestId: string }>();
-
+    console.log(pullRequestId);
+    
     const params: PRDetailParamsType = {
         owner: selectedOwner,
         repo: selectedRepo,
