@@ -4,7 +4,7 @@ import { PRDataType, CalendarPRParamsType, PRDetailParamsType, BranchListType, B
 
 export const useQueryCalendarPR = (params: CalendarPRParamsType) => {
   return useQuery<PRDataType[], Error>(
-    ['pullRequest', params],
+    ['calendarPR', params],
     () => getCalendarPR(params),
     {
       enabled: !!params.writer && !!params.month && !!params.year, 
@@ -15,7 +15,7 @@ export const useQueryCalendarPR = (params: CalendarPRParamsType) => {
 
 export const useQueryPRDetail = (params: PRDetailParamsType) => {
   return useQuery<PRDataType, Error>(
-    ['pullRequest', params],
+    ['pullRequestDetail', params],
     () => getPRDetail(params),
     {
       enabled: !!params.pullId, 

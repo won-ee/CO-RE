@@ -26,10 +26,17 @@ const CalendarPage: React.FC = () => {
     year: currentYear,
   };
 
+  // API 호출
   const { data, error, isLoading } = useQueryCalendarPR(params);
-  
+
+  // 로딩 중 또는 에러 상태 처리
   if (isLoading) return <LoadingPage />;
-  if (error) return <NotFoundPage errorNumber={404} />;
+  if (error) {
+    console.error('Error fetching data:', error);
+    return <NotFoundPage errorNumber={404} />;
+  }
+
+  console.log('Fetched Data:', data); // 데이터 확인
 
   const handleEventClick = (info: any) => {
     const pullRequestId = info.event.id;
