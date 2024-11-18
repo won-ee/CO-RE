@@ -35,10 +35,11 @@
 
 ## 📢 서비스 소개
 
-<!-- TODO: 서비스 소개 작성 -->
+적극적인 코드 리뷰 문화를 활성화하여 소프트웨어 개발 과정의 효율을 향상하기 위한 프로젝트 입니다.  
+코리는 버전 별 통계, 메일링, 지라 이슈 자동 배정 및 재배치를 통해 팀원 간 협업을 원활히 하고 생산성과 코드 품질을 동시에 높이고자 하였습니다..
 
 <br/><br/>
-[📎 서비스 소개 UCC](#)
+[📎 서비스 소개 UCC](https://youtu.be/1RaLnhX0iDk)
 
 ## 🥳 서비스 설계
 
@@ -72,7 +73,7 @@
 ### Docs
 
 [📎 API](https://ineedalotofmoney.notion.site/API-11db8335ace68122bc35fa791e2dd9eb?pvs=4)  
-[📎 기능 정의서](#)
+[📎 기능 정의서](https://ineedalotofmoney.notion.site/4a578c5e0fed44d2ab5beb99c315974d?pvs=4)
 
 ## 🤗 기능 소개
 
