@@ -168,3 +168,9 @@ export interface ReviewCommentTypeForPatch{
   score:number;
   status:string;
 }
+
+export interface MergeRequestType{
+  commitTitle:string;
+  commitMessage:string;
+  mergeMethod:string;
+}

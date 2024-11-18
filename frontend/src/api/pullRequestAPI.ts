@@ -14,7 +14,8 @@ import {
   ChangeType,
   TemplateType,
   CommentType,
-  ReviewCommentTypeForPatch
+  ReviewCommentTypeForPatch,
+  MergeRequestType
 } from "../Types/pullRequestType";
 
 const BASE_URL ='https://k11s106.p.ssafy.io/api'; 
@@ -223,3 +224,19 @@ export const patchReviewComment = async ({owner,repo,id,commentData}:{
   );
   return response.data;
 };
+
+export const putMergeRequest = async ({owner,repo,pullId,mergeData}:{
+  owner: string,
+  repo: string,
+  pullId:number,
+  mergeData: MergeRequestType
+})=>{
+  const response = await axios.put(`${BASE_URL}/github/pull-request/${owner}/${repo}/${pullId}/merge`,mergeData,
+    {
+      headers: {
+        withCredentials: true,
+      },
+    },
+  )
+  return response.data;
+}
