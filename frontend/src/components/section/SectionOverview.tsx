@@ -1,16 +1,22 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Button, Container, ContainerLayout, DeadLineBox, OverviewApproveBox, OverviewApproveButton, OverviewApproveContent, OverviewApproveHeader, OverviewContent, OverviewContentBox, OverviewCoreBox, OverviewCoreContentBox, OverviewCoreHeader, OverviewCoreImg, OverviewCoreText, OverviewDayText, OverviewHeaderBox, OverviewHeaderText, OverviewInfoBox, OverviewInput, OverviewName, OverviewProfileImg, OverviewSourceText, OverviewTargetText, OverviewText, RadioButton, RadioCol, RadioGroup, RadioText, Text } from './SectionOverview.styled'
 import core from '../../assets/Core.png'
 import { PRDataType } from '../../Types/pullRequestType';
 import ReactMarkdown from 'react-markdown';
+import useDateDiff from '../../hooks/useDateDiff';
+import { differenceInDays } from 'date-fns'
 
 interface SectionOverviewProps{
   data:PRDataType|undefined
 }
 
 const SectionOverview:React.FC<SectionOverviewProps> = ({data}) => {
-  const [dDay, setDDay] = useState(0);
-  const [createDate,setCreateDate] = useState(0)  
+  const dafeDiff = useDateDiff(data?.createdDate)
+
+  const deadlineDate = data?.deadline ? new Date(data.deadline) : new Date();
+  const today = new Date();
+  const dayDifference = differenceInDays(deadlineDate, today);
+  const deadlineText = dayDifference > 0 ? `D-${dayDifference}` : `D-day`;
 
   const formatRelativeDate = (dateString: string): string => {
     const date = new Date(dateString);
@@ -23,47 +29,22 @@ const SectionOverview:React.FC<SectionOverviewProps> = ({data}) => {
     return `${differenceInDays} days ago`;
   };
 
-  useEffect(() => {
-    if (data?.deadline) {
-      const formatDeadline = () => {
-        const deadline = new Date(data.deadline);
-        const today = new Date();
-        const differenceInTime = deadline.getTime() - today.getTime();
-        const differenceInDays = Math.ceil(differenceInTime / (1000 * 60 * 60 * 24));
-        setDDay(differenceInDays);
-      };
-
-      formatDeadline();
-    }
-    if (data?.createdDate) {
-      const formatCreateDate = () => {
-        const createData = new Date(data.createdDate);
-        const today = new Date();
-        const differenceInTime = createData.getTime() - today.getTime();
-        const differenceInDays = Math.ceil(differenceInTime / (1000 * 60 * 60 * 24));
-        setCreateDate(-differenceInDays);
-      }
-      formatCreateDate();
-    }
-
-  }, []);
-  
   return (
     <>
       <ContainerLayout>
         <OverviewHeaderBox>
-          <DeadLineBox>D-{dDay}</DeadLineBox>
+          <DeadLineBox $status={deadlineText} $afterReview={data?.afterReview}>{deadlineText}</DeadLineBox>
           <OverviewHeaderText>{data?.title}</OverviewHeaderText>
         </OverviewHeaderBox>
         <OverviewInfoBox>
           <OverviewProfileImg src={data?.writer.writerImg} />
           <OverviewName>{data?.writer.writerId}</OverviewName>
           <OverviewDayText>
-            {createDate === 0 ? "today" : `${createDate} days ago`}
+            {dafeDiff}
           </OverviewDayText>
-          <OverviewSourceText>{data?.base}</OverviewSourceText>
+          <OverviewSourceText>{data?.head}</OverviewSourceText>
           <OverviewText>into</OverviewText>
-          <OverviewTargetText>{data?.head}</OverviewTargetText>
+          <OverviewTargetText>{data?.base}</OverviewTargetText>
         </OverviewInfoBox>
         <OverviewContentBox>
           <OverviewContent>

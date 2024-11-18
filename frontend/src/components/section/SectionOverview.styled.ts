@@ -1,5 +1,10 @@
 import styled from "styled-components";
 
+interface StringProps {
+    $status:string;
+    $afterReview?: boolean;
+}
+
 export const ContainerLayout = styled.div`
     margin: 0;
     width: 100%;
@@ -14,7 +19,7 @@ export const OverviewHeaderBox = styled.div`
 
 `
 
-export const DeadLineBox = styled.div`
+export const DeadLineBox = styled.div<StringProps>`
     margin-left: 20px;
     margin-top: 18px;
     display: flex;
@@ -25,7 +30,9 @@ export const DeadLineBox = styled.div`
     background-color: #FCD7D4;
     color: #EF3826;
     border-radius: 3px;
-
+    font-weight: bold;
+    white-space: nowrap;
+    color: ${(props)=>(props.$afterReview==true ? '#723CF1': parseInt(props.$status.replace('D-',''),10) < 2 ? 'red': props.$status =='D-day' ? 'red':'black')};
 `
 
 export const OverviewHeaderText = styled.div`

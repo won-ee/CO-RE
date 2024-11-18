@@ -155,7 +155,7 @@ useEffect(() => {
 };
 
   return (
-    <div>
+    <div style={{backgroundColor:'white'}}>
       {changes.map((change, index) => (
         <ChangeCard key={change.file.filename}>
           <Header onClick={() => toggleCard(index)} style={{ cursor: 'pointer' }}>
