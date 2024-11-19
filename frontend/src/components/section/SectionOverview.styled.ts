@@ -220,3 +220,19 @@ export const Button = styled.button<{ $approve?: string }>`
         opacity: 0.8;
     }
 `
+
+
+export const ButtonMerge = styled.button`
+    margin-right: 25px;
+    padding: 8px 16px;
+    border-radius: 5px;
+    margin-left: 10px;
+    font-weight: bold;
+    color: white;
+    border: none;
+    cursor: pointer;
+    background-color:'#7667FF';
+    &:hover {
+        opacity: 0.8;
+    }
+`
