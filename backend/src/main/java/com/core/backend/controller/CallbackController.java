@@ -48,7 +48,7 @@ public class CallbackController {
     @GetMapping("/code/update/{userId}")
     public ResponseEntity<Void> updateJira(@PathVariable Long userId) {
         try {
-            callbackService.updateJiraMySql(userId);
+//            callbackService.updateJiraMySql(userId);
 
         } catch (Exception e) {
             log.error("Error updateJira: {}", e.getMessage());

@@ -5,7 +5,10 @@ import com.core.backend.data.dto.isssue.IssueCreateEpicDto;
 import com.core.backend.data.dto.isssue.IssueListDto;
 import com.core.backend.data.entity.*;
 import com.core.backend.data.enums.StatusEnum;
-import com.core.backend.data.repository.*;
+import com.core.backend.data.repository.EpicRepository;
+import com.core.backend.data.repository.IssueRepository;
+import com.core.backend.data.repository.ProjectRepository;
+import com.core.backend.data.repository.ProjectUserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -277,9 +280,9 @@ public class IssueService {
                                     Issues issue = null;
                                     if (newEpic == null) {
 
-                                        if(extractedIssue.get("parent")!=null)  {
+                                        if (extractedIssue.get("parent") != null) {
                                             Map<String, Object> parent = (Map<String, Object>) extractedIssue.get("parent");
-                                            newEpic = epicRepository.findByKeyAndJiraIdAndUrl(parent.get("key").toString(),parent.get("id").toString(),parent.get("self").toString());
+                                            newEpic = epicRepository.findByKeyAndJiraIdAndUrl(parent.get("key").toString(), parent.get("id").toString(), parent.get("self").toString());
                                             if (newEpic == null) {
                                                 newEpic = Epics.builder()
                                                         .key(parent.get("key").toString())
@@ -348,9 +351,9 @@ public class IssueService {
                 Issues issue = null;
                 if (newEpic == null) {
 
-                    if(extractedIssue.get("parent")!=null)  {
+                    if (extractedIssue.get("parent") != null) {
                         Map<String, Object> parent = (Map<String, Object>) extractedIssue.get("parent");
-                        newEpic = epicRepository.findByKeyAndJiraIdAndUrl(parent.get("key").toString(),parent.get("id").toString(),parent.get("self").toString());
+                        newEpic = epicRepository.findByKeyAndJiraIdAndUrl(parent.get("key").toString(), parent.get("id").toString(), parent.get("self").toString());
                         if (newEpic == null) {
                             newEpic = Epics.builder()
                                     .key(parent.get("key").toString())
@@ -445,7 +448,7 @@ public class IssueService {
 
                     //parent
                     Map<String, Object> parent = (Map<String, Object>) fields.get("parent");
-                    if(parent != null) {
+                    if (parent != null) {
                         Map<String, Object> extractedParent = new HashMap<>();
                         extractedParent.put("id", parent.get("id"));
                         extractedParent.put("key", parent.get("key"));
@@ -453,7 +456,7 @@ public class IssueService {
                         Map<String, Object> fieldparent = (Map<String, Object>) parent.get("fields");
                         extractedParent.put("summary", fieldparent.get("summary"));
                         Map<String, Object> issueTypeParent = (Map<String, Object>) fieldparent.get("issuetype");
-                        if(issueTypeParent.get("name").equals("에픽") || issueTypeParent.get("name").equals("Epic")){
+                        if (issueTypeParent.get("name").equals("에픽") || issueTypeParent.get("name").equals("Epic")) {
                             extractedParent.put("issueType", issueTypeParent.get("name"));
                             extractedIssue.put("parent", extractedParent);
                         }
@@ -594,6 +597,7 @@ public class IssueService {
                 count = pu.getIssueList().size();
             }
         }
+        log.info(smallIssueUser.getUser().getName());
 
 //        if (smallIssueUser == null || smallIssueUser.getIssueList().isEmpty()) {
 //            if (isParent) {
