@@ -53,18 +53,18 @@ const SectionReassignedTasks: React.FC = () => {
   
 
   const groupedData = Array.isArray(projectTasks) ? projectTasks.reduce<Record<string, IssueLocationType[]>>((acc, item) => {
-    if (!acc[item.epicKey]) {
-      acc[item.epicKey] = [];
+    if (!acc[item.key]) {
+      acc[item.key] = [];
     }
-    acc[item.epicKey].push(item);
+    acc[item.key].push(item);
     return acc;
   }, {}) : {}; 
   
 
-  const result = Object.keys(groupedData).map((epicKey, index) => ({
-    epicKey,
+  const result = Object.keys(groupedData).map((key, index) => ({
+    key,
     color: colorPalette[index % colorPalette.length],
-    issues: groupedData[epicKey],
+    issues: groupedData[key],
   }));
 
   const filteredData = Array.isArray(tasks)
@@ -104,7 +104,7 @@ const SectionReassignedTasks: React.FC = () => {
       </HeaderBox>
       <TableLayout>
         {filteredData?.map((projectTask) => {
-          const epicData = result.find(r => r.epicKey === projectTask.epicKey);
+          const epicData = result.find(r => r.key === projectTask.key);
           const color = epicData ? epicData.color : ''; 
           return (
             <CardTask 
