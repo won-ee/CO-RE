@@ -14,7 +14,7 @@ import { useQueryChangeList, useQueryCommitList } from '../hooks/usePullRequestD
 import { useMutationpostPRReview } from '../hooks/useMutationCreatePR'
 import ButtonSimpleSquare from '../components/buttons/ButtonSimpleSquare'
 import CardFinalCodeReview from '../components/card/CardFinalCodeReview'
-// import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
   
 const PullRequestPageDetail:React.FC = () => {
     const [isSeleted, setIsSeleted] = useState('Overview')
@@ -23,7 +23,7 @@ const PullRequestPageDetail:React.FC = () => {
     const [reviews,setReviews] = useState<ReviewType[]>([])
     const [body,setBody] = useState<string>('')
     const event = "COMMENT"
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
 
 
     const params: PRDetailParamsType = {
@@ -83,7 +83,7 @@ const PullRequestPageDetail:React.FC = () => {
 
     const handleAddReview = (content: string) => {
         setBody(content); // content를 body로 설정
-        window.location.reload();
+        navigate(`pullrequest/${Number(pullRequestId)}`)
     };
 
     const handlesIsFinalReviewOpen = ()=>{
