@@ -4,7 +4,7 @@ import com.core.backend.data.dto.users.UserGroupsDto;
 import com.core.backend.data.dto.users.UserInfoDto;
 import com.core.backend.data.entity.JiraOAuthToken;
 import com.core.backend.data.entity.Users;
-import com.core.backend.data.repository.UserRepository;
+import com.core.backend.data.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +26,10 @@ public class CallbackService {
     private final GroupService groupService;
     private final UserRepository userRepository;
     private final ProjectService projectService;
+    private final ProjectRepository projectRepository;
+    private final EpicRepository epicRepository;
+    private final ProjectUserRepository projectUserRepository;
+    private final IssueRepository issueRepository;
 
     public Map<String, Object> loginAccessCallBack(String authorizationCode) {
         log.info("Authorization code received: {}", authorizationCode);
@@ -76,6 +80,20 @@ public class CallbackService {
             log.error("loginAccessCallBack Error: {}", e.getMessage());
         }
         return null;
+    }
+
+    public void updateJiraMySql(Long userId) {
+        Users newUser = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: "));
+
+        String accessToken = jiraOAuthTokenService.getNewAccessToken(newUser.getEmail());
+        List<UserGroupsDto> groupList = jiraService.getGroups(accessToken);
+
+        groupService.saveGroups(groupList);
+        log.info("Groups saved.");
+
+        projectService.saveProjects(groupList, newUser, accessToken);
+        log.info("Projects saved for the new user.");
     }
 
 

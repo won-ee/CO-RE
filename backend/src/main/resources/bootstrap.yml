@@ -9,8 +9,8 @@ spring:
   cloud:
     config:
       uri: http://config:8888
-    profiles:
-      active: backend
+  profiles:
+    active: backend
   datasource:
     url: ${MYSQL_URL}
     username: ${MYSQL_USERNAME}
@@ -55,7 +55,7 @@ logging:
 front:
   url: ${FRONT_URL}
 jira:
-  scopes: read:me read:jira-work manage:jira-project manage:jira-configuration read:jira-user manage:jira-webhook write:jira-work offline_access
+  scopes: read:me read:jira-work manage:jira-project manage:jira-configuration read:jira-user manage:jira-webhook write:jira-work offline_access report:personal-data
 
 eureka:
   instance:
@@ -64,3 +64,4 @@ eureka:
   client:
     service-url:
       defaultZone: http://eureka:8761/eureka/
+

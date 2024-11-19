@@ -29,6 +29,7 @@ public class UserService {
     private final ProjectService projectService;
     private final ProjectRepository projectRepository;
     private final GroupService groupService;
+    private final APIService apiService;
 
     public boolean findUserEmail(String email) {
         return userRepository.findByEmail(email).isPresent();
@@ -46,6 +47,7 @@ public class UserService {
                 .nickName(user.getNickname())
                 .image(user.getProfile())
                 .gitToken(user.getGitToken())
+                .gitName(user.getGitName())
                 .build();
 
         List<Projects> projectList = projectService.getProjectsByUserId(id);
@@ -59,6 +61,7 @@ public class UserService {
                     .id(project.getId())
                     .projectUserId(projectUsers.getId())
                     .name(project.getName())
+                    .key(project.getKey())
                     .image(project.getImage())
                     .ownerId(project.getOwnerId())
                     .ownerName(project.getOwnerName())
@@ -117,9 +120,19 @@ public class UserService {
     }
 
     public UserAllInfoDto updateUserInfo(Long id, UserUpdateInfoDto userInfo) {
+        log.info("API - 0");
         Users user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+        log.info("API - 1");
         user.createUserInfo(userInfo);
-        userRepository.save(user);
+        log.info("API - 2");
+        user = userRepository.save(user);
+        log.info("API - 3");
+
+        // 여기서 깃허브 연결시 깃 아이디반환하는 부분 추가할것.
+        if (userInfo.gitToken() != null && !userInfo.gitToken().isEmpty()) {
+            log.info("API - Git Name 요청");
+            apiService.getGitHubName(user);
+        }
 
         return UserAllInfoDto.toUserAllInfoDto(user);
     }

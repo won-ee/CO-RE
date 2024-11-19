@@ -1,9 +1,14 @@
 package com.core.backend.service;
 
-import com.core.backend.data.dto.isssue.*;
+import com.core.backend.data.dto.isssue.IssueCreateDto;
+import com.core.backend.data.dto.isssue.IssueCreateEpicDto;
+import com.core.backend.data.dto.isssue.IssueListDto;
 import com.core.backend.data.entity.*;
 import com.core.backend.data.enums.StatusEnum;
-import com.core.backend.data.repository.*;
+import com.core.backend.data.repository.EpicRepository;
+import com.core.backend.data.repository.IssueRepository;
+import com.core.backend.data.repository.ProjectRepository;
+import com.core.backend.data.repository.ProjectUserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +34,6 @@ public class IssueService {
 
     private final IssueRepository issueRepository;
     private final RestTemplate restTemplate;
-    private final JiraOAuthTokenRepository jiraOAuthTokenRepository;
     private final JiraOAuthTokenService jiraOAuthTokenService;
     private final EpicRepository epicRepository;
     private final ProjectUserRepository projectUserRepository;
@@ -131,7 +135,7 @@ public class IssueService {
 
                     // JQL 쿼리 작성
                     String jqlQuery = String.format(
-                            "\"Epic Link\" = %s AND issuetype in (Story, Task)",
+                            "\"Epic Link\" is empty AND issuetype in (Story, Task)",
                             epic.get("key")
                     );
 
@@ -188,14 +192,19 @@ public class IssueService {
                     String epicKey = epic.get("key").toString();
                     String epicUrl = epic.get("self").toString();
                     String epicId = epic.get("id").toString();
-                    Epics newEpic = epicRepository.save(
-                            Epics.builder()
-                                    .key(epicKey)
-                                    .name(epicName)
-                                    .url(epicUrl)
-                                    .jiraId(epicId)
-                                    .project(project)
-                                    .build());
+
+                    Epics newEpic = epicRepository.findByKey(epicKey);
+
+                    if (newEpic == null) {
+                        newEpic = epicRepository.save(
+                                Epics.builder()
+                                        .key(epicKey)
+                                        .name(epicName)
+                                        .url(epicUrl)
+                                        .jiraId(epicId)
+                                        .project(project)
+                                        .build());
+                    }
 
                     saveIssueListToJira(newEpic, extractIssueDetails(allIssues), user, accessToken);
                 }
@@ -245,7 +254,6 @@ public class IssueService {
     public void saveIssueListToJira(Epics newEpic, List<Map<String, Object>> extractedIssues, ProjectUsers user, String accessToken) {
 
         for (Map<String, Object> extractedIssue : extractedIssues) {
-            //subtask먼저 작업하기
             if (extractedIssue.get("subtasks") != null) {
                 List<Map<String, Object>> subtasks = (List<Map<String, Object>>) extractedIssue.get("subtasks");
                 if (!subtasks.isEmpty()) {
@@ -269,6 +277,24 @@ public class IssueService {
 
                                     Issues issue = null;
                                     if (newEpic == null) {
+
+                                        if (extractedIssue.get("parent") != null) {
+                                            Map<String, Object> parent = (Map<String, Object>) extractedIssue.get("parent");
+                                            newEpic = epicRepository.findByKeyAndJiraIdAndUrl(parent.get("key").toString(), parent.get("id").toString(), parent.get("self").toString());
+                                            if (newEpic == null) {
+                                                newEpic = Epics.builder()
+                                                        .key(parent.get("key").toString())
+                                                        .name(parent.get("summary").toString())
+                                                        .url(parent.get("self").toString())
+                                                        .jiraId(parent.get("id").toString())
+                                                        .project(user.getProject())
+                                                        .build();
+
+                                                newEpic = epicRepository.save(newEpic);
+                                            }
+
+                                        }
+
                                         issue = Issues.builder()
                                                 .title((String) subtask.get("summary"))
                                                 .content((String) subtask.get("summary"))
@@ -304,7 +330,7 @@ public class IssueService {
 
             if ((extractedIssue.get("assigneeAccountId") == null) ||
                     (!extractedIssue.get("assigneeAccountId").equals(user.getUser().getAccountId())) ||
-                    (!extractedIssue.get("issuetypeName").equals("작업"))) {
+                    (!extractedIssue.get("issuetypeName").equals("Task"))) {
                 continue;
             }
 
@@ -322,6 +348,23 @@ public class IssueService {
 
                 Issues issue = null;
                 if (newEpic == null) {
+
+                    if (extractedIssue.get("parent") != null) {
+                        Map<String, Object> parent = (Map<String, Object>) extractedIssue.get("parent");
+                        newEpic = epicRepository.findByKeyAndJiraIdAndUrl(parent.get("key").toString(), parent.get("id").toString(), parent.get("self").toString());
+                        if (newEpic == null) {
+                            newEpic = Epics.builder()
+                                    .key(parent.get("key").toString())
+                                    .name(parent.get("summary").toString())
+                                    .url(parent.get("self").toString())
+                                    .jiraId(parent.get("id").toString())
+                                    .project(user.getProject())
+                                    .build();
+
+                            newEpic = epicRepository.save(newEpic);
+                        }
+
+                    }
                     issue = Issues.builder()
                             .title((String) extractedIssue.get("summary"))
                             .content((String) extractedIssue.get("summary"))
@@ -400,6 +443,22 @@ public class IssueService {
                     //priority
                     Map<String, Object> priority = (Map<String, Object>) fields.get("priority");
                     extractedIssue.put("priority", priority.get("name"));
+
+                    //parent
+                    Map<String, Object> parent = (Map<String, Object>) fields.get("parent");
+                    if (parent != null) {
+                        Map<String, Object> extractedParent = new HashMap<>();
+                        extractedParent.put("id", parent.get("id"));
+                        extractedParent.put("key", parent.get("key"));
+                        extractedParent.put("self", parent.get("self"));
+                        Map<String, Object> fieldparent = (Map<String, Object>) parent.get("fields");
+                        extractedParent.put("summary", fieldparent.get("summary"));
+                        Map<String, Object> issueTypeParent = (Map<String, Object>) fieldparent.get("issuetype");
+                        if (issueTypeParent.get("name").equals("에픽") || issueTypeParent.get("name").equals("Epic")) {
+                            extractedParent.put("issueType", issueTypeParent.get("name"));
+                            extractedIssue.put("parent", extractedParent);
+                        }
+                    }
 
                     // subtasks
                     List<Map<String, Object>> subtasks = (List<Map<String, Object>>) fields.get("subtasks");
@@ -511,9 +570,11 @@ public class IssueService {
         return null;
     }
 
-    public IssueListDto createIssueToJira(boolean isParent, ProjectUsers projectUsers, Object bodyDto, String deadline) throws IOException {
+    public IssueListDto createIssueToJira(boolean isParent, Object bodyDto, String deadline) throws IOException {
 
         String projectKey = null;
+        log.info("createIssueToJira - bodyDto: {}", bodyDto.toString());
+
         if (isParent) {
             IssueCreateEpicDto issueCreateEpicDto = (IssueCreateEpicDto) bodyDto;
             projectKey = issueCreateEpicDto.getFields().getProject().getKey();
@@ -522,6 +583,8 @@ public class IssueService {
             IssueCreateDto issueCreateDto = (IssueCreateDto) bodyDto;
             projectKey = issueCreateDto.getFields().getProject().getKey();
         }
+        log.info("bodyDto : {}", bodyDto);
+
         Projects getProject = projectRepository.findByKey(projectKey);
         List<ProjectUsers> projectUsersList = projectUserRepository.findAllByProjectId(getProject.getId());
         ProjectUsers smallIssueUser = null;
@@ -533,59 +596,60 @@ public class IssueService {
             }
         }
 
-        if (smallIssueUser == null) {
-            if (isParent) {
-                bodyDto = IssueCreateEpicNoAssigneeDto.builder()
-                        .fields(IssueCreateEpicNoAssigneeDto.Fields.builder()
-                                .project(IssueCreateEpicNoAssigneeDto.Project.builder()
-                                        .key(((IssueCreateEpicDto) bodyDto).getFields().getProject().getKey())
-                                        .build())
+//        if (smallIssueUser == null || smallIssueUser.getIssueList().isEmpty()) {
+//            if (isParent) {
+//                bodyDto = IssueCreateEpicNoAssigneeDto.builder()
+//                        .fields(IssueCreateEpicNoAssigneeDto.Fields.builder()
+//                                .project(IssueCreateEpicNoAssigneeDto.Project.builder()
+//                                        .key(((IssueCreateEpicDto) bodyDto).getFields().getProject().getKey())
+//                                        .build())
+//                                .summary(((IssueCreateEpicDto) bodyDto).getFields().getSummary())
+//                                .issuetype(IssueCreateEpicNoAssigneeDto.IssueType.builder()
+//                                        .name(((IssueCreateEpicDto) bodyDto).getFields().getIssuetype().getName())
+//                                        .build())
+//                                .parent(IssueCreateEpicNoAssigneeDto.Parent.builder()
+//                                        .key(((IssueCreateEpicDto) bodyDto).getFields().getParent().getKey())
+//                                        .build())
+//                                .priority(IssueCreateEpicNoAssigneeDto.Priority.builder()
+//                                        .name(((IssueCreateEpicDto) bodyDto).getFields().getPriority().getName())
+//                                        .build())
+//                                .build())
+//                        .build();
+//            } else {
+//                bodyDto = IssueCreateDtoNoAssignee.builder()
+//                        .fields(IssueCreateDtoNoAssignee.Fields.builder()
+//                                .project(IssueCreateDtoNoAssignee.Project.builder()
+//                                        .key(((IssueCreateDto) bodyDto).getFields().getProject().getKey())
+//                                        .build())
+//                                .summary(((IssueCreateDto) bodyDto).getFields().getSummary())
+//                                .issuetype(IssueCreateDtoNoAssignee.IssueType.builder()
+//                                        .name(((IssueCreateDto) bodyDto).getFields().getIssuetype().getName())
+//                                        .build())
+//                                .priority(IssueCreateDtoNoAssignee.Priority.builder()
+//                                        .name(((IssueCreateDto) bodyDto).getFields().getPriority().getName())
+//                                        .build())
+//                                .build())
+//                        .build();
+//            }
+//        } else {
+//            if (isParent) {
+//                ((IssueCreateEpicDto) bodyDto).getFields().getAssignee().setAccountId(smallIssueUser.getUser().getAccountId());
+//            } else {
+//                ((IssueCreateDto) bodyDto).getFields().getAssignee().setAccountId(smallIssueUser.getUser().getAccountId());
+//            }
+//        }
 
-                                .summary(((IssueCreateEpicDto) bodyDto).getFields().getSummary())
-
-                                .issuetype(IssueCreateEpicNoAssigneeDto.IssueType.builder()
-                                        .name(((IssueCreateEpicDto) bodyDto).getFields().getIssuetype().getName())
-                                        .build())
-
-                                .parent(IssueCreateEpicNoAssigneeDto.Parent.builder()
-                                        .key(((IssueCreateEpicDto) bodyDto).getFields().getParent().getKey())
-                                        .build())
-
-                                .priority(IssueCreateEpicNoAssigneeDto.Priority.builder()
-                                        .name(((IssueCreateEpicDto) bodyDto).getFields().getPriority().getName())
-                                        .build())
-                                .build());
-            } else {
-                bodyDto = IssueCreateDtoNoAssignee.builder()
-                        .fields(IssueCreateDtoNoAssignee.Fields.builder()
-                                .project(IssueCreateDtoNoAssignee.Project.builder()
-                                        .key(((IssueCreateDto) bodyDto).getFields().getProject().getKey())
-                                        .build())
-
-                                .summary(((IssueCreateDto) bodyDto).getFields().getSummary())
-
-                                .issuetype(IssueCreateDtoNoAssignee.IssueType.builder()
-                                        .name(((IssueCreateDto) bodyDto).getFields().getIssuetype().getName())
-                                        .build())
-
-                                .priority(IssueCreateDtoNoAssignee.Priority.builder()
-                                        .name(((IssueCreateDto) bodyDto).getFields().getPriority().getName())
-                                        .build())
-                                .build());
-            }
+        if (isParent) {
+            ((IssueCreateEpicDto) bodyDto).getFields().getAssignee().setAccountId(smallIssueUser.getUser().getAccountId());
         } else {
-            if (isParent) {
-                ((IssueCreateEpicDto) bodyDto).getFields().getAssignee().setAccountId(smallIssueUser.getUser().getAccountId());
-            } else {
-                ((IssueCreateDto) bodyDto).getFields().getAssignee().setAccountId(smallIssueUser.getUser().getAccountId());
-            }
+            ((IssueCreateDto) bodyDto).getFields().getAssignee().setAccountId(smallIssueUser.getUser().getAccountId());
         }
 
 
-        JiraOAuthToken oAuthToken = jiraOAuthTokenService.getOAuthToken(projectUsers.getUser().getEmail());
+        JiraOAuthToken oAuthToken = jiraOAuthTokenService.getOAuthToken(smallIssueUser.getUser().getEmail());
         String accessToken = oAuthToken.getAccessToken();
 
-        String jiraBaseUrl = projectUsers.getProject().getSelfUrl();
+        String jiraBaseUrl = smallIssueUser.getProject().getSelfUrl();
         jiraBaseUrl = jiraBaseUrl.replaceAll("/project/\\d+", "/issue");
 
         Issues makeIssue = null;
@@ -598,6 +662,7 @@ public class IssueService {
 
             ObjectMapper objectMapper = new ObjectMapper();
             String requestBody = objectMapper.writeValueAsString(bodyDto);
+            log.info("objectMapper bodyDto : {}", requestBody);
 
             HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
@@ -630,7 +695,7 @@ public class IssueService {
                                     .jiraId((String) responseBody.get("id"))
                                     .jiraUrl((String) responseBody.get("self"))
                                     .epic(epic)
-                                    .projectUser(projectUsers)
+                                    .projectUser(smallIssueUser)
                                     .build());
 
                 } else {
@@ -646,7 +711,7 @@ public class IssueService {
                                     .status(StatusEnum.TODO)
                                     .jiraId((String) responseBody.get("id"))
                                     .jiraUrl((String) responseBody.get("self"))
-                                    .projectUser(projectUsers)
+                                    .projectUser(smallIssueUser)
                                     .build());
                 }
             }
@@ -655,7 +720,7 @@ public class IssueService {
 
             log.error("Unauthorized error: {}", e.getMessage());
 
-            accessToken = jiraOAuthTokenService.getNewAccessToken(projectUsers.getUser().getEmail());
+            accessToken = jiraOAuthTokenService.getNewAccessToken(smallIssueUser.getUser().getEmail());
 
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(accessToken);
@@ -664,6 +729,7 @@ public class IssueService {
 
             ObjectMapper objectMapper = new ObjectMapper();
             String requestBody = objectMapper.writeValueAsString(bodyDto);
+            log.info("objectMapper bodyDto : {}", requestBody);
 
             HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
@@ -682,8 +748,8 @@ public class IssueService {
 
                 if (isParent) {
                     IssueCreateEpicDto issueCreateEpicDto = (IssueCreateEpicDto) bodyDto;
-                    //TODO: 추후 웹훅 설정시 해당부분 지워줘야함.
 
+                    //웹훅 설정시 해당부분 지워줘야함.
                     Epics epic = epicRepository.findByKey(issueCreateEpicDto.getFields().getParent().getKey());
 
                     makeIssue = issueRepository.save(
@@ -697,7 +763,7 @@ public class IssueService {
                                     .jiraId((String) responseBody.get("id"))
                                     .jiraUrl((String) responseBody.get("self"))
                                     .epic(epic)
-                                    .projectUser(projectUsers)
+                                    .projectUser(smallIssueUser)
                                     .build());
 
                 } else {
@@ -713,15 +779,12 @@ public class IssueService {
                                     .status(StatusEnum.TODO)
                                     .jiraId((String) responseBody.get("id"))
                                     .jiraUrl((String) responseBody.get("self"))
-                                    .projectUser(projectUsers)
+                                    .projectUser(smallIssueUser)
                                     .build());
                 }
             }
         } catch (Exception ex) {
-            // 그 외 다른 예외 처리
             log.error("Error occurred: {}", ex.getMessage());
-            ex.printStackTrace();
-
         }
         if (makeIssue == null)
             return null;
@@ -734,9 +797,9 @@ public class IssueService {
                 .issuePriority(makeIssue.getIssuePriority())
                 .issueDeadLine(makeIssue.getDeadLine())
                 .issueStatus(makeIssue.getStatus())
-                .managerUserId(projectUsers.getUser().getId())
-                .managerUserImage(projectUsers.getUser().getProfile())
-                .managerUserName(projectUsers.getUser().getName())
+                .managerUserId(smallIssueUser.getUser().getId())
+                .managerUserImage(smallIssueUser.getUser().getProfile())
+                .managerUserName(smallIssueUser.getUser().getName())
                 .epicName(Optional.ofNullable(makeIssue.getEpic())
                         .map(Epics::getName)
                         .orElse(""))

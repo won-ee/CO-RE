@@ -92,7 +92,6 @@ public class CarrotService {
         if (issue == null)
             return null;
 
-        //이제 jira에서도 assignee 변경해줘야함
         JiraOAuthToken oAuthToken = jiraOAuthTokenService.getOAuthToken(projectUser.getUser().getEmail());
         String accessToken = oAuthToken.getAccessToken();
 
@@ -142,7 +141,7 @@ public class CarrotService {
             log.error("Error occurred: {}", ex.getMessage());
         }
 
-        Issues updateiIssue = issueRepository.save(Issues.builder()
+        Issues updateIssue = issueRepository.save(Issues.builder()
                 .id(issue.getId())
                 .title(issue.getTitle())
                 .content(issue.getContent())
@@ -161,7 +160,7 @@ public class CarrotService {
                 Carrots.builder()
                         .id(carrot.getId())
                         .state(false)
-                        .issue(updateiIssue)
+                        .issue(updateIssue)
                         .projectUserWriter(carrot.getProjectUserWriter())
                         .projectUserApprover(projectUser)
                         .build());

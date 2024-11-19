@@ -9,10 +9,7 @@ import com.core.backend.data.entity.JiraGroups;
 import com.core.backend.data.entity.ProjectUsers;
 import com.core.backend.data.entity.Projects;
 import com.core.backend.data.entity.Users;
-import com.core.backend.data.repository.EpicRepository;
-import com.core.backend.data.repository.IssueRepository;
-import com.core.backend.data.repository.ProjectRepository;
-import com.core.backend.data.repository.ProjectUserRepository;
+import com.core.backend.data.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +18,10 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,6 +38,8 @@ public class ProjectService {
     private final IssueService issueService;
     private final EpicRepository epicRepository;
     private final IssueRepository issueRepository;
+    private final APIService apiService;
+    private final UserRepository userRepository;
 
     public List<Map<String, Object>> getAllProjects(String accessToken, String cloudId) {
         try {
@@ -145,7 +147,7 @@ public class ProjectService {
                             .ownerName(ownerName)
                             .build();
 
-                    Projects getProject = projectRepository.findByGroupUrlAndJiraId(group.getGroupUrl(), jiraId);
+                    Projects getProject = projectRepository.findByGroupKeyAndJiraId(group.getGroupKey(), jiraId);
                     if (getProject == null) {
                         newProject = projectRepository.save(newProject);
                     } else {
@@ -177,18 +179,41 @@ public class ProjectService {
         return projectUserRepository.findProjectsByUserId(userId);
     }
 
-    public boolean updateGitHubToProject(Long userId, UpdateGitHubRequestDto updateGitHubRequestDto) {
+    public boolean updateGitHubToProject(Long userId, Long projectId, UpdateGitHubRequestDto updateGitHubRequestDto) {
         try {
-            if (projectUserRepository.existsByUserIdAndProjectId(userId, updateGitHubRequestDto.projectId())) {
-                // 업데이트 작업 진행할것
-                Optional<Projects> getProjects = projectRepository.findById(updateGitHubRequestDto.projectId());
+            log.info("1");
+            Users user = userRepository.findById(userId).orElse(null);
+            log.info("2");
+            Projects project = projectRepository.findById(projectId).orElse(null);
+            log.info("3");
 
-                if (getProjects.isPresent()) {
-                    Projects project = getProjects.get().updateGitHub(updateGitHubRequestDto);
-                    projectRepository.save(project);
-                    return true;
+            if (project == null || user == null) {
+                log.info("4");
+                return false;
+            }
+            log.info("5");
+
+            log.info("6");
+
+            if (!updateGitHubRequestDto.githubOwner().isEmpty() && !updateGitHubRequestDto.githubRepository().isEmpty()) {
+                log.info("6.5");
+                if (projectRepository.existsByGithubOwnerAndGithubRepository(updateGitHubRequestDto.githubOwner(), updateGitHubRequestDto.githubRepository())) {
+                    log.info("7");
+                    return false;
                 }
             }
+
+            log.info("8");
+            project = project.updateGitHub(updateGitHubRequestDto);
+            project = projectRepository.save(project);
+            if (project.getGithubOwner() != null && !project.getGithubOwner().isEmpty()
+                    && project.getGithubRepository() != null && !project.getGithubRepository().isEmpty()
+                    && user.getGitToken() != null && !user.getGitToken().isEmpty()) {
+                log.info("git hook event 전송 시작");
+                apiService.addGitHubHookEvents(project.getGithubOwner(), project.getGithubRepository(), user.getGitToken());
+            }
+            return true;
+
         } catch (Exception ex) {
             log.info("updateGitHubToProject error: {}", ex.getMessage());
         }
@@ -223,12 +248,20 @@ public class ProjectService {
                     .build();
         }
 
+        // 여기서 dlqfur
+
         return null;
     }
 
     public ProjectGitSetDto findGitSetToProject(String repo, String owner) {
-        Projects project = getProjectGit(repo, owner);
-        assert project != null;
+        log.info("init 2");
+        List<Projects> projectsList = projectRepository.findByGithubOwnerAndGithubRepository(owner, repo);
+        if (projectsList.size() > 1) {
+            return null;
+        }
+        Projects project = projectsList.get(0);
+
+        log.info("findGitSetToProject init get project : {}", project.toString());
 
         return ProjectGitSetDto.builder()
                 .template(project.getReviewTemplate())
@@ -237,7 +270,11 @@ public class ProjectService {
     }
 
     public Projects getProjectGit(String repo, String owner) {
-        return projectRepository.findByGithubOwnerAndGithubRepository(owner, repo).orElse(null);
+        List<Projects> projectsList = projectRepository.findByGithubOwnerAndGithubRepository(owner, repo);
+        if (projectsList.size() > 1) {
+            return null;
+        }
+        return projectsList.get(0);
     }
 
     public List<EpicListDto> getAllEpicToProject(Long projectId) {

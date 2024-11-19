@@ -55,6 +55,7 @@ public class GroupService {
                 .map(project -> ProjectInfoDto.builder()
                         .id(project.getId())
                         .name(project.getName())
+                        .key(project.getKey())
                         .image(project.getImage())
                         .ownerId(project.getOwnerId())
                         .ownerName(project.getOwnerName())

@@ -17,6 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -55,20 +57,27 @@ public class JwtTokenService {
     private final UserRepository userRepository;
 
     public String createAccessToken(Long id, String email) {
-        Date now = new Date();
+
+        ZonedDateTime nowKST = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
+        ZonedDateTime nowUTC = nowKST.withZoneSameInstant(ZoneId.of("UTC"));
+        ZonedDateTime expirationUTC = nowUTC.plusMinutes(accessTokenExpirationPeriod);
+
         return JWT.create()
                 .withSubject(ACCESS_TOKEN_SUBJECT)
-                .withExpiresAt(new Date(now.getTime() + accessTokenExpirationPeriod))
+                .withExpiresAt(Date.from(expirationUTC.toInstant()))
                 .withClaim(ID_CLAIM, id)
                 .withClaim(EMAIL_CLAIM, email)
                 .sign(Algorithm.HMAC512(secretKey));
     }
 
     public String createRefreshToken() {
-        Date now = new Date();
+        ZonedDateTime nowKST = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
+        ZonedDateTime nowUTC = nowKST.withZoneSameInstant(ZoneId.of("UTC"));
+        ZonedDateTime expirationUTC = nowUTC.plusMinutes(refreshTokenExpirationPeriod);
+
         return JWT.create()
                 .withSubject(REFRESH_TOKEN_SUBJECT)
-                .withExpiresAt(new Date(now.getTime() + refreshTokenExpirationPeriod))
+                .withExpiresAt(Date.from(expirationUTC.toInstant()))
                 .sign(Algorithm.HMAC512(secretKey));
     }
 
@@ -126,7 +135,18 @@ public class JwtTokenService {
 
     public boolean isJwtTokenValid(String token) {
         try {
+            log.info(token);
             var decodeJWT = JWT.require(Algorithm.HMAC512(secretKey)).build().verify(token);
+
+            ZonedDateTime nowUTC = ZonedDateTime.now(ZoneId.of("UTC"));
+
+            Date expiration = decodeJWT.getExpiresAt();
+            ZonedDateTime expirationUTC = expiration.toInstant().atZone(ZoneId.of("UTC"));
+
+            if (nowUTC.isAfter(expirationUTC)) {
+                log.info("JWT Token has expired. Expiration time (UTC): {}", expirationUTC);
+                return false;
+            }
 
             Long id = decodeJWT.getClaim(ID_CLAIM).asLong();
             String email = decodeJWT.getClaim(EMAIL_CLAIM).asString();

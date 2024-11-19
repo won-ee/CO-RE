@@ -36,7 +36,8 @@ public class ProjectUserService {
                     projectUsers.getUser().getName(),
                     projectUsers.getUser().getNickname(),
                     projectUsers.getUser().getEmail(),
-                    projectUsers.getUser().getGitToken()
+                    projectUsers.getUser().getGitToken(),
+                    projectUsers.getUser().getGitName()
             );
             projectUserInfoDtoList.add(infoDto);
         }
@@ -44,10 +45,17 @@ public class ProjectUserService {
     }
 
     public ProjectNameAndUserEmailDto getProjectNameAndUsersEmail(Projects project) {
+        log.info("4");
         List<String> userEmailList = projectUserRepository.findAllByProjectId(project.getId()).stream()
                 .map(projectUsers -> projectUsers.getUser().getEmail())
                 .toList();
-        return new ProjectNameAndUserEmailDto(project.getName(), userEmailList);
+
+        log.info("5 userEmailList: {}", userEmailList);
+
+        ProjectNameAndUserEmailDto dto = new ProjectNameAndUserEmailDto(project.getName(), userEmailList);
+        log.info(dto.toString());
+
+        return dto;
     }
 
     public ProjectUsers getProjectUser(Long projectUserId) {

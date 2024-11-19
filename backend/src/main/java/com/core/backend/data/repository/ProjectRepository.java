@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<Projects, Long> {
@@ -19,11 +18,13 @@ public interface ProjectRepository extends JpaRepository<Projects, Long> {
 
     @Query("SELECT p " +
             "FROM Projects p " +
-            "WHERE p.jiraGroup.groupUrl = :groupUrl AND p.jiraId = :jiraId")
-    Projects findByGroupUrlAndJiraId(@Param("groupUrl") String groupUrl, @Param("jiraId") String jiraId);
+            "WHERE p.jiraGroup.groupKey = :groupKey AND p.jiraId = :jiraId")
+    Projects findByGroupKeyAndJiraId(@Param("groupKey") String groupKey, @Param("jiraId") String jiraId);
 
 
-    Optional<Projects> findByGithubOwnerAndGithubRepository(String githubOwner, String githubRepository);
+    List<Projects> findByGithubOwnerAndGithubRepository(String githubOwner, String githubRepository);
+
+    boolean existsByGithubOwnerAndGithubRepository(String githubOwner, String githubRepository);
 
     List<Projects> findAllByJiraGroup_Id(Long jiraGroupId);
 

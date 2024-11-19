@@ -32,9 +32,12 @@ public class ProjectUserController {
 
     @GetMapping("/search/email")
     public ResponseEntity<ProjectNameAndUserEmailDto> getProjectUsersAndName(@RequestParam("repo") String repo, @RequestParam("owner") String owner) {
+        log.info("1");
         Projects project = projectService.getProjectGit(repo, owner);
+        log.info("2 Project = {}", project.toString());
         if (project == null)
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        log.info("3");
         return new ResponseEntity<>(projectUserService.getProjectNameAndUsersEmail(project), HttpStatus.OK);
     }
 

@@ -38,6 +38,9 @@ public class Users extends Base {
     @Column(name = "user_git_token")
     private String gitToken;
 
+    @Column(name = "user_git_name")
+    private String gitName;
+
     @OneToMany(mappedBy = "user")
     private List<ProjectUsers> projectUsersList = new ArrayList<>();
 
