@@ -69,8 +69,7 @@ public class IssueService {
 
             // JQL 쿼리 작성
             String jqlQuery = String.format(
-                    "project=%s AND \"Epic Link\" is empty AND issuetype in (Story, Task)",
-                    project.getJiraId()
+                    "\"Epic Link\" is empty AND issuetype in (Story, Task)"
             );
 
             int maxResults = 50;
@@ -136,7 +135,7 @@ public class IssueService {
 
                     // JQL 쿼리 작성
                     String jqlQuery = String.format(
-                            "\"Epic Link\" = %s AND issuetype in (Story, Task)",
+                            "\"Epic Link\" is empty AND issuetype in (Story, Task)",
                             epic.get("key")
                     );
 
@@ -255,7 +254,6 @@ public class IssueService {
     public void saveIssueListToJira(Epics newEpic, List<Map<String, Object>> extractedIssues, ProjectUsers user, String accessToken) {
 
         for (Map<String, Object> extractedIssue : extractedIssues) {
-            //subtask먼저 작업하기
             if (extractedIssue.get("subtasks") != null) {
                 List<Map<String, Object>> subtasks = (List<Map<String, Object>>) extractedIssue.get("subtasks");
                 if (!subtasks.isEmpty()) {
@@ -597,7 +595,6 @@ public class IssueService {
                 count = pu.getIssueList().size();
             }
         }
-        log.info(smallIssueUser.getUser().getName());
 
 //        if (smallIssueUser == null || smallIssueUser.getIssueList().isEmpty()) {
 //            if (isParent) {

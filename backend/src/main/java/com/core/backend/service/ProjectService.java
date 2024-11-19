@@ -147,7 +147,7 @@ public class ProjectService {
                             .ownerName(ownerName)
                             .build();
 
-                    Projects getProject = projectRepository.findByGroupUrlAndJiraId(group.getGroupUrl(), jiraId);
+                    Projects getProject = projectRepository.findByGroupKeyAndJiraId(group.getGroupKey(), jiraId);
                     if (getProject == null) {
                         newProject = projectRepository.save(newProject);
                     } else {
