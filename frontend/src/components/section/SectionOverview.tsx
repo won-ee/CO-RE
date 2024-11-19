@@ -9,6 +9,7 @@ import { useMutationPutMergeRequest, useMutationReviewComment } from '../../hook
 import { useProjectStore } from '../../store/userStore';
 import LoadingPage from '../../pages/LoadingPage';
 import { QueryObserverResult } from 'react-query';
+import { useNavigate } from 'react-router-dom';
 
 interface ErrorType{
   message: string; // 에러 메시지
@@ -33,9 +34,9 @@ const SectionOverview:React.FC<SectionOverviewProps> = ({data,refetch}) => {
   const dayDifference = differenceInDays(deadlineDate, today);
   const deadlineText = dayDifference > 0 ? `D-${dayDifference}` : `D-day`;
   const mutationMerge = useMutationPutMergeRequest()
+  const navigate = useNavigate()
 
   const handleMergeRequest = ()=>{
-    console.log('눌림');
     setPostLoading(true);
     const mergeData = {
       commitTitle:"",
@@ -51,7 +52,7 @@ const SectionOverview:React.FC<SectionOverviewProps> = ({data,refetch}) => {
     mutationMerge.mutate(mustationData,{
       onSuccess:()=>{
         setPostLoading(false)
-        refetch()
+        navigate(`/pullrequest`)
       },
       onError: ()=>{
         setPostLoading(false)
