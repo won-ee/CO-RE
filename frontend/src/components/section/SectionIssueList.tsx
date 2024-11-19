@@ -17,10 +17,13 @@ const SectionIssueList: React.FC = () => {
   const { selectedProjectUserId } = useProjectStore();
   const { data } = useQueryIssueList(selectedProjectUserId);
   const [searchTerm, setSearchTerm] = useState("");
+  console.log('NouseEffect',data);
 
   useEffect(() => {
+    console.log('useEffect',data);
+    
   }, [data]);
-  
+
   const colorPalette = [
     "rgba(96, 151, 223, 1)",  
     "rgba(223, 96, 100, 1)", 
