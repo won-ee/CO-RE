@@ -14,6 +14,7 @@ import { useQueryChangeList, useQueryCommitList } from '../hooks/usePullRequestD
 import { useMutationpostPRReview } from '../hooks/useMutationCreatePR'
 import ButtonSimpleSquare from '../components/buttons/ButtonSimpleSquare'
 import CardFinalCodeReview from '../components/card/CardFinalCodeReview'
+import { useNavigate } from 'react-router-dom'
   
 const PullRequestPageDetail:React.FC = () => {
     const [isSeleted, setIsSeleted] = useState('Overview')
@@ -22,6 +23,7 @@ const PullRequestPageDetail:React.FC = () => {
     const [reviews,setReviews] = useState<ReviewType[]>([])
     const [body,setBody] = useState<string>('')
     const event = "COMMENT"
+    const navigate = useNavigate();
 
 
     const params: PRDetailParamsType = {
@@ -70,11 +72,6 @@ const PullRequestPageDetail:React.FC = () => {
             refetch(); // 성공 시 최신 데이터 다시 가져오기
         },
         onError: () => {
-            console.log('에러 메세지 :',error?.message);
-            console.log('오너 :',selectedOwner);
-            console.log('레포 :',selectedRepo);
-            console.log('아이디 :',Number(pullRequestId));
-            console.log('리뷰데이터 :',TotalReview);
             
         },
     })
@@ -85,7 +82,8 @@ const PullRequestPageDetail:React.FC = () => {
       },[body])
 
     const handleAddReview = (content: string) => {
-        setBody(content); // content를 body로 설정     
+        setBody(content); // content를 body로 설정
+        navigate(`pullrequest/${Number(pullRequestId)}`)
     };
 
     const handlesIsFinalReviewOpen = ()=>{
@@ -98,7 +96,7 @@ const PullRequestPageDetail:React.FC = () => {
         <ContainerLayout>
             <TabBox>
             <TabPullRequest isSeleted={isSeleted} setIsSeleted={setIsSeleted}/>
-            {reviews.length>0 && 
+            {reviews.length>0 && isSeleted === 'Changes' &&
             <div style={{position:'relative'}}>
             <ButtonSimpleSquare $text="Finish Review" $color="white" $bgc="#1C8139" btnEvent={handlesIsFinalReviewOpen}/>
             {isFinalReviewOpen && <CardFinalCodeReview onAdd={handleAddReview} commentNums={reviews.length}/>}
