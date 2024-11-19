@@ -223,7 +223,7 @@ useEffect(() => {
                       </LineContainer>
                       {reviews.length > 0 ? (reviews.filter((review) => review.line === line.modifiedLineNumber).map((review, index) => (
                               <CardCodeReviewReadBox>
-                                <CardCodeReviewRead key={index} review={review}/>
+                                <CardCodeReviewRead key={index} review={review} reviewData={reviewData}/>
                               </CardCodeReviewReadBox>
                             ))
                         ) : null}
