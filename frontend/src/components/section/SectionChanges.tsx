@@ -227,7 +227,7 @@ useEffect(() => {
                               </CardCodeReviewReadBox>
                             ))
                         ) : null}
-                      {reviewLineIndex === line.modifiedLineNumber && <CardCodeReview onCancel={handleCancel} onAdd={handleAddReview}/>}
+                      {reviewLineIndex === line.modifiedLineNumber && reviewLineIndex !== null && <CardCodeReview onCancel={handleCancel} onAdd={handleAddReview}/>}
                       </div>
                     )}
                   </React.Fragment>
