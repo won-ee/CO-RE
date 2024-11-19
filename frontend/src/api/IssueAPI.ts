@@ -11,6 +11,8 @@ export const getIssueList = async (projectUserId:number) => {
         }
       },
     );      
+    console.log('APIdata',response.data);
+    
     return response.data;
   };
 
