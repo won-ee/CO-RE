@@ -12,7 +12,7 @@ export interface IssueListType {
     epicName:string;
     epicKey:string;
 };
-  
+
 export interface EpicType {
     id: number; 
     key: string;
