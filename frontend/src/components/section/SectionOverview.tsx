@@ -52,10 +52,12 @@ const SectionOverview:React.FC<SectionOverviewProps> = ({data,refetch}) => {
     mutationMerge.mutate(mustationData,{
       onSuccess:()=>{
         setPostLoading(false)
+        console.log('성공');
         navigate(`/pullrequest`)
       },
       onError: ()=>{
         setPostLoading(false)
+        console.log('실패');
       }
     })
   }
