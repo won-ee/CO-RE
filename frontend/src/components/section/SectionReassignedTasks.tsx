@@ -15,8 +15,10 @@ const SectionReassignedTasks: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [tasks, setTasks] = useState(projectTasks || []);
   const mutation = useMutationAcceptIssueLocation();
-
-
+  console.log('projectTasks',projectTasks);
+  console.log('tasks',tasks);
+  
+  
   useEffect(() => {
     if (projectTasks) {
       setTasks(projectTasks);
