@@ -112,7 +112,8 @@ export const useMutationIssueLocation = () => {
         console.log(data);
         queryClient.invalidateQueries(['IssueLocationList', variables.projectUserId]);
         queryClient.refetchQueries(['IssueLocation', variables.projectUserId]);
-
+        queryClient.invalidateQueries(['IssueListData', variables.projectUserId]);
+        queryClient.refetchQueries(['IssueListData', variables.projectUserId]);
       },
       onError: (error) => {
         console.error('Failed to update issue location:', error);
@@ -134,7 +135,8 @@ export const useMutationAcceptIssueLocation = () => {
         
         queryClient.invalidateQueries(['IssueLocationList', variables.projectUserId]);
         queryClient.refetchQueries(['IssueLocation', variables.projectUserId]);
-
+        queryClient.invalidateQueries(['IssueListData', variables.projectUserId]);
+        queryClient.refetchQueries(['IssueListData', variables.projectUserId]);
       },
       onError: (error) => {
         console.error('Failed to accept issue location:', error);
