@@ -231,7 +231,7 @@ export const ButtonMerge = styled.button`
     color: white;
     border: none;
     cursor: pointer;
-    background-color:'#7667FF';
+    background-color: #7667FF;
     &:hover {
         opacity: 0.8;
     }
