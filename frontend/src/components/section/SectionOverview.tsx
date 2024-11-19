@@ -1,5 +1,5 @@
 import React, { useState, ChangeEvent, useEffect } from 'react'
-import { Button, Container, ContainerLayout, DeadLineBox, OverviewApproveBox, OverviewApproveButton, OverviewApproveContent, OverviewApproveHeader, OverviewContent, OverviewContentBox, OverviewCoreBox, OverviewCoreContentBox, OverviewCoreHeader, OverviewCoreImg, OverviewCoreText, OverviewDayText, OverviewHeaderBox, OverviewHeaderText, OverviewInfoBox, OverviewInput, OverviewName, OverviewProfileImg, OverviewSourceText, OverviewTargetText, OverviewText, RadioButton, RadioCol, RadioGroup, RadioText, Text } from './SectionOverview.styled'
+import { Button, ButtonMerge, Container, ContainerLayout, DeadLineBox, OverviewApproveBox, OverviewApproveButton, OverviewApproveContent, OverviewApproveHeader, OverviewContent, OverviewContentBox, OverviewCoreBox, OverviewCoreContentBox, OverviewCoreHeader, OverviewCoreImg, OverviewCoreText, OverviewDayText, OverviewHeaderBox, OverviewHeaderText, OverviewInfoBox, OverviewInput, OverviewName, OverviewProfileImg, OverviewSourceText, OverviewTargetText, OverviewText, RadioButton, RadioCol, RadioGroup, RadioText, Text } from './SectionOverview.styled'
 import core from '../../assets/Core.png'
 import { PRDataType } from '../../Types/pullRequestType';
 import ReactMarkdown from 'react-markdown';
@@ -150,7 +150,7 @@ const SectionOverview:React.FC<SectionOverviewProps> = ({data,refetch}) => {
         </OverviewApproveBox>
         <OverviewInput placeholder="Write a comment" onChange={handleCommentbody}/>
         <Container>
-          <button onClick={() => handleMergeRequest()}>머지 버튼</button>
+          <ButtonMerge onClick={() => handleMergeRequest()}>MERGE</ButtonMerge>
           <Text>Code-Review</Text>
           <RadioGroup>
             <RadioCol>

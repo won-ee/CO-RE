@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CardIssue from "../card/CardIssue";
 import {
   ContainerLayout,
@@ -17,6 +17,9 @@ const SectionIssueList: React.FC = () => {
   const { selectedProjectUserId } = useProjectStore();
   const { data } = useQueryIssueList(selectedProjectUserId);
   const [searchTerm, setSearchTerm] = useState("");
+
+  useEffect(() => {
+  }, [data]);
   
   const colorPalette = [
     "rgba(96, 151, 223, 1)",  
