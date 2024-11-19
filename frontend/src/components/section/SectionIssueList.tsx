@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CardIssue from "../card/CardIssue";
 import {
   ContainerLayout,
@@ -12,12 +12,12 @@ import { useQueryIssueList } from "../../hooks/useIssueList";
 import { useProjectStore } from "../../store/userStore";
 import { IssueListEpicType } from "../../Types/IssueType";
 
-
 const SectionIssueList: React.FC = () => {
   const { selectedProjectUserId } = useProjectStore();
   const { data } = useQueryIssueList(selectedProjectUserId);
   const [searchTerm, setSearchTerm] = useState("");
-  
+  const [renderedData, setRenderedData] = useState(data || []);
+
   const colorPalette = [
     "rgba(96, 151, 223, 1)",  
     "rgba(223, 96, 100, 1)", 
@@ -39,16 +39,14 @@ const SectionIssueList: React.FC = () => {
     "rgba(253, 187, 45, 1)",  
     "rgba(255, 99, 71, 1)",   
   ];
-  
 
-  const groupedData = Array.isArray(data) ? data.reduce<Record<string, IssueListEpicType[]>>((acc, item) => {
+  const groupedData = Array.isArray(renderedData) ? renderedData.reduce<Record<string, IssueListEpicType[]>>((acc, item) => {
     if (!acc[item.epicKey]) {
       acc[item.epicKey] = [];
     }
     acc[item.epicKey].push(item);
     return acc;
   }, {}) : {}; 
-  
 
   const result = Object.keys(groupedData).map((epicKey, index) => ({
     epicKey,
@@ -56,12 +54,15 @@ const SectionIssueList: React.FC = () => {
     issues: groupedData[epicKey],
   }));
 
-  
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
 
-  const filteredData = data?.filter((issue) =>
+  useEffect(() => {
+    setRenderedData(data || []); 
+  }, [data]);
+
+  const filteredData = renderedData?.filter((issue) =>
     issue.issueContent.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
