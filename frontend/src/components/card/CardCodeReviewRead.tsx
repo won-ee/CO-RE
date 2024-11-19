@@ -1,34 +1,22 @@
 import { ReviewType } from "../../Types/pullRequestType";
-
+import {useUserStore} from "../../store/userStore";
 import { CardCodeReviewReadLayout, CardCodeReviewReadBox, ContentBox, NameBox, NameSpan, BodyBox, UserImg } from "./CardCodeReviewRead.styled";
-import { PRDataReviewType } from "../../Types/pullRequestType";
+
 
 interface CardCodeReviewReadProps{
     key:number;
     review: ReviewType
-    reviewData : PRDataReviewType[]
 }
 
-function CardCodeReviewRead({review,reviewData}:CardCodeReviewReadProps) {
-  const matchedData = reviewData.find((data) =>
-    data.reviews.some(
-      (item) =>
-        item.path === review.path &&
-        item.line === review.line &&
-        item.body === review.body
-    )
-  );
-
-  const writerId = matchedData?.writer.writerId || "Unknown Writer";
-  const writerImg = matchedData?.writer.writerImg || "/default-image.jpg"; // 기본 이미지 처리
-
+function CardCodeReviewRead({review}:CardCodeReviewReadProps) {
+  const userInfo = useUserStore((state)=>state.userInfo)
   return (
     <CardCodeReviewReadLayout>
       <CardCodeReviewReadBox>
-        <UserImg src={writerImg}/>
+        <UserImg src={userInfo?.userInfo.image}/>
         <ContentBox>
           <NameBox>
-            <NameSpan>{writerId}</NameSpan>
+            <NameSpan>{userInfo?.userInfo.name}</NameSpan>
             {/* <HourSpan>Hour</HourSpan> */}
           </NameBox>
           <BodyBox>
