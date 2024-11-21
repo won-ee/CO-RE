@@ -76,10 +76,88 @@
 [📎 기능 정의서](https://ineedalotofmoney.notion.site/4a578c5e0fed44d2ab5beb99c315974d?pvs=4)
 
 ## 🤗 기능 소개
-
+> Jira 프로젝트별 권한 미설정시 기능 제한이 있을 수 있습니다. (포팅 메뉴얼 참고)
 <!-- TODO: 기능 소개 작성 -->
+#### 로그인 & 프로젝트 연걸 
+<p align="center">
+  <img src="exec/img/지라연동.png" width="45%" alt="Image 1">
+  <img src="exec/img/깃허브연동.png" width="45%" alt="Image 2">
+</p>
 
-- Jira 프로젝트별 권한 미설정시 기능 제한이 있을 수 있습니다. (포팅 메뉴얼 참고)
+- 지라 계정과 깃허브 리포지토리를 연결합니다. 
+#### PR 리스트 
+  <img src="exec/img/PR리스트조회.png"  >
+
+- 자신이 올린 PR리스트와 리뷰어로 할당된 PR 리스트를 볼 수 있습니다.
+- 마감 날짜와 우선순위 , 리뷰어 점수에 따른 PR 상태여부를 볼 수 있습니다. 
+- 리뷰어가 모두 리뷰를 작성했지만 목표 점수에 도달 못하지 못하면 PR 상태는 rejected가 됩니다.
+
+#### PR 상세보기 
+  <img src="exec/img/PR상세정보.png"  >
+
+- PR 정보를 볼 수 있으며 커밋정보와 변경된 파일 정보를 볼 수 있습니다. 
+
+#### PR 생성
+<p align="center">
+  <img src="exec/img/PR생성2.png" width="45%" >
+  <img src="exec/img/PR생성3.png" width="45%" >
+</p>
+
+- PR생성 시 현재 remote 서버 기준으로 존재하는 브랜치들과 마지막 커밋 정보를 확인할 수 있습니다.
+- PR작성 시 저장된 템플릿을 바탕으로 커밋리스트를 분석해 PR내용을 작성해줍니다.
+- 선택된 브랜치와 비교해서 커밋정보와 변경된 파일 정보를 확인할 수 있습니다. 
+
+#### PR 리뷰
+<p align="center">
+  <img src="exec/img/PR리뷰.png" width="45%" >
+  <img src="exec/img/PR리뷰2.png" width="45%" >
+</p>
+
+- 코드에 대한 리뷰와 점수를 등록할 수 있습니다. 
+- 작성된 코드에 대해 자세한 코드리뷰를 작성할 수 있습니다. 
+
+#### JIRA 이슈
+  <img src="exec/img/이슈.png"  >
+
+- 오류문의를 남기면 같은 그룹내 타프로젝트 팀원 중 이슈항목이 적은 팀원에게 이슈가 자동으로 할당됩니다.
+
+#### JIRA 이슈 재배치
+  <img src="exec/img/이슈재배치.png"  >
+
+- 이슈 재배치를 요청할 수 있습니다.
+- ReassignedTaskes 에서 재배치 요청된 이슈를 볼 수 있습니다.
+- 요청된 이슈를 수락 후 본인의 리스트에서 확인 가능합니다. 
+
+#### 대시보드
+<p align="center">
+  <img src="exec/img/대시보드.png" width="45%" >
+  <img src="exec/img/대시보드2.png" width="45%" >
+</p>
+
+- 현재 프로젝트의 통계 정보를 볼 수 있습니다.
+- 배포된 버전별 통계 정보를 볼 수 있습니다. 
+- 현재 리뷰어 할당을 받거나 이슈 할당을 받은 정보를 볼 수 있습니다. 
+- 버전 노트를 통해 버전별 정보를 볼 수 있습니다.
+
+#### 히스토리
+  <img src="exec/img/히스토리.png"  >
+
+- 버전별 git flow을 확인할 수 있습니다.
+
+#### 캘린더
+  <img src="exec/img/캘린더.png"  >
+
+- 자신이 올린 PR과 리뷰어로 할당된 PR의 마감날짜를 한 눈에 확인할 수 있습니다.
+
+#### 환경설정
+<p align="center">
+  <img src="exec/img/환경설정.png" width="45%" >
+  <img src="exec/img/환경설정2.png" width="45%" >
+</p>
+
+- 프로필과 깃토큰을 등록할 수 있습니다.
+- PR 목표 리뷰 점수와 자동 리뷰어 수를 지정할 수 있습니다.
+- PR에 적용할 템플릿을 지정할 수 있습니다.
 
 ## 😆 느낀점
 
